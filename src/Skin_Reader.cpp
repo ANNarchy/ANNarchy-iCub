@@ -1,0 +1,348 @@
+
+#include <iostream>
+#include <queue>
+#include <string>
+
+#include <yarp/dev/all.h>
+#include <yarp/os/all.h>
+#include <yarp/sig/all.h>
+
+#include <iCub/iKin/iKinFwd.h> // iCub forward Kinematics
+#include <iCub/skinDynLib/iCubSkin.h>
+
+#include "Skin_Reader.hpp"
+
+// Constructor
+Skin_Reader::Skin_Reader() {}
+
+// Destructor
+Skin_Reader::~Skin_Reader() {}
+
+// init skin reader with given parameters
+bool Skin_Reader::init(char arm)
+/*
+    params: char arm    -- string representing the robot part, has to match iCub part naming
+
+    return: bool        -- return True, if successful
+*/
+{
+    // Init YARP-Network
+    yarp::os::Network::init();
+    if (!yarp::os::Network::checkNetwork())
+        {
+            std::cerr << "YARP Network is not online. Check nameserver is running" << std::endl;
+            return false;
+        }
+
+    if (!dev_init)
+        {
+            // set side and read taxel position files depending on selected arm side
+            if (arm == 'r' || arm == 'R')
+                {
+                    side = "right";
+                    bool read_err_arm =
+                        !read_taxel_pos("sensor_positions/right_arm_mesh_idx.txt", "sensor_positions/right_arm_mesh_pos.txt", "arm");
+                    bool read_err_farm = !read_taxel_pos("sensor_positions/right_forearm_V2_idx.txt",
+                                                         "sensor_positions/right_forearm_V2_pos.txt", "forearm");
+                    bool read_err_hand =
+                        !read_taxel_pos("sensor_positions/right_hand_V2_1_idx.txt", "sensor_positions/right_hand_V2_1_pos.txt", "hand");
+                    if (read_err_arm || read_err_farm || read_err_hand)
+                        {
+                            return false;
+                        }
+                }
+            else if (arm == 'l' || arm == 'L')
+                {
+                    side = "left";
+                    bool read_err_arm =
+                        !read_taxel_pos("sensor_positions/left_arm_mesh_idx.txt", "sensor_positions/left_arm_mesh_pos.txt", "arm");
+                    bool read_err_farm =
+                        !read_taxel_pos("sensor_positions/left_forearm_V2_idx.txt", "sensor_positions/left_forearm_V2_pos.txt", "forearm");
+                    bool read_err_hand =
+                        !read_taxel_pos("sensor_positions/left_hand_V2_1_idx.txt", "sensor_positions/left_hand_V2_1_pos.txt", "hand");
+
+                    if (read_err_arm || read_err_farm || read_err_hand)
+                        {
+                            return false;
+                        }
+                }
+            else
+                {
+                    std::cerr << "[Skin Reader] No correct side descriptor: Use R/r for the right arm and L/l for the left arm"
+                              << std::endl;
+                    return false;
+                }
+
+            // Open and connect YARP-Port to read hand skin sensor data
+            std::string port_name_hand = "/Skin_Reader/" + side + "_hand:i";
+            PortHand.open(port_name_hand);
+            if (!yarp::os::Network::connect(("/icubSim/skin/" + side + "_hand_comp").c_str(), port_name_hand.c_str()))
+                {
+                    std::cerr << "[Skin Reader] Could not connect skin hand port" << std::endl;
+                    return false;
+                }
+
+            // Open and connect YARP-Port to read forearm skin sensor data
+            std::string port_name_farm = "/Skin_Reader/" + side + "_forearm:i";
+            PortForearm.open(port_name_farm);
+            if (!yarp::os::Network::connect(("/icubSim/skin/" + side + "_forearm_comp").c_str(), port_name_farm.c_str()))
+                {
+                    std::cerr << "[Skin Reader] Could not connect skin forearm port" << std::endl;
+                    return false;
+                }
+
+            // Open and connect YARP-Port to read upper arm skin sensor data
+            std::string port_name_arm = "/Skin_Reader/" + side + "_arm:i";
+            PortArm.open(port_name_arm);
+            if (!yarp::os::Network::connect(("/icubSim/skin/" + side + "_arm_comp").c_str(), port_name_arm.c_str()))
+                {
+                    std::cerr << "[Skin Reader] Could not connect skin arm port" << std::endl;
+                    return false;
+                }
+
+            // iCub::iKin::iCubArm libArm(side);
+            // kin_chains["arm"] = libArm.asChain();
+            // for (int i = 10; i > 2; i--)
+            //     {
+            //         kin_chains["arm"]->rmLink(i);
+            //     }
+
+            // kin_chains["forearm"] = libArm.asChain();
+            // for (int i = 10; i > 4; i--)
+            //     {
+            //         kin_chains["forearm"]->rmLink(i);
+            //     }
+
+            // kin_chains["hand"] = libArm.asChain();
+            // for (int i = 10; i > 6; i--)
+            //     {
+            //         kin_chains["hand"]->rmLink(i);
+            //     }
+
+            dev_init = true;
+            return true;
+        }
+    else
+        {
+            std::cerr << "[Skin Reader] Initialization aready done!" << std::endl;
+            return false;
+        }
+}
+
+// check if init function was called
+bool Skin_Reader::check_init()
+{
+    if (!dev_init)
+        {
+            std::cerr << "[Skin Reader] Error: Device is not initialized" << std::endl;
+            return false;
+        }
+    else
+        {
+            return true;
+        }
+}
+
+// read sensor data from iCub YARP ports
+void Skin_Reader::read_tactile()
+{
+    if (check_init())
+        {
+            tactile_hand = PortHand.read();
+            tactile_forearm = PortForearm.read();
+            tactile_arm = PortArm.read();
+
+            // HAND
+            std::string skin_part_h = "hand";
+            auto init_pos_h = taxel_pos_data[skin_part_h].arr;
+            auto idx_arr_h = taxel_pos_data[skin_part_h].idx;
+            for (int i = 0; i < idx_arr_h.size(); i++)
+                {
+                    printf("%i\n", i);
+                    if (idx_arr_h[i] > 0)
+                        hand_data.push_back(tactile_hand->data()[i]);
+                }
+
+            // FOREARM
+            std::string skin_part_f = "forearm";
+            auto init_pos_f = taxel_pos_data[skin_part_f].arr;
+            auto idx_arr_f = taxel_pos_data[skin_part_f].idx;
+            for (int i = 0; i < idx_arr_f.size(); i++)
+                {
+                    printf("%i\n", i);
+                    if (idx_arr_f[i] > 0)
+                        forearm_data.push_back(tactile_forearm->data()[i]);
+                }
+
+            // ARM
+            std::string skin_part_a = "arm";
+            auto init_pos_a = taxel_pos_data[skin_part_a].arr;
+            auto idx_arr_a = taxel_pos_data[skin_part_a].idx;
+            for (int i = 0; i < idx_arr_a.size(); i++)
+                {
+                    printf("%i\n", i);
+                    if (idx_arr_a[i] > 0)
+                        arm_data.push_back(tactile_arm->data()[i]);
+                }
+        }
+}
+
+// return tactile data for hand skin
+std::vector<double> Skin_Reader::get_tactile_hand()
+{
+    if (check_init())
+        {
+            return hand_data;
+        }
+    else
+        {
+            std::vector<double> empty;
+            return empty;
+        }
+}
+
+// return tactile data for forearm skin
+std::vector<double> Skin_Reader::get_tactile_forearm()
+{
+    if (check_init())
+        {
+            return forearm_data;
+        }
+    else
+        {
+            std::vector<double> empty;
+            return empty;
+        }
+}
+
+// return tactile data for upper arm skin
+std::vector<double> Skin_Reader::get_tactile_arm()
+{
+    if (check_init())
+        {
+            return arm_data;
+        }
+    else
+        {
+            std::vector<double> empty;
+            return empty;
+        }
+}
+
+// read information about taxel position from config files
+bool Skin_Reader::read_taxel_pos(std::string filename_idx, std::string filename_pos, std::string part)
+/*
+    params: std::string filename_idx    -- filename, containing the path, of the file with the taxel index data
+            std::string filename_pos    -- filename, containing the path, of the file with the taxel position data
+            std::string part            -- skin part to load the data for (e.g. forearm)
+
+    return: bool        -- return True, if successful
+*/
+{
+    std::ifstream File_idx;
+    std::ifstream File_pos;
+    std::vector<int> idx;
+    std::vector<std::vector<double>> arr;
+    std::vector<double> pos;
+    taxel_data part_tax_pos;
+    int ind;
+    double val;
+    int i;
+
+    // read information from file about used indices of the skin sensor position data
+    i = 0;
+    File_idx.open(filename_idx);
+    if (File_idx.fail())
+        {
+            std::cerr << "[Skin Reader " + side + "] Could not open taxel index file" << std::endl;
+            return false;
+        }
+    while (File_idx >> ind)
+        {
+            i++;
+            idx.push_back(ind);
+        }
+    File_idx.close();
+
+    // read information about skin sensor (also called taxel) position
+    i = 0;
+    File_pos.open(filename_pos);
+    if (File_pos.fail())
+        {
+            std::cerr << "[Skin Reader " + side + "] Could not open taxel position file" << std::endl;
+            return false;
+        }
+    while (File_pos >> val)
+        {
+            i++;
+            i = i % 6;
+            if (i < 3)
+                {
+                    pos.push_back(val);
+                }
+            if (i % 6 == 0)
+                {
+                    arr.push_back(pos);
+                    pos.clear();
+                }
+        }
+    File_pos.close();
+
+    part_tax_pos.idx = idx;
+    part_tax_pos.arr = arr;
+
+    taxel_pos_data[part] = part_tax_pos;
+
+    return true;
+}
+
+// return the taxel positions given by the ini files
+std::vector<std::vector<double>> Skin_Reader::get_taxel_pos(std::string skin_part)
+/*
+    params: std::string skin_part               -- skin part to load the data for ("arm", "forearm", "hand")
+
+    return: std::vector<std::vector<double>>    -- Vector containing taxel positions -> reference frame depending on skin part
+*/
+{
+    std::vector<std::vector<double>> taxel_positions;
+    if (check_init())
+        {
+            // auto root2part = kin_chains[skin_part]->getH();
+            // auto part2root = yarp::math::SE3inv(root2part);
+
+            auto init_pos = taxel_pos_data[skin_part].arr;
+            auto idx_arr = taxel_pos_data[skin_part].idx;
+            std::cout << "index:" << idx_arr << std::endl;
+            yarp::sig::Vector test;
+            for (int i = 0; i < idx_arr.size(); i++)
+                {
+                    printf("%i\n", i);
+                    if (idx_arr[i] > 0)
+                        taxel_positions.push_back(init_pos[i]);
+                }
+        }
+    return taxel_positions;
+
+}
+
+// close and clean skin reader
+void Skin_Reader::close()
+{
+    if (!PortHand.isClosed())
+        {
+            yarp::os::Network::disconnect("/icubSim/skin/right_hand_comp", "/Skin_Reader/right_hand:i");
+            PortHand.close();
+        }
+    if (!PortForearm.isClosed())
+        {
+            yarp::os::Network::disconnect("/icubSim/skin/right_forearm_comp", "/Skin_Reader/right_forearm:i");
+            PortForearm.close();
+        }
+    if (!PortArm.isClosed())
+        {
+            yarp::os::Network::disconnect("/icubSim/skin/right_arm_comp", "/Skin_Reader/right_arm:i");
+            PortArm.close();
+        }
+
+    yarp::os::Network::fini();
+}

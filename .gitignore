@@ -1,0 +1,15 @@
+# python related files
+*.pyc
+
+# results
+*.npy
+
+
+# application
+*.so
+
+
+# VSCode files
+*.clang-format
+*.vscode*
+
