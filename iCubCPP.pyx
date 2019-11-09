@@ -12,21 +12,14 @@ import sys
 cdef extern from "Interface_iCub.h":
 
     cdef struct iCub_ANN:
-        
-        const string KEY_HEAD 
-        const string KEY_TORSO
-        const string KEY_RIGHT_ARM
-        const string KEY_LEFT_ARM
-        const string KEY_RIGHT_LEG
-        const string KEY_LEFT_LEG
-        
+       
         #TODO: we need to add here all function declarators we need to access
         
         # add Reader/Writer
-        void add_jointReader(string)
-        void add_jointWriter(string)
-        void add_skinReader(string)
-        void add_visualReader()
+        void AddJointReader(string)
+        void AddJointWriter(string)
+        void AddSkinReader(string)
+        void AddVisualReader()
 
         # Access to joint reader member functions
         # initialize the joint reader with given parameters

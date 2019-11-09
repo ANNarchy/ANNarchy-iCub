@@ -1,3 +1,21 @@
+/*
+ *  Copyright (C) 2019 Torsten Follak
+ *
+ *  Interface_iCub.cpp is part of the iCub ANNarchy interface
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <string>
 
@@ -11,7 +29,7 @@
 iCub_ANN my_interface;
 
 // add an instance of joint reader
-void iCub_ANN::add_jointReader(std::string name)
+void iCub_ANN::AddJointReader(std::string name)
 /*
     params: std::string name        -- name for the added joint reader in the map, can be freely selected
 */
@@ -27,7 +45,7 @@ void iCub_ANN::add_jointReader(std::string name)
 }
 
 // add an instance of joint writer
-void iCub_ANN::add_jointWriter(std::string name)
+void iCub_ANN::AddJointWriter(std::string name)
 /*
     params: std::string name        -- name for the added joint writer in the map, can be freely selected
 */
@@ -43,7 +61,7 @@ void iCub_ANN::add_jointWriter(std::string name)
 }
 
 // add an instance of skin reader
-void iCub_ANN::add_skinReader(std::string name)
+void iCub_ANN::AddSkinReader(std::string name)
 /*
     params: std::string name        -- name for the added skin reader in the map, can be freely selected
 */
@@ -59,7 +77,7 @@ void iCub_ANN::add_skinReader(std::string name)
 }
 
 // add an instance of visual reader
-void iCub_ANN::add_visualReader()
+void iCub_ANN::AddVisualReader()
 /*
     params: std::string name        -- name for the added visual reader in the map, can be freely selected
 */
@@ -87,7 +105,7 @@ bool iCub_ANN::visualR_init(char eye, double fov_width, double fov_height, int i
     return: bool                -- return True, if successful
 */
 {
-    return visual_input->init(eye, fov_width, fov_height, img_width, img_height);
+    return visual_input->Init(eye, fov_width, fov_height, img_width, img_height);
 }
 // start reading images from the iCub with YARP-RFModule
 void iCub_ANN::visualR_start(int argc, char *argv[])
@@ -95,17 +113,17 @@ void iCub_ANN::visualR_start(int argc, char *argv[])
     params: int argc, char *argv[]  -- main function inputs from program call; can be used to configure RFModule; not implemented yet
 */
 {
-    visual_input->start(argc, argv);
+    visual_input->Start(argc, argv);
 }
 // stop reading images from the iCub, by terminating the RFModule
-void iCub_ANN::visualR_stop() { visual_input->stop(); }
+void iCub_ANN::visualR_stop() { visual_input->Stop(); }
 // read image vector from the image buffer and remove it from the buffer
 std::vector<double> iCub_ANN::visualR_read_fromBuf()
 /*
     return: std::vector<double>     -- image (1D-vector) from the image buffer
 */
 {
-    return visual_input->read_fromBuf();
+    return visual_input->ReadFromBuf();
 }
 
 // Access to joint reader member functions //
@@ -124,7 +142,7 @@ bool iCub_ANN::jointR_init(std::string name, std::string part, double sigma, int
     return: bool                    -- return True, if successful
 */
 {
-    return parts_reader[name]->init(part, sigma, pop_size, deg_per_neuron);
+    return parts_reader[name]->Init(part, sigma, pop_size, deg_per_neuron);
 }
 // get the size of the populations encoding the joint angles
 std::vector<int> iCub_ANN::jointR_get_neurons_per_joint(std::string name)
@@ -134,7 +152,7 @@ std::vector<int> iCub_ANN::jointR_get_neurons_per_joint(std::string name)
     return: std::vector<int>        -- return vector, containing the population size for every joint
 */
 {
-    return parts_reader[name]->get_neurons_per_joint();
+    return parts_reader[name]->GetNeuronsPerJoint();
 }
 // get the resolution in degree of the populations encoding the joint angles
 std::vector<double> iCub_ANN::jointR_get_joints_deg_res(std::string name)
@@ -144,7 +162,7 @@ std::vector<double> iCub_ANN::jointR_get_joints_deg_res(std::string name)
     return: std::vector<double>     -- return vector, containing the resolution for every joints population codimg in degree
 */
 {
-    return parts_reader[name]->get_joints_deg_res();
+    return parts_reader[name]->GetJointsDegRes();
 }
 // read one joint and return joint angle directly as double value
 double iCub_ANN::jointR_read_double(std::string name, int joint)
@@ -155,7 +173,7 @@ double iCub_ANN::jointR_read_double(std::string name, int joint)
     return: double              -- joint angle read from the robot
 */
 {
-    return parts_reader[name]->read_double(joint);
+    return parts_reader[name]->ReadDouble(joint);
 }
 // read one joint and return the joint angle encoded in a vector
 std::vector<double> iCub_ANN::jointR_read_one(std::string name, int joint)
@@ -166,7 +184,7 @@ std::vector<double> iCub_ANN::jointR_read_one(std::string name, int joint)
     return: std::vector<double>     -- population vector encoding the joint angle
 */
 {
-    return parts_reader[name]->read_one(joint);
+    return parts_reader[name]->ReadOne(joint);
 }
 // read all joints and return the joint angles encoded in vectors
 std::vector<std::vector<double>> iCub_ANN::jointR_read_all(std::string name)
@@ -176,7 +194,7 @@ std::vector<std::vector<double>> iCub_ANN::jointR_read_all(std::string name)
     return: std::vector<std::vector<double>>    -- population vectors encoding every joint angle from associated robot part
 */
 {
-    return parts_reader[name]->read_all();
+    return parts_reader[name]->ReadAll();
 }
 // close joint reader with cleanup
 void iCub_ANN::jointR_close(std::string name)
@@ -184,7 +202,7 @@ void iCub_ANN::jointR_close(std::string name)
     params: std::string name        -- name of the selected joint reader
 */
 {
-    parts_reader[name]->close();
+    parts_reader[name]->Close();
 }
 
 // Access to joint writer member functions //
@@ -202,7 +220,7 @@ bool iCub_ANN::jointW_init(std::string name, std::string part, int pop_size, dou
     return: bool                    -- return True, if successful
 */
 {
-    return parts_writer[name]->init(part, pop_size, deg_per_neuron);
+    return parts_writer[name]->Init(part, pop_size, deg_per_neuron);
 }
 // get the size of the populations encoding the joint angles
 std::vector<int> iCub_ANN::jointW_get_neurons_per_joint(std::string name)
@@ -212,7 +230,7 @@ std::vector<int> iCub_ANN::jointW_get_neurons_per_joint(std::string name)
     return: std::vector<int>        -- return vector, containing the population size for every joint
 */
 {
-    return parts_writer[name]->get_neurons_per_joint();
+    return parts_writer[name]->GetNeuronsPerJoint();
 }
 // get the resolution in degree of the populations encoding the joint angles
 std::vector<double> iCub_ANN::jointW_get_joints_deg_res(std::string name)
@@ -222,7 +240,7 @@ std::vector<double> iCub_ANN::jointW_get_joints_deg_res(std::string name)
     return: std::vector<double>     -- return vector, containing the resolution for every joints population codimg in degree
 */
 {
-    return parts_writer[name]->get_joints_deg_res();
+    return parts_writer[name]->GetJointsDegRes();
 }
 // write one joint as double value
 bool iCub_ANN::jointW_write_double(std::string name, double position, int joint, bool blocking)
@@ -235,7 +253,7 @@ bool iCub_ANN::jointW_write_double(std::string name, double position, int joint,
     return: bool                -- return True, if successful
 */
 {
-    return parts_writer[name]->write_double(position, joint, blocking);
+    return parts_writer[name]->WriteDouble(position, joint, blocking);
 }
 // write one joint with the joint angle encoded in a population
 bool iCub_ANN::jointW_write_one(std::string name, std::vector<double> position_pop, int joint, bool blocking)
@@ -248,7 +266,7 @@ bool iCub_ANN::jointW_write_one(std::string name, std::vector<double> position_p
     return: bool                    -- return True, if successful
 */
 {
-    return parts_writer[name]->write_one(position_pop, joint, blocking);
+    return parts_writer[name]->WriteOne(position_pop, joint, blocking);
 }
 // write all joints with joint angles encoded in populations
 bool iCub_ANN::jointW_write_all(std::string name, std::vector<std::vector<double>> position_pops, bool blocking)
@@ -260,7 +278,7 @@ bool iCub_ANN::jointW_write_all(std::string name, std::vector<std::vector<double
     return: bool                                -- return True, if successful
 */
 {
-    return parts_writer[name]->write_all(position_pops, blocking);
+    return parts_writer[name]->WriteAll(position_pops, blocking);
 }
 // close joint reader with cleanup
 void iCub_ANN::jointW_close(std::string name)
@@ -268,7 +286,7 @@ void iCub_ANN::jointW_close(std::string name)
     params: std::string name        -- name of the selected joint writer
 */
 {
-    return parts_writer[name]->close();
+    return parts_writer[name]->Close();
 }
 
 // Access to skin reader member functions //
@@ -281,7 +299,7 @@ bool iCub_ANN::skinR_init(std::string name, char arm)
     return: bool                    -- return True, if successful
 */
 {
-    tactile_reader[name]->init(arm);
+    tactile_reader[name]->Init(arm);
 }
 // read sensor data
 void iCub_ANN::skinR_read_tactile(std::string name)
@@ -289,7 +307,7 @@ void iCub_ANN::skinR_read_tactile(std::string name)
     params: std::string name        -- name of the selected skin reader
 */
 {
-    tactile_reader[name]->read_tactile();
+    tactile_reader[name]->ReadTactile();
 }
 // return tactile data for hand skin
 std::vector<double> iCub_ANN::skinR_get_tactile_hand(std::string name)
@@ -297,7 +315,7 @@ std::vector<double> iCub_ANN::skinR_get_tactile_hand(std::string name)
     params: std::string name        -- name of the selected skin reader
 */
 {
-    return tactile_reader[name]->get_tactile_hand();
+    return tactile_reader[name]->GetTactileHand();
 }
 // return tactile data for forearm skin
 std::vector<double> iCub_ANN::skinR_get_tactile_forearm(std::string name)
@@ -305,7 +323,7 @@ std::vector<double> iCub_ANN::skinR_get_tactile_forearm(std::string name)
     params: std::string name        -- name of the selected skin reader
 */
 {
-    return tactile_reader[name]->get_tactile_forearm();
+    return tactile_reader[name]->GetTactileForearm();
 }
 // return tactile data for upper arm skin
 std::vector<double> iCub_ANN::skinR_get_tactile_arm(std::string name)
@@ -313,7 +331,7 @@ std::vector<double> iCub_ANN::skinR_get_tactile_arm(std::string name)
     params: std::string name        -- name of the selected skin reader
 */
 {
-    return tactile_reader[name]->get_tactile_arm();
+    return tactile_reader[name]->GetTactileArm();
 }
 // return the taxel positions given by the ini files
 std::vector<std::vector<double>> iCub_ANN::skinR_get_taxel_pos(std::string name, std::string skin_part)
@@ -324,7 +342,7 @@ std::vector<std::vector<double>> iCub_ANN::skinR_get_taxel_pos(std::string name,
     return: std::vector<std::vector<double>>    -- Vector containing taxel positions -> reference frame depending on skin part
 */
 {
-    return tactile_reader[name]->get_taxel_pos(skin_part);
+    return tactile_reader[name]->GetTaxelPos(skin_part);
 }
 // close and clean skin reader
 void iCub_ANN::skinR_close(std::string name)
@@ -332,5 +350,5 @@ void iCub_ANN::skinR_close(std::string name)
     params: std::string name        -- name of the selected skin reader
 */
 {
-    tactile_reader[name]->close();
+    tactile_reader[name]->Close();
 }

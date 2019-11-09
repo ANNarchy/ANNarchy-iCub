@@ -1,3 +1,21 @@
+/*
+ *  Copyright (C) 2019 Torsten Follak
+ *
+ *  Visual_Reader.cpp is part of the iCub ANNarchy interface
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <iostream>
 #include <queue>
@@ -23,7 +41,7 @@ Visual_Reader::Visual_Reader() {}
 Visual_Reader::~Visual_Reader() {}
 
 // init Visual reader with given parameters for image resolution, field of view and eye selection
-bool Visual_Reader::init(char eye, double fov_width, double fov_height, int img_width, int img_height)
+bool Visual_Reader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height)
 /*
     params: char eye            -- characteer representing the selected eye (l/L; r/R)
             double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
@@ -43,8 +61,8 @@ bool Visual_Reader::init(char eye, double fov_width, double fov_height, int img_
             // compute output field of view borders in input image
             if (fov_width <= icub_fov_x)
                 {
-                    out_fov_x_low = static_cast<int>(ceil(fov_x2pixel_x(-fov_width / 2.0)));
-                    out_fov_x_up = static_cast<int>(floor(fov_x2pixel_x(fov_width / 2.0)));
+                    out_fov_x_low = static_cast<int>(ceil(FovX2PixelX(-fov_width / 2.0)));
+                    out_fov_x_up = static_cast<int>(floor(FovX2PixelX(fov_width / 2.0)));
                 }
             else
                 {
@@ -54,8 +72,8 @@ bool Visual_Reader::init(char eye, double fov_width, double fov_height, int img_
 
             if (fov_height <= icub_fov_y)
                 {
-                    out_fov_y_low = static_cast<int>(ceil(fov_y2pixel_y(fov_height / 2.0)));
-                    out_fov_y_up = static_cast<int>(floor(fov_y2pixel_y(-fov_height / 2.0)));
+                    out_fov_y_low = static_cast<int>(ceil(FovY2PixelY(fov_height / 2.0)));
+                    out_fov_y_up = static_cast<int>(floor(FovY2PixelY(-fov_height / 2.0)));
                 }
             else
                 {
@@ -64,12 +82,12 @@ bool Visual_Reader::init(char eye, double fov_width, double fov_height, int img_
                 }
 
             // calculate output region of view (ROV) (image part equivalent to output field of view)
-            ROV_width = out_fov_x_up - out_fov_x_low;
-            ROV_height = out_fov_y_up - out_fov_y_low;
+            rov_width = out_fov_x_up - out_fov_x_low;
+            rov_height = out_fov_y_up - out_fov_y_low;
 
             // calculate scaling factors to scale ROV to output image size
-            res_scale_x = ((double)(out_width)) / (ROV_width);
-            res_scale_y = ((double)(out_height)) / (ROV_height);
+            res_scale_x = ((double)(out_width)) / (rov_width);
+            res_scale_y = ((double)(out_height)) / (rov_height);
 
             // init YARP-Network
             yarp::os::Network::init();
@@ -85,7 +103,7 @@ bool Visual_Reader::init(char eye, double fov_width, double fov_height, int img_
                 {
                     act_eye = 'R';
                     std::string port_name = "/V_Reader/image/right:i";
-                    PortRight.open(port_name);
+                    port_right.open(port_name);
                     if (!yarp::os::Network::connect("/icubSim/cam/right", port_name.c_str()))
                         {
                             return false;
@@ -96,7 +114,7 @@ bool Visual_Reader::init(char eye, double fov_width, double fov_height, int img_
                 {
                     act_eye = 'L';
                     std::string port_name = "/V_Reader/image/left:i";
-                    PortLeft.open(port_name);
+                    port_left.open(port_name);
                     if (!yarp::os::Network::connect("/icubSim/cam/left", port_name.c_str()))
                         {
                             return false;
@@ -113,7 +131,7 @@ bool Visual_Reader::init(char eye, double fov_width, double fov_height, int img_
 }
 
 // check if init function was called
-bool Visual_Reader::check_init()
+bool Visual_Reader::CheckInit()
 {
     if (!dev_init)
         {
@@ -127,12 +145,12 @@ bool Visual_Reader::check_init()
 }
 
 // read image vector from the image buffer and remove from the buffer
-std::vector<double> Visual_Reader::read_fromBuf()
+std::vector<double> Visual_Reader::ReadFromBuf()
 /*
     return: std::vector<double>     -- image (1D-vector) from the image buffer
 */
 {
-    if (check_init())
+    if (CheckInit())
         {
             // if image buffer is not empty return the image and delete it from the buffer
             std::vector<double> img;
@@ -155,12 +173,12 @@ std::vector<double> Visual_Reader::read_fromBuf()
 }
 
 // start reading images from the iCub with YARP-RFModule
-void Visual_Reader::start(int argc, char *argv[])
+void Visual_Reader::Start(int argc, char *argv[])
 /*
     params: int argc, char *argv[]  -- main function inputs from program call; can be used to configure RFModule; not implemented yet
 */
 {
-    if (check_init())
+    if (CheckInit())
         {
             // configure YARP-RessourceFinder and start RFModule as seperate Thread
             yarp::os::ResourceFinder rf;
@@ -171,9 +189,9 @@ void Visual_Reader::start(int argc, char *argv[])
 }
 
 // stop reading images from the iCub, by terminating the RFModule
-void Visual_Reader::stop()
+void Visual_Reader::Stop()
 {
-    if (check_init())
+    if (CheckInit())
         {
             // stop and close RFModule
             stopModule(true);
@@ -215,11 +233,11 @@ bool Visual_Reader::updateModule()
     yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb;
     if (act_eye == 'L')
         {
-            iEyeRgb = PortLeft.read();
+            iEyeRgb = port_left.read();
         }
     if (act_eye == 'R')
         {
-            iEyeRgb = PortRight.read();
+            iEyeRgb = port_right.read();
         }
 
     cv::Mat RgbMat = yarp::cv::toCvMat(*iEyeRgb);
@@ -229,7 +247,7 @@ bool Visual_Reader::updateModule()
     cv::cvtColor(RgbMat, tmpMat, cv::COLOR_RGB2GRAY);
 
     // extracting the output part of the field of view
-    cv::Mat ROV = tmpMat(cv::Rect(out_fov_x_low, out_fov_y_low, ROV_width, ROV_height)).clone();
+    cv::Mat ROV = tmpMat(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
 
     // resize ROV to given output resolution
     if (res_scale_x == 1 && res_scale_x == 1)
@@ -246,7 +264,7 @@ bool Visual_Reader::updateModule()
         }
 
     // flat the image matrix to 1D-vector
-    std::vector<int> img_vector = mat2vec(monoMat);
+    std::vector<int> img_vector = Mat2Vec(monoMat);
 
     // normalize the image from 0..255 to 0..1
     std::vector<double> img_vec_norm(img_vector.size());
@@ -274,11 +292,11 @@ bool Visual_Reader::interruptModule()
     // interrupt port communication
     if (act_eye == 'L')
         {
-            PortLeft.interrupt();
+            port_left.interrupt();
         }
     if (act_eye == 'R')
         {
-            PortRight.interrupt();
+            port_right.interrupt();
         }
     return true;
 }
@@ -290,17 +308,17 @@ bool Visual_Reader::close()
 */
 {
     // disconnect and close left eye port
-    if (!PortLeft.isClosed())
+    if (!port_left.isClosed())
         {
             yarp::os::Network::disconnect("/icubSim/cam/left", "/V_Reader/image/left:i");
-            PortLeft.close();
+            port_left.close();
         }
 
     // disconnect and close right eye port
-    if (!PortRight.isClosed())
+    if (!port_right.isClosed())
         {
             yarp::os::Network::disconnect("/icubSim/cam/right", "/V_Reader/image/right:i");
-            PortRight.close();
+            port_right.close();
         }
 
     // close YARP Network
@@ -309,7 +327,7 @@ bool Visual_Reader::close()
 }
 
 // convert field of view horizontal degree position to horizontal pixel position
-double Visual_Reader::fov_x2pixel_x(double fx)
+double Visual_Reader::FovX2PixelX(double fx)
 /*
     params: double fx   -- horizontal field of view position in degree
 
@@ -323,7 +341,7 @@ double Visual_Reader::fov_x2pixel_x(double fx)
 }
 
 // convert field of view vertical degree position to vertical pixel position
-double Visual_Reader::fov_y2pixel_y(double fy)
+double Visual_Reader::FovY2PixelY(double fy)
 /*
     params: double fy   -- vertical field of view position in degree
 
@@ -337,7 +355,7 @@ double Visual_Reader::fov_y2pixel_y(double fy)
 }
 
 // convert a 2D-matrix to 1D-vector
-std::vector<int> Visual_Reader::mat2vec(cv::Mat matrix)
+std::vector<int> Visual_Reader::Mat2Vec(cv::Mat matrix)
 /*
     params: cv::Mat matrix    -- image as 2D-matrix
 

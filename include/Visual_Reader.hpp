@@ -1,3 +1,22 @@
+/*
+ *  Copyright (C) 2019 Torsten Follak
+ *
+ *  Visual_Reader.hpp is part of the iCub ANNarchy interface
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include <queue>
@@ -8,7 +27,6 @@
 #include <yarp/os/all.h>
 #include <yarp/sig/all.h>
 
-
 class Visual_Reader : private yarp::os::RFModule
 {
   public:
@@ -16,13 +34,13 @@ class Visual_Reader : private yarp::os::RFModule
     ~Visual_Reader();
 
     // init Visual reader with given parameters for image resolution, field of view and eye selection
-    bool init(char eye, double fov_width, double fov_height, int img_width, int img_height);
+    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height);
     // start reading images from the iCub with YARP-RFModule
-    void start(int argc, char *argv[]);
+    void Start(int argc, char *argv[]);
     // stop reading images from the iCub, by terminating the RFModule
-    void stop();
+    void Stop();
     // read image vector from the image buffer and remove it from the buffer
-    std::vector<double> read_fromBuf();
+    std::vector<double> ReadFromBuf();
 
   private:
     bool dev_init = false; // variable for initialization check
@@ -36,8 +54,8 @@ class Visual_Reader : private yarp::os::RFModule
 
     int out_fov_x_up, out_fov_x_low; // pixel borders for horizontal field of view in the iCub image
     int out_fov_y_up, out_fov_y_low; // pixel borders for vertical field of view in the iCub image
-    int ROV_width;                   // image width for given horizontal field of view (ROV, region of view)
-    int ROV_height;                  // image height for given vertical field of view (ROV, region of view)
+    int rov_width;                   // image width for given horizontal field of view (ROV, region of view)
+    int rov_height;                  // image height for given vertical field of view (ROV, region of view)
 
     int out_width;  // output image width in pixel
     int out_height; // output image height in pixel
@@ -47,8 +65,8 @@ class Visual_Reader : private yarp::os::RFModule
 
     std::queue<std::vector<double>> img_buffer[30]; // buffer to store the preprocessed iCub images
 
-    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> PortRight; // port for the iCub right eye image
-    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> PortLeft;  // port for the iCub left eye image
+    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_right; // port for the iCub right eye image
+    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;  // port for the iCub left eye image
 
     // functions for the YARP-RFModule //
     // configure RFModule
@@ -64,11 +82,11 @@ class Visual_Reader : private yarp::os::RFModule
 
     // auxilary functions //
     // check if init function was called
-    bool check_init();
+    bool CheckInit();
     // convert field of view horizontal degree position to horizontal pixel position
-    double fov_x2pixel_x(double fx);
+    double FovX2PixelX(double fx);
     // convert field of view vertical degree position to vertical pixel position
-    double fov_y2pixel_y(double fy);
+    double FovY2PixelY(double fy);
     // convert a 2D-matrix to 1D-vector
-    std::vector<int> mat2vec(cv::Mat matrix);
+    std::vector<int> Mat2Vec(cv::Mat matrix);
 };

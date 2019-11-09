@@ -1,3 +1,22 @@
+/*
+ *  Copyright (C) 2019 Torsten Follak
+ *
+ *  Interface_iCub.hpp is part of the iCub ANNarchy interface
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include <map>
@@ -16,71 +35,71 @@ struct iCub_ANN
     std::map<std::string, Skin_Reader *> tactile_reader; // associated skin reader
 
     // add an instance of joint reader
-    void add_jointReader(std::string name);
+    void AddJointReader(std::string name);
     // add an instance of joint writer
-    void add_jointWriter(std::string name);
+    void AddJointWriter(std::string name);
     // add an instance of skin reader
-    void add_skinReader(std::string name);
+    void AddSkinReader(std::string name);
     // add an instance of visual reader
-    void add_visualReader();
+    void AddVisualReader();
 
     // Access to visual reader member functions //
     // init Visual reader with given parameters for image resolution, field of view and eye selection
-    bool visualR_init(char eye, double fov_width, double fov_height, int img_width, int img_height);
+    bool VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height);
     // start reading images from the iCub with YARP-RFModule
-    void visualR_start(int argc, char *argv[]);
+    void VisualRStart(int argc, char *argv[]);
     // stop reading images from the iCub, by terminating the RFModule
-    void visualR_stop();
+    void VisualRStop();
     // read image vector from the image buffer and remove it from the buffer
-    std::vector<double> visualR_read_fromBuf();
+    std::vector<double> VisualRReadFromBuf();
 
     // Access to joint reader member functions //
     // initialize the joint reader with given parameters
-    bool jointR_init(std::string name, std::string part, double sigma, int pop_size, double deg_per_neuron);
+    bool JointRInit(std::string name, std::string part, double sigma, int pop_size, double deg_per_neuron);
     // get the size of the populations encoding the joint angles
-    std::vector<int> jointR_get_neurons_per_joint(std::string name);
+    std::vector<int> JointRGetNeuronsPerJoint(std::string name);
     // get the resolution in degree of the populations encoding the joint angles
-    std::vector<double> jointR_get_joints_deg_res(std::string name);
+    std::vector<double> JointRGetJointsDegRes(std::string name);
     // close joint reader with cleanup
-    void jointR_close(std::string name);
+    void JointRClose(std::string name);
     // read one joint and return joint angle directly as double value
-    double jointR_read_double(std::string name, int joint);
+    double JointRReadDouble(std::string name, int joint);
     // read one joint and return the joint angle encoded in a vector
-    std::vector<double> jointR_read_one(std::string name, int joint);
+    std::vector<double> JointRReadOne(std::string name, int joint);
     // read all joints and return the joint angles encoded in vectors
-    std::vector<std::vector<double>> jointR_read_all(std::string name);
+    std::vector<std::vector<double>> JointRReadAll(std::string name);
 
     // Access to joint writer member functions //
     // initialize the joint writer with given parameters
-    bool jointW_init(std::string name, std::string part, int pop_size, double deg_per_neuron);
+    bool JointWInit(std::string name, std::string part, int pop_size, double deg_per_neuron);
     // get the size of the populations encoding the joint angles
-    std::vector<int> jointW_get_neurons_per_joint(std::string name);
+    std::vector<int> JointWGetNeuronsPerJoint(std::string name);
     // get the resolution in degree of the populations encoding the joint angles
-    std::vector<double> jointW_get_joints_deg_res(std::string name);
+    std::vector<double> JointWGetJointsDegRes(std::string name);
     // close joint reader with cleanup
-    void jointW_close(std::string name);
+    void JointWClose(std::string name);
     // write one joint as double value
-    bool jointW_write_double(std::string name, double position, int joint, bool blocking);
+    bool JointWWriteDouble(std::string name, double position, int joint, bool blocking);
     // write one joint with the joint angle encoded in a population
-    bool jointW_write_one(std::string name, std::vector<double> position_pop, int joint, bool blocking);
+    bool JointWWriteOne(std::string name, std::vector<double> position_pop, int joint, bool blocking);
     // write all joints with joint angles encoded in populations
-    bool jointW_write_all(std::string name, std::vector<std::vector<double>> position_pops, bool blocking);
+    bool JointWWriteAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking);
 
     // Access to skin reader member functions //
     // init skin reader with given parameters
-    bool skinR_init(std::string name, char arm);
+    bool SkinRInit(std::string name, char arm);
     // read sensor data
-    void skinR_read_tactile(std::string name);
+    void SkinRReadTactile(std::string name);
     // return tactile data for hand skin
-    std::vector<double> skinR_get_tactile_hand(std::string name);
+    std::vector<double> SkinRGetTactileHand(std::string name);
     // return tactile data for forearm skin
-    std::vector<double> skinR_get_tactile_forearm(std::string name);
+    std::vector<double> SkinRGetTactileForearm(std::string name);
     // return tactile data for upper arm skin
-    std::vector<double> skinR_get_tactile_arm(std::string name);
+    std::vector<double> SkinRGetTactileArm(std::string name);
     // return the taxel positions given by the ini files
-    std::vector<std::vector<double>> skinR_get_taxel_pos(std::string name, std::string skin_part);
+    std::vector<std::vector<double>> SkinRGetTaxelPos(std::string name, std::string skin_part);
     // close and clean skin reader
-    void skinR_close(std::string name);
+    void SkinRClose(std::string name);
 };
 
 extern iCub_ANN my_interface;

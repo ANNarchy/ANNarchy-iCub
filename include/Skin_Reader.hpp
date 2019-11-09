@@ -1,3 +1,22 @@
+/*
+ *  Copyright (C) 2019 Torsten Follak
+ *
+ *  Skin_Reader.hpp is part of the iCub ANNarchy interface
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include <opencv2/opencv.hpp>
@@ -21,26 +40,26 @@ class Skin_Reader
     // Destructor
     ~Skin_Reader();
     // init skin reader with given parameters
-    bool init(char arm);
+    bool Init(char arm);
     // read sensor data
-    void read_tactile();
+    void ReadTactile();
 
     // return tactile data for hand skin
-    std::vector<double> get_tactile_hand();
+    std::vector<double> GetTactileHand();
     // return tactile data for forearm skin
-    std::vector<double> get_tactile_forearm();
+    std::vector<double> GetTactileForearm();
     // return tactile data for upper arm skin
-    std::vector<double> get_tactile_arm();
+    std::vector<double> GetTactileArm();
     // return the taxel positions given by the ini files
-    std::vector<std::vector<double>> get_taxel_pos(std::string skin_part);
+    std::vector<std::vector<double>> GetTaxelPos(std::string skin_part);
 
     // close and clean skin reader
-    void close();
+    void Close();
 
   private:
-    yarp::os::BufferedPort<yarp::sig::Vector> PortHand;    // port for the hand
-    yarp::os::BufferedPort<yarp::sig::Vector> PortForearm; // port for the forearm
-    yarp::os::BufferedPort<yarp::sig::Vector> PortArm;     // port for the arm
+    yarp::os::BufferedPort<yarp::sig::Vector> port_hand;    // port for the hand
+    yarp::os::BufferedPort<yarp::sig::Vector> port_forearm; // port for the forearm
+    yarp::os::BufferedPort<yarp::sig::Vector> port_arm;     // port for the arm
 
     yarp::sig::Vector *tactile_hand;    // YARP Vector for hand sensor data
     yarp::sig::Vector *tactile_forearm; // YARP Vector for forearm sensor data
@@ -56,9 +75,9 @@ class Skin_Reader
     std::map<std::string, taxel_data> taxel_pos_data;          // contains taxel position data for different skin parts
     std::map<std::string, iCub::iKin::iKinChain *> kin_chains; // contains taxel position data for different skin parts
 
-    bool read_taxel_pos(std::string filename_idx, std::string filename_pos, std::string part);
+    bool ReadTaxelPos(std::string filename_idx, std::string filename_pos, std::string part);
 
     // auxilary functions //
     // check if init function was called
-    bool check_init();
+    bool CheckInit();
 };

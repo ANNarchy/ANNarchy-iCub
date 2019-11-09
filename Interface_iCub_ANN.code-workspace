@@ -62,7 +62,14 @@
 			"map": "cpp",
 			"memory_resource": "cpp",
 			"set": "cpp",
-			"string": "cpp"
+			"string": "cpp",
+			"hash_map": "cpp",
+			"strstream": "cpp",
+			"bitset": "cpp",
+			"numeric": "cpp",
+			"cfenv": "cpp",
+			"typeindex": "cpp",
+			"valarray": "cpp"
 		},
 		"terminal.integrated.shell.windows": "cmd.exe",
 		"C_Cpp.workspaceParsingPriority": "medium"
