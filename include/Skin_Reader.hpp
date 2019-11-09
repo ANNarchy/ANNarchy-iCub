@@ -19,26 +19,27 @@
 
 #pragma once
 
-#include <opencv2/opencv.hpp>
-#include <string>
-
-#include <iCub/iKin/iKinFwd.h> // iCub forward Kinematics
+#include <iCub/iKin/iKinFwd.h>    // iCub forward Kinematics
 #include <yarp/os/all.h>
 #include <yarp/sig/all.h>
 
-struct taxel_data
-{
+#include <map>
+#include <string>
+#include <vector>
+
+#include <opencv2/opencv.hpp>
+
+struct TaxelData {
     std::vector<int> idx;
     std::vector<std::vector<double>> arr;
 };
 
-class Skin_Reader
-{
-  public:
+class SkinReader {
+ public:
     // Constructor
-    Skin_Reader();
+    SkinReader();
     // Destructor
-    ~Skin_Reader();
+    ~SkinReader();
     // init skin reader with given parameters
     bool Init(char arm);
     // read sensor data
@@ -56,24 +57,24 @@ class Skin_Reader
     // close and clean skin reader
     void Close();
 
-  private:
-    yarp::os::BufferedPort<yarp::sig::Vector> port_hand;    // port for the hand
-    yarp::os::BufferedPort<yarp::sig::Vector> port_forearm; // port for the forearm
-    yarp::os::BufferedPort<yarp::sig::Vector> port_arm;     // port for the arm
+ private:
+    yarp::os::BufferedPort<yarp::sig::Vector> port_hand;       // port for the hand
+    yarp::os::BufferedPort<yarp::sig::Vector> port_forearm;    // port for the forearm
+    yarp::os::BufferedPort<yarp::sig::Vector> port_arm;        // port for the arm
 
-    yarp::sig::Vector *tactile_hand;    // YARP Vector for hand sensor data
-    yarp::sig::Vector *tactile_forearm; // YARP Vector for forearm sensor data
-    yarp::sig::Vector *tactile_arm;     // YARP Vector for upper arm sensor data
+    yarp::sig::Vector *tactile_hand;       // YARP Vector for hand sensor data
+    yarp::sig::Vector *tactile_forearm;    // YARP Vector for forearm sensor data
+    yarp::sig::Vector *tactile_arm;        // YARP Vector for upper arm sensor data
 
-    std::vector<double> hand_data;    // Vector for sorted and cleaned hand sensor data
-    std::vector<double> forearm_data; // Vector for sorted and cleaned forearm sensor data
-    std::vector<double> arm_data;     // Vector for sorted and cleaned upper arm sensor data
+    std::vector<double> hand_data;       // Vector for sorted and cleaned hand sensor data
+    std::vector<double> forearm_data;    // Vector for sorted and cleaned forearm sensor data
+    std::vector<double> arm_data;        // Vector for sorted and cleaned upper arm sensor data
 
-    std::string side;      // containing information about selected arm (right/left)
-    bool dev_init = false; // variable for initialization check
+    std::string side;         // containing information about selected arm (right/left)
+    bool dev_init = false;    // variable for initialization check
 
-    std::map<std::string, taxel_data> taxel_pos_data;          // contains taxel position data for different skin parts
-    std::map<std::string, iCub::iKin::iKinChain *> kin_chains; // contains taxel position data for different skin parts
+    std::map<std::string, TaxelData> taxel_pos_data;             // contains taxel position data for different skin parts
+    std::map<std::string, iCub::iKin::iKinChain *> kin_chains;    // contains taxel position data for different skin parts
 
     bool ReadTaxelPos(std::string filename_idx, std::string filename_pos, std::string part);
 

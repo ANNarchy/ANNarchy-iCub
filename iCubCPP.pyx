@@ -11,7 +11,7 @@ import sys
 
 cdef extern from "Interface_iCub.h":
 
-    cdef struct iCub_ANN:
+    cdef struct iCubANN:
        
         #TODO: we need to add here all function declarators we need to access
         
@@ -23,67 +23,67 @@ cdef extern from "Interface_iCub.h":
 
         # Access to joint reader member functions
         # initialize the joint reader with given parameters
-        bint jointR_init(string, string, double, int, double)
+        bint JointRInit(string, string, double, int, double)
         # get the size of the populations encoding the joint angles
-        vector[int] jointR_get_neurons_per_joint(string)
+        vector[int] JointRGetNeuronsPerJoint(string)
         # get the resolution in degree of the populations encoding the joint angles
-        vector[double] jointR_get_joints_deg_res(string)
+        vector[double] JointRGetJointsDegRes(string)
         # close joint reader with cleanup
-        void jointR_close(string)
+        void JointRClose(string)
         # read one joint and return joint angle directly as double value
-        double jointR_read_double(string , int)
+        double JointRReadCouble(string , int)
         # read one joint and return the joint angle encoded in a vector
-        vector[double] jointR_read_one(string, int)
+        vector[double] JointRReadOne(string, int)
         # read all joints and return the joint angles encoded in vectors
-        vector[vector[double]] jointR_read_all(string)
+        vector[vector[double]] JointRReadAll(string)
 
         # Access to joint writer member functions
         # initialize the joint writer with given parameters
-        bint jointW_init(string, string, int, double)
+        bint JointWInit(string, string, int, double)
         # get the size of the populations encoding the joint angles
-        vector[int] jointW_get_neurons_per_joint(string)
+        vector[int] JointWGetNeuronsPerJoint(string)
         # get the resolution in degree of the populations encoding the joint angles
-        vector[double] jointW_get_joints_deg_res(string)
+        vector[double] JointWGetJointsDegRes(string)
         # close joint reader with cleanup
-        void jointW_close(string)
+        void JointWClose(string)
         # write one joint as double value
-        bint jointW_write_double(string, double, int, bool)
+        bint JointWWriteDouble(string, double, int, bool)
         # write one joint with the joint angle encoded in a population
-        bint jointW_write_one(string, vector[double], int, bool)
+        bint JointWWriteOne(string, vector[double], int, bool)
         # write all joints with joint angles encoded in populations
-        bint jointW_write_all(string, vector[vector[double]], bool)
+        bint JointWWriteAll(string, vector[vector[double]], bool)
 
         # Access to skin reader member functions
         # init skin reader with given parameters
-        bint skinR_init(string, char)
+        bint SkinRInit(string, char)
         # read sensor data
-        void skinR_read_tactile(string)
+        void SkinRReadTactile(string)
         # return tactile data for hand skin
-        vector[double] skinR_get_tactile_hand(string)
+        vector[double] SkinRGetTactileHand(string)
         # return tactile data for forearm skin
-        vector[double] skinR_get_tactile_forearm(string)
+        vector[double] SkinRGetTactileForearm(string)
         # return tactile data for upper arm skin
-        vector[double] skinR_get_tactile_arm(string)
+        vector[double] SkinRGetTactileArm(string)
         # return the taxel positions given by the ini files
-        vector[vector[double]] skinR_get_taxel_pos(string, string)
+        vector[vector[double]] SkinRGetTaxelPos(string, string)
         # close and clean skin reader
-        void skinR_close(string)
+        void SkinRClose(string)
 
         # Access to visual reader member functions
         # init Visual reader with given parameters for image resolution, field of view and eye selection
-        bint visualR_init(char, double, double, int, int)
+        bint VisualRInit(char, double, double, int, int)
         # start reading images from the iCub with YARP-RFModule
-        void visualR_start(int, char**)
+        void VisualRStart(int, char**)
         # stop reading images from the iCub, by terminating the RFModule
-        void visualR_stop()
+        void VisualRStop()
         # read image vector from the image buffer and remove it from the buffer
-        vector[double] visualR_read_fromBuf()
+        vector[double] VisualRReadFromBuf()
 
 
     # Instances:
-    iCub_ANN my_interface # defined in Interface_iCub.cpp
+    iCubANN my_interface # defined in Interface_iCub.cpp
 
-cdef class iCubANN_wrapper:
+cdef class iCubANNWrapper:
 
     PART_KEY_HEAD = "head";            # part key for iCub head; can be used for joint reader/writer initialization
     PART_KEY_TORSO = "torso";          # part key for iCub torso; can be used for joint reader/writer initialization
@@ -138,7 +138,7 @@ cdef class iCubANN_wrapper:
     ### add Reader/Writer
     def add_jointReader(self, name):
         """
-            Calls iCub_ANN::add_jointReader(std::string name)
+            Calls iCubANN::AddJointReader(std::string name)
 
             params: std::string name        -- name for the added joint reader in the map, can be freely selected
         """
@@ -146,11 +146,11 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.add_jointReader(s)
+        my_interface.AddJointReader(s)
 
     def add_jointWriter(self, name):
         """
-            Calls iCub_ANN::add_jointWriter(std::string name)
+            Calls iCubANN::AddJointWriter(std::string name)
 
             params: std::string name        -- name for the added joint writer in the map, can be freely selected
         """
@@ -158,11 +158,11 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.add_jointWriter(s)
+        my_interface.AddJointWriter(s)
 
     def add_skinReader(self, name):
         """
-            Calls iCub_ANN::add_skinReader(std::string name)
+            Calls iCubANN::AddSkinReader(std::string name)
 
             params: std::string name        -- name for the added skin reader in the map, can be freely selected
         """
@@ -170,25 +170,25 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.add_skinReader(s)
+        my_interface.AddSkinReader(s)
 
     def add_visualReader(self):
         """
-            Calls iCub_ANN::add_visualReader()
+            Calls iCubANN::AddVisualReader()
 
             params: std::string name        -- name for the added visual reader in the map, can be freely selected
         """
         # call the interface
-        my_interface.add_visualReader()
+        my_interface.AddVisualReader()
 
     ### end add Reader/Writer
 
 
     ### Access to visual reader member functions
     # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def visualR_init(self, eye, fov_width, fov_height, img_width, img_height):
+    def visualRInit(self, eye, fov_width, fov_height, img_width, img_height):
         """
-            Calls bool iCub_ANN::visualR_init(char eye, double fov_width, double fov_height, int img_width, int img_height)
+            Calls bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height)
 
             params: char eye            -- characteer representing the selected eye (l/L; r/R)
                     double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
@@ -200,12 +200,12 @@ cdef class iCubANN_wrapper:
         """
 
         # call the interface
-        return my_interface.visualR_init(eye, fov_width, fov_height, img_width, img_height)
+        return my_interface.VisualRInit(eye, fov_width, fov_height, img_width, img_height)
 
     # start reading images from the iCub with a YARP-RFModule
     def visualR_start(self):
         """
-            Calls void iCub_ANN::visualR_start(int argc, char *argv[])
+            Calls void iCubANN::VisualRStart(int argc, char *argv[])
         """
         argv = sys.argv
         # Declare char**
@@ -221,29 +221,29 @@ cdef class iCubANN_wrapper:
             argv[i] = argv[i].encode()
             c_argv[i] = argv[i]
         # call the interface
-        my_interface.visualR_start(argc, c_argv)
+        my_interface.VisualRStart(argc, c_argv)
         # Let him go
         free(c_argv)
 
     # stop reading images from the iCub, by terminating the RFModule
     def visualR_stop(self):
         """
-            Calls void iCub_ANN::visualR_stop()
+            Calls void iCubANN::VisualRStop()
         """
 
         # call the interface
-        my_interface.visualR_stop()
+        my_interface.VisualRStop()
 
     # return image vector from the image buffer and remove it from the buffer
     def visualR_read_fromBuf(self):
         """
-            Calls std::vector<double> iCub_ANN::visualR_read_fromBuf()
+            Calls std::vector<double> iCubANN::VisualRReadFromBuf()
 
             return: std::vector<double>     -- image (1D-vector) from the image buffer
         """
 
         # call the interface
-        return my_interface.visualR_read_fromBuf()
+        return my_interface.VisualRReadFromBuf()
 
     ### end access to visual reader member functions
 
@@ -252,7 +252,7 @@ cdef class iCubANN_wrapper:
     # initialize the joint reader with given parameters
     def jointR_init(self, name, part, sigma, n_pop, degr_per_neuron=0.0):
         """
-            Calls bool iCub_ANN::jointR_init(std::string name, std::string part, double sigma, int pop_n, double deg_per_neuron)
+            Calls bool iCubANN::JointRInit(std::string name, std::string part, double sigma, int pop_n, double deg_per_neuron)
         
             params: std::string name        -- name of the selected joint reader
                     std::string part        -- string representing the robot part, has to match iCub part naming
@@ -269,12 +269,12 @@ cdef class iCubANN_wrapper:
         cdef string c_name = name.encode('UTF-8')
         cdef string key = part.encode('UTF-8')
 
-        return my_interface.jointR_init(c_name, key, sigma, n_pop, degr_per_neuron)
+        return my_interface.JointRInit(c_name, key, sigma, n_pop, degr_per_neuron)
 
     # get the size of the populations encoding the joint angles
     def jointR_get_neurons_per_joint(self, name):
         """
-            Calls std::vector<int> iCub_ANN:: jointR_get_neurons_per_joint(std::string name)
+            Calls std::vector<int> iCubANN:: JointRGetNeuronsPerJoint(std::string name)
 
             params: std::string name        -- name of the selected joint reader
 
@@ -284,12 +284,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.jointR_get_neurons_per_joint(s)
+        return my_interface.JointRGetNeuronsPerJoint(s)
 
     # get the resolution in degree of the populations encoding the joint angles
     def jointR_get_joints_deg_res(self, name):
         """
-            Calls std::vector<double> iCub_ANN::jointR_get_joints_deg_res(std::string name)
+            Calls std::vector<double> iCubANN::JointRGetJointsDegRes(std::string name)
 
             params: std::string name        -- name of the selected joint reader
 
@@ -299,12 +299,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.jointR_get_joints_deg_res(s)
+        return my_interface.JointRGetJointsDegRes(s)
 
     # close joint reader with cleanup
     def jointR_close(self, name):
         """
-            Calls iCub_ANN::jointR_close(std::string name)
+            Calls iCubANN::JointRClose(std::string name)
 
             params: std::string name    -- name of the selected joint reader
                     int joint           -- joint number of the robot part
@@ -315,12 +315,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.jointR_close(s)
+        my_interface.JointRClose(s)
 
     # read one joint and return joint angle directly as double value
     def jointR_read_double(self, name, joint):
         """
-            Calls double iCub_ANN::jointR_read_double(std::string name, int joint)
+            Calls double iCubANN::JointRReadDouble(std::string name, int joint)
 
             params: std::string name        -- name of the selected joint reader
                     int joint               -- joint number of the robot part
@@ -331,12 +331,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.jointR_read_double(s, joint)
+        return my_interface.JointRReadDouble(s, joint)
 
     # read one joint and return the joint angle encoded in a vector (population coding)
     def jointR_read_one(self, name, joint):
         """
-            Calls std::vector<double> iCub_ANN::jointR_read_one(std::string name, int joint)
+            Calls std::vector<double> iCubANN::JointRReadOne(std::string name, int joint)
 
             params: std::string name                    -- name of the selected joint reader
 
@@ -346,12 +346,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.jointR_read_one(s, joint)
+        return my_interface.JointRReadOne(s, joint)
 
     # read all joints and return the joint angles encoded in vectors (population coding)
     def jointR_read_all(self, name):
         """
-            Calls std::vector<std::vector<double>> iCub_ANN::jointR_read_all(std::string name)
+            Calls std::vector<std::vector<double>> iCubANN::JointRReadAll(std::string name)
 
             params: std::string name        -- name of the selected joint reader
         """
@@ -359,7 +359,7 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.jointR_read_all(s)
+        return my_interface.JointRReadAll(s)
 
     ### end access to joint reader member functions
 
@@ -368,7 +368,7 @@ cdef class iCubANN_wrapper:
     # initialize the joint writer with given parameters
     def jointW_init(self, name, part, n_pop, degr_per_neuron=0.0):
         """
-            Calls bool iCub_ANN::jointW_init(std::string name, std::string part, int pop_size, double deg_per_neuron)
+            Calls bool iCubANN::JointWInit(std::string name, std::string part, int pop_size, double deg_per_neuron)
 
             params: std::string name        -- name of the selected joint writer
                     std::string part        -- string representing the robot part, has to match iCub part naming
@@ -385,12 +385,12 @@ cdef class iCubANN_wrapper:
         cdef string key = part.encode('UTF-8')
         
         # call the interface
-        return my_interface.jointW_init(s, key, n_pop, degr_per_neuron)
+        return my_interface.JointWInit(s, key, n_pop, degr_per_neuron)
 
     # get the size of the populations encoding the joint angles
     def jointW_get_neurons_per_joint(self, name):
         """
-            Calls std::vector<int> iCub_ANN::jointW_get_neurons_per_joint(std::string name)
+            Calls std::vector<int> iCubANN::JointWGetNeuronsPerJoint(std::string name)
 
             params: std::string name        -- name of the selected joint writer
 
@@ -400,12 +400,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.jointW_get_neurons_per_joint(s)
+        return my_interface.JointWGetNeuronsPerJoint(s)
 
     # get the resolution in degree of the populations encoding the joint angles
     def jointW_get_joints_deg_res(self, name):
         """
-            Calls std::vector<double> iCub_ANN::jointW_get_joints_deg_res(std::string name)
+            Calls std::vector<double> iCubANN::JointWGetJointsDegRes(std::string name)
 
             params: std::string name        -- name of the selected joint writer
 
@@ -415,12 +415,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.jointW_get_joints_deg_res(s)
+        return my_interface.JointWGetJointsDegRes(s)
 
     # write one joint as double value
     def jointW_write_double(self, name, position, joint, blocking):
         """
-            Calls bool iCub_ANN::jointW_write_double(std::string name, double position, int joint, bool blocking)
+            Calls bool iCubANN::JointWWriteDouble(std::string name, double position, int joint, bool blocking)
 
             params: std::string name    -- name of the selected joint writer
                     double position     -- joint angle to write to the robot joint
@@ -435,12 +435,12 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.jointW_write_double(s, position, joint, block)
+        return my_interface.JointWWriteDouble(s, position, joint, block)
 
     # write one joint with the joint angle encoded in a population vector
     def jointW_write_one(self, name, position_pop, joint, blocking):
         """
-            Calls bool iCub_ANN::jointW_write_one(std::string name, std::vector<double> position_pop, int joint, bool blocking)
+            Calls bool iCubANN::JointWWriteOne(std::string name, std::vector<double> position_pop, int joint, bool blocking)
 
             params: std::string name        -- name of the selected joint writer
                     std::vector<double>     -- population encoded joint angle for writing to the robot joint
@@ -455,12 +455,12 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.jointW_write_one(s, position_pop, joint, block)
+        return my_interface.JointWWriteOne(s, position_pop, joint, block)
 
     # write all joints with joint angles encoded in populations vectors
     def jointW_write_all(self, name, position_pops, blocking):
         """
-            Calls bool iCub_ANN::jointW_write_all(std::string name, std::vector<std::vector<double>> position_pops, bool blocking)
+            Calls bool iCubANN::JointWWriteAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking)
 
             params: std::string name                    -- name of the selected joint writer
                     std::vector<std::vector<double>>    -- populations encoding every joint angle for writing them to the associated robot part
@@ -474,12 +474,12 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.jointW_write_all(s, position_pops, block)
+        return my_interface.JointWWriteAll(s, position_pops, block)
 
     # close joint reader with cleanup
     def jointW_close(self, name):
         """
-            Calls iCub_ANN::jointR_close(std::string name)
+            Calls iCubANN::JointWClose(std::string name)
         
             params: std::string name        -- name of the selected joint writer
         """
@@ -487,14 +487,14 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.jointW_close(s)
+        my_interface.JointWClose(s)
     ### end access to joint writer member functions
 
     ### Access to skin reader member functions
     # init skin reader with given parameters
     def skinR_init(self, name, arm):
         """
-            Calls bool iCub_ANN::skinR_init(std::string name, char arm)
+            Calls bool iCubANN::SkinRInit(std::string name, char arm)
 
             params: std::string name        -- name of the selected skin reader
                     char arm                -- string representing the robot part, has to match iCub part naming
@@ -505,12 +505,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.skinR_init(s, arm)
+        return my_interface.SkinRInit(s, arm)
 
     # read sensor data
     def skinR_read_tactile(self, name):
         """
-            Calls void iCub_ANN::skinR_read_tactile(std::string name)
+            Calls void iCubANN::SkinRReadTactile(std::string name)
 
             params: std::string name        -- name of the selected skin reader
         """
@@ -518,12 +518,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.skinR_read_tactile(s)
+        my_interface.SkinRReadTactile(s)
 
     # return tactile data for hand skin
     def skinR_get_tactile_hand(self, name):
         """
-            Calls  std::vector<double> iCub_ANN::skinR_get_tactile_hand(std::string name)
+            Calls  std::vector<double> iCubANN::SkinRGetTactileHand(std::string name)
 
             params: std::string name        -- name of the selected skin reader
         """
@@ -531,12 +531,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.skinR_get_tactile_hand(s)
+        return my_interface.SkinRGetTactileHand(s)
 
     # return tactile data for forearm skin
     def skinR_get_tactile_forearm(self, name):
         """
-            Calls  std::vector<double> iCub_ANN::skinR_get_tactile_forearm(std::string name)
+            Calls  std::vector<double> iCubANN::SkinRGetTactileForearm(std::string name)
 
             params: std::string name        -- name of the selected skin reader
         """
@@ -544,12 +544,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.skinR_get_tactile_forearm(s)
+        return my_interface.SkinRGetTactileForearm(s)
 
     # return tactile data for upper arm skin
     def skinR_get_tactile_arm(self, name):
         """
-            Calls  std::vector<double> iCub_ANN::skinR_get_tactile_arm(std::string name)
+            Calls  std::vector<double> iCubANN::SkinRGetTactileArm(std::string name)
 
             params: std::string name        -- name of the selected skin reader
         """
@@ -557,12 +557,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.skinR_get_tactile_arm(s)
+        return my_interface.SkinRGetTactileArm(s)
 
     # return the taxel positions given by the ini files
-    def skinR_get_taxel_pos(self, name, skin_part):
+    def skinRGet_taxel_pos(self, name, skin_part):
         """
-            Calls  std::vector<std::vector<double>> iCub_ANN::skinR_get_taxel_pos(std::string name, std::string skin_part)
+            Calls  std::vector<std::vector<double>> iCubANN::SkinRGetTaxelPos(std::string name, std::string skin_part)
 
             params: std::string name                    -- name of the selected skin reader
                     std::string skin_part               -- skin part to load the data for ("arm", "forearm", "hand")
@@ -574,12 +574,12 @@ cdef class iCubANN_wrapper:
         cdef string s1 = skin_part.encode('UTF-8')
 
         # call the interface
-        return my_interface.skinR_get_taxel_pos(s, s1)
+        return my_interface.SkinRGetTaxelPos(s, s1)
 
     # close and clean skin reader
     def skinR_close(self, name):
         """
-            Calls void iCub_ANN::skinR_close(std::string name)
+            Calls void iCubANN::SkinRClose(std::string name)
 
             params: std::string name        -- name of the selected skin reader
         """
@@ -587,7 +587,7 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.skinR_close(s)
+        my_interface.SkinRClose(s)
 
     ### end access to skin reader member functions
 

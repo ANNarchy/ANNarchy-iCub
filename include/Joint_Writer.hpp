@@ -19,18 +19,18 @@
 
 #pragma once
 
-#include <string>
-
 #include <yarp/dev/all.h>
 #include <yarp/sig/all.h>
 
-class Joint_Writer
-{
-  public:
+#include <string>
+#include <vector>
+
+class JointWriter {
+ public:
     // Constructor
-    Joint_Writer();
+    JointWriter() = default;
     // Destructor
-    ~Joint_Writer();
+    ~JointWriter();
 
     // initialize the joint writer with given parameters
     bool Init(std::string part, int pop_size, double deg_per_neuron = 0.0);
@@ -48,21 +48,22 @@ class Joint_Writer
     // write all joints with joint angles encoded in populations
     bool WriteAll(std::vector<std::vector<double>> position_pops, bool blocking);
 
-  private:
-    bool dev_init = false; // variable for initialization check
-    std::string icub_part; // string describing the part of the iCub
+ private:
+    bool dev_init = false;    // variable for initialization check
+    std::string icub_part;    // string describing the part of the iCub
 
-    int joint_res;                     // neuron count for the population coding, if degree per neuron is set by argument
-    std::vector<double> joint_deg_res; // degree per neuron for the population coding, value per joint; if neuron count is set by argument
-    int joints;                        // number of joints
+    int joint_res;    // neuron count for the population coding, if degree per neuron is set by argument
+    std::vector<double>
+        joint_deg_res;    // degree per neuron for the population coding, value per joint; if neuron count is set by argument
+    int joints;           // number of joints
 
-    std::vector<double> joint_min;               // minimum possible joint angles
-    std::vector<double> joint_max;               // maximum possible joint angles
-    std::vector<std::vector<double>> neuron_deg; // vector of vectors representing the degree values for the neuron populations
+    std::vector<double> joint_min;                  // minimum possible joint angles
+    std::vector<double> joint_max;                  // maximum possible joint angles
+    std::vector<std::vector<double>> neuron_deg;    // vector of vectors representing the degree values for the neuron populations
 
-    yarp::sig::Vector joint_angles;    // yarp vector for reading all joint angles
-    yarp::dev::PolyDriver driver;      // yarp driver needed for reading joint encoders
-    yarp::dev::IPositionControl *ipos; // iCub position control interface
+    yarp::sig::Vector joint_angles;       // yarp vector for reading all joint angles
+    yarp::dev::PolyDriver driver;         // yarp driver needed for reading joint encoders
+    yarp::dev::IPositionControl *ipos;    // iCub position control interface
 
     // auxilary functions //
     // check if init function was called

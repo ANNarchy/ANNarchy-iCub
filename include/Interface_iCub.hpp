@@ -8,7 +8,7 @@
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  The iCub ANNarchy interface is distributed in the hope that it will be useful, 
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -21,18 +21,19 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "Joint_Reader.hpp"
 #include "Joint_Writer.hpp"
 #include "Skin_Reader.hpp"
 #include "Visual_Reader.hpp"
 
-struct iCub_ANN
-{
-    Visual_Reader *visual_input;                         // associated visual reader (only one possible for left/right eye)
-    std::map<std::string, Joint_Reader *> parts_reader;  // associated joint readers (one for every robot part)
-    std::map<std::string, Joint_Writer *> parts_writer;  // associated joint writers (one for every robot part)
-    std::map<std::string, Skin_Reader *> tactile_reader; // associated skin reader
+struct iCubANN {
+    VisualReader *visual_input;                            // associated visual reader (only one possible
+                                                            // for left/right eye)
+    std::map<std::string, JointReader *> parts_reader;     // associated joint readers (one for every robot part)
+    std::map<std::string, JointWriter *> parts_writer;     // associated joint writers (one for every robot part)
+    std::map<std::string, SkinReader *> tactile_reader;    // associated skin reader
 
     // add an instance of joint reader
     void AddJointReader(std::string name);
@@ -44,7 +45,8 @@ struct iCub_ANN
     void AddVisualReader();
 
     // Access to visual reader member functions //
-    // init Visual reader with given parameters for image resolution, field of view and eye selection
+    // init Visual reader with given parameters for image resolution, field of
+    // view and eye selection
     bool VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height);
     // start reading images from the iCub with YARP-RFModule
     void VisualRStart(int argc, char *argv[]);
@@ -102,4 +104,4 @@ struct iCub_ANN
     void SkinRClose(std::string name);
 };
 
-extern iCub_ANN my_interface;
+extern iCubANN my_interface;
