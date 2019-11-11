@@ -25,6 +25,7 @@
 // #include <iCub/skinDynLib/iCubSkin.h>
 
 #include <iostream>
+#include <fstream>
 #include <queue>
 #include <string>
 
@@ -50,20 +51,20 @@ bool SkinReader::Init(char arm)
 
     if (!dev_init) {
         // set side and read taxel position files depending on selected arm side
-        std::string data_dir = "data/sensor_positions/";
+        std::string data_dir = "./data/sensor_positions/";
         if (arm == 'r' || arm == 'R') {
             side = "right";
-            bool read_err_arm = !ReadTaxelPos(data_dir + "right_arm_mesh_idx.txt", data_dir + "right_arm_mesh_pos.txt", "arm");
-            bool read_err_farm = !ReadTaxelPos(data_dir + "right_forearm_V2_idx.txt", data_dir + "right_forearm_V2_pos.txt", "forearm");
-            bool read_err_hand = !ReadTaxelPos(data_dir + "right_hand_V2_1_idx.txt", data_dir + "right_hand_V2_1_pos.txt", "hand");
+            bool read_err_arm = !ReadTaxelPos("" + data_dir + "right_arm_mesh_idx.txt", "" + data_dir + "right_arm_mesh_pos.txt", "arm");
+            bool read_err_farm = !ReadTaxelPos("" + data_dir + "right_forearm_V2_idx.txt", "" + data_dir + "right_forearm_V2_pos.txt", "forearm");
+            bool read_err_hand = !ReadTaxelPos("" + data_dir + "right_hand_V2_1_idx.txt", "" + data_dir + "right_hand_V2_1_pos.txt", "hand");
             if (read_err_arm || read_err_farm || read_err_hand) {
                 return false;
             }
         } else if (arm == 'l' || arm == 'L') {
             side = "left";
-            bool read_err_arm = !ReadTaxelPos(data_dir + "left_arm_mesh_idx.txt", data_dir + "left_arm_mesh_pos.txt", "arm");
-            bool read_err_farm = !ReadTaxelPos(data_dir + "left_forearm_V2_idx.txt", data_dir + "left_forearm_V2_pos.txt", "forearm");
-            bool read_err_hand = !ReadTaxelPos(data_dir + "left_hand_V2_1_idx.txt", data_dir + "left_hand_V2_1_pos.txt", "hand");
+            bool read_err_arm = !ReadTaxelPos("" + data_dir + "left_arm_mesh_idx.txt", "" + data_dir + "left_arm_mesh_pos.txt", "arm");
+            bool read_err_farm = !ReadTaxelPos("" + data_dir + "left_forearm_V2_idx.txt", "" + data_dir + "left_forearm_V2_pos.txt", "forearm");
+            bool read_err_hand = !ReadTaxelPos("" + data_dir + "left_hand_V2_1_idx.txt", "" + data_dir + "left_hand_V2_1_pos.txt", "hand");
 
             if (read_err_arm || read_err_farm || read_err_hand) {
                 return false;
@@ -196,8 +197,8 @@ bool SkinReader::ReadTaxelPos(std::string filename_idx, std::string filename_pos
     return: bool                        -- return True, if successful
 */
 {
-    std::ifstream File_idx;
-    std::ifstream File_pos;
+    std::ifstream file_idx;
+    std::ifstream file_pos;
     std::vector<int> idx;
     std::vector<std::vector<double>> arr;
     std::vector<double> pos;
@@ -206,28 +207,27 @@ bool SkinReader::ReadTaxelPos(std::string filename_idx, std::string filename_pos
     double val;
     int i;
 
-    // read information from file about used indices of the skin sensor position
-    // data
+    // read information from file about used indices of the skin sensor position data
     i = 0;
-    File_idx.open(filename_idx);
-    if (File_idx.fail()) {
+    file_idx.open(filename_idx);
+    if (file_idx.fail()) {
         std::cerr << "[Skin Reader " + side + "] Could not open taxel index file" << std::endl;
         return false;
     }
-    while (File_idx >> ind) {
+    while (file_idx >> ind) {
         i++;
         idx.push_back(ind);
     }
-    File_idx.close();
+    file_idx.close();
 
     // read information about skin sensor (also called taxel) position
     i = 0;
-    File_pos.open(filename_pos);
-    if (File_pos.fail()) {
+    file_pos.open(filename_pos);
+    if (file_pos.fail()) {
         std::cerr << "[Skin Reader " + side + "] Could not open taxel position file" << std::endl;
         return false;
     }
-    while (File_pos >> val) {
+    while (file_pos >> val) {
         i++;
         i = i % 6;
         if (i < 3) {
@@ -238,7 +238,7 @@ bool SkinReader::ReadTaxelPos(std::string filename_idx, std::string filename_pos
             pos.clear();
         }
     }
-    File_pos.close();
+    file_pos.close();
 
     part_tax_pos.idx = idx;
     part_tax_pos.arr = arr;

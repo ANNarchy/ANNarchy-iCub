@@ -41,7 +41,16 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron)
 */
 {
     if (!dev_init) {
+        if(!CheckPartKey(part))
+        {
+            std::cerr << "[Joint Writer] " << part << " is an invalid iCub part key." << std::endl;
+            return false;
+        }
         icub_part = part;
+        if(pop_size < 0)   {
+            std::cerr << "[Joint Writer " << icub_part << "] Population size must be positive." << std::endl;
+            return false;
+        }
 
         yarp::os::Network::init();
         if (!yarp::os::Network::checkNetwork()) {
@@ -279,4 +288,17 @@ void JointWriter::Close() {
         driver.close();
     }
     yarp::os::Network::fini();
+}
+
+// check if iCub part key is valid
+bool JointWriter::CheckPartKey(std::string key)
+{
+    bool inside = false;
+    for (auto it = key_map.cbegin(); it != key_map.cend(); it++)
+        if(key == *it)
+        {
+            inside = true;
+            break;
+        }
+	return inside;
 }

@@ -22,6 +22,7 @@
 #include <yarp/sig/all.h>
 
 #include <iostream>
+#include <map>
 #include <string>
 
 #include "INI_Reader/INIReader.h"
@@ -42,7 +43,20 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
 */
 {
     if (!dev_init) {
+        if(!CheckPartKey(part))
+        {
+            std::cerr << "[Joint Reader] " << part << " is an invalid iCub part key." << std::endl;
+            return false;
+        }
         icub_part = part;
+        if(pop_size < 0)   {
+            std::cerr << "[Joint Reader " << icub_part << "] Population size must be positive." << std::endl;
+            return false;
+        }
+        if(sigma < 0)   {
+            std::cerr << "[Joint Reader " << icub_part << "] Sigma must be positive." << std::endl;
+            return false;
+        }
         sigma_pop = sigma;
         yarp::os::Network::init();
         if (!yarp::os::Network::checkNetwork()) {
@@ -247,4 +261,17 @@ void JointReader::Close() {
         driver.close();
     }
     yarp::os::Network::fini();
+}
+
+// check if iCub part key is valid
+bool JointReader::CheckPartKey(std::string key)
+{
+    bool inside = false;
+    for (auto it = key_map.cbegin(); it != key_map.cend(); it++)
+        if(key == *it)
+        {
+            inside = true;
+            break;
+        }
+	return inside;
 }

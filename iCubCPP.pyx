@@ -1,3 +1,6 @@
+# distutils: language = c++
+# cython: language_level = 3
+
 """
    Copyright (C) 2019 Torsten Follak; Helge Ülo Dinkelbach
  
@@ -16,9 +19,6 @@
    You should have received a copy of the GNU General Public License
    along with this headers. If not, see <http://www.gnu.org/licenses/>.
  """
-
-# distutils: language = c++
-# cython: language_level = 3
 
 from libcpp.string cimport string
 from libcpp.vector cimport vector

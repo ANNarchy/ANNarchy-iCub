@@ -1,5 +1,7 @@
 This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator). It is written in C++ with an Cython wrapping to Python.
 
+
+## Interface description
 Possible actions are the reading and writing of joint angles get the current sate or move the robot joints. Further, the cameras and the tactile sensors data can be received.
 
 The interface has a modular structure with a main struct and several subclasses.
@@ -18,7 +20,7 @@ SkinReader:
     This module handles the tactile data from the iCub's artificial skin. The robot is at several parts equipped with skin modules, reacting to pressure. The sensor data for the arm can be read out with this module. The skin of the iCubs arm is seperated in three modules, being the arm, forearm and hand. The tactile data is returned as a vector with doubles in a range of 0.0 to 1.0. Here 0. iss no pressure and 1.0 is the maximum sensor response.
 
 
-Folder structure:
+## Folder structure
 Interface_ANNarchy_iCub -> Main folder containing the whole interface
     - include -> This folder contains the header files for the interface modules.
         - INI_Reader -> The INI-Reader is an external module, which is used to handle ini-files.
@@ -32,10 +34,14 @@ Interface_ANNarchy_iCub -> Main folder containing the whole interface
 
 
 ## useful links
+Wiki for the iCub robot:
 http://wiki.icub.org/wiki/Manual
 
+YARP website:
+http://www.yarp.it/index.html
 
 ## Authors
+Torsten Follak
 
 ## Dependencies
 Python  >= 3.5
