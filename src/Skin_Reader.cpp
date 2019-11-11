@@ -21,17 +21,14 @@
 #include <yarp/os/all.h>
 #include <yarp/sig/all.h>
 
-#include <iCub/iKin/iKinFwd.h>    // iCub forward Kinematics
-#include <iCub/skinDynLib/iCubSkin.h>
+// #include <iCub/iKin/iKinFwd.h>    // iCub forward Kinematics
+// #include <iCub/skinDynLib/iCubSkin.h>
 
 #include <iostream>
 #include <queue>
 #include <string>
 
 #include "Skin_Reader.hpp"
-
-// Constructor
-SkinReader::SkinReader() {}
 
 // Destructor
 SkinReader::~SkinReader() {}
@@ -47,37 +44,32 @@ bool SkinReader::Init(char arm)
     // Init YARP-Network
     yarp::os::Network::init();
     if (!yarp::os::Network::checkNetwork()) {
-        std::cerr << "YARP Network is not online. Check nameserver is running" << std::endl;
+        std::cerr << "[Skin Reader] YARP Network is not online. Check nameserver is running" << std::endl;
         return false;
     }
 
     if (!dev_init) {
         // set side and read taxel position files depending on selected arm side
+        std::string data_dir = "data/sensor_positions/";
         if (arm == 'r' || arm == 'R') {
             side = "right";
-            bool read_err_arm = !ReadTaxelPos("sensor_positions/right_arm_mesh_idx.txt", "sensor_positions/right_arm_mesh_pos.txt", "arm");
-            bool read_err_farm =
-                !ReadTaxelPos("sensor_positions/right_forearm_V2_idx.txt", "sensor_positions/right_forearm_V2_pos.txt", "forearm");
-            bool read_err_hand =
-                !ReadTaxelPos("sensor_positions/right_hand_V2_1_idx.txt", "sensor_positions/right_hand_V2_1_pos.txt", "hand");
+            bool read_err_arm = !ReadTaxelPos(data_dir + "right_arm_mesh_idx.txt", data_dir + "right_arm_mesh_pos.txt", "arm");
+            bool read_err_farm = !ReadTaxelPos(data_dir + "right_forearm_V2_idx.txt", data_dir + "right_forearm_V2_pos.txt", "forearm");
+            bool read_err_hand = !ReadTaxelPos(data_dir + "right_hand_V2_1_idx.txt", data_dir + "right_hand_V2_1_pos.txt", "hand");
             if (read_err_arm || read_err_farm || read_err_hand) {
                 return false;
             }
         } else if (arm == 'l' || arm == 'L') {
             side = "left";
-            bool read_err_arm = !ReadTaxelPos("sensor_positions/left_arm_mesh_idx.txt", "sensor_positions/left_arm_mesh_pos.txt", "arm");
-            bool read_err_farm =
-                !ReadTaxelPos("sensor_positions/left_forearm_V2_idx.txt", "sensor_positions/left_forearm_V2_pos.txt", "forearm");
-            bool read_err_hand =
-                !ReadTaxelPos("sensor_positions/left_hand_V2_1_idx.txt", "sensor_positions/left_hand_V2_1_pos.txt", "hand");
+            bool read_err_arm = !ReadTaxelPos(data_dir + "left_arm_mesh_idx.txt", data_dir + "left_arm_mesh_pos.txt", "arm");
+            bool read_err_farm = !ReadTaxelPos(data_dir + "left_forearm_V2_idx.txt", data_dir + "left_forearm_V2_pos.txt", "forearm");
+            bool read_err_hand = !ReadTaxelPos(data_dir + "left_hand_V2_1_idx.txt", data_dir + "left_hand_V2_1_pos.txt", "hand");
 
             if (read_err_arm || read_err_farm || read_err_hand) {
                 return false;
             }
         } else {
-            std::cerr << "[Skin Reader] No correct side descriptor: Use R/r for the "
-                         "right arm and L/l for the left arm"
-                      << std::endl;
+            std::cerr << "[Skin Reader] No correct side descriptor: Use R/r for the right arm and L/l for the left arm" << std::endl;
             return false;
         }
 
@@ -136,10 +128,8 @@ bool SkinReader::Init(char arm)
 bool SkinReader::CheckInit() {
     if (!dev_init) {
         std::cerr << "[Skin Reader] Error: Device is not initialized" << std::endl;
-        return false;
-    } else {
-        return true;
     }
+    return dev_init;
 }
 
 // read sensor data from iCub YARP ports
@@ -180,32 +170,20 @@ void SkinReader::ReadTactile() {
 
 // return tactile data for hand skin
 std::vector<double> SkinReader::GetTactileHand() {
-    if (CheckInit()) {
-        return hand_data;
-    } else {
-        std::vector<double> empty;
-        return empty;
-    }
+    CheckInit();
+    return hand_data;
 }
 
 // return tactile data for forearm skin
 std::vector<double> SkinReader::GetTactileForearm() {
-    if (CheckInit()) {
-        return forearm_data;
-    } else {
-        std::vector<double> empty;
-        return empty;
-    }
+    CheckInit();
+    return forearm_data;
 }
 
 // return tactile data for upper arm skin
 std::vector<double> SkinReader::GetTactileArm() {
-    if (CheckInit()) {
-        return arm_data;
-    } else {
-        std::vector<double> empty;
-        return empty;
-    }
+    CheckInit();
+    return arm_data;
 }
 
 // read information about taxel position from config files

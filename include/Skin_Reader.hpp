@@ -37,7 +37,7 @@ struct TaxelData {
 class SkinReader {
  public:
     // Constructor
-    SkinReader();
+    SkinReader() = default;
     // Destructor
     ~SkinReader();
     // init skin reader with given parameters

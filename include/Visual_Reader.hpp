@@ -22,7 +22,7 @@
 #include <yarp/os/all.h>
 #include <yarp/sig/all.h>
 
-#include <queue>
+#include <deque>
 #include <string>
 #include <vector>
 
@@ -30,7 +30,7 @@
 
 class VisualReader : private yarp::os::RFModule {
  public:
-    VisualReader();
+    VisualReader() = default;
     ~VisualReader();
 
     // init Visual reader with given parameters for image resolution, field of view and eye selection
@@ -43,14 +43,16 @@ class VisualReader : private yarp::os::RFModule {
     std::vector<double> ReadFromBuf();
 
  private:
-    bool dev_init = false;    // variable for initialization check
-    char act_eye;             // selected iCub eye to read images from
+    bool dev_init = false;        // variable for initialization check
+    static const int buffer_len = 30;    // length of the image buffer
 
     // fix iCub-visual data //
     const int icub_width = 320;      // iCub image width in pixel
     const int icub_height = 240;     // iCub image height in pixel
     const double icub_fov_x = 60;    // iCub field of view horizontal in degree
     const double icub_fov_y = 48;    // iCub field of view vertical in degree
+
+    char act_eye;    // selected iCub eye to read images from
 
     int out_fov_x_up, out_fov_x_low;    // pixel borders for horizontal field of view in the iCub image
     int out_fov_y_up, out_fov_y_low;    // pixel borders for vertical field of view in the iCub image
@@ -63,7 +65,7 @@ class VisualReader : private yarp::os::RFModule {
     double res_scale_x;    // scaling factor in x direction to scale ROV to ouput image width
     double res_scale_y;    // scaling factor in y direction to scale ROV to ouput image height
 
-    std::queue<std::vector<double>> img_buffer[30];    // buffer to store the preprocessed iCub images
+    std::deque<std::vector<double>> img_buffer[buffer_len];    // buffer to store the preprocessed iCub images
 
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_right;    // port for the iCub right eye image
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;     // port for the iCub left eye image

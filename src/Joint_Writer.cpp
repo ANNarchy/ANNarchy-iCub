@@ -27,9 +27,6 @@
 #include "INI_Reader/INIReader.h"
 #include "Joint_Writer.hpp"
 
-// Constructor
-JointWriter::JointWriter() {}
-
 // Destructor
 JointWriter::~JointWriter() {}
 
@@ -69,7 +66,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron)
         joint_deg_res.resize(joints);
 
         double joint_range;
-        INIReader reader("joint_limits.ini");
+        INIReader reader("data/joint_limits.ini");
 
         for (int i = 0; i < joints; i++) {
             joint_min.push_back(reader.GetReal(icub_part.c_str(), ("joint_" + std::to_string(i) + "_min").c_str(), 0.0));
@@ -116,10 +113,8 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron)
 bool JointWriter::CheckInit() {
     if (!dev_init) {
         std::cerr << "[Joint Writer] Error: Device is not initialized" << std::endl;
-        return false;
-    } else {
-        return true;
     }
+    return dev_init;
 }
 
 // get the size of the populations encoding the joint angles
@@ -128,16 +123,13 @@ std::vector<int> JointWriter::GetNeuronsPerJoint()
   return: std::vector<int>        -- return vector, containing the population size for every joint
 */
 {
+    std::vector<int> neuron_counts(joints);
     if (CheckInit()) {
-        std::vector<int> neuron_counts(joints);
         for (int i = 0; i < joints; i++) {
             neuron_counts[i] = neuron_deg[i].size();
         }
-        return neuron_counts;
-    } else {
-        std::vector<int> empty;
-        return empty;
     }
+    return neuron_counts;
 }
 
 // get the resolution in degree of the populations encoding the joint angles
@@ -146,12 +138,8 @@ std::vector<double> JointWriter::GetJointsDegRes()
   return: std::vector<double>        -- return vector, containing the resolution for every joints population codimg in degree
 */
 {
-    if (CheckInit()) {
-        return joint_deg_res;
-    } else {
-        std::vector<double> empty;
-        return empty;
-    }
+    CheckInit();
+    return joint_deg_res;
 }
 
 // decode the population coded joint angle to double value
@@ -226,9 +214,8 @@ bool JointWriter::WriteOne(std::vector<double> position_pop, int joint, bool blo
             return false;
         }
         double angle = Decode(position_pop, joint);
-
         if (blocking) {
-            auto start = ipos->positionMove(joint, angle);
+            bool start = ipos->positionMove(joint, angle);
             if (start) {
                 bool motion = false;
                 while (!motion) {

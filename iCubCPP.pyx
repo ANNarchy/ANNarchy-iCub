@@ -1,3 +1,22 @@
+"""
+   Copyright (C) 2019 Torsten Follak; Helge Ülo Dinkelbach
+ 
+   iCubCPP.pyx is part of the iCub ANNarchy interface
+ 
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   The iCub ANNarchy interface is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with this headers. If not, see <http://www.gnu.org/licenses/>.
+ """
+
 # distutils: language = c++
 # cython: language_level = 3
 
@@ -6,10 +25,11 @@ from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
 from libc.stdlib cimport malloc, free
 import sys
+import cython
 
 
 
-cdef extern from "Interface_iCub.h":
+cdef extern from "Interface_iCub.hpp":
 
     cdef struct iCubANN:
        
@@ -31,7 +51,7 @@ cdef extern from "Interface_iCub.h":
         # close joint reader with cleanup
         void JointRClose(string)
         # read one joint and return joint angle directly as double value
-        double JointRReadCouble(string , int)
+        double JointRReadDouble(string , int)
         # read one joint and return the joint angle encoded in a vector
         vector[double] JointRReadOne(string, int)
         # read all joints and return the joint angles encoded in vectors
@@ -83,7 +103,7 @@ cdef extern from "Interface_iCub.h":
     # Instances:
     iCubANN my_interface # defined in Interface_iCub.cpp
 
-cdef class iCubANNWrapper:
+cdef class iCubANN_wrapper:
 
     PART_KEY_HEAD = "head";            # part key for iCub head; can be used for joint reader/writer initialization
     PART_KEY_TORSO = "torso";          # part key for iCub torso; can be used for joint reader/writer initialization
@@ -136,7 +156,7 @@ cdef class iCubANNWrapper:
         #my_interface.init() - we need a special init?
 
     ### add Reader/Writer
-    def add_jointReader(self, name):
+    def add_joint_reader(self, name):
         """
             Calls iCubANN::AddJointReader(std::string name)
 
@@ -148,7 +168,7 @@ cdef class iCubANNWrapper:
         # call the interface
         my_interface.AddJointReader(s)
 
-    def add_jointWriter(self, name):
+    def add_joint_writer(self, name):
         """
             Calls iCubANN::AddJointWriter(std::string name)
 
@@ -160,7 +180,7 @@ cdef class iCubANNWrapper:
         # call the interface
         my_interface.AddJointWriter(s)
 
-    def add_skinReader(self, name):
+    def add_skin_reader(self, name):
         """
             Calls iCubANN::AddSkinReader(std::string name)
 
@@ -172,7 +192,7 @@ cdef class iCubANNWrapper:
         # call the interface
         my_interface.AddSkinReader(s)
 
-    def add_visualReader(self):
+    def add_visual_reader(self):
         """
             Calls iCubANN::AddVisualReader()
 
@@ -186,7 +206,7 @@ cdef class iCubANNWrapper:
 
     ### Access to visual reader member functions
     # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def visualRInit(self, eye, fov_width, fov_height, img_width, img_height):
+    def visualR_init(self, eye, fov_width=60, fov_height=48, img_width=320, img_height=240):
         """
             Calls bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height)
 
@@ -198,9 +218,10 @@ cdef class iCubANNWrapper:
 
             return: bool                -- return True, if successful
         """
+        cdef char e = eye.encode('UTF-8')[0]
 
         # call the interface
-        return my_interface.VisualRInit(eye, fov_width, fov_height, img_width, img_height)
+        return my_interface.VisualRInit(e, fov_width, fov_height, img_width, img_height)
 
     # start reading images from the iCub with a YARP-RFModule
     def visualR_start(self):
@@ -503,9 +524,10 @@ cdef class iCubANNWrapper:
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
+        cdef char a = arm.encode('UTF-8')[0]
 
         # call the interface
-        return my_interface.SkinRInit(s, arm)
+        return my_interface.SkinRInit(s, a)
 
     # read sensor data
     def skinR_read_tactile(self, name):

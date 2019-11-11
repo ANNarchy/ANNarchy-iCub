@@ -33,9 +33,6 @@
 
 typedef std::chrono::high_resolution_clock Clock;
 
-// Constructor
-VisualReader::VisualReader() {}
-
 // Destructor
 VisualReader::~VisualReader() {}
 
@@ -119,10 +116,8 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 bool VisualReader::CheckInit() {
     if (!dev_init) {
         std::cerr << "[Visual Reader] Error: Device is not initialized" << std::endl;
-        return false;
-    } else {
-        return true;
     }
+    return dev_init;
 }
 
 // read image vector from the image buffer and remove from the buffer
@@ -131,20 +126,17 @@ std::vector<double> VisualReader::ReadFromBuf()
     return: std::vector<double>     -- image (1D-vector) from the image buffer
 */
 {
+    std::vector<double> img;
     if (CheckInit()) {
         // if image buffer is not empty return the image and delete it from the buffer
-        std::vector<double> img;
         if (img_buffer->empty()) {
             printf("[Visual Reader] The image buffer is empty \n");
         } else {
             img = img_buffer->front();
-            img_buffer->pop();
+            img_buffer->pop_front();
         }
-        return img;
-    } else {
-        std::vector<double> empty;
-        return empty;
     }
+    return img;
 }
 
 // start reading images from the iCub with YARP-RFModule
@@ -210,6 +202,10 @@ bool VisualReader::updateModule()
         iEyeRgb = port_right.read();
     }
 
+    if (iEyeRgb == nullptr) {
+        return false;
+    }
+
     cv::Mat RgbMat = yarp::cv::toCvMat(*iEyeRgb);
 
     // convert rgb image to grayscale image
@@ -238,7 +234,7 @@ bool VisualReader::updateModule()
     }
 
     // store image in the buffer
-    img_buffer->push(img_vec_norm);
+    img_buffer->push_back(img_vec_norm);
 
     auto t2 = Clock::now();
     std::cout << "[Visual Reader] Load image in: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms"
