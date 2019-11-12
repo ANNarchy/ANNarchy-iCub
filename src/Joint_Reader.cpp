@@ -239,13 +239,13 @@ std::vector<double> JointReader::ReadOne(int joint)
 }
 
 // read all joints and return the joint angles encoded in vectors
-std::vector<std::vector<double>> JointReader::ReadAll()
+std::vector<std::vector<double> > JointReader::ReadAll()
 /*
     return: std::vector<std::vector<double>>    -- vector of population vectors encoding every joint angle from associated robot part
 */
 {
-    printf("start read all");
-    std::vector<std::vector<double>> angle_pops;
+    auto angle_pops = std::vector<std::vector<double> >(joints, std::vector<double>());
+    
     if (CheckInit()) {
         double angles[joints];
         if (!ienc->getEncoders(angles)) {
@@ -255,7 +255,6 @@ std::vector<std::vector<double>> JointReader::ReadAll()
             angle_pops[i] = Encode(angles[i], i);
         }
     }
-    printf("finished read all");
     return angle_pops;
 }
 

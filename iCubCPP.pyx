@@ -106,13 +106,15 @@ cdef extern from "Interface_iCub.hpp":
 
 cdef class iCubANN_wrapper:
 
-    PART_KEY_HEAD = "head";            # part key for iCub head; can be used for joint reader/writer initialization
-    PART_KEY_TORSO = "torso";          # part key for iCub torso; can be used for joint reader/writer initialization
-    PART_KEY_RIGHT_ARM = "right_arm";  # part key for iCub right arm; can be used for joint reader/writer initialization
-    PART_KEY_LEFT_ARM = "left_arm";    # part key for iCub left arm; can be used for joint reader/writer initialization
-    PART_KEY_RIGHT_LEG = "right_leg";  # part key for iCub right leg; can be used for joint reader/writer initialization
-    PART_KEY_LEFT_LEG = "left_leg";    # part key for iCub left leg; can be used for joint reader/writer initialization
+    # part keys for the iCub, which are needed for joint reader/writer initialization
+    PART_KEY_HEAD = "head";            # part key for iCub head
+    PART_KEY_TORSO = "torso";          # part key for iCub torso
+    PART_KEY_RIGHT_ARM = "right_arm";  # part key for iCub right arm
+    PART_KEY_LEFT_ARM = "left_arm";    # part key for iCub left arm
+    PART_KEY_RIGHT_LEG = "right_leg";  # part key for iCub right leg
+    PART_KEY_LEFT_LEG = "left_leg";    # part key for iCub left leg
 
+    # TODO: comments which movements
     # numbers for head joints
     JOINT_NUM_NECK_PITCH = 0
     JOINT_NUM_NECK_ROLL = 1
@@ -205,71 +207,6 @@ cdef class iCubANN_wrapper:
     ### end add Reader/Writer
 
 
-    ### Access to visual reader member functions
-    # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def visualR_init(self, eye, fov_width=60, fov_height=48, img_width=320, img_height=240):
-        """
-            Calls bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height)
-
-            params: char eye            -- characteer representing the selected eye (l/L; r/R)
-                    double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
-                    double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
-                    int img_width       -- output image width in pixel (input width: 320px)
-                    int img_height      -- output image height in pixel (input height: 240px)
-
-            return: bool                -- return True, if successful
-        """
-        cdef char e = eye.encode('UTF-8')[0]
-
-        # call the interface
-        return my_interface.VisualRInit(e, fov_width, fov_height, img_width, img_height)
-
-    # start reading images from the iCub with a YARP-RFModule
-    def visualR_start(self):
-        """
-            Calls void iCubANN::VisualRStart(int argc, char *argv[])
-        """
-        argv = sys.argv
-        # Declare char**
-        cdef char** c_argv
-        argc = len(argv)
-        # Allocate memory
-        c_argv = <char**>malloc(argc * sizeof(char*))
-        # Check if allocation went fine
-        if c_argv is NULL:
-            raise MemoryError()
-        # Convert str to char* and store it into our char**
-        for i in range(argc):
-            argv[i] = argv[i].encode()
-            c_argv[i] = argv[i]
-        # call the interface
-        my_interface.VisualRStart(argc, c_argv)
-        # Let him go
-        free(c_argv)
-
-    # stop reading images from the iCub, by terminating the RFModule
-    def visualR_stop(self):
-        """
-            Calls void iCubANN::VisualRStop()
-        """
-
-        # call the interface
-        my_interface.VisualRStop()
-
-    # return image vector from the image buffer and remove it from the buffer
-    def visualR_read_fromBuf(self):
-        """
-            Calls std::vector<double> iCubANN::VisualRReadFromBuf()
-
-            return: std::vector<double>     -- image (1D-vector) from the image buffer
-        """
-
-        # call the interface
-        return my_interface.VisualRReadFromBuf()
-
-    ### end access to visual reader member functions
-
-
     ### Access to joint reader member functions
     # initialize the joint reader with given parameters
     def jointR_init(self, name, part, sigma, n_pop, degr_per_neuron=0.0):
@@ -306,7 +243,7 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.JointRGetNeuronsPerJoint(s)
+        return np.array(my_interface.JointRGetNeuronsPerJoint(s))
 
     # get the resolution in degree of the populations encoding the joint angles
     def jointR_get_joints_deg_res(self, name):
@@ -321,33 +258,17 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.JointRGetJointsDegRes(s)
-
-    # close joint reader with cleanup
-    def jointR_close(self, name):
-        """
-            Calls iCubANN::JointRClose(std::string name)
-
-            params: std::string name    -- name of the selected joint reader
-                    int joint           -- joint number of the robot part
-
-            return: double              -- joint angle read from the robot
-        """
-        # we need to transform py-string to c++ compatible string
-        cdef string s = name.encode('UTF-8')
-
-        # call the interface
-        my_interface.JointRClose(s)
+        return np.array(my_interface.JointRGetJointsDegRes(s))
 
     # read one joint and return joint angle directly as double value
     def jointR_read_double(self, name, joint):
         """
             Calls double iCubANN::JointRReadDouble(std::string name, int joint)
 
-            params: std::string name        -- name of the selected joint reader
-                    int joint               -- joint number of the robot part
+            params: std::string name    -- name of the selected joint reader
+                    int joint           -- joint number of the robot part
 
-            return: std::vector<double>     -- population vector encoding the joint angle
+            return: double              -- joint angle read from the robot
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
@@ -360,16 +281,16 @@ cdef class iCubANN_wrapper:
         """
             Calls std::vector<double> iCubANN::JointRReadOne(std::string name, int joint)
 
-            params: std::string name                    -- name of the selected joint reader
+            params: std::string name        -- name of the selected joint reader
+                    int joint               -- joint number of the robot part
 
-            return: std::vector<std::vector<double>>    -- population vectors encoding every joint angle from associated robot part
+            return: std::vector<double>     -- population vector encoding the joint angle
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        read = my_interface.JointRReadOne(s, joint)
-        return np.array(read)
+        return np.array(my_interface.JointRReadOne(s, joint))
 
     # read all joints and return the joint angles encoded in vectors (population coding)
     def jointR_read_all(self, name):
@@ -377,15 +298,28 @@ cdef class iCubANN_wrapper:
             Calls std::vector<std::vector<double>> iCubANN::JointRReadAll(std::string name)
 
             params: std::string name        -- name of the selected joint reader
+
+            return: std::vector<std::vector<double>>    -- population vectors encoding every joint angle from associated robot part
+
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        print("readall0")
-        read = my_interface.JointRReadAll(s)
-        return np.array(read)
+        return np.array(my_interface.JointRReadAll(s))
 
+    # close joint reader with cleanup
+    def jointR_close(self, name):
+        """
+            Calls iCubANN::JointRClose(std::string name)
+
+            params: std::string name    -- name of the selected joint reader
+       """
+        # we need to transform py-string to c++ compatible string
+        cdef string s = name.encode('UTF-8')
+
+        # call the interface
+        my_interface.JointRClose(s)
     ### end access to joint reader member functions
 
 
@@ -425,7 +359,7 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.JointWGetNeuronsPerJoint(s)
+        return np.array(my_interface.JointWGetNeuronsPerJoint(s))
 
     # get the resolution in degree of the populations encoding the joint angles
     def jointW_get_joints_deg_res(self, name):
@@ -440,7 +374,7 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.JointWGetJointsDegRes(s)
+        return np.array(my_interface.JointWGetJointsDegRes(s))
 
     # write one joint as double value
     def jointW_write_double(self, name, position, joint, blocking):
@@ -600,7 +534,7 @@ cdef class iCubANN_wrapper:
         cdef string s1 = skin_part.encode('UTF-8')
 
         # call the interface
-        return my_interface.SkinRGetTaxelPos(s, s1)
+        return np.array(my_interface.SkinRGetTaxelPos(s, s1))
 
     # close and clean skin reader
     def skinR_close(self, name):
@@ -617,3 +551,67 @@ cdef class iCubANN_wrapper:
 
     ### end access to skin reader member functions
 
+
+    ### Access to visual reader member functions
+    # init Visual reader with given parameters for image resolution, field of view and eye selection
+    def visualR_init(self, eye, fov_width=60, fov_height=48, img_width=320, img_height=240):
+        """
+            Calls bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height)
+
+            params: char eye            -- characteer representing the selected eye (l/L; r/R)
+                    double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
+                    double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
+                    int img_width       -- output image width in pixel (input width: 320px)
+                    int img_height      -- output image height in pixel (input height: 240px)
+
+            return: bool                -- return True, if successful
+        """
+        cdef char e = eye.encode('UTF-8')[0]
+
+        # call the interface
+        return my_interface.VisualRInit(e, fov_width, fov_height, img_width, img_height)
+
+    # start reading images from the iCub with a YARP-RFModule
+    def visualR_start(self):
+        """
+            Calls void iCubANN::VisualRStart(int argc, char *argv[])
+        """
+        argv = sys.argv
+        # Declare char**
+        cdef char** c_argv
+        argc = len(argv)
+        # Allocate memory
+        c_argv = <char**>malloc(argc * sizeof(char*))
+        # Check if allocation went fine
+        if c_argv is NULL:
+            raise MemoryError()
+        # Convert str to char* and store it into our char**
+        for i in range(argc):
+            argv[i] = argv[i].encode()
+            c_argv[i] = argv[i]
+        # call the interface
+        my_interface.VisualRStart(argc, c_argv)
+        # Let him go
+        free(c_argv)
+
+    # stop reading images from the iCub, by terminating the RFModule
+    def visualR_stop(self):
+        """
+            Calls void iCubANN::VisualRStop()
+        """
+
+        # call the interface
+        my_interface.VisualRStop()
+
+    # return image vector from the image buffer and remove it from the buffer
+    def visualR_read_fromBuf(self):
+        """
+            Calls std::vector<double> iCubANN::VisualRReadFromBuf()
+
+            return: std::vector<double>     -- image (1D-vector) from the image buffer
+        """
+
+        # call the interface
+        return np.array(my_interface.VisualRReadFromBuf())
+
+    ### end access to visual reader member functions

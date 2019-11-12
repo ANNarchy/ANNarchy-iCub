@@ -91,6 +91,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
             std::string port_name = "/V_Reader/image/right:i";
             port_right.open(port_name);
             if (!yarp::os::Network::connect("/icubSim/cam/right", port_name.c_str())) {
+                std::cerr << "[Visual Reader] Could not connect to right eye camera port!" << std::endl;
                 return false;
             }
         } else if (eye == 'l' || eye == 'L') {    // left eye chosen
@@ -98,16 +99,18 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
             std::string port_name = "/V_Reader/image/left:i";
             port_left.open(port_name);
             if (!yarp::os::Network::connect("/icubSim/cam/left", port_name.c_str())) {
+                std::cerr << "[Visual Reader] Could not connect to left eye camera port!" << std::endl;
                 return false;
             }
         } else {
             std::cerr << "[Visual Reader] Invalid character for eye selection!" << std::endl;
             return false;
         }
+
         dev_init = true;
         return true;
     } else {
-        std::cerr << "[Visual Reader] Initialization aready done!" << std::endl;
+        std::cerr << "[Visual Reader] Initialization already done!" << std::endl;
         return false;
     }
 }
@@ -250,10 +253,10 @@ bool VisualReader::interruptModule()
 */
 {
     // interrupt port communication
-    if (act_eye == 'L') {
+    if (!port_left.isClosed()) {
         port_left.interrupt();
     }
-    if (act_eye == 'R') {
+    if (!port_right.isClosed()) {
         port_right.interrupt();
     }
     return true;

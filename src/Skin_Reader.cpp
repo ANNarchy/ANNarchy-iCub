@@ -145,7 +145,6 @@ void SkinReader::ReadTactile() {
         auto init_pos_h = taxel_pos_data[skin_part_h].arr;
         auto idx_arr_h = taxel_pos_data[skin_part_h].idx;
         for (int i = 0; i < idx_arr_h.size(); i++) {
-            printf("%i\n", i);
             if (idx_arr_h[i] > 0) hand_data.push_back(tactile_hand->data()[i]);
         }
 
@@ -154,7 +153,6 @@ void SkinReader::ReadTactile() {
         auto init_pos_f = taxel_pos_data[skin_part_f].arr;
         auto idx_arr_f = taxel_pos_data[skin_part_f].idx;
         for (int i = 0; i < idx_arr_f.size(); i++) {
-            printf("%i\n", i);
             if (idx_arr_f[i] > 0) forearm_data.push_back(tactile_forearm->data()[i]);
         }
 
@@ -163,7 +161,6 @@ void SkinReader::ReadTactile() {
         auto init_pos_a = taxel_pos_data[skin_part_a].arr;
         auto idx_arr_a = taxel_pos_data[skin_part_a].idx;
         for (int i = 0; i < idx_arr_a.size(); i++) {
-            printf("%i\n", i);
             if (idx_arr_a[i] > 0) arm_data.push_back(tactile_arm->data()[i]);
         }
     }
@@ -266,7 +263,6 @@ std::vector<std::vector<double>> SkinReader::GetTaxelPos(std::string skin_part)
         // std::cout << "index:" << idx_arr << std::endl;
         yarp::sig::Vector test;
         for (int i = 0; i < idx_arr.size(); i++) {
-            // printf("%i\n", i);
             if (idx_arr[i] > 0) taxel_positions.push_back(init_pos[i]);
         }
     }

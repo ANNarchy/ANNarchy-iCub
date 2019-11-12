@@ -173,16 +173,14 @@ std::vector<double> iCubANN::JointRReadOne(std::string name, int joint)
 }
 
 // read all joints and return the joint angles encoded in vectors
-std::vector<std::vector<double> > iCubANN::JointRReadAll(std::string name)
+std::vector<std::vector<double>> iCubANN::JointRReadAll(std::string name)
 /*
     params: std::string name                    -- name of the selected joint reader
 
     return: std::vector<std::vector<double>>    -- population vectors encoding every joint angle from associated robot part
 */
 {
-    printf("readall1");
     if (parts_reader.count(name)) {
-        printf("readall2");
         return parts_reader[name]->ReadAll();
     } else {
         std::cerr << "[Joint Reader] " << name << ": This name is not defined." << std::endl;
