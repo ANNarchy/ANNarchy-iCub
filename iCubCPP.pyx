@@ -26,6 +26,7 @@ from libcpp cimport bool as bool_t
 from libc.stdlib cimport malloc, free
 import sys
 import cython
+import numpy as np
 
 
 
@@ -367,7 +368,8 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.JointRReadOne(s, joint)
+        read = my_interface.JointRReadOne(s, joint)
+        return np.array(read)
 
     # read all joints and return the joint angles encoded in vectors (population coding)
     def jointR_read_all(self, name):
@@ -380,7 +382,9 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.JointRReadAll(s)
+        print("readall0")
+        read = my_interface.JointRReadAll(s)
+        return np.array(read)
 
     ### end access to joint reader member functions
 

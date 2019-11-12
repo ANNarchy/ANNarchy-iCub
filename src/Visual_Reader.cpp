@@ -81,28 +81,28 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         // init YARP-Network
         yarp::os::Network::init();
         if (!yarp::os::Network::checkNetwork()) {
-            std::cerr << "[Visual Reader] YARP Network is not online. Check nameserver is running" << std::endl;
+            std::cerr << "[Visual Reader] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
         }
 
         // open and connect YARP port for the chosen eye
-        // right eye chosen
-        if (eye == 'r' || eye == 'R') {
+        if (eye == 'r' || eye == 'R') {    // right eye chosen
             act_eye = 'R';
             std::string port_name = "/V_Reader/image/right:i";
             port_right.open(port_name);
             if (!yarp::os::Network::connect("/icubSim/cam/right", port_name.c_str())) {
                 return false;
             }
-        }
-        // left eye chosen
-        if (eye == 'l' || eye == 'L') {
+        } else if (eye == 'l' || eye == 'L') {    // left eye chosen
             act_eye = 'L';
             std::string port_name = "/V_Reader/image/left:i";
             port_left.open(port_name);
             if (!yarp::os::Network::connect("/icubSim/cam/left", port_name.c_str())) {
                 return false;
             }
+        } else {
+            std::cerr << "[Visual Reader] Invalid character for eye selection!" << std::endl;
+            return false;
         }
         dev_init = true;
         return true;
@@ -115,7 +115,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 // check if init function was called
 bool VisualReader::CheckInit() {
     if (!dev_init) {
-        std::cerr << "[Visual Reader] Error: Device is not initialized" << std::endl;
+        std::cerr << "[Visual Reader] Error: Device is not initialized!" << std::endl;
     }
     return dev_init;
 }
@@ -130,7 +130,7 @@ std::vector<double> VisualReader::ReadFromBuf()
     if (CheckInit()) {
         // if image buffer is not empty return the image and delete it from the buffer
         if (img_buffer->empty()) {
-            printf("[Visual Reader] The image buffer is empty \n");
+            printf("[Visual Reader] The image buffer is empty! \n");
         } else {
             img = img_buffer->front();
             img_buffer->pop_front();

@@ -24,12 +24,13 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <vector>
 
 #include "INI_Reader/INIReader.h"
 #include "Joint_Reader.hpp"
 
 // Destructor
-JointReader::~JointReader() {}
+JointReader::~JointReader() { Close();}
 
 // initialize the joint reader with given parameters
 bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_per_neuron)
@@ -43,24 +44,24 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
 */
 {
     if (!dev_init) {
-        if(!CheckPartKey(part))
-        {
-            std::cerr << "[Joint Reader] " << part << " is an invalid iCub part key." << std::endl;
+        if (!CheckPartKey(part)) {
+            std::cerr << "[Joint Reader] " << part << " is an invalid iCub part key!" << std::endl;
             return false;
         }
         icub_part = part;
-        if(pop_size < 0)   {
-            std::cerr << "[Joint Reader " << icub_part << "] Population size must be positive." << std::endl;
+        if (pop_size < 0) {
+            std::cerr << "[Joint Reader " << icub_part << "] Population size must be positive!" << std::endl;
             return false;
         }
-        if(sigma < 0)   {
-            std::cerr << "[Joint Reader " << icub_part << "] Sigma must be positive." << std::endl;
+        if (sigma < 0) {
+            std::cerr << "[Joint Reader " << icub_part << "] Sigma must be positive!" << std::endl;
             return false;
         }
         sigma_pop = sigma;
+
         yarp::os::Network::init();
         if (!yarp::os::Network::checkNetwork()) {
-            std::cerr << "[Joint Reader " << icub_part << "] YARP Network is not online. Check nameserver is running" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
         }
 
@@ -70,7 +71,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         options.put("local", ("/ANNarchy_read/" + icub_part).c_str());
 
         if (!driver.open(options)) {
-            std::cerr << "[Joint Reader " << icub_part << "] Unable to open " << options.find("device").asString() << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Unable to open " << options.find("device").asString() << "!" << std::endl;
             return false;
         }
 
@@ -90,13 +91,20 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
             // printf("joint: %i, min: %f, max: %f \n", i, joint_min[i], joint_max[i]);
 
             if (joint_min == joint_max) {
-                std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint parameters from .ini file" << std::endl;
+                std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint parameters from .ini file!" << std::endl;
                 return false;
             }
 
             joint_range = joint_max[i] - joint_min[i];
 
-            if (deg_per_neuron > 0.0) {
+            if (pop_size > 0) {
+                neuron_deg[i].resize(pop_size);
+                joint_deg_res[i] = joint_range / pop_size;
+
+                for (int j = 0; j < neuron_deg[i].size(); j++) {
+                    neuron_deg[i][j] = joint_min[i] + j * joint_deg_res[i];
+                }
+            } else if (deg_per_neuron > 0.0) {
                 joint_res = std::floor(joint_range / deg_per_neuron);
                 neuron_deg[i].resize(joint_res);
                 joint_deg_res[i] = deg_per_neuron;
@@ -104,15 +112,9 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
                 for (int j = 0; j < neuron_deg[i].size(); j++) {
                     neuron_deg[i][j] = joint_min[i] + j * deg_per_neuron;
                 }
-            } else if (pop_size > 0) {
-                neuron_deg[i].resize(pop_size);
-                joint_deg_res[i] = joint_range / pop_size;
-
-                for (int j = 0; j < neuron_deg[i].size(); j++) {
-                    neuron_deg[i][j] = joint_min[i] + j * joint_deg_res[i];
-                }
             } else {
-                std::cerr << "[Joint Reader " << icub_part << "] Error in population size definition" << std::endl;
+                std::cerr << "[Joint Reader " << icub_part
+                          << "] Error in population size definition. Check the values for pop_size or deg_per_neuron!" << std::endl;
                 return false;
             }
         }
@@ -128,7 +130,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
 // check if init function was called
 bool JointReader::CheckInit() {
     if (!dev_init) {
-        std::cerr << "[Joint Reader] Error: Device is not initialized" << std::endl;
+        std::cerr << "[Joint Reader] Error: Device is not initialized!" << std::endl;
     }
     return dev_init;
 }
@@ -204,10 +206,10 @@ double JointReader::ReadDouble(int joint)
     double angle = 0.0;
     if (CheckInit()) {
         if (joint >= joints) {
-            std::cerr << "[Joint Reader " << icub_part << "] Selected joint out of range" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
         }
         if (!ienc->getEncoder(joint, &angle)) {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
         }
     }
     return angle;
@@ -224,12 +226,12 @@ std::vector<double> JointReader::ReadOne(int joint)
     std::vector<double> angle_pop;
     if (CheckInit()) {
         if (joint >= joints) {
-            std::cerr << "[Joint Reader " << icub_part << "] Selected joint out of range" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
         }
 
         double angle;
         if (!ienc->getEncoder(joint, &angle)) {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
         }
         angle_pop = Encode(angle, joint);
     }
@@ -242,16 +244,18 @@ std::vector<std::vector<double>> JointReader::ReadAll()
     return: std::vector<std::vector<double>>    -- vector of population vectors encoding every joint angle from associated robot part
 */
 {
+    printf("start read all");
     std::vector<std::vector<double>> angle_pops;
     if (CheckInit()) {
         double angles[joints];
         if (!ienc->getEncoders(angles)) {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
         }
         for (int i = 0; i < joints; i++) {
             angle_pops[i] = Encode(angles[i], i);
         }
     }
+    printf("finished read all");
     return angle_pops;
 }
 
@@ -264,14 +268,12 @@ void JointReader::Close() {
 }
 
 // check if iCub part key is valid
-bool JointReader::CheckPartKey(std::string key)
-{
+bool JointReader::CheckPartKey(std::string key) {
     bool inside = false;
     for (auto it = key_map.cbegin(); it != key_map.cend(); it++)
-        if(key == *it)
-        {
+        if (key == *it) {
             inside = true;
             break;
         }
-	return inside;
+    return inside;
 }

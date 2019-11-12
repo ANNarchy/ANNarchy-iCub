@@ -28,7 +28,7 @@
 #include "Joint_Writer.hpp"
 
 // Destructor
-JointWriter::~JointWriter() {}
+JointWriter::~JointWriter() { Close();}
 
 // initialize the joint writer with given parameters
 bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron)
@@ -41,20 +41,19 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron)
 */
 {
     if (!dev_init) {
-        if(!CheckPartKey(part))
-        {
-            std::cerr << "[Joint Writer] " << part << " is an invalid iCub part key." << std::endl;
+        if (!CheckPartKey(part)) {
+            std::cerr << "[Joint Writer] " << part << " is an invalid iCub part key!" << std::endl;
             return false;
         }
         icub_part = part;
-        if(pop_size < 0)   {
-            std::cerr << "[Joint Writer " << icub_part << "] Population size must be positive." << std::endl;
+        if (pop_size < 0) {
+            std::cerr << "[Joint Writer " << icub_part << "] Population size must be positive!" << std::endl;
             return false;
         }
 
         yarp::os::Network::init();
         if (!yarp::os::Network::checkNetwork()) {
-            std::cerr << "[Joint Writer " << icub_part << "] YARP Network is not online. Check nameserver is running" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
         }
 
@@ -64,7 +63,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron)
         options.put("local", ("/ANNarchy_write/" + icub_part).c_str());
 
         if (!driver.open(options)) {
-            std::cerr << "[Joint Writer " << icub_part << "] Unable to open" << options.find("device").asString() << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Unable to open" << options.find("device").asString() << "!" << std::endl;
             return false;
         }
 
@@ -90,7 +89,14 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron)
 
             joint_range = joint_max[i] - joint_min[i];
 
-            if (deg_per_neuron > 0.0) {
+            if (pop_size > 0) {
+                neuron_deg[i].resize(pop_size);
+                joint_deg_res[i] = joint_range / pop_size;
+
+                for (int j = 0; j < neuron_deg[i].size(); j++) {
+                    neuron_deg[i][j] = joint_min[i] + j * joint_deg_res[i];
+                }
+            } else if (deg_per_neuron > 0.0) {
                 joint_res = std::floor(joint_range / deg_per_neuron);
                 neuron_deg[i].resize(joint_res);
                 joint_deg_res[i] = deg_per_neuron;
@@ -98,15 +104,9 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron)
                 for (int j = 0; j < neuron_deg[i].size(); j++) {
                     neuron_deg[i][j] = joint_min[i] + j * deg_per_neuron;
                 }
-            } else if (pop_size > 0) {
-                neuron_deg[i].resize(pop_size);
-                joint_deg_res[i] = joint_range / pop_size;
-
-                for (int j = 0; j < neuron_deg[i].size(); j++) {
-                    neuron_deg[i][j] = joint_min[i] + j * joint_deg_res[i];
-                }
             } else {
-                std::cerr << "[Joint Reader " << icub_part << "] Error in population size definition" << std::endl;
+                std::cerr << "[Joint Reader " << icub_part
+                          << "] Error in population size definition. Check the values for pop_size or deg_per_neuron!" << std::endl;
                 return false;
             }
         }
@@ -121,7 +121,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron)
 // helper function to check if init function was called
 bool JointWriter::CheckInit() {
     if (!dev_init) {
-        std::cerr << "[Joint Writer] Error: Device is not initialized" << std::endl;
+        std::cerr << "[Joint Writer] Error: Device is not initialized!" << std::endl;
     }
     return dev_init;
 }
@@ -184,7 +184,7 @@ bool JointWriter::WriteDouble(double position, int joint, bool blocking)
 {
     if (CheckInit()) {
         if (joint >= joints) {
-            std::cerr << "[Joint Writer " << icub_part << "] Selected joint out of range" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Selected joint out of range!" << std::endl;
             return false;
         }
         if (blocking) {
@@ -193,7 +193,7 @@ bool JointWriter::WriteDouble(double position, int joint, bool blocking)
                 bool motion = false;
                 while (!motion) {
                     if (!ipos->checkMotionDone(&motion)) {
-                        std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving" << std::endl;
+                        std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving!" << std::endl;
                         return false;
                     }
                 }
@@ -219,7 +219,7 @@ bool JointWriter::WriteOne(std::vector<double> position_pop, int joint, bool blo
 {
     if (CheckInit()) {
         if (joint >= joints) {
-            std::cerr << "[Joint Writer " << icub_part << "] Selected joint out of range" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Selected joint is out of range!" << std::endl;
             return false;
         }
         double angle = Decode(position_pop, joint);
@@ -229,7 +229,7 @@ bool JointWriter::WriteOne(std::vector<double> position_pop, int joint, bool blo
                 bool motion = false;
                 while (!motion) {
                     if (!ipos->checkMotionDone(&motion)) {
-                        std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving" << std::endl;
+                        std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving ocuured!" << std::endl;
                         return false;
                     }
                 }
@@ -254,7 +254,7 @@ bool JointWriter::WriteAll(std::vector<std::vector<double>> position_pops, bool 
 {
     if (CheckInit()) {
         if (position_pops.size() != joints) {
-            std::cerr << "[Joint Writer " << icub_part << "] Wrong joint count in population input" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Invalid joint count in population input!" << std::endl;
             return false;
         }
 
@@ -268,7 +268,7 @@ bool JointWriter::WriteAll(std::vector<std::vector<double>> position_pops, bool 
                 bool motion = false;
                 while (!motion) {
                     if (!ipos->checkMotionDone(&motion)) {
-                        std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving" << std::endl;
+                        std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving occured!" << std::endl;
                         return false;
                     }
                 }
@@ -291,14 +291,12 @@ void JointWriter::Close() {
 }
 
 // check if iCub part key is valid
-bool JointWriter::CheckPartKey(std::string key)
-{
+bool JointWriter::CheckPartKey(std::string key) {
     bool inside = false;
     for (auto it = key_map.cbegin(); it != key_map.cend(); it++)
-        if(key == *it)
-        {
+        if (key == *it) {
             inside = true;
             break;
         }
-	return inside;
+    return inside;
 }
