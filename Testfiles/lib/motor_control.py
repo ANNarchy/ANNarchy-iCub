@@ -21,6 +21,7 @@ def motor_init(part):
     return: iPos    -- Position Controller for the given iCub part
             iEnc    -- Encoder for the controlled joints
             jnts    -- number of controlled joints
+            driver  -- driver instance for motor control
     '''
     # prepare a property object
     props = yarp.Property()
@@ -29,17 +30,17 @@ def motor_init(part):
     props.put("remote","/icubSim/"+ part)
 
     # create remote driver
-    DeadDriver = yarp.PolyDriver(props)
+    driver = yarp.PolyDriver(props)
 
     #query motor control interfaces
-    iPos = DeadDriver.viewIPositionControl()
-    iEnc = DeadDriver.viewIEncoders()
+    iPos = driver.viewIPositionControl()
+    iEnc = driver.viewIEncoders()
     
     #retrieve number of joints
     jnts=iPos.getAxes()
 
     print('----- Controlling', jnts, 'joints -----')
-    return iPos, iEnc, jnts, DeadDriver
+    return iPos, iEnc, jnts, driver
 
 
 ######################################################################
@@ -95,7 +96,7 @@ def get_joint_position(iEnc, jnts):
     params: iEnc    -- Encoder for the controlled joints
             jnts    -- number of joints
 
-    return: encs    -- Vector containing the joint positions
+    return: encs    -- YARP-Vector containing the joint positions
     '''
     # read encoders
     encs = yarp.Vector(jnts)

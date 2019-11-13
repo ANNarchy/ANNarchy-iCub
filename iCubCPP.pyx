@@ -574,7 +574,7 @@ cdef class iCubANN_wrapper:
         """
             Calls void iCubANN::VisualRStart(int argc, char *argv[])
         """
-        argv = sys.argv
+        argv = []
         # Declare char**
         cdef char** c_argv
         argc = len(argv)
@@ -585,7 +585,7 @@ cdef class iCubANN_wrapper:
             raise MemoryError()
         # Convert str to char* and store it into our char**
         for i in range(argc):
-            argv[i] = argv[i].encode()
+            argv[i] = argv[i].encode('UTF-8')
             c_argv[i] = argv[i]
         # call the interface
         my_interface.VisualRStart(argc, c_argv)

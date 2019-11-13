@@ -23,6 +23,7 @@ def print_hand_pos(world_pos, orient_giv, hand_pos_r, orient_r, Mat_rw):
         pos_akt[i] = hand_pos_r[i]
     pos_akt_w = np.dot(Mat_rw, pos_akt)
     delta = []
+
     for i in range(3):
         d = round(float(world_pos[i]), 4) - round(float(pos_akt_w[i]), 4)
         if abs(d) > 0.01:
@@ -62,14 +63,13 @@ props.put("local","/client/right_arm")
 # create remote driver
 DeadDriver_rarm = yarp.PolyDriver(props)
 
-#query motor control interfaces
+# query motor control interfaces
 iCart = DeadDriver_rarm.viewICartesianControl()
 iCart.setPosePriority("position")
 ######################################################################
 
 time.sleep(1)
 welt_pos = pos_hand_world_coord
-#welt_pos = np.array([pos_hand_world_coord[0], pos_hand_world_coord[1], pos_hand_world_coord[2] + 0.1, 1.0])
 print(welt_pos)
 rob_pos = np.dot(T_w2r,  welt_pos.reshape((4,1)))
 pos_rob = mot.npvec_2_yarpvec(rob_pos[0:3])
@@ -84,3 +84,8 @@ print_hand_pos(welt_pos, orient_hand, pos, orient, T_r2w)
 
 iCart.stopControl()
 DeadDriver_rarm.close()
+
+# save the arm joint positions
+pos_ctrl, pos_enc, joints, driver = mot.motor_init('right_arm')
+position = mot.yarpvec_2_npvec(mot.get_joint_position(pos_enc, joints))
+np.save("test_pos0.npy", position)

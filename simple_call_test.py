@@ -223,10 +223,9 @@ def call_test_vreader(ann_wrapper):
     print(test_img.shape)
     print(test_img)
     np.save('test_img.npy', test_img)
-    # test = np.zeros((20, 25))
-    # plt.imshow(test, cmap='gray')
-    # plt.show()
-    # plt.pause(0.05)
+    plt.imshow(test_img, cmap='gray')
+    plt.show()
+    plt.pause(0.05)
     ann_wrapper.visualR_stop()
 
 
