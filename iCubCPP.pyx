@@ -34,8 +34,6 @@ cdef extern from "Interface_iCub.hpp":
 
     cdef struct iCubANN:
        
-        #TODO: we need to add here all function declarators we need to access
-        
         # add Reader/Writer
         void AddJointReader(string)
         void AddJointWriter(string)

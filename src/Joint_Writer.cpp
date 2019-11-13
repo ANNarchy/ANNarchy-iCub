@@ -28,7 +28,7 @@
 #include "Joint_Writer.hpp"
 
 // Destructor
-JointWriter::~JointWriter() { Close();}
+JointWriter::~JointWriter() { Close(); }
 
 // initialize the joint writer with given parameters
 bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron)

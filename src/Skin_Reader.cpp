@@ -32,7 +32,7 @@
 #include "Skin_Reader.hpp"
 
 // Destructor
-SkinReader::~SkinReader() { Close();}
+SkinReader::~SkinReader() { Close(); }
 
 // init skin reader with given parameters
 bool SkinReader::Init(char arm)

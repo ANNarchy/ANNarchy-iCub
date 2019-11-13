@@ -30,7 +30,7 @@
 #include "Joint_Reader.hpp"
 
 // Destructor
-JointReader::~JointReader() { Close();}
+JointReader::~JointReader() { Close(); }
 
 // initialize the joint reader with given parameters
 bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_per_neuron)
@@ -239,13 +239,13 @@ std::vector<double> JointReader::ReadOne(int joint)
 }
 
 // read all joints and return the joint angles encoded in vectors
-std::vector<std::vector<double> > JointReader::ReadAll()
+std::vector<std::vector<double>> JointReader::ReadAll()
 /*
     return: std::vector<std::vector<double>>    -- vector of population vectors encoding every joint angle from associated robot part
 */
 {
-    auto angle_pops = std::vector<std::vector<double> >(joints, std::vector<double>());
-    
+    auto angle_pops = std::vector<std::vector<double>>(joints, std::vector<double>());
+
     if (CheckInit()) {
         double angles[joints];
         if (!ienc->getEncoders(angles)) {

@@ -222,7 +222,7 @@ def call_test_vreader(ann_wrapper):
         print('No buffered image!')
     print(test_img.shape)
     print(test_img)
-    np.save('test_img.npy', test_img)
+    np.save('Testfiles/test_img.npy', test_img)
     # test = np.zeros((20, 25))
     # plt.imshow(test, cmap='gray')
     # plt.show()
