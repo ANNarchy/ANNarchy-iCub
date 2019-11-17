@@ -32,7 +32,7 @@ def print_hand_pos(world_pos, orient_giv, hand_pos_r, orient_r, Mat_rw):
     print('Delta  position:', delta)
 
     delta_o = []
-    for i in range(3):
+    for i in range(4):
         d = round(float(orient_giv[i]), 4) - round(float(orient_r[i]), 4)
         if abs(d) > 0.3:
             print('ACHTUNG')
@@ -46,6 +46,10 @@ def print_hand_pos(world_pos, orient_giv, hand_pos_r, orient_r, Mat_rw):
 
 ######################################################################
 ############## init cartesian controller for right arm ###############
+yarp.Network.init()
+if yarp.Network.checkNetwork() != True:
+    print("[error] Please try running yarp server")
+    quit()
 T_r2w = Transfermat_robot2world
 T_w2r = Transfermat_world2robot
 
@@ -68,8 +72,10 @@ iCart = DeadDriver_rarm.viewICartesianControl()
 iCart.setPosePriority("position")
 ######################################################################
 
-time.sleep(1)
 welt_pos = pos_hand_world_coord
+iCart.getPose(pos, orient)
+print_hand_pos(welt_pos, orient_hand, pos, orient, T_r2w)
+time.sleep(1)
 print(welt_pos)
 rob_pos = np.dot(T_w2r,  welt_pos.reshape((4,1)))
 pos_rob = mot.npvec_2_yarpvec(rob_pos[0:3])
@@ -77,7 +83,7 @@ iCart.goToPoseSync(pos_rob, orient_hand)
 iCart.waitMotionDone(period=5.0)
 iCart.getPose(pos, orient)
 print_hand_pos(welt_pos, orient_hand, pos, orient, T_r2w)
-time.sleep(10)
+time.sleep(1)
 
 iCart.getPose(pos, orient)
 print_hand_pos(welt_pos, orient_hand, pos, orient, T_r2w)
@@ -85,7 +91,13 @@ print_hand_pos(welt_pos, orient_hand, pos, orient, T_r2w)
 iCart.stopControl()
 DeadDriver_rarm.close()
 
-# save the arm joint positions
-pos_ctrl, pos_enc, joints, driver = mot.motor_init('right_arm')
-position = mot.yarpvec_2_npvec(mot.get_joint_position(pos_enc, joints))
-np.save("test_pos0.npy", position)
+# # save the arm joint positions
+# iPos, iEnc, jnts, driver = mot.motor_init('right_arm')
+# test_pos0 = mot.get_joint_position(iEnc, jnts)
+# print(test_pos0)
+# for i in range(jnts):
+#     print(test_pos0[i])
+# position = mot.yarpvec_2_npvec(test_pos0)
+# print(position)
+# np.save("test_pos0.npy", position)
+# driver.close()

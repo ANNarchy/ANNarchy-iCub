@@ -31,10 +31,14 @@ position_param['obj_z'] = [ 0.65, 0.75, 0.85 ]  # object z position in m
 ################## Parameter arm cartesian control ###################
 
 ############### Initial hand position and orientation ################
-pos_hand_world_coord   = np.array([ -0.28, 0.97, 0.0, 1.0 ])             # in world coordinate system
-# pos_hand_world_coord   = np.array([ -0.15, 0.8, 0.2, 1.0 ])             # in world coordinate system
+pos_hand_world_coord   = np.array([ -0.22, 0.7, 0.23, 1.0 ])             # in world coordinate system (hand pos)
+# pos_hand_world_coord   = np.array([ -0.28, 0.97, 0.0, 1.0 ])             # in world coordinate system (hand up)
 
-orientation_robot_hand = np.array([ 0.0022, -0.993, -0.1178, 2.0423 ])  # in robot coordinate system
+# pos_hand_world_coord   = np.array([ -0.15, 0.8, 0.2, 1.0 ])             # in world coordinate system
+# pos_hand_world_coord   = np.array([ -0.45, 0.75, 0.0, 1.0 ])             # in world coordinate system
+
+orientation_robot_hand = np.array([ 0.1113, -0.9845, 0.1357, 3.0023 ])  # in robot coordinate system
+# orientation_robot_hand = np.array([ 0.0022, -0.993, -0.1178, 2.0423 ])  # in robot coordinate system
 
 ###################### Transformation matrices: ######################
 ######## robot coordinate system <-> world coordinate system #########

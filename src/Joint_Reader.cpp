@@ -170,10 +170,11 @@ double JointReader::NormalPdf(double value, double mean, double sigma)
     return: double                  -- function value for the normal distribution
 */
 {
-    double inv_sqrt_2pi = 1 / (sigma * std::sqrt(2 * M_PI));
+    // double inv_sqrt_2pi = 4.0 / (sigma * std::sqrt(2 * M_PI));
     double a = (value - mean) / sigma;
 
-    return inv_sqrt_2pi * std::exp(-0.5 * a * a);
+    // return inv_sqrt_2pi * std::exp(-0.5 * a * a);
+    return 1.0 * std::exp(-0.5 * a * a);
 }
 
 // encode joint position into a vector
@@ -187,7 +188,6 @@ std::vector<double> JointReader::Encode(double joint_angle, int joint)
 {
     int size = neuron_deg.at(joint).size();
     std::vector<double> pos_pop(size);
-
     for (int i = 0; i < size; i++) {
         pos_pop[i] = (NormalPdf(neuron_deg[joint][i], joint_angle, sigma_pop));
     }

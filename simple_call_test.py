@@ -193,6 +193,7 @@ def call_test_sreader(ann_wrapper):
     print('finish SReader close')
     print('\n')
 
+
 #########################################################
 def call_test_vreader(ann_wrapper):
     ## add visual reader instance
@@ -222,7 +223,6 @@ def call_test_vreader(ann_wrapper):
         print('No buffered image!')
     print(test_img.shape)
     print(test_img)
-    np.save('test_img.npy', test_img)
     plt.imshow(test_img, cmap='gray')
     plt.show()
     plt.pause(0.05)
@@ -230,7 +230,6 @@ def call_test_vreader(ann_wrapper):
 
 
 #########################################################
-
 if __name__ == "__main__":
     wrapper = iCubCPP.iCubANN_wrapper()
 

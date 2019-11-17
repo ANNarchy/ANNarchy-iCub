@@ -18,11 +18,13 @@ def motor_init(part):
     initialize motor control for the given part 
 
     params: part    -- part of the iCub to be controlled (string: head, left_arm, right_arm, ...)
+    
     return: iPos    -- Position Controller for the given iCub part
             iEnc    -- Encoder for the controlled joints
             jnts    -- number of controlled joints
             driver  -- driver instance for motor control
     '''
+
     # prepare a property object
     props = yarp.Property()
     props.put("device","remote_controlboard")
@@ -32,11 +34,11 @@ def motor_init(part):
     # create remote driver
     driver = yarp.PolyDriver(props)
 
-    #query motor control interfaces
+    # query motor control interfaces
     iPos = driver.viewIPositionControl()
     iEnc = driver.viewIEncoders()
     
-    #retrieve number of joints
+    # retrieve number of joints
     jnts=iPos.getAxes()
 
     print('----- Controlling', jnts, 'joints -----')

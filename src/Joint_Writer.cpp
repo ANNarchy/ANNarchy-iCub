@@ -223,6 +223,10 @@ bool JointWriter::WriteOne(std::vector<double> position_pop, int joint, bool blo
             return false;
         }
         double angle = Decode(position_pop, joint);
+        if (std::isnan(angle)) {
+            std::cerr << "[Joint Writer " << icub_part << "] Invalid joint angle in population code!" << std::endl;
+            return false;
+        }
         if (blocking) {
             bool start = ipos->positionMove(joint, angle);
             if (start) {
@@ -260,6 +264,10 @@ bool JointWriter::WriteAll(std::vector<std::vector<double>> position_pops, bool 
 
         for (int i = 0; i < joints; i++) {
             joint_angles[i] = Decode(position_pops[i], i);
+            if (std::isnan(joint_angles[i])) {
+                std::cerr << "[Joint Writer " << icub_part << "] Invalid joint angle in population code!" << std::endl;
+                return false;
+            }
         }
 
         if (blocking) {
