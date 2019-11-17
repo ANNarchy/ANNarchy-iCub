@@ -3,19 +3,19 @@
 
 """
    Copyright (C) 2019 Torsten Follak; Helge Ülo Dinkelbach
- 
+
    iCubCPP.pyx is part of the iCub ANNarchy interface
- 
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
- 
+
    The iCub ANNarchy interface is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
- 
+
    You should have received a copy of the GNU General Public License
    along with this headers. If not, see <http://www.gnu.org/licenses/>.
  """
@@ -33,7 +33,7 @@ import numpy as np
 cdef extern from "Interface_iCub.hpp":
 
     cdef struct iCubANN:
-       
+
         # add Reader/Writer
         void AddJointReader(string)
         void AddJointWriter(string)
@@ -173,7 +173,7 @@ cdef class iCubANN_wrapper:
         """
             Calls iCubANN::AddJointWriter(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name for the added joint writer in the map, can be freely selected
         """
         # we need to transform py-string to c++ compatible string
@@ -186,7 +186,7 @@ cdef class iCubANN_wrapper:
         """
             Calls iCubANN::AddSkinReader(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name for the added skin reader in the map, can be freely selected
         """
         # we need to transform py-string to c++ compatible string
@@ -199,7 +199,7 @@ cdef class iCubANN_wrapper:
         """
             Calls iCubANN::AddVisualReader()
 
-            params: 
+            params:
                 std::string name        -- name for the added visual reader in the map, can be freely selected
         """
         # call the interface
@@ -213,8 +213,8 @@ cdef class iCubANN_wrapper:
     def jointR_init(self, name, part, sigma, n_pop, degr_per_neuron=0.0):
         """
             Calls bool iCubANN::JointRInit(std::string name, std::string part, double sigma, int pop_n, double deg_per_neuron)
-        
-            params: 
+
+            params:
                 std::string name        -- name of the selected joint reader
                 std::string part        -- string representing the robot part, has to match iCub part naming
                                             {left_(arm/leg), right_(arm/leg), head, torso}
@@ -224,7 +224,7 @@ cdef class iCubANN_wrapper:
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles;
                                             if set: population size depends on joint working range
 
-            return: 
+            return:
                 bool                    -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
@@ -238,10 +238,10 @@ cdef class iCubANN_wrapper:
         """
             Calls std::vector<int> iCubANN:: JointRGetNeuronsPerJoint(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name of the selected joint reader
 
-            return: 
+            return:
                 std::vector<int>        -- return vector, containing the population size for every joint
         """
         # we need to transform py-string to c++ compatible string
@@ -255,10 +255,10 @@ cdef class iCubANN_wrapper:
         """
             Calls std::vector<double> iCubANN::JointRGetJointsDegRes(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name of the selected joint reader
 
-            return: 
+            return:
                 std::vector<double>     -- return vector, containing the resolution for every joints population codimg in degree
         """
         # we need to transform py-string to c++ compatible string
@@ -272,11 +272,11 @@ cdef class iCubANN_wrapper:
         """
             Calls double iCubANN::JointRReadDouble(std::string name, int joint)
 
-            params: 
+            params:
                 std::string name    -- name of the selected joint reader
                 int joint           -- joint number of the robot part
 
-            return: 
+            return:
                 double              -- joint angle read from the robot
         """
         # we need to transform py-string to c++ compatible string
@@ -290,11 +290,11 @@ cdef class iCubANN_wrapper:
         """
             Calls std::vector<double> iCubANN::JointRReadOne(std::string name, int joint)
 
-            params: 
+            params:
                 std::string name        -- name of the selected joint reader
                 int joint               -- joint number of the robot part
 
-            return: 
+            return:
                 std::vector<double>     -- population vector encoding the joint angle
         """
         # we need to transform py-string to c++ compatible string
@@ -308,10 +308,10 @@ cdef class iCubANN_wrapper:
         """
             Calls std::vector<std::vector<double>> iCubANN::JointRReadAll(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name of the selected joint reader
 
-            return: 
+            return:
                 std::vector<std::vector<double>>    -- population vectors encoding every joint angle from associated robot part
 
         """
@@ -326,7 +326,7 @@ cdef class iCubANN_wrapper:
         """
             Calls iCubANN::JointRClose(std::string name)
 
-            params: 
+            params:
                 std::string name    -- name of the selected joint reader
        """
         # we need to transform py-string to c++ compatible string
@@ -343,7 +343,7 @@ cdef class iCubANN_wrapper:
         """
             Calls bool iCubANN::JointWInit(std::string name, std::string part, int pop_size, double deg_per_neuron)
 
-            params: 
+            params:
                 std::string name        -- name of the selected joint writer
                 std::string part        -- string representing the robot part, has to match iCub part naming
                                             {left_(arm/leg), right_(arm/leg), head, torso}
@@ -352,13 +352,13 @@ cdef class iCubANN_wrapper:
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles;
                                             if set: population size depends on joint working range
 
-            return: 
+            return:
                 bool                    -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
         cdef string key = part.encode('UTF-8')
-        
+
         # call the interface
         return my_interface.JointWInit(s, key, n_pop, degr_per_neuron)
 
@@ -367,10 +367,10 @@ cdef class iCubANN_wrapper:
         """
             Calls std::vector<int> iCubANN::JointWGetNeuronsPerJoint(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name of the selected joint writer
 
-            return: 
+            return:
                 std::vector<int>        -- return vector, containing the population size for every joint
         """
         # we need to transform py-string to c++ compatible string
@@ -384,10 +384,10 @@ cdef class iCubANN_wrapper:
         """
             Calls std::vector<double> iCubANN::JointWGetJointsDegRes(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name of the selected joint writer
 
-            return: 
+            return:
                 std::vector<double>     -- return vector, containing the resolution for every joints population codimg in degree
         """
         # we need to transform py-string to c++ compatible string
@@ -401,13 +401,13 @@ cdef class iCubANN_wrapper:
         """
             Calls bool iCubANN::JointWWriteDouble(std::string name, double position, int joint, bool blocking)
 
-            params: 
+            params:
                 std::string name    -- name of the selected joint writer
                 double position     -- joint angle to write to the robot joint
                 int joint           -- joint number of the robot part
                 bool blocking       -- if True, function waits for end of movement
 
-            return: 
+            return:
                 bool                -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
@@ -423,13 +423,13 @@ cdef class iCubANN_wrapper:
         """
             Calls bool iCubANN::JointWWriteOne(std::string name, std::vector<double> position_pop, int joint, bool blocking)
 
-            params: 
+            params:
                 std::string name        -- name of the selected joint writer
                 std::vector<double>     -- population encoded joint angle for writing to the robot joint
                 int joint               -- joint number of the robot part
                 bool blocking           -- if True, function waits for end of movement
 
-            return: 
+            return:
                 bool                    -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
@@ -445,12 +445,12 @@ cdef class iCubANN_wrapper:
         """
             Calls bool iCubANN::JointWWriteAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking)
 
-            params: 
+            params:
                 std::string name                    -- name of the selected joint writer
                 std::vector<std::vector<double>>    -- populations encoding every joint angle for writing them to the associated robot part
                 bool blocking                       -- if True, function waits for end of movement
 
-            return: 
+            return:
                 bool                                -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
@@ -465,8 +465,8 @@ cdef class iCubANN_wrapper:
     def jointW_close(self, name):
         """
             Calls iCubANN::JointWClose(std::string name)
-        
-            params: 
+
+            params:
                 std::string name        -- name of the selected joint writer
         """
         # we need to transform py-string to c++ compatible string
@@ -482,11 +482,11 @@ cdef class iCubANN_wrapper:
         """
             Calls bool iCubANN::SkinRInit(std::string name, char arm)
 
-            params: 
+            params:
                 std::string name        -- name of the selected skin reader
                 char arm                -- string representing the robot part, has to match iCub part naming
 
-            return: 
+            return:
                 bool                    -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
@@ -501,7 +501,7 @@ cdef class iCubANN_wrapper:
         """
             Calls void iCubANN::SkinRReadTactile(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name of the selected skin reader
         """
         # we need to transform py-string to c++ compatible string
@@ -515,9 +515,9 @@ cdef class iCubANN_wrapper:
         """
             Calls  std::vector<double> iCubANN::SkinRGetTactileHand(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name of the selected skin reader
-            
+
             return:
                 std::vector<double>
         """
@@ -532,9 +532,9 @@ cdef class iCubANN_wrapper:
         """
             Calls  std::vector<double> iCubANN::SkinRGetTactileForearm(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name of the selected skin reader
-                        
+
             return:
                 std::vector<double>
         """
@@ -549,9 +549,9 @@ cdef class iCubANN_wrapper:
         """
             Calls  std::vector<double> iCubANN::SkinRGetTactileArm(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name of the selected skin reader
-                        
+
             return:
                 std::vector<double>
         """
@@ -566,11 +566,11 @@ cdef class iCubANN_wrapper:
         """
             Calls  std::vector<std::vector<double>> iCubANN::SkinRGetTaxelPos(std::string name, std::string skin_part)
 
-            params: 
+            params:
                 std::string name                    -- name of the selected skin reader
                 std::string skin_part               -- skin part to load the data for ("arm", "forearm", "hand")
 
-            return: 
+            return:
                 std::vector<std::vector<double>>    -- Vector containing taxel positions -> reference frame depending on skin part
         """
         # we need to transform py-string to c++ compatible string
@@ -585,7 +585,7 @@ cdef class iCubANN_wrapper:
         """
             Calls void iCubANN::SkinRClose(std::string name)
 
-            params: 
+            params:
                 std::string name        -- name of the selected skin reader
         """
         # we need to transform py-string to c++ compatible string
@@ -603,14 +603,14 @@ cdef class iCubANN_wrapper:
         """
             Calls bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height)
 
-            params: 
+            params:
                 char eye            -- characteer representing the selected eye (l/L; r/R)
                 double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
                 double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width       -- output image width in pixel (input width: 320px)
                 int img_height      -- output image height in pixel (input height: 240px)
 
-            return: 
+            return:
                 bool                -- return True, if successful
         """
         cdef char e = eye.encode('UTF-8')[0]
@@ -655,7 +655,7 @@ cdef class iCubANN_wrapper:
         """
             Calls std::vector<double> iCubANN::VisualRReadFromBuf()
 
-            return: 
+            return:
                 std::vector<double>     -- image (1D-vector) from the image buffer
         """
 
