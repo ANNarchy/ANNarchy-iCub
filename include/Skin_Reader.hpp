@@ -41,16 +41,16 @@ class SkinReader {
     // Destructor
     ~SkinReader();
     // init skin reader with given parameters
-    bool Init(char arm);
+    bool Init(char arm, bool norm_data);
     // read sensor data
-    void ReadTactile();
+    bool ReadTactile();
 
     // return tactile data for hand skin
-    std::vector<double> GetTactileHand();
+    std::vector<std::vector<double>> GetTactileHand();
     // return tactile data for forearm skin
-    std::vector<double> GetTactileForearm();
+    std::vector<std::vector<double>> GetTactileForearm();
     // return tactile data for upper arm skin
-    std::vector<double> GetTactileArm();
+    std::vector<std::vector<double>> GetTactileArm();
     // return the taxel positions given by the ini files
     std::vector<std::vector<double>> GetTaxelPos(std::string skin_part);
 
@@ -58,6 +58,8 @@ class SkinReader {
     void Close();
 
  private:
+    bool dev_init = false;    // variable for initialization check
+
     yarp::os::BufferedPort<yarp::sig::Vector> port_hand;       // port for the hand
     yarp::os::BufferedPort<yarp::sig::Vector> port_forearm;    // port for the forearm
     yarp::os::BufferedPort<yarp::sig::Vector> port_arm;        // port for the arm
@@ -66,14 +68,14 @@ class SkinReader {
     yarp::sig::Vector *tactile_forearm;    // YARP Vector for forearm sensor data
     yarp::sig::Vector *tactile_arm;        // YARP Vector for upper arm sensor data
 
-    std::vector<double> hand_data;       // Vector for sorted and cleaned hand sensor data
-    std::vector<double> forearm_data;    // Vector for sorted and cleaned forearm sensor data
-    std::vector<double> arm_data;        // Vector for sorted and cleaned upper arm sensor data
+    std::vector<std::vector<double>> hand_data;       // Vector for sorted and cleaned hand sensor data
+    std::vector<std::vector<double>> forearm_data;    // Vector for sorted and cleaned forearm sensor data
+    std::vector<std::vector<double>> arm_data;        // Vector for sorted and cleaned upper arm sensor data
 
-    std::string side;         // containing information about selected arm (right/left)
-    bool dev_init = false;    // variable for initialization check
+    std::string side;    // containing information about selected arm (right/left)
+    double norm_fac;     // norming factor: 255.0 for naormalized data
 
-    std::map<std::string, TaxelData> taxel_pos_data;             // contains taxel position data for different skin parts
+    std::map<std::string, TaxelData> taxel_pos_data;              // contains taxel position data for different skin parts
     std::map<std::string, iCub::iKin::iKinChain *> kin_chains;    // contains taxel position data for different skin parts
 
     bool ReadTaxelPos(std::string filename_idx, std::string filename_pos, std::string part);

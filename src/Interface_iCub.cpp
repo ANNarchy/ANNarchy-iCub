@@ -327,16 +327,17 @@ void iCubANN::JointWClose(std::string name)
 
 // Access to skin reader member functions //
 // init skin reader with given parameters
-bool iCubANN::SkinRInit(std::string name, char arm)
+bool iCubANN::SkinRInit(std::string name, char arm, bool norm_data)
 /*
     params: std::string name        -- name of the selected skin reader
             char arm                -- character to choose the arm side (r/R for right; l/L for left)
+            bool norm_data          -- if True, data is normalized from 0..255 to 0..1.0
 
     return: bool                    -- return True, if successful
 */
 {
     if (tactile_reader.count(name)) {
-        return tactile_reader[name]->Init(arm);
+        return tactile_reader[name]->Init(arm, norm_data);
     } else {
         std::cerr << "[Skin Reader] " << name << ": This name is not defined." << std::endl;
         return false;
@@ -344,20 +345,20 @@ bool iCubANN::SkinRInit(std::string name, char arm)
 }
 
 // read sensor data
-void iCubANN::SkinRReadTactile(std::string name)
+bool iCubANN::SkinRReadTactile(std::string name)
 /*
     params: std::string name        -- name of the selected skin reader
 */
 {
     if (tactile_reader.count(name)) {
-        tactile_reader[name]->ReadTactile();
+        return tactile_reader[name]->ReadTactile();
     } else {
         std::cerr << "[Skin Reader] " << name << ": This name is not defined." << std::endl;
     }
 }
 
 // return tactile data for hand skin
-std::vector<double> iCubANN::SkinRGetTactileHand(std::string name)
+std::vector<std::vector<double>> iCubANN::SkinRGetTactileHand(std::string name)
 /*
     params: std::string name        -- name of the selected skin reader
 */
@@ -366,13 +367,13 @@ std::vector<double> iCubANN::SkinRGetTactileHand(std::string name)
         return tactile_reader[name]->GetTactileHand();
     } else {
         std::cerr << "[Skin Reader] " << name << ": This name is not defined." << std::endl;
-        std::vector<double> empty;
+        std::vector<std::vector<double>> empty;
         return empty;
     }
 }
 
 // return tactile data for forearm skin
-std::vector<double> iCubANN::SkinRGetTactileForearm(std::string name)
+std::vector<std::vector<double>> iCubANN::SkinRGetTactileForearm(std::string name)
 /*
     params: std::string name        -- name of the selected skin reader
 */
@@ -381,13 +382,13 @@ std::vector<double> iCubANN::SkinRGetTactileForearm(std::string name)
         return tactile_reader[name]->GetTactileForearm();
     } else {
         std::cerr << "[Skin Reader] " << name << ": This name is not defined." << std::endl;
-        std::vector<double> empty;
+        std::vector<std::vector<double>> empty;
         return empty;
     }
 }
 
 // return tactile data for upper arm skin
-std::vector<double> iCubANN::SkinRGetTactileArm(std::string name)
+std::vector<std::vector<double>> iCubANN::SkinRGetTactileArm(std::string name)
 /*
     params: std::string name        -- name of the selected skin reader
 */
@@ -396,7 +397,7 @@ std::vector<double> iCubANN::SkinRGetTactileArm(std::string name)
         return tactile_reader[name]->GetTactileArm();
     } else {
         std::cerr << "[Skin Reader] " << name << ": This name is not defined." << std::endl;
-        std::vector<double> empty;
+        std::vector<std::vector<double>> empty;
         return empty;
     }
 }

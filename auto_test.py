@@ -69,16 +69,17 @@ def test_joint_positioning(ann_wrapper):
     print('__ Load test positions __')
 
     # load test positions
+    position_path = "./Testfiles/test_positions/"
     positions = {}
-    positions['pos_hand_T_r'] = (np.load("./Testfiles/test_pos_T.npy"), 'right_arm')
-    positions['pos_hand_complex_r'] = (np.load("./Testfiles/test_hand_complex.npy"), 'right_arm')
-    positions['pos_hand_home_r'] = (np.load("./Testfiles/test_pos_home.npy"), 'right_arm')
-    positions['pos_hand_T_l'] = (np.load("./Testfiles/test_pos_T.npy"), 'left_arm')
-    positions['pos_hand_complex_l'] = (np.load("./Testfiles/test_hand_complex.npy"), 'left_arm')
-    positions['pos_hand_home_l'] = (np.load("./Testfiles/test_pos_home.npy"), 'left_arm')
-    positions['pos_head'] = (np.load("./Testfiles/test_pos_head.npy"), 'head')
-    positions['pos_head_complex'] = (np.load("./Testfiles/test_pos_head_complex.npy"), 'head')
-    positions['pos_head_zero'] = (np.load("./Testfiles/test_pos_head_zero.npy"), 'head')
+    positions['pos_hand_T_r'] = (np.load(position_path + "test_pos_T.npy"), 'right_arm')
+    positions['pos_hand_complex_r'] = (np.load(position_path + "test_hand_complex.npy"), 'right_arm')
+    positions['pos_hand_home_r'] = (np.load(position_path + "test_pos_home.npy"), 'right_arm')
+    positions['pos_hand_T_l'] = (np.load(position_path + "test_pos_T.npy"), 'left_arm')
+    positions['pos_hand_complex_l'] = (np.load(position_path + "test_hand_complex.npy"), 'left_arm')
+    positions['pos_hand_home_l'] = (np.load(position_path + "test_pos_home.npy"), 'left_arm')
+    positions['pos_head'] = (np.load(position_path + "test_pos_head.npy"), 'head')
+    positions['pos_head_complex'] = (np.load(position_path + "test_pos_head_complex.npy"), 'head')
+    positions['pos_head_zero'] = (np.load(position_path + "test_pos_head_zero.npy"), 'head')
 
     if not os.path.isdir(path):
         os.mkdir(path)
@@ -132,17 +133,17 @@ def test_joint_positioning(ann_wrapper):
                     ann_wrapper.jointW_write_double(name, positions[key][0][i], i, True)
                 time.sleep(1)
 
-                read_pos = np.zeros((positions[key][0].shape[0]))
-                for i in range(read_pos.shape[0]):
-                    read_pos[i] = round(ann_wrapper.jointR_read_double(name, i), 2)
-                read_double[key] = read_pos
+                read_pos_double = np.zeros((positions[key][0].shape[0]))
+                for i in range(read_pos_double.shape[0]):
+                    read_pos_double[i] = round(ann_wrapper.jointR_read_double(name, i), 2)
+                read_double[key] = read_pos_double
 
                 test_result = True
                 error_joints = []
-                for i in range(read_pos.shape[0]):
+                for i in range(read_pos_double.shape[0]):
                     max_lim = abs(round(positions[key][0][i], 2)) + 0.01 * abs(round(positions[key][0][i], 2))
                     min_lim = abs(round(positions[key][0][i], 2)) - 0.01 * abs(round(positions[key][0][i], 2))
-                    if (abs(round(read_pos[i], 2)) > max_lim) or (abs(round(read_pos[i], 2)) < min_lim):
+                    if (abs(round(read_pos_double[i], 2)) > max_lim) or (abs(round(read_pos_double[i], 2)) < min_lim):
                         test_result = False
                         error_joints.append(i)
                 test_results[name + '_' + key] = (test_result, error_joints)
@@ -168,15 +169,15 @@ def test_joint_positioning(ann_wrapper):
                 ann_wrapper.jointW_write_one(name, part_enc[name][key][i], i, True)
             time.sleep(2)
 
-            read_pos = []
-            for i in range(len(read_pos)):
-                read_pos.append(np.round(ann_wrapper.jointR_read_one(name, i), decimals=3))
-            read_pop_single[key] = read_pos
+            read_pos_pop_S = []
+            for i in range(positions[key][0].shape[0]):
+                read_pos_pop_S.append(np.round(ann_wrapper.jointR_read_one(name, i), decimals=3))
+            read_pop_single[key] = read_pos_pop_S
 
             test_result = True
             error_joints = []
-            for i in range(len(read_pos)):
-                if not np.allclose(read_pos[i], part_enc[name][key][i], atol=0.1):
+            for i in range(len(read_pos_pop_S)):
+                if not np.allclose(read_pos_pop_S[i], part_enc[name][key][i], atol=0.1):
                     test_result = False
                     error_joints.append(i)
             test_results[name + '_' + key] = (test_result, error_joints)
@@ -201,14 +202,13 @@ def test_joint_positioning(ann_wrapper):
             ann_wrapper.jointW_write_all(name, part_enc[name][key], True)
             time.sleep(2)
 
-            read_pos = ann_wrapper.jointR_read_all(name)
-            # print(read_pos, type(read_pos))
-            read_pop_all[key] = read_pos
+            read_pos_pop_a = ann_wrapper.jointR_read_all(name)
+            read_pop_all[key] = read_pos_pop_a
 
             test_result = True
             error_joints = []
-            for i in range(len(read_pos)):
-                if not np.allclose(read_pos[i][0:part_enc[name][key][i].shape[0]], part_enc[name][key][i], atol=0.1):
+            for i in range(len(read_pos_pop_a)):
+                if not np.allclose(read_pos_pop_a[i][0:part_enc[name][key][i].shape[0]], part_enc[name][key][i], atol=0.1):
                     test_result = False
                     error_joints.append(i)
             test_results[name + '_' + key] = (test_result, error_joints)
@@ -234,42 +234,98 @@ def test_joint_positioning(ann_wrapper):
     print('____ Closed joint reader and writer modules ____')
     print('____________________________________________________________\n')
 
-# #########################################################
-# def test_tactile_reading(ann_wrapper):
-#     # add skin reader instances
-#     ann_wrapper.add_skin_reader("S_Reader")
-#     ann_wrapper.add_skin_reader("S_Reader")    # dublicate check
-#     ann_wrapper.add_skin_reader("S_Reader1")
 
-#     print('finish skin reader adding')
-#     print('\n')
+#########################################################
+def test_tactile_reading(ann_wrapper):
 
-#     # init skin reader
-#     ann_wrapper.skinR_init("S_Reader", "r")
-#     ann_wrapper.skinR_init("S_Reader", "r")
-#     ann_wrapper.skinR_init("NO_NAME", "r")
-#     ann_wrapper.skinR_init("S_Reader1", "g")
+    path = "./Testfiles/Tactile/"
+    if not os.path.isdir(path):
+        os.mkdir(path)
+    sim_ctrl = wc.WorldController()
+    loc_sph = []
+    loc_p0 = np.array([-0.0, 0.6, 0.22])
+    loc_p1 = np.array([-0.14, 0.6, 0.22])
+    loc_p2 = np.array([-0.26, 0.62, 0.12])
+    loc_p3 = np.array([-0.1975, 0.62, 0.12])
+    loc_p4 = np.array([-0.25, 0.7, 0.05])
+    loc_p5 = np.array([-0.18, 0.715, 0.04])
+    loc_sph.append(loc_p0)
+    loc_sph.append(loc_p1)
+    loc_sph.append(loc_p2)
+    loc_sph.append(loc_p3)
+    loc_sph.append(loc_p4)
+    loc_sph.append(loc_p5)
 
-#     print('finish SReader init')
-#     print('\n')
+    sphere = sim_ctrl.create_object("ssph", [0.025], loc_p0, [0.0, 0.0, 1.0])
+    data_count = 5
 
-#     # print taxel positions
-#     ann_wrapper.skinR_read_tactile("S_Reader")
-#     print(ann_wrapper.skinRGet_taxel_pos("S_Reader", "arm"))
-#     print(ann_wrapper.skinRGet_taxel_pos("S_Reader", "forearm"))
-#     print(ann_wrapper.skinRGet_taxel_pos("S_Reader", "hand"))
+    print('____________________________________________________________')
+    print('__ Add and init skin reader module __')
 
-#     # print tactile data
-#     print(ann_wrapper.skinR_get_tactile_arm("S_Reader"))
-#     print(ann_wrapper.skinR_get_tactile_forearm("S_Reader"))
-#     print(ann_wrapper.skinR_get_tactile_hand("S_Reader"))
+    # add skin reader instances
+    ann_wrapper.add_skin_reader("S_Reader")
+    ann_wrapper.add_skin_reader("S_Reader1")
 
+    # init skin reader
+    print("Init:", ann_wrapper.skinR_init("S_Reader", "r", True))
+    print("Init:", ann_wrapper.skinR_init("S_Reader1", "r", False))
 
-#     # close skin reader
-#     print(ann_wrapper.skinR_close("S_Reader"))
+    print('____ Initialized skin reader ____')
+    print('____________________________________________________________\n')
+    data_arm_norm = []
+    data_farm_norm = []
+    data_hand_norm = []
+    pos = loc_p0
+    for i in range(len(loc_sph) - 1):
+        print("step:", i)
+        delta_pos = loc_sph[i+1] - pos
+        d_pos = delta_pos/data_count
+        if d_pos.sum() != 0:
+            for j in range(data_count):
+                pos += d_pos
+                sim_ctrl.move_object(sphere, pos)
+                time.sleep(0.1)
 
-#     print('finish SReader close')
-#     print('\n')
+                ann_wrapper.skinR_read_tactile("S_Reader")
+                ann_wrapper.skinR_read_tactile("S_Reader1")
+
+                data_arm_norm.append(np.array(ann_wrapper.skinR_get_tactile_arm("S_Reader")))
+                data_farm_norm.append(np.array(ann_wrapper.skinR_get_tactile_forearm("S_Reader")))
+                data_hand_norm.append(np.array(ann_wrapper.skinR_get_tactile_hand("S_Reader")))
+
+                time.sleep(0.1)
+                if np.equal(pos, loc_p1).all():
+                    pos = loc_p2
+                    sim_ctrl.move_object(sphere, pos)
+
+    data_arm_raw = np.array(ann_wrapper.skinR_get_tactile_arm("S_Reader1"))
+    data_farm_raw = np.array(ann_wrapper.skinR_get_tactile_forearm("S_Reader1"))
+    data_hand_raw = np.array(ann_wrapper.skinR_get_tactile_hand("S_Reader1"))
+
+    print("Finished tactile sensing process")
+
+    print("________ Test results:")
+    print(" Touched arm:\n   ", "norm data:", np.array(data_arm_norm).max() == 1.0, "\n    raw data:", data_arm_raw.max() == 255.0)
+    print(" Touched forearm:\n   ", "norm data:", np.array(data_farm_norm).max() == 1.0, "\n    raw data:", data_farm_raw.max() == 255.0)
+    print(" Touched hand:\n   ", "norm data:", np.array(data_hand_norm).max() == 1.0, "\n    raw data:", data_hand_raw.max() == 255.)
+    
+    np.save(path + "tact_arm_data_norm.npy", data_arm_norm)
+    np.save(path + "tact_forearm_data_norm.npy", data_farm_norm)
+    np.save(path + "tact_hand_data_norm.npy", data_hand_norm)
+
+    np.save(path + "tact_arm_data_raw.npy", data_arm_raw)
+    np.save(path + "tact_forearm_data_raw.npy", data_farm_raw)
+    np.save(path + "tact_hand_data_raw.npy", data_hand_raw)
+    print('____________________________________________________________')
+    print('__ Close skin reader module __')
+
+    # close skin reader
+    ann_wrapper.skinR_close("S_Reader")
+    ann_wrapper.skinR_close("S_Reader1")
+
+    sim_ctrl.del_all()
+    del sim_ctrl
+
 
 #########################################################
 def test_visual_perception(ann_wrapper):
@@ -307,6 +363,8 @@ def test_visual_perception(ann_wrapper):
     sim_ctrl.move_object(sphere, loc_sph)
     time.sleep(0.35)
 
+    print('____ Obtain visual information ____')
+
     for i in range(img_count):
         read_img = ann_wrapper.visualR_read_fromBuf()
         if read_img.shape[0] > 0:
@@ -319,6 +377,8 @@ def test_visual_perception(ann_wrapper):
             print('No buffered image!')
     np.save(path + 'Vision_full_size.npy', read_imgs)
 
+    print('____________________________________________________________')
+    print('__ Stop and close visual reader module __')
     ann_wrapper.visualR_stop()
     sim_ctrl.del_all()
     del sim_ctrl
@@ -333,10 +393,11 @@ if __name__ == "__main__":
         if command == 'all':
             test_joint_positioning(wrapper)
             test_visual_perception(wrapper)
+            test_tactile_reading(wrapper)
         elif command == "positioning":
             test_joint_positioning(wrapper)
-        # elif command == "sreader":
-        #     call_test_sreader(wrapper)
+        elif command == "tactile":
+            test_tactile_reading(wrapper)
         elif command == "vision":
             test_visual_perception(wrapper)
     else:

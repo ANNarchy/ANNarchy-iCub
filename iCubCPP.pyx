@@ -66,23 +66,23 @@ cdef extern from "Interface_iCub.hpp":
         # close joint reader with cleanup
         void JointWClose(string)
         # write one joint as double value
-        bint JointWWriteDouble(string, double, int, bool)
+        bint JointWWriteDouble(string, double, int, bint)
         # write one joint with the joint angle encoded in a population
-        bint JointWWriteOne(string, vector[double], int, bool)
+        bint JointWWriteOne(string, vector[double], int, bint)
         # write all joints with joint angles encoded in populations
-        bint JointWWriteAll(string, vector[vector[double]], bool)
+        bint JointWWriteAll(string, vector[vector[double]], bint)
 
         # Access to skin reader member functions
         # init skin reader with given parameters
-        bint SkinRInit(string, char)
+        bint SkinRInit(string, char, bint)
         # read sensor data
-        void SkinRReadTactile(string)
+        bint SkinRReadTactile(string)
         # return tactile data for hand skin
-        vector[double] SkinRGetTactileHand(string)
+        vector[vector[double]] SkinRGetTactileHand(string)
         # return tactile data for forearm skin
-        vector[double] SkinRGetTactileForearm(string)
+        vector[vector[double]] SkinRGetTactileForearm(string)
         # return tactile data for upper arm skin
-        vector[double] SkinRGetTactileArm(string)
+        vector[vector[double]] SkinRGetTactileArm(string)
         # return the taxel positions given by the ini files
         vector[vector[double]] SkinRGetTaxelPos(string, string)
         # close and clean skin reader
@@ -478,13 +478,14 @@ cdef class iCubANN_wrapper:
 
     ### Access to skin reader member functions
     # init skin reader with given parameters
-    def skinR_init(self, name, arm):
+    def skinR_init(self, name, arm, norm=True):
         """
-            Calls bool iCubANN::SkinRInit(std::string name, char arm)
+            Calls bool iCubANN::SkinRInit(std::string name, char arm, bool norm_data)
 
             params:
                 std::string name        -- name of the selected skin reader
                 char arm                -- string representing the robot part, has to match iCub part naming
+                bool norm_data          -- if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1])
 
             return:
                 bool                    -- return True, if successful
@@ -494,12 +495,12 @@ cdef class iCubANN_wrapper:
         cdef char a = arm.encode('UTF-8')[0]
 
         # call the interface
-        return my_interface.SkinRInit(s, a)
+        return my_interface.SkinRInit(s, a, norm)
 
     # read sensor data
     def skinR_read_tactile(self, name):
         """
-            Calls void iCubANN::SkinRReadTactile(std::string name)
+            Calls bool iCubANN::SkinRReadTactile(std::string name)
 
             params:
                 std::string name        -- name of the selected skin reader
@@ -508,18 +509,18 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.SkinRReadTactile(s)
+        return my_interface.SkinRReadTactile(s)
 
     # return tactile data for hand skin
     def skinR_get_tactile_hand(self, name):
         """
-            Calls  std::vector<double> iCubANN::SkinRGetTactileHand(std::string name)
+            Calls std::vector<std::vector<double>> iCubANN::SkinRGetTactileHand(std::string name)
 
             params:
                 std::string name        -- name of the selected skin reader
 
             return:
-                std::vector<double>
+                std::vector<std::vector<double>>     -- tactile data of the hand part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0 
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
@@ -530,13 +531,13 @@ cdef class iCubANN_wrapper:
     # return tactile data for forearm skin
     def skinR_get_tactile_forearm(self, name):
         """
-            Calls  std::vector<double> iCubANN::SkinRGetTactileForearm(std::string name)
+            Calls std::vector<std::vector<double>> iCubANN::SkinRGetTactileForearm(std::string name)
 
             params:
                 std::string name        -- name of the selected skin reader
 
             return:
-                std::vector<double>
+                std::vector<std::vector<double>>     -- tactile data of the forearm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0 
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
@@ -547,13 +548,13 @@ cdef class iCubANN_wrapper:
     # return tactile data for upper arm skin
     def skinR_get_tactile_arm(self, name):
         """
-            Calls  std::vector<double> iCubANN::SkinRGetTactileArm(std::string name)
+            Calls std::vector<std::vector<double>> iCubANN::SkinRGetTactileArm(std::string name)
 
             params:
                 std::string name        -- name of the selected skin reader
 
             return:
-                std::vector<double>
+                std::vector<std::vector<double>>     -- tactile data of the arm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0 
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
@@ -564,7 +565,7 @@ cdef class iCubANN_wrapper:
     # return the taxel positions given by the ini files
     def skinRGet_taxel_pos(self, name, skin_part):
         """
-            Calls  std::vector<std::vector<double>> iCubANN::SkinRGetTaxelPos(std::string name, std::string skin_part)
+            Calls std::vector<std::vector<double>> iCubANN::SkinRGetTaxelPos(std::string name, std::string skin_part)
 
             params:
                 std::string name                    -- name of the selected skin reader

@@ -60,7 +60,7 @@ def encode(part, joint, pop_size, joint_angle, sigma):
 def call_test_jreader(ann_wrapper):
     # add joint reader instances
     ann_wrapper.add_joint_reader("J_Reader")
-    ann_wrapper.add_joint_reader("J_Reader")    # dublicate check
+    ann_wrapper.add_joint_reader("J_Reader")    # duplicate check
     ann_wrapper.add_joint_reader("J_Reader1")
     ann_wrapper.add_joint_reader("J_Reader2")
 
@@ -113,7 +113,7 @@ def call_test_jreader(ann_wrapper):
 def call_test_jwriter(ann_wrapper):
     # add joint writer instances
     ann_wrapper.add_joint_writer("J_Writer")
-    ann_wrapper.add_joint_writer("J_Writer")   # dublicate check
+    ann_wrapper.add_joint_writer("J_Writer")   # duplicate check
     ann_wrapper.add_joint_writer("J_Writer1")
     ann_wrapper.add_joint_writer("J_Writer2")
 
@@ -170,17 +170,18 @@ def call_test_jwriter(ann_wrapper):
 def call_test_sreader(ann_wrapper):
     # add skin reader instances
     ann_wrapper.add_skin_reader("S_Reader")
-    ann_wrapper.add_skin_reader("S_Reader")    # dublicate check
+    ann_wrapper.add_skin_reader("S_Reader")    # duplicate check
     ann_wrapper.add_skin_reader("S_Reader1")
 
     print('finish skin reader adding')
     print('\n')
 
     # init skin reader
-    ann_wrapper.skinR_init("S_Reader", "r")
-    ann_wrapper.skinR_init("S_Reader", "r")
-    ann_wrapper.skinR_init("NO_NAME", "r")
-    ann_wrapper.skinR_init("S_Reader1", "g")
+    ann_wrapper.skinR_init("S_Reader", "r", True)       # correct init
+    ann_wrapper.skinR_init("S_Reader", "r", True)       # double init
+    ann_wrapper.skinR_init("NO_NAME", "r", True)        # non existent name
+    ann_wrapper.skinR_init("S_Reader1", "g", False)     # wrong eye descriptor
+    ann_wrapper.skinR_init("S_Reader1", "l", False)     # correct init; non norm
 
     print('finish SReader init')
     print('\n')

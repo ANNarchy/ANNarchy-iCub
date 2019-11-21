@@ -89,15 +89,15 @@ struct iCubANN {
 
     // Access to skin reader member functions //
     // init skin reader with given parameters
-    bool SkinRInit(std::string name, char arm);
+    bool SkinRInit(std::string name, char arm, bool norm_data);
     // read sensor data
-    void SkinRReadTactile(std::string name);
+    bool SkinRReadTactile(std::string name);
     // return tactile data for hand skin
-    std::vector<double> SkinRGetTactileHand(std::string name);
+    std::vector<std::vector<double>> SkinRGetTactileHand(std::string name);
     // return tactile data for forearm skin
-    std::vector<double> SkinRGetTactileForearm(std::string name);
+    std::vector<std::vector<double>> SkinRGetTactileForearm(std::string name);
     // return tactile data for upper arm skin
-    std::vector<double> SkinRGetTactileArm(std::string name);
+    std::vector<std::vector<double>> SkinRGetTactileArm(std::string name);
     // return the taxel positions given by the ini files
     std::vector<std::vector<double>> SkinRGetTaxelPos(std::string name, std::string skin_part);
     // close and clean skin reader
