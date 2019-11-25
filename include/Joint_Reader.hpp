@@ -38,6 +38,8 @@ class JointReader {
     std::vector<int> GetNeuronsPerJoint();
     // get the resolution in degree of the populations encoding the joint angles
     std::vector<double> GetJointsDegRes();
+    // get number of controlled joints
+    int GetJointCount();
     // close joint reader with cleanup
     void Close();
 
@@ -50,12 +52,13 @@ class JointReader {
 
  private:
     bool dev_init = false;    // variable for initialization check
-    std::vector<std::string> key_map {"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"}; // valid iCub part keys
+    std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
 
     std::string icub_part;    // string describing the part of the iCub
 
     int joint_res;    // neuron count for the population coding, if degree per neuron is set by argument
-    std::vector<double> joint_deg_res;    // degree per neuron for the population coding, value per joint; if neuron count is set by argument
+    std::vector<double>
+        joint_deg_res;    // degree per neuron for the population coding, value per joint; if neuron count is set by argument
     int joints;           // number of joints
     double sigma_pop;     // sigma for Gaussian envelope in the population coding
 

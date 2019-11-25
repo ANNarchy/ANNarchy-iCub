@@ -188,9 +188,9 @@ def call_test_sreader(ann_wrapper):
 
     # print taxel positions
     ann_wrapper.skinR_read_tactile("S_Reader")
-    print(ann_wrapper.skinRGet_taxel_pos("S_Reader", "arm"))
-    print(ann_wrapper.skinRGet_taxel_pos("S_Reader", "forearm"))
-    print(ann_wrapper.skinRGet_taxel_pos("S_Reader", "hand"))
+    print(ann_wrapper.skinR_get_taxel_pos("S_Reader", "arm"))
+    print(ann_wrapper.skinR_get_taxel_pos("S_Reader", "forearm"))
+    print(ann_wrapper.skinR_get_taxel_pos("S_Reader", "hand"))
 
     # print tactile data
     print(ann_wrapper.skinR_get_tactile_arm("S_Reader"))

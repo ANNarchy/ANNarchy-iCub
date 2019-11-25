@@ -38,7 +38,7 @@ void iCubANN::AddJointReader(std::string name)
     if (parts_reader.count(name) == 0) {
         parts_reader[name] = new JointReader();
     } else {
-        std::cerr << "[Joint Reader] Name \"" + name + "\" is already used.\n";
+        std::cerr << "[Joint Reader] Name \"" + name + "\" is already used." << std::endl;
     }
 }
 
@@ -51,7 +51,7 @@ void iCubANN::AddJointWriter(std::string name)
     if (parts_writer.count(name) == 0) {
         parts_writer[name] = new JointWriter();
     } else {
-        std::cerr << "[Joint Writer] Name \"" + name + "\" is already used.\n";
+        std::cerr << "[Joint Writer] Name \"" + name + "\" is already used." << std::endl;
     }
 }
 
@@ -64,7 +64,7 @@ void iCubANN::AddSkinReader(std::string name)
     if (tactile_reader.count(name) == 0) {
         tactile_reader[name] = new SkinReader();
     } else {
-        std::cerr << "[Skin Reader] Name \"" + name + "\" is already used.\n";
+        std::cerr << "[Skin Reader] Name \"" + name + "\" is already used." << std::endl;
     }
 }
 
@@ -77,8 +77,13 @@ void iCubANN::AddVisualReader()
     if (visual_input == NULL) {
         visual_input = new VisualReader();
     } else {
-        std::cerr << "Visual Reader is already defined.\n";
+        std::cerr << "[Visual Reader] Visual Reader is already defined." << std::endl;
     }
+}
+
+void iCubANN::RemoveVisualReader() {
+    delete visual_input;
+    visual_input = NULL;
 }
 
 // Access to joint reader member functions //
@@ -136,8 +141,25 @@ std::vector<double> iCubANN::JointRGetJointsDegRes(std::string name)
     }
 }
 
-// read one joint and return joint angle directly as double value
-double iCubANN::JointRReadDouble(std::string name, int joint)
+// get number of controlled joints
+int iCubANN::JointRGetJointCount(std::string name)
+/*
+    params: std::string name        -- name of the selected joint reader
+
+    return: int                     -- return number of joints, being controlled by the reader
+*/
+{
+    if (parts_reader.count(name)) {
+        return parts_reader[name]->GetJointCount();
+    } else {
+        std::cerr << "[Joint Reader] " << name << ": This name is not defined." << std::endl;
+        int empty = 0;
+        return empty;
+    }
+}
+
+    // read one joint and return joint angle directly as double value
+    double iCubANN::JointRReadDouble(std::string name, int joint)
 /*
     params: std::string name    -- name of the selected joint reader
             int joint           -- joint number of the robot part
@@ -252,6 +274,23 @@ std::vector<double> iCubANN::JointWGetJointsDegRes(std::string name)
     } else {
         std::cerr << "[Joint Writer] " << name << ": This name is not defined." << std::endl;
         std::vector<double> empty;
+        return empty;
+    }
+}
+
+// get number of controlled joints
+int iCubANN::JointWGetJointCount(std::string name)
+/*
+    params: std::string name        -- name of the selected joint reader
+
+    return: int                     -- return number of joints, being controlled by the writer
+*/
+{
+    if (parts_writer.count(name)) {
+        return parts_writer[name]->GetJointCount();
+    } else {
+        std::cerr << "[Joint Writer] " << name << ": This name is not defined." << std::endl;
+        int empty = 0;
         return empty;
     }
 }
@@ -435,7 +474,7 @@ void iCubANN::SkinRClose(std::string name)
 
 // Access to visual reader member functions //
 // init Visual reader with given parameters for image resolution, field of view and eye selection
-bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height)
+bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter)
 /*
     params: char eye            -- characteer representing the selected eye (l/L; r/R) 
             double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°) 
@@ -446,16 +485,16 @@ bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img
     return: bool                -- return True, if successful
 */
 {
-    return visual_input->Init(eye, fov_width, fov_height, img_width, img_height);
+    return visual_input->Init(eye, fov_width, fov_height, img_width, img_height, fast_filter);
 }
 
 // start reading images from the iCub with YARP-RFModule
-void iCubANN::VisualRStart(int argc, char *argv[])
+bool iCubANN::VisualRStart(int argc, char *argv[])
 /*
     params: int argc, char *argv[]  -- main function inputs from program call; can be used to configure RFModule; not implemented yet
 */
 {
-    visual_input->Start(argc, argv);
+    return visual_input->Start(argc, argv);
 }
 
 // stop reading images from the iCub, by terminating the RFModule

@@ -40,6 +40,8 @@ cdef extern from "Interface_iCub.hpp":
         void AddSkinReader(string)
         void AddVisualReader()
 
+        void RemoveVisualReader()
+
         # Access to joint reader member functions
         # initialize the joint reader with given parameters
         bint JointRInit(string, string, double, int, double)
@@ -47,6 +49,8 @@ cdef extern from "Interface_iCub.hpp":
         vector[int] JointRGetNeuronsPerJoint(string)
         # get the resolution in degree of the populations encoding the joint angles
         vector[double] JointRGetJointsDegRes(string)
+        # get number of controlled joints
+        int JointRGetJointCount(string)
         # close joint reader with cleanup
         void JointRClose(string)
         # read one joint and return joint angle directly as double value
@@ -63,7 +67,9 @@ cdef extern from "Interface_iCub.hpp":
         vector[int] JointWGetNeuronsPerJoint(string)
         # get the resolution in degree of the populations encoding the joint angles
         vector[double] JointWGetJointsDegRes(string)
-        # close joint reader with cleanup
+        # get number of controlled joints
+        int JointWGetJointCount(string)
+        # close joint writer with cleanup
         void JointWClose(string)
         # write one joint as double value
         bint JointWWriteDouble(string, double, int, bint)
@@ -90,9 +96,9 @@ cdef extern from "Interface_iCub.hpp":
 
         # Access to visual reader member functions
         # init Visual reader with given parameters for image resolution, field of view and eye selection
-        bint VisualRInit(char, double, double, int, int)
+        bint VisualRInit(char, double, double, int, int, bint)
         # start reading images from the iCub with YARP-RFModule
-        void VisualRStart(int, char**)
+        bint VisualRStart(int, char**)
         # stop reading images from the iCub, by terminating the RFModule
         void VisualRStop()
         # read image vector from the image buffer and remove it from the buffer
@@ -207,6 +213,10 @@ cdef class iCubANN_wrapper:
 
     ### end add Reader/Writer
 
+    def rm_visual_reader(self):
+        # call the interface
+        my_interface.RemoveVisualReader()
+
 
     ### Access to joint reader member functions
     # initialize the joint reader with given parameters
@@ -266,6 +276,22 @@ cdef class iCubANN_wrapper:
 
         # call the interface
         return np.array(my_interface.JointRGetJointsDegRes(s))
+
+    def jointR_get_joint_count(self, name):
+        """
+            Calls std::vector<double> iCubANN::JointRGetJointCount(std::string name)
+
+            params:
+                std::string name        -- name of the selected joint reader
+
+            return:
+                int                     -- return number of joints, being controlled by the reader
+        """
+        # we need to transform py-string to c++ compatible string
+        cdef string s = name.encode('UTF-8')
+
+        # call the interface
+        return my_interface.JointRGetJointCount(s)
 
     # read one joint and return joint angle directly as double value
     def jointR_read_double(self, name, joint):
@@ -395,6 +421,22 @@ cdef class iCubANN_wrapper:
 
         # call the interface
         return np.array(my_interface.JointWGetJointsDegRes(s))
+
+    def jointW_get_joint_count(self, name):
+        """
+            Calls std::vector<double> iCubANN::JointWGetJointCount(std::string name)
+
+            params:
+                std::string name        -- name of the selected joint writer
+
+            return:
+                int                     -- return number of joints, being controlled by the writer
+        """
+        # we need to transform py-string to c++ compatible string
+        cdef string s = name.encode('UTF-8')
+
+        # call the interface
+        return my_interface.JointWGetJointCount(s)
 
     # write one joint as double value
     def jointW_write_double(self, name, position, joint, blocking):
@@ -563,7 +605,7 @@ cdef class iCubANN_wrapper:
         return my_interface.SkinRGetTactileArm(s)
 
     # return the taxel positions given by the ini files
-    def skinRGet_taxel_pos(self, name, skin_part):
+    def skinR_get_taxel_pos(self, name, skin_part):
         """
             Calls std::vector<std::vector<double>> iCubANN::SkinRGetTaxelPos(std::string name, std::string skin_part)
 
@@ -600,7 +642,7 @@ cdef class iCubANN_wrapper:
 
     ### Access to visual reader member functions
     # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def visualR_init(self, eye, fov_width=60, fov_height=48, img_width=320, img_height=240):
+    def visualR_init(self, eye, fov_width=60, fov_height=48, img_width=320, img_height=240, fast_filter=True):
         """
             Calls bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height)
 
@@ -610,6 +652,7 @@ cdef class iCubANN_wrapper:
                 double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width       -- output image width in pixel (input width: 320px)
                 int img_height      -- output image height in pixel (input height: 240px)
+                fast_filter         -- 
 
             return:
                 bool                -- return True, if successful
@@ -617,14 +660,14 @@ cdef class iCubANN_wrapper:
         cdef char e = eye.encode('UTF-8')[0]
 
         # call the interface
-        return my_interface.VisualRInit(e, fov_width, fov_height, img_width, img_height)
+        return my_interface.VisualRInit(e, fov_width, fov_height, img_width, img_height, fast_filter)
 
     # start reading images from the iCub with a YARP-RFModule
     def visualR_start(self):
         """
             Calls void iCubANN::VisualRStart(int argc, char *argv[])
         """
-        argv = []
+        argv=[]
         # Declare char**
         cdef char** c_argv
         argc = len(argv)
@@ -638,9 +681,10 @@ cdef class iCubANN_wrapper:
             argv[i] = argv[i].encode('UTF-8')
             c_argv[i] = argv[i]
         # call the interface
-        my_interface.VisualRStart(argc, c_argv)
+        start = my_interface.VisualRStart(argc, c_argv)
         # Let him go
         free(c_argv)
+        return start
 
     # stop reading images from the iCub, by terminating the RFModule
     def visualR_stop(self):

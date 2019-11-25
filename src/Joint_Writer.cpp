@@ -151,6 +151,15 @@ std::vector<double> JointWriter::GetJointsDegRes()
     return joint_deg_res;
 }
 
+// get number of controlled joints
+int JointWriter::GetJointCount()
+/*
+  return: int       -- return number of controlled joints
+*/
+{
+    return joints;
+}
+
 // decode the population coded joint angle to double value
 double JointWriter::Decode(std::vector<double> position_pop, int joint)
 /*
@@ -296,6 +305,7 @@ void JointWriter::Close() {
         driver.close();
     }
     yarp::os::Network::fini();
+    dev_init = false;
 }
 
 // check if iCub part key is valid

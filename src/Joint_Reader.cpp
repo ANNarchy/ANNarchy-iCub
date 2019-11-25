@@ -160,6 +160,15 @@ std::vector<double> JointReader::GetJointsDegRes()
     return joint_deg_res;
 }
 
+int JointReader::GetJointCount()
+/*
+  return: int       -- return number of controlled joints
+*/
+{
+    return joints;
+}
+
+
 // return the normal distribution value for a given value, mean and sigma
 double JointReader::NormalPdf(double value, double mean, double sigma)
 /*
@@ -264,6 +273,7 @@ void JointReader::Close() {
         driver.close();
     }
     yarp::os::Network::fini();
+    dev_init = false;
 }
 
 // check if iCub part key is valid

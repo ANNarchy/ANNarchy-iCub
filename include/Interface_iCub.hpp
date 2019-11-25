@@ -30,7 +30,7 @@
 
 struct iCubANN {
     VisualReader *visual_input;                            // associated visual reader (only one possible
-                                                            // for left/right eye)
+                                                           // for left/right eye)
     std::map<std::string, JointReader *> parts_reader;     // associated joint readers (one for every robot part)
     std::map<std::string, JointWriter *> parts_writer;     // associated joint writers (one for every robot part)
     std::map<std::string, SkinReader *> tactile_reader;    // associated skin reader
@@ -44,12 +44,14 @@ struct iCubANN {
     // add an instance of visual reader
     void AddVisualReader();
 
+    void RemoveVisualReader();
+
     // Access to visual reader member functions //
     // init Visual reader with given parameters for image resolution, field of
     // view and eye selection
-    bool VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height);
+    bool VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter);
     // start reading images from the iCub with YARP-RFModule
-    void VisualRStart(int argc, char *argv[]);
+    bool VisualRStart(int argc, char *argv[]);
     // stop reading images from the iCub, by terminating the RFModule
     void VisualRStop();
     // read image vector from the image buffer and remove it from the buffer
@@ -62,6 +64,8 @@ struct iCubANN {
     std::vector<int> JointRGetNeuronsPerJoint(std::string name);
     // get the resolution in degree of the populations encoding the joint angles
     std::vector<double> JointRGetJointsDegRes(std::string name);
+    // get number of controlled joints
+    int JointRGetJointCount(std::string name);
     // close joint reader with cleanup
     void JointRClose(std::string name);
     // read one joint and return joint angle directly as double value
@@ -78,6 +82,8 @@ struct iCubANN {
     std::vector<int> JointWGetNeuronsPerJoint(std::string name);
     // get the resolution in degree of the populations encoding the joint angles
     std::vector<double> JointWGetJointsDegRes(std::string name);
+    // get number of controlled joints
+    int JointWGetJointCount(std::string name);
     // close joint reader with cleanup
     void JointWClose(std::string name);
     // write one joint as double value

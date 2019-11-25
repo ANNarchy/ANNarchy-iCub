@@ -344,4 +344,5 @@ void SkinReader::Close() {
     }
 
     yarp::os::Network::fini();
+    dev_init = false;
 }

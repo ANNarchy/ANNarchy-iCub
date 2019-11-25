@@ -37,13 +37,14 @@ typedef std::chrono::high_resolution_clock Clock;
 VisualReader::~VisualReader() {}
 
 // init Visual reader with given parameters for image resolution, field of view and eye selection
-bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height)
+bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter)
 /*
     params: char eye            -- characteer representing the selected eye (l/L; r/R)
             double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
             double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
             int img_width       -- output image width in pixel (input width: 320px)
             int img_height      -- output image height in pixel (input height: 240px)
+            bool fast_filter    -- 
 
     return: bool                -- return True, if successful
 */
@@ -55,8 +56,8 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 
         // compute output field of view borders in input image
         if (fov_width <= icub_fov_x) {
-            out_fov_x_low = static_cast<int>(ceil(FovX2PixelX(-fov_width / 2.0)));
-            out_fov_x_up = static_cast<int>(floor(FovX2PixelX(fov_width / 2.0)));
+            out_fov_x_low = static_cast<int>(ceil(FovX2PixelX(-fov_width / 2.0)/2.0));
+            out_fov_x_up = static_cast<int>(floor(FovX2PixelX(fov_width / 2.0)/2.0));
         } else {
             std::cerr << "[Visual Reader] Selected field of view width is out of range" << std::endl;
             return false;
@@ -73,10 +74,23 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         // calculate output region of view (ROV) (image part equivalent to output field of view)
         rov_width = out_fov_x_up - out_fov_x_low;
         rov_height = out_fov_y_up - out_fov_y_low;
+        if (rov_width != fov_width || rov_height != fov_height) {
+            cut_img = true;
+        } else {
+            cut_img = false;
+        }
 
         // calculate scaling factors to scale ROV to output image size
         res_scale_x = static_cast<double>(out_width) / (rov_width);
         res_scale_y = static_cast<double>(out_height) / (rov_height);
+
+        if (res_scale_y > 1 || res_scale_x > 1) {
+            if (fast_filter) {
+                filter_ds = cv::INTER_LINEAR;
+            } else {
+                filter_ds = cv::INTER_CUBIC;
+            }
+        }
 
         // init YARP-Network
         yarp::os::Network::init();
@@ -132,18 +146,19 @@ std::vector<double> VisualReader::ReadFromBuf()
     std::vector<double> img;
     if (CheckInit()) {
         // if image buffer is not empty return the image and delete it from the buffer
-        if (img_buffer->empty()) {
-            printf("[Visual Reader] The image buffer is empty! \n");
-        } else {
+        if (!img_buffer->empty()) {
             img = img_buffer->front();
             img_buffer->pop_front();
         }
+        //  else {
+        //     printf("[Visual Reader] The image buffer is empty! \n");
+        // }
     }
     return img;
 }
 
 // start reading images from the iCub with YARP-RFModule
-void VisualReader::Start(int argc, char *argv[])
+bool VisualReader::Start(int argc, char *argv[])
 /*
     params: int argc, char *argv[]  -- main function inputs from program call; can be used to configure RFModule; not implemented yet
 */
@@ -152,8 +167,12 @@ void VisualReader::Start(int argc, char *argv[])
         // configure YARP-RessourceFinder and start RFModule as seperate Thread
         yarp::os::ResourceFinder rf;
         rf.configure(argc, argv);
-
-        runModuleThreaded(rf);
+        auto start = runModuleThreaded(rf);
+        if (start) {
+            std::cerr << "[Visual Reader] Failed to start the RF Module!" << std::endl;
+            return false;
+        }
+        return true;
     }
 }
 
@@ -194,10 +213,10 @@ bool VisualReader::updateModule()
     return: bool      -- return True, if successful
 */
 {
+    // auto t1 = Clock::now();
     auto t1 = Clock::now();
 
     // read image from the iCub and get CV-Matrix
-    yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb;
     if (act_eye == 'L') {
         iEyeRgb = port_left.read();
     }
@@ -208,15 +227,40 @@ bool VisualReader::updateModule()
     if (iEyeRgb == nullptr) {
         return false;
     }
-
     cv::Mat RgbMat = yarp::cv::toCvMat(*iEyeRgb);
 
+    auto t2 = Clock::now();
+    std::cout << "[Visual Reader] Read image in: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms"
+              << std::endl;
+    // ca. 30 ms (mit viewer) / 20 ms (ohne viewer)
+
+
+    // t1 = Clock::now();
+
     // convert rgb image to grayscale image
-    cv::Mat tmpMat, monoMat;
     cv::cvtColor(RgbMat, tmpMat, cv::COLOR_RGB2GRAY);
 
+    // t2 = Clock::now();
+    // std::cout << "[Visual Reader] Convert image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
+    //           << std::endl;
+    // 1/4: 85-110 µs / full: 85-110 µs
+
+    // t1 = Clock::now();
+
     // extracting the output part of the field of view
-    cv::Mat ROV = tmpMat(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+    cv::Mat ROV;
+    if (!cut_img) {
+        ROV = tmpMat;
+    } else {
+        ROV = tmpMat(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+    }
+
+    // t2 = Clock::now();
+    // std::cout << "[Visual Reader] Cut image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
+    //           << std::endl;
+    // 1/4: 10 µs / full: 10 µs / 1/2 fov: 10 µs
+
+    // t1 = Clock::now();
 
     // resize ROV to given output resolution
     if (res_scale_x == 1 && res_scale_x == 1) {
@@ -224,24 +268,51 @@ bool VisualReader::updateModule()
     } else if (res_scale_x < 1 || res_scale_x < 1) {
         cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
     } else {
-        cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, cv::INTER_LINEAR);
+        cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, filter_ds);
     }
+
+    // t2 = Clock::now();
+    // std::cout << "[Visual Reader] Resize image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
+    //           << std::endl;
+    // 1/4: 50 - 70 µs / full: 2 µs / 1/2fov: 50 - 70 µs
+
+    // t1 = Clock::now();
 
     // flat the image matrix to 1D-vector
     std::vector<int> img_vector = Mat2Vec(monoMat);
 
+    // t2 = Clock::now();
+    // std::cout << "[Visual Reader] Flatten image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
+    //           << std::endl;
+    // 1/4: 15-25 µs / full: 220 µs / 1/2 fov: 15-25 µs
+
+    // t1 = Clock::now();
+
     // normalize the image from 0..255 to 0..1
     std::vector<double> img_vec_norm(img_vector.size());
+    double norm_fact = 1 / 255.0;
     for (int i = 0; i < img_vector.size(); i++) {
-        img_vec_norm[i] = (static_cast<double>(img_vector[i]) / 255.0);
+        img_vec_norm[i] = (static_cast<double>(img_vector[i]) * norm_fact);
     }
+
+    // t2 = Clock::now();
+    // std::cout << "[Visual Reader] Norm image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
+    //           << std::endl;
+    // 1/4: 40-60 µs / full: 900 µs / 1/2fov: 40-60 µs
+
+    // t1 = Clock::now();
 
     // store image in the buffer
     img_buffer->push_back(img_vec_norm);
 
-    auto t2 = Clock::now();
-    std::cout << "[Visual Reader] Load image in: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms"
-              << std::endl;
+    // t2 = Clock::now();
+    // std::cout << "[Visual Reader] Write image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
+    //           << std::endl;
+    // 1/4: 5 µs / full: 250 µs / 1/2fov: 5 µs
+
+    // auto t2 = Clock::now();
+    // std::cout << "[Visual Reader] Load image in: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms"
+    //           << std::endl;
 
     return true;
 }
@@ -282,6 +353,7 @@ bool VisualReader::close()
 
     // close YARP Network
     yarp::os::Network::fini();
+    dev_init = false;
     return true;
 }
 

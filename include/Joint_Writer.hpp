@@ -38,6 +38,8 @@ class JointWriter {
     std::vector<int> GetNeuronsPerJoint();
     // get the resolution in degree of the populations encoding the joint angles
     std::vector<double> GetJointsDegRes();
+    // get number of controlled joints
+    int GetJointCount();
     // close joint reader with cleanup
     void Close();
 

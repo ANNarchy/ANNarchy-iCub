@@ -34,9 +34,9 @@ class VisualReader : private yarp::os::RFModule {
     ~VisualReader();
 
     // init Visual reader with given parameters for image resolution, field of view and eye selection
-    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height);
+    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter);
     // start reading images from the iCub with YARP-RFModule
-    void Start(int argc, char *argv[]);
+    bool Start(int argc, char *argv[]);
     // stop reading images from the iCub, by terminating the RFModule
     void Stop();
     // read image vector from the image buffer and remove it from the buffer
@@ -53,6 +53,8 @@ class VisualReader : private yarp::os::RFModule {
     const double icub_fov_y = 48;    // iCub field of view vertical in degree
 
     char act_eye;    // selected iCub eye to read images from
+    int filter_ds;
+    bool cut_img;
 
     int out_fov_x_up, out_fov_x_low;    // pixel borders for horizontal field of view in the iCub image
     int out_fov_y_up, out_fov_y_low;    // pixel borders for vertical field of view in the iCub image
@@ -69,6 +71,9 @@ class VisualReader : private yarp::os::RFModule {
 
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_right;    // port for the iCub right eye image
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;     // port for the iCub left eye image
+
+    yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb;
+    cv::Mat tmpMat, monoMat;
 
     // functions for the YARP-RFModule //
     // configure RFModule
