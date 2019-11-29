@@ -40,6 +40,10 @@ http://wiki.icub.org/wiki/Manual
 YARP website:
 http://www.yarp.it/index.html
 
+git repository with scripts to control the iCub simulator:
+https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git
+
+
 ## Authors
 Torsten Follak
 
