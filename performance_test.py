@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 
@@ -5,8 +6,8 @@ import matplotlib.pylab as plt
 import numpy as np
 
 import iCubCPP  # requires iCubCPP in the present directory
-from Testfiles.joint_limits import joint_limits as j_lim
 import Testfiles.lib.world_controller as wc
+from Testfiles.joint_limits import joint_limits as j_lim
 
 bog2deg = 180.0 / np.pi         # factor for radiant to degree conversion
 eye_distance = 0.07             # distance between left and right eye
@@ -81,7 +82,7 @@ def speed_test_jreader(ann_wrapper, test_count):
     # init joint reader
     ann_wrapper.jointR_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, sigma, n_pop, neuron_res)
     ann_wrapper.jointR_init("head", ann_wrapper.PART_KEY_HEAD, sigma, n_pop, neuron_res)
-    
+
     print('____ Initialized all joint reader and writer ____')
     print('____________________________________________________________\n')
 
@@ -154,7 +155,7 @@ def speed_test_jreader(ann_wrapper, test_count):
 
 
 #########################################################
-def speed_test_jwriter(ann_wrapper):
+def speed_test_jwriter(ann_wrapper, test_count):
     n_pop = 100
     sigma = 1.5
     neuron_res = 0.0
@@ -172,6 +173,11 @@ def speed_test_jwriter(ann_wrapper):
     positions['pos_head_complex'] = (np.load(position_path + "test_pos_head_complex.npy"), 'head')
     positions['pos_head_zero'] = (np.load(position_path + "test_pos_head_zero.npy"), 'head')
 
+    zero_pos = {}
+    zero_pos['head'] = np.zeros(6)
+    zero_pos['right_arm'] = np.load(position_path + "zero_pos_arm.npy")
+    zero_pos['left_arm'] = np.load(position_path + "zero_pos_arm.npy")
+
     # encode positions
     print('__ Encode test positions __')
     part_enc = {'right_arm': {}, 'head': {}}
@@ -183,7 +189,6 @@ def speed_test_jwriter(ann_wrapper):
         part_enc[positions[key][1]][key] = pos_enc
 
     print('____________________________________________________________\n')
-
     print('__ Add and init joint writer modules __')
 
     for name in part_enc:
@@ -192,9 +197,9 @@ def speed_test_jwriter(ann_wrapper):
     print('____ Added all joint writer ____')
 
     # init joint writer
-    ann_wrapper.jointW_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, neuron_res)
-    ann_wrapper.jointW_init("left_arm", ann_wrapper.PART_KEY_LEFT_ARM, n_pop, neuron_res)
-    ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, neuron_res)
+    ann_wrapper.jointW_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, neuron_res, 100.0)
+    ann_wrapper.jointW_init("left_arm", ann_wrapper.PART_KEY_LEFT_ARM, n_pop, neuron_res, 100.0)
+    ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, neuron_res, 100.0)
     print('____ Initialized all joint writer ____')
     print('____________________________________________________________\n')
 
@@ -204,20 +209,22 @@ def speed_test_jwriter(ann_wrapper):
     results_double = {}
     for name in part_enc:
         joints = ann_wrapper.jointW_get_joint_count(name)
-        zero_pos = np.zeros((joints))
         print('____ Test part:', name)
         for key in positions:
             if positions[key][1] == name:
                 print('______ Test position:', key)
-                time_start = time.time()
-                for i in range(joints):
-                    ann_wrapper.jointW_write_double(name, positions[key][0][i], i, True)
-                time_stop = time.time()
-                results_double[name + '_' + key] = time_stop -time_start
+                for i in range(test_count):
+                    time_start = time.time()
+                    for i in range(joints):
+                        ann_wrapper.jointW_write_double(name, positions[key][0][i], i, True)
+                    time_stop = time.time()
+                    results_double[name + '_' + key] += time_stop -time_start
 
-                for i in range(joints):
-                    ann_wrapper.jointW_write_double(name, zero_pos[i], i, True)
-                time.sleep(0.5)
+                    for i in range(joints):
+                        ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, True)
+                    time.sleep(0.5)
+                results_double[name + '_' + key] /= test_count
+
 
     print('________ Test results: Double')
     for key in results_double:
@@ -229,19 +236,20 @@ def speed_test_jwriter(ann_wrapper):
     results_pop_single = {}
     for name in part_enc:
         joints = ann_wrapper.jointW_get_joint_count(name)
-        zero_pos = np.zeros((joints))
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
-            time_start = time.time()
-            for i in range(joints):
-                ann_wrapper.jointW_write_one(name, part_enc[name][key][i], i, True)
-            time_stop = time.time()
-            results_pop_single[name + '_' + key] = time_stop -time_start
+            for i in range(test_count):
+                time_start = time.time()
+                for i in range(joints):
+                    ann_wrapper.jointW_write_one(name, part_enc[name][key][i], i, True)
+                time_stop = time.time()
+                results_pop_single[name + '_' + key] += time_stop -time_start
 
-            for i in range(joints):
-                ann_wrapper.jointW_write_double(name, zero_pos[i], i, True)
-            time.sleep(0.5)
+                for i in range(joints):
+                    ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, True)
+                time.sleep(0.5)
+            results_pop_single[name + '_' + key] /= test_count
 
     print('________ Test results: Population_single')
     for key in results_pop_single:
@@ -255,14 +263,16 @@ def speed_test_jwriter(ann_wrapper):
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
-            time_start = time.time()
-            ann_wrapper.jointW_write_all(name, part_enc[name][key], True)
-            time_stop = time.time()
-            results_pop_all[name + '_' + key] = time_stop -time_start
+            for i in range(test_count):
+                time_start = time.time()
+                ann_wrapper.jointW_write_all(name, part_enc[name][key], True)
+                time_stop = time.time()
+                results_pop_all[name + '_' + key] += time_stop -time_start
 
-            for i in range(joints):
-                ann_wrapper.jointW_write_double(name, zero_pos[i], i, True)
-            time.sleep(0.5)
+                for i in range(joints):
+                    ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, True)
+                time.sleep(0.5)
+            results_pop_all[name + '_' + key] /= test_count
 
     print('________ Test results: Population_all')
     for key in results_pop_all:
@@ -281,7 +291,7 @@ def speed_test_jwriter(ann_wrapper):
 
 #########################################################
 def speed_test_sreader(ann_wrapper, test_count):
-    
+
     print('____________________________________________________________')
     print('__ Add and init skin reader module __')
     # add skin reader instances
@@ -296,7 +306,7 @@ def speed_test_sreader(ann_wrapper, test_count):
     print('____ Initialized skin reader ____')
     print('____________________________________________________________\n')
 
-    
+
     print('____ Test speed performance with normalization ____')
     t_start_norm = time.time()
     for i in range(test_count):
@@ -343,6 +353,10 @@ def speed_test_vreader(ann_wrapper, test_count):
     imgs_quarter = []
     imgs_field = []
 
+    path = "./Testfiles/Vision/"
+    if not os.path.isdir(path):
+        os.mkdir(path)
+
     print('____________________________________________________________')
     print('__ Add and init visual reader module with full resolution __')
     # add visual reader instance
@@ -367,6 +381,8 @@ def speed_test_vreader(ann_wrapper, test_count):
     ann_wrapper.visualR_stop()
     ann_wrapper.rm_visual_reader()
 
+    np.save(path + 'full_size.npy', img_full)
+
     time.sleep(1.0)
     ann_wrapper.add_visual_reader()
 
@@ -384,11 +400,13 @@ def speed_test_vreader(ann_wrapper, test_count):
         if img_quarter.shape[0] != 0:
             imgs_quarter.append(img_quarter)
     t_stop_quart = time.time()
-    
+
     print('____________________________________________________________')
     print('__ Stop and close visual reader module __')
     ann_wrapper.visualR_stop()
     ann_wrapper.rm_visual_reader()
+
+    np.save(path + 'quarter_size.npy', img_quarter)
 
     time.sleep(1.0)
     ann_wrapper.add_visual_reader()
@@ -407,41 +425,92 @@ def speed_test_vreader(ann_wrapper, test_count):
         if img_field.shape[0] != 0:
             imgs_field.append(img_field)
     t_stop_field = time.time()
-    
+
     print('____________________________________________________________')
     print('__ Stop and close visual reader module __')
     ann_wrapper.visualR_stop()
 
-    print('Time with full resolution:', (t_stop_full - t_start_full) / test_count, "s")
-    print('Time with quarter resolution:', (t_stop_quart - t_start_quart) / test_count, "s")
-    print('Time with quarter resolution and half visual field:', (t_stop_field - t_start_field) / test_count, "s")
+    np.save(path + 'field_size.npy', img_field)
+
+    print('Time with full resolution:', 1. / ((t_stop_full - t_start_full) / test_count), "fps")
+    print('Time with quarter resolution:', 1.0 / ((t_stop_quart - t_start_quart) / test_count), "fps")
+    print('Time with quarter resolution and half visual field:', 1/ ((t_stop_field - t_start_field) / test_count), "fps")
 
 
 #########################################################
-def track_hand(ann_wrapper):
+def vis_move_test(ann_wrapper):
+    position_path = "./Testfiles/test_positions/"
+    # position = np.load(position_path + "test_visuomove.npy")
+    pos = {}
+    pos[True] = np.load(position_path + "test_vismov0.npy")
+    pos[False] = np.load(position_path + "test_vismov1.npy")
+
+    zero_pos = {}
+    zero_pos['head'] = np.zeros(6)
+    zero_pos['right_arm'] = np.load(position_path + "test_pos_home.npy")
+
+    path = "./Testfiles/Visiou_movement/"
+    if not os.path.isdir(path):
+        os.mkdir(path)
+
     n_pop = 50
-    ann_wrapper.add_joint_writer("tracking")
-    ann_wrapper.jointW_init("tracking", ann_wrapper.PART_KEY_HEAD, n_pop)
+    imgs = []
+
+    ann_wrapper.add_visual_reader()
+    ann_wrapper.add_joint_writer("moving")
+    ann_wrapper.add_joint_writer("head")
+    speed_arm = 1
+    ann_wrapper.visualR_init('r', 60, 48, 80, 60)
+    ann_wrapper.jointW_init("moving", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, speed_arm)
+    ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, 100)
+
+    for i in range(ann_wrapper.jointW_get_joint_count("moving")):
+        ann_wrapper.jointW_write_double("moving", pos[True][i], i, True)
+
     sim_ctrl = wc.WorldController()
     hand_loc = sim_ctrl.get_hand_location("rhand")
-    # target_pos = np.zeros(ann)
 
     dx = hand_loc[0] - eye_loc[0]
     dy = hand_loc[1] - eye_loc[1]
     dz = hand_loc[2] - eye_loc[2]
     alpha = bog2deg * np.arctan(dy/dz)
     beta =  - bog2deg * np.arctan(dx/dz)
+    target_pos = np.zeros(ann_wrapper.jointW_get_joint_count("head"))
 
-    target_pos[0] = 2.0/3.0 * alpha
-    target_pos[3] =  1.0// 3.0 * alpha
-    target_pos[2] = 1.0/3.0 * beta
-    target_pos[4] = 2.0/3.0 * beta
+    target_pos[0] = 3.0/4.0 * alpha
+    target_pos[3] = 1.0/ 4.0 * alpha - 3
+    target_pos[2] = -1.0/2.0 * beta
+    target_pos[4] = 1.0/2.0 * beta - 10
 
-def move_hand(ann_wrapper):
-    ann_wrapper.add_joint_writer("moving")
+    for i in range(ann_wrapper.jointW_get_joint_count("head")):
+        ann_wrapper.jointW_write_double_all("head", target_pos, True)
+    time.sleep(2)
 
-def tracking_test(ann_wrapper):
-    ann_wrapper.add_visual_reader()
+    ann_wrapper.visualR_start()
+
+    for i in range(ann_wrapper.jointW_get_joint_count("moving")):
+        ann_wrapper.jointW_write_double_all("moving", pos[False], True)
+    t_start = time.time()
+    pos_choice = True
+    while len(imgs) < 100:
+        imgs.append(np.array(ann_wrapper.visualR_read_fromBuf()))
+        dt = time.time() - t_start
+        if dt > 0.5:
+            for i in range(ann_wrapper.jointW_get_joint_count("moving")):
+                ann_wrapper.jointW_write_double_all("moving", pos[pos_choice], False)
+                pos_choice = not pos_choice
+                t_start = time.time()
+
+    ann_wrapper.visualR_stop()
+
+    np.save(path + 'visual_percept_' + str(speed_arm) + '.npy', imgs)
+
+    ann_wrapper.jointW_write_double_all("moving", zero_pos["right_arm"], True)
+    ann_wrapper.jointW_write_double_all("head", zero_pos["head"], True)
+
+    ann_wrapper.jointW_close("moving")
+    ann_wrapper.jointW_close("head")
+
 
 #########################################################
 if __name__ == "__main__":
@@ -452,17 +521,20 @@ if __name__ == "__main__":
         command = sys.argv[1]
         if command == 'all':
             speed_test_jreader(wrapper, test_cnt)
-            speed_test_jwriter(wrapper)
+            speed_test_jwriter(wrapper, test_cnt)
             speed_test_sreader(wrapper, test_cnt)
             speed_test_vreader(wrapper, test_cnt)
+            vis_move_test(wrapper)
         elif command == "jreader":
             speed_test_jreader(wrapper, test_cnt)
         elif command == "jwriter":
-            speed_test_jwriter(wrapper)
+            speed_test_jwriter(wrapper, test_cnt)
         elif command == "sreader":
             speed_test_sreader(wrapper, test_cnt)
         elif command == "vreader":
             speed_test_vreader(wrapper, test_cnt)
+        elif command == "visuo_move":
+            vis_move_test(wrapper)
     else:
         print('No valid test command!')
 
