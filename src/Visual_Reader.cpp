@@ -16,7 +16,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include <yarp/cv/Cv.h>
 #include <yarp/dev/all.h>
 #include <yarp/os/all.h>
@@ -26,6 +25,7 @@
 #include <iostream>
 #include <queue>
 #include <string>
+#include <typeinfo>
 
 #include <opencv2/opencv.hpp>
 
@@ -36,19 +36,21 @@ typedef std::chrono::high_resolution_clock Clock;
 // Destructor
 VisualReader::~VisualReader() {}
 
-// init Visual reader with given parameters for image resolution, field of view and eye selection
-bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter)
-/*
-    params: char eye            -- characteer representing the selected eye (l/L; r/R)
-            double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
-            double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
-            int img_width       -- output image width in pixel (input width: 320px)
-            int img_height      -- output image height in pixel (input height: 240px)
-            bool fast_filter    -- 
+/*** public methods for the user ***/
+bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter) {
+    /*
+        Initialize Visual reader with given parameters for image resolution, field of view and eye selection
 
-    return: bool                -- return True, if successful
-*/
-{
+        params: char eye            -- characteer representing the selected eye (l/L; r/R)
+                double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
+                double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
+                int img_width       -- output image width in pixel (input width: 320px)
+                int img_height      -- output image height in pixel (input height: 240px)
+                bool fast_filter    -- 
+
+        return: bool                -- return True, if successful
+    */
+
     if (!dev_init) {
         // set ouput image size
         out_width = img_width;
@@ -56,8 +58,8 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 
         // compute output field of view borders in input image
         if (fov_width <= icub_fov_x) {
-            out_fov_x_low = static_cast<int>(ceil(FovX2PixelX(-fov_width / 2.0)/2.0));
-            out_fov_x_up = static_cast<int>(floor(FovX2PixelX(fov_width / 2.0)/2.0));
+            out_fov_x_low = static_cast<int>(ceil(FovX2PixelX(-fov_width / 2.0) / 2.0));
+            out_fov_x_up = static_cast<int>(floor(FovX2PixelX(fov_width / 2.0) / 2.0));
         } else {
             std::cerr << "[Visual Reader] Selected field of view width is out of range" << std::endl;
             return false;
@@ -80,6 +82,19 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
             cut_img = false;
         }
 
+        if (typeid(precision) == typeid(double)) {
+            // tmpMat1.create(out_height, out_width, CV_64FC1);
+            new_type = CV_64FC1;
+            std::cout << "double" << std::endl;
+        } else if (typeid(precision) == typeid(float)) {
+            // tmpMat1.create(out_height, out_width, CV_32FC1);
+            new_type = CV_32FC1;
+            std::cout << "float" << std::endl;
+        } else {
+            std::cerr << "[Visual Reader] Precision type is not valid!" << std::endl;
+            return false;
+        }
+
         // calculate scaling factors to scale ROV to output image size
         res_scale_x = static_cast<double>(out_width) / (rov_width);
         res_scale_y = static_cast<double>(out_height) / (rov_height);
@@ -91,6 +106,8 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
                 filter_ds = cv::INTER_CUBIC;
             }
         }
+
+        norm_fact = 1 / 255.0;
 
         // init YARP-Network
         yarp::os::Network::init();
@@ -129,20 +146,12 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
     }
 }
 
-// check if init function was called
-bool VisualReader::CheckInit() {
-    if (!dev_init) {
-        std::cerr << "[Visual Reader] Error: Device is not initialized!" << std::endl;
-    }
-    return dev_init;
-}
+std::vector<double> VisualReader::ReadFromBuf() {
+    /*
+        Read image vector from the image buffer and remove from the buffer
 
-// read image vector from the image buffer and remove from the buffer
-std::vector<double> VisualReader::ReadFromBuf()
-/*
-    return: std::vector<double>     -- image (1D-vector) from the image buffer
-*/
-{
+        return: std::vector<double>     -- image (1D-vector) from the image buffer
+    */
     std::vector<double> img;
     if (CheckInit()) {
         // if image buffer is not empty return the image and delete it from the buffer
@@ -157,12 +166,12 @@ std::vector<double> VisualReader::ReadFromBuf()
     return img;
 }
 
-// start reading images from the iCub with YARP-RFModule
-bool VisualReader::Start(int argc, char *argv[])
-/*
-    params: int argc, char *argv[]  -- main function inputs from program call; can be used to configure RFModule; not implemented yet
-*/
-{
+bool VisualReader::Start(int argc, char *argv[]) {
+    /*
+        Start reading images from the iCub with YARP-RFModule
+
+        params: int argc, char *argv[]  -- main function inputs from program call; can be used to configure RFModule; not implemented yet
+    */
     if (CheckInit()) {
         // configure YARP-RessourceFinder and start RFModule as seperate Thread
         yarp::os::ResourceFinder rf;
@@ -176,8 +185,11 @@ bool VisualReader::Start(int argc, char *argv[])
     }
 }
 
-// stop reading images from the iCub, by terminating the RFModule
 void VisualReader::Stop() {
+    /*
+        Stop reading images from the iCub, by terminating the RFModule
+    */
+
     if (CheckInit()) {
         // stop and close RFModule
         stopModule(true);
@@ -185,36 +197,37 @@ void VisualReader::Stop() {
     }
 }
 
-// configure YARP-RFModule
-bool VisualReader::configure(yarp::os::ResourceFinder &rf)
-/*
-    params: yarp::os::ResourceFinder &rf  -- YARP ResourceFinder can be used to configure variables from e.g. ini-file
+/*** methods for the YARP-RFModule ***/
+bool VisualReader::configure(yarp::os::ResourceFinder &rf) {
+    /*
+        Configure YARP-RFModule; given by the RFModule Class, not used here
 
-    return: bool                          -- return True, if successful
-*/
-{
+        params: yarp::os::ResourceFinder &rf  -- YARP ResourceFinder can be used to configure variables from e.g. ini-file
+
+        return: bool                          -- return True, if successful
+    */
     // empty, because anything is configured in init(); needed for RFMoule
     return true;
 }
 
-// get calling period of updateModule
-double VisualReader::getPeriod()
-/*
-    return: double      -- period for calling updateModule
-*/
-{
+double VisualReader::getPeriod() {
+    /*
+        Return the calling period of updateModule
+
+        return: double      -- period for calling updateModule
+    */
     // 0.0 to synchronize with incoming images
     return 0.0;
 }
 
-// YARP-RFModule update function, is called when the module is running, load images from the iCub
-bool VisualReader::updateModule()
-/*
-    return: bool      -- return True, if successful
-*/
-{
-    // auto t1 = Clock::now();
-    auto t1 = Clock::now();
+bool VisualReader::updateModule() {
+    /*
+        YARP-RFModule update function, is called when the module is running, load images from the iCub
+
+        return: bool      -- return True, if successful
+    */
+
+    // auto t1_load = Clock::now();
 
     // read image from the iCub and get CV-Matrix
     if (act_eye == 'L') {
@@ -229,38 +242,15 @@ bool VisualReader::updateModule()
     }
     cv::Mat RgbMat = yarp::cv::toCvMat(*iEyeRgb);
 
-    auto t2 = Clock::now();
-    std::cout << "[Visual Reader] Read image in: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms"
-              << std::endl;
-    // ca. 30 ms (mit viewer) / 20 ms (ohne viewer)
-
-
-    // t1 = Clock::now();
-
     // convert rgb image to grayscale image
     cv::cvtColor(RgbMat, tmpMat, cv::COLOR_RGB2GRAY);
 
-    // t2 = Clock::now();
-    // std::cout << "[Visual Reader] Convert image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
-    //           << std::endl;
-    // 1/4: 85-110 µs / full: 85-110 µs
-
-    // t1 = Clock::now();
-
     // extracting the output part of the field of view
-    cv::Mat ROV;
     if (!cut_img) {
         ROV = tmpMat;
     } else {
         ROV = tmpMat(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
     }
-
-    // t2 = Clock::now();
-    // std::cout << "[Visual Reader] Cut image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
-    //           << std::endl;
-    // 1/4: 10 µs / full: 10 µs / 1/2 fov: 10 µs
-
-    // t1 = Clock::now();
 
     // resize ROV to given output resolution
     if (res_scale_x == 1 && res_scale_x == 1) {
@@ -271,58 +261,29 @@ bool VisualReader::updateModule()
         cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, filter_ds);
     }
 
-    // t2 = Clock::now();
-    // std::cout << "[Visual Reader] Resize image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
-    //           << std::endl;
-    // 1/4: 50 - 70 µs / full: 2 µs / 1/2fov: 50 - 70 µs
-
-    // t1 = Clock::now();
+    // normalize the image from 0..255 to 0..1.0
+    monoMat.convertTo(tmpMat1, CV_64FC1, norm_fact);
 
     // flat the image matrix to 1D-vector
-    std::vector<int> img_vector = Mat2Vec(monoMat);
-
-    // t2 = Clock::now();
-    // std::cout << "[Visual Reader] Flatten image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
-    //           << std::endl;
-    // 1/4: 15-25 µs / full: 220 µs / 1/2 fov: 15-25 µs
-
-    // t1 = Clock::now();
-
-    // normalize the image from 0..255 to 0..1
-    std::vector<double> img_vec_norm(img_vector.size());
-    double norm_fact = 1 / 255.0;
-    for (int i = 0; i < img_vector.size(); i++) {
-        img_vec_norm[i] = (static_cast<double>(img_vector[i]) * norm_fact);
-    }
-
-    // t2 = Clock::now();
-    // std::cout << "[Visual Reader] Norm image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
-    //           << std::endl;
-    // 1/4: 40-60 µs / full: 900 µs / 1/2fov: 40-60 µs
-
-    // t1 = Clock::now();
+    std::vector<precision> img_vec_norm = Mat2Vec(tmpMat1);
 
     // store image in the buffer
     img_buffer->push_back(img_vec_norm);
 
-    // t2 = Clock::now();
-    // std::cout << "[Visual Reader] Write image in: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() << " ms"
-    //           << std::endl;
-    // 1/4: 5 µs / full: 250 µs / 1/2fov: 5 µs
-
-    // auto t2 = Clock::now();
-    // std::cout << "[Visual Reader] Load image in: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms"
-    //           << std::endl;
+    // auto t2_load = Clock::now();
+    // std::cout << "[Visual Reader] Load image in: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2_load - t1_load).count()
+    //           << " ms" << std::endl;
 
     return true;
 }
 
-// called when interrupting/stopping the YARP-RFModule
-bool VisualReader::interruptModule()
-/*
-    return: bool      -- return True, if successful
-*/
-{
+bool VisualReader::interruptModule() {
+    /*
+        Called when the YARP-RFModule is interrupted; interrupts the port communication
+
+        return: bool      -- return True, if successful
+    */
+
     // interrupt port communication
     if (!port_left.isClosed()) {
         port_left.interrupt();
@@ -333,12 +294,13 @@ bool VisualReader::interruptModule()
     return true;
 }
 
-// closes used Network parts; called by the YARP-RFModule when it is terminating
-bool VisualReader::close()
-/*
-    return: bool      -- return True, if successful
-*/
-{
+bool VisualReader::close() {
+    /*
+        Closes used Network parts; called by the YARP-RFModule when it is terminating
+
+        return: bool      -- return True, if successful
+    */
+
     // disconnect and close left eye port
     if (!port_left.isClosed()) {
         yarp::os::Network::disconnect("/icubSim/cam/left", "/V_Reader/image/left:i");
@@ -357,49 +319,64 @@ bool VisualReader::close()
     return true;
 }
 
-// convert field of view horizontal degree position to horizontal pixel position
-double VisualReader::FovX2PixelX(double fx)
-/*
-    params: double fx   -- horizontal field of view position in degree
+/*** auxilary methods ***/
+bool VisualReader::CheckInit() {
+    /*
+        Check, if the init function was called
+    */
 
-    return: double      -- horizontal field of view position in pixel
-*/
-{
+    if (!dev_init) {
+        std::cerr << "[Visual Reader] Error: Device is not initialized!" << std::endl;
+    }
+    return dev_init;
+}
+
+double VisualReader::FovX2PixelX(double fx) {
+    /*
+        Convert field of view horizontal degree position to horizontal pixel position
+
+        params: double fx   -- horizontal field of view position in degree
+
+        return: double      -- horizontal field of view position in pixel
+    */
     double pixel;
     // conversion function retrieved from measured data
     pixel = 0.0006 * pow(fx, 3) + 4.8056 * fx + 160;
     return pixel;
 }
 
-// convert field of view vertical degree position to vertical pixel position
-double VisualReader::FovY2PixelY(double fy)
-/*
-    params: double fy   -- vertical field of view position in degree
+double VisualReader::FovY2PixelY(double fy) {
+    /*
+        Convert field of view vertical degree position to vertical pixel position
 
-    return: double      -- vertical field of view position in pixel
-*/
-{
+        params: double fy   -- vertical field of view position in degree
+
+        return: double      -- vertical field of view position in pixel
+    */
+
     double pixel;
     // conversion function retrieved from measured data
     pixel = -0.0005 * pow(fy, 3) + 0.0005 * pow(fy, 2) - 4.7269 * fy + 120.0;
     return pixel;
 }
 
-// convert a 2D-matrix to 1D-vector
-std::vector<int> VisualReader::Mat2Vec(cv::Mat matrix)
-/*
-    params: cv::Mat matrix    -- image as 2D-matrix
+std::vector<VisualReader::precision> VisualReader::Mat2Vec(cv::Mat matrix) {
+    /*
+        Convert a 2D-matrix to 1D-vector
 
-    return: std::vector<int>  -- image as 1D-vector
-*/
-{
-    std::vector<int> vec;
-    // convert a 2D-matrix to 1D-vector, distinguish to cases with different methods
-    if (matrix.isContinuous()) {    // faster, only possible when data continous in memory
-        vec.assign(matrix.data, matrix.data + matrix.total());
-    } else {    // slower, always possible
+        params: cv::Mat matrix                          -- image as 2D-matrix
+
+        return: std::vector<VisualReader::precision>    -- image as 1D-vector
+    */
+
+    // convert a 2D-matrix to 1D-vector, distinguish two cases with different methods
+    std::vector<precision> vec;
+
+    if (matrix.isContinuous()) {    // faster, only possible when data is continous in memory
+        vec.assign(reinterpret_cast<precision *>(matrix.data), reinterpret_cast<precision *>(matrix.data) + matrix.total());
+    } else {    // slower, but is always possible
         for (int i = 0; i < matrix.rows; ++i) {
-            vec.insert(vec.end(), matrix.ptr<int>(i), matrix.ptr<int>(i) + matrix.cols);
+            vec.insert(vec.begin(), matrix.ptr<precision>(i), matrix.ptr<precision>(i) + matrix.cols);
         }
     }
     return vec;

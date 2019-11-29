@@ -32,17 +32,19 @@
 // Destructor
 JointReader::~JointReader() { Close(); }
 
-// initialize the joint reader with given parameters
-bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_per_neuron)
-/*
-    params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-            sigma                   -- sigma for the joints angles populations coding 
-            int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
-            double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+/*** public methods for the user ***/
+bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_per_neuron) {
+    /*
+        Initialize the joint reader with given parameters
 
-    return: bool                    -- return True, if successful
-*/
-{
+        params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+                sigma                   -- sigma for the joints angles populations coding 
+                int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+                double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+
+        return: bool                    -- return True, if successful
+    */
+
     if (!dev_init) {
         if (!CheckPartKey(part)) {
             std::cerr << "[Joint Reader] " << part << " is an invalid iCub part key!" << std::endl;
@@ -105,7 +107,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
                     neuron_deg[i][j] = joint_min[i] + j * joint_deg_res[i];
                 }
             } else if (deg_per_neuron > 0.0) {
-                joint_res = std::floor(joint_range / deg_per_neuron);
+                int joint_res = std::floor(joint_range / deg_per_neuron);
                 neuron_deg[i].resize(joint_res);
                 joint_deg_res[i] = deg_per_neuron;
 
@@ -127,20 +129,45 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
     }
 }
 
-// check if init function was called
-bool JointReader::CheckInit() {
-    if (!dev_init) {
-        std::cerr << "[Joint Reader] Error: Device is not initialized!" << std::endl;
+void JointReader::Close() {
+    /*
+        Close joint reader with cleanup
+    */
+    if (CheckInit()) {
+        driver.close();
     }
-    return dev_init;
+    yarp::os::Network::fini();
+    dev_init = false;
 }
 
-// get the size of the populations encoding the joint angles
-std::vector<int> JointReader::GetNeuronsPerJoint()
-/*
-  return: std::vector<int>        -- return vector, containing the population size for every joint
-*/
-{
+int JointReader::GetJointCount() {
+    /*    
+        Return number of controlled joints
+
+        return: int       -- return number of controlled joints
+    */
+
+    return joints;
+}
+
+std::vector<double> JointReader::GetJointsDegRes() {
+    /*
+        Get the resolution in degree of the populations encoding the joint angles
+        
+        return: std::vector<double>        -- return vector, containing the resolution for every joint population in degree
+    */
+
+    CheckInit();
+    return joint_deg_res;
+}
+
+std::vector<int> JointReader::GetNeuronsPerJoint() {
+    /*
+        Return the size of the populations encoding the joint angles
+
+        return: std::vector<int>        -- return vector, containing the population size for every joint
+    */
+
     std::vector<int> neuron_counts(joints);
     if (CheckInit()) {
         for (int i = 0; i < joints; i++) {
@@ -150,71 +177,18 @@ std::vector<int> JointReader::GetNeuronsPerJoint()
     return neuron_counts;
 }
 
-// get the resolution in degree of the populations encoding the joint angles
-std::vector<double> JointReader::GetJointsDegRes()
-/*
-  return: std::vector<double>        -- return vector, containing the resolution for every joints population codimg in degree
-*/
-{
-    CheckInit();
-    return joint_deg_res;
-}
+double JointReader::ReadDouble(int joint) {
+    /*
+        Read one joint and return joint angle directly as double value
 
-int JointReader::GetJointCount()
-/*
-  return: int       -- return number of controlled joints
-*/
-{
-    return joints;
-}
+        params: int joint       -- joint number of the robot part
 
+        return: double          -- joint angle read from the robot
+    */
 
-// return the normal distribution value for a given value, mean and sigma
-double JointReader::NormalPdf(double value, double mean, double sigma)
-/*
-    params: double value            -- value to calculate normal distribution at
-            double mean             -- mean of the normal distribution
-            double sigma            -- sigma of the normal distribution
-
-    return: double                  -- function value for the normal distribution
-*/
-{
-    // double inv_sqrt_2pi = 4.0 / (sigma * std::sqrt(2 * M_PI));
-    double a = (value - mean) / sigma;
-
-    // return inv_sqrt_2pi * std::exp(-0.5 * a * a);
-    return 1.0 * std::exp(-0.5 * a * a);
-}
-
-// encode joint position into a vector
-std::vector<double> JointReader::Encode(double joint_angle, int joint)
-/*
-    params: double joint_angle              -- joint angle read from the robot
-            int joint                       -- joint number of the robot part
-
-    return: std::vector<double>             -- population encoded joint angle
-*/
-{
-    int size = neuron_deg.at(joint).size();
-    std::vector<double> pos_pop(size);
-    for (int i = 0; i < size; i++) {
-        pos_pop[i] = (NormalPdf(neuron_deg[joint][i], joint_angle, sigma_pop));
-    }
-
-    return pos_pop;
-}
-
-// read one joint and return joint angle directly as double value
-double JointReader::ReadDouble(int joint)
-/*
-    params: int joint       -- joint number of the robot part
-
-    return: double          -- joint angle read from the robot
-*/
-{
     double angle = 0.0;
     if (CheckInit()) {
-        if (joint >= joints) {
+        if (joint >= joints || joint < 0) {
             std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
         }
         if (!ienc->getEncoder(joint, &angle)) {
@@ -224,35 +198,13 @@ double JointReader::ReadDouble(int joint)
     return angle;
 }
 
-// read one joint and return the joint angle encoded in a vector
-std::vector<double> JointReader::ReadOne(int joint)
-/*
-    params: int joint               -- joint number of the robot part
+std::vector<std::vector<double>> JointReader::ReadPopAll() {
+    /*
+        Read all joints and return the joint angles encoded in vectors
+        
+        return: std::vector<std::vector<double>>    -- vector of population vectors encoding every joint angle from associated robot part
+    */
 
-    return: std::vector<double>     -- population vector encoding the joint angle
-*/
-{
-    std::vector<double> angle_pop;
-    if (CheckInit()) {
-        if (joint >= joints) {
-            std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
-        }
-
-        double angle;
-        if (!ienc->getEncoder(joint, &angle)) {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
-        }
-        angle_pop = Encode(angle, joint);
-    }
-    return angle_pop;
-}
-
-// read all joints and return the joint angles encoded in vectors
-std::vector<std::vector<double>> JointReader::ReadAll()
-/*
-    return: std::vector<std::vector<double>>    -- vector of population vectors encoding every joint angle from associated robot part
-*/
-{
     auto angle_pops = std::vector<std::vector<double>>(joints, std::vector<double>());
 
     if (CheckInit()) {
@@ -267,17 +219,46 @@ std::vector<std::vector<double>> JointReader::ReadAll()
     return angle_pops;
 }
 
-// close joint reader with cleanup
-void JointReader::Close() {
+std::vector<double> JointReader::ReadPopOne(int joint) {
+    /*
+        Read one joint and return the joint angle encoded in a vector
+
+        params: int joint               -- joint number of the robot part
+
+        return: std::vector<double>     -- population vector encoding the joint angle
+    */
+
+    std::vector<double> angle_pop;
     if (CheckInit()) {
-        driver.close();
+        if (joint >= joints || joint < 0) {
+            std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
+        }
+
+        double angle;
+        if (!ienc->getEncoder(joint, &angle)) {
+            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
+        }
+        angle_pop = Encode(angle, joint);
     }
-    yarp::os::Network::fini();
-    dev_init = false;
+    return angle_pop;
 }
 
-// check if iCub part key is valid
+/*** auxilary functions ***/
+bool JointReader::CheckInit() {
+    /*
+        Check if the init function was called
+    */
+    if (!dev_init) {
+        std::cerr << "[Joint Reader] Error: Device is not initialized!" << std::endl;
+    }
+    return dev_init;
+}
+
 bool JointReader::CheckPartKey(std::string key) {
+    /*
+        Check if iCub part key is valid
+    */
+
     bool inside = false;
     for (auto it = key_map.cbegin(); it != key_map.cend(); it++)
         if (key == *it) {
@@ -285,4 +266,41 @@ bool JointReader::CheckPartKey(std::string key) {
             break;
         }
     return inside;
+}
+
+std::vector<double> JointReader::Encode(double joint_angle, int joint) {
+    /*
+        Encode given joint position into a vector
+
+        params: double joint_angle              -- joint angle read from the robot
+                int joint                       -- joint number of the robot part
+
+        return: std::vector<double>             -- population encoded joint angle
+    */
+
+    int size = neuron_deg.at(joint).size();
+    std::vector<double> pos_pop(size);
+    for (int i = 0; i < size; i++) {
+        pos_pop[i] = (NormalPdf(neuron_deg[joint][i], joint_angle, sigma_pop));
+    }
+
+    return pos_pop;
+}
+
+double JointReader::NormalPdf(double value, double mean, double sigma) {
+    /*
+        Return the normal distribution value for a given value, mean and sigma
+
+        params: double value            -- value to calculate normal distribution at
+                double mean             -- mean of the normal distribution
+                double sigma            -- sigma of the normal distribution
+
+        return: double                  -- function value for the normal distribution
+    */
+
+    // double inv_sqrt_2pi = 4.0 / (sigma * std::sqrt(2 * M_PI));
+    double a = (value - mean) / sigma;
+
+    // return inv_sqrt_2pi * std::exp(-0.5 * a * a);
+    return 1.0 * std::exp(-0.5 * a * a);
 }

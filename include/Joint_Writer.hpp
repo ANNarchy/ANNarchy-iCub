@@ -32,42 +32,51 @@ class JointWriter {
     // Destructor
     ~JointWriter();
 
+    /*** public methods for the user ***/
     // initialize the joint writer with given parameters
-    bool Init(std::string part, int pop_size, double deg_per_neuron = 0.0);
-    // get the size of the populations encoding the joint angles
-    std::vector<int> GetNeuronsPerJoint();
-    // get the resolution in degree of the populations encoding the joint angles
-    std::vector<double> GetJointsDegRes();
-    // get number of controlled joints
-    int GetJointCount();
+    bool Init(std::string part, int pop_size, double deg_per_neuron = 0.0, double speed = 10.0);
     // close joint reader with cleanup
     void Close();
+    // get number of controlled joints
+    int GetJointCount();
+    // get the resolution in degree of the populations encoding the joint angles
+    std::vector<double> GetJointsDegRes();
+    // get the size of the populations encoding the joint angles
+    std::vector<int> GetNeuronsPerJoint();
+    // set velocity for a given joint or all joints
+    bool SetJointVelocity(double speed, int joint);
 
+    // write all joints as double values
+    bool WriteDoubleAll(std::vector<double> position, bool blocking);
     // write one joint as double value
     bool WriteDouble(double position, int joint, bool blocking);
-    // write one joint with the joint angle encoded in a population
-    bool WriteOne(std::vector<double> position_pop, int joint, bool blocking);
     // write all joints with joint angles encoded in populations
-    bool WriteAll(std::vector<std::vector<double>> position_pops, bool blocking);
+    bool WritePopAll(std::vector<std::vector<double>> position_pops, bool blocking);
+    // write one joint with the joint angle encoded in a population
+    bool WritePopOne(std::vector<double> position_pop, int joint, bool blocking);
 
  private:
-    bool dev_init = false;    // variable for initialization check
-    std::vector<std::string> key_map {"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"}; // valid iCub part keys
-    std::string icub_part;    // string describing the part of the iCub
+    /** configuration variables **/
+    bool dev_init = false;        // variable for initialization check
+    double velocity_max = 100;    // maximum joint velocity
+    std::string icub_part;        // string describing the part of the iCub
 
-    int joint_res;    // neuron count for the population coding, if degree per neuron is set by argument
-    std::vector<double> joint_deg_res;    // degree per neuron for the population coding, value per joint; if neuron count is set by argument
-    int joints;           // number of joints
+    std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
+
+    /*** population coding data structures ***/
+    std::vector<double> joint_deg_res;    // degree per neuron for the population coding, value per joint
+    int joints;                           // number of joints
 
     std::vector<double> joint_min;                  // minimum possible joint angles
     std::vector<double> joint_max;                  // maximum possible joint angles
     std::vector<std::vector<double>> neuron_deg;    // vector of vectors representing the degree values for the neuron populations
 
+    /*** yarp data structures ***/
     yarp::sig::Vector joint_angles;       // yarp vector for reading all joint angles
     yarp::dev::PolyDriver driver;         // yarp driver needed for reading joint encoders
     yarp::dev::IPositionControl *ipos;    // iCub position control interface
 
-    // auxilary functions //
+    /*** auxilary methods ***/
     // check if init function was called
     bool CheckInit();
     // check if iCub part key is valid

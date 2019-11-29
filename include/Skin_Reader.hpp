@@ -40,26 +40,31 @@ class SkinReader {
     SkinReader() = default;
     // Destructor
     ~SkinReader();
+
+    /*** public methods for the user ***/
     // init skin reader with given parameters
     bool Init(char arm, bool norm_data);
-    // read sensor data
-    bool ReadTactile();
-
-    // return tactile data for hand skin
-    std::vector<std::vector<double>> GetTactileHand();
-    // return tactile data for forearm skin
-    std::vector<std::vector<double>> GetTactileForearm();
-    // return tactile data for upper arm skin
-    std::vector<std::vector<double>> GetTactileArm();
-    // return the taxel positions given by the ini files
-    std::vector<std::vector<double>> GetTaxelPos(std::string skin_part);
-
     // close and clean skin reader
     void Close();
 
- private:
-    bool dev_init = false;    // variable for initialization check
+    // read sensor data
+    bool ReadTactile();
+    // return tactile data for upper arm skin
+    std::vector<std::vector<double>> GetTactileArm();
+    // return tactile data for forearm skin
+    std::vector<std::vector<double>> GetTactileForearm();
+    // return tactile data for hand skin
+    std::vector<std::vector<double>> GetTactileHand();
+    // return the taxel positions given by the ini files
+    std::vector<std::vector<double>> GetTaxelPos(std::string skin_part);
 
+ private:
+    /*** configuration variables ***/
+    bool dev_init = false;    // variable for initialization check
+    std::string side;         // containing information about selected arm (right/left)
+    double norm_fac;          // norming factor: 255.0 for normalized data
+
+    /*** yarp data structures ***/
     yarp::os::BufferedPort<yarp::sig::Vector> port_hand;       // port for the hand
     yarp::os::BufferedPort<yarp::sig::Vector> port_forearm;    // port for the forearm
     yarp::os::BufferedPort<yarp::sig::Vector> port_arm;        // port for the arm
@@ -68,19 +73,19 @@ class SkinReader {
     yarp::sig::Vector *tactile_forearm;    // YARP Vector for forearm sensor data
     yarp::sig::Vector *tactile_arm;        // YARP Vector for upper arm sensor data
 
+    /*** vectors to store tactile data ***/
     std::vector<std::vector<double>> hand_data;       // Vector for sorted and cleaned hand sensor data
     std::vector<std::vector<double>> forearm_data;    // Vector for sorted and cleaned forearm sensor data
     std::vector<std::vector<double>> arm_data;        // Vector for sorted and cleaned upper arm sensor data
 
-    std::string side;    // containing information about selected arm (right/left)
-    double norm_fac;     // norming factor: 255.0 for naormalized data
+    /*** sensor position data ***/
+    std::map<std::string, TaxelData> taxel_pos_data;    // contains taxel position data for different skin parts
 
-    std::map<std::string, TaxelData> taxel_pos_data;              // contains taxel position data for different skin parts
-    std::map<std::string, iCub::iKin::iKinChain *> kin_chains;    // contains taxel position data for different skin parts
+    // std::map<std::string, iCub::iKin::iKinChain *> kin_chains;    // iCub kinematic chain
 
-    bool ReadTaxelPos(std::string filename_idx, std::string filename_pos, std::string part);
-
-    // auxilary functions //
+    /*** auxilary functions ***/
     // check if init function was called
     bool CheckInit();
+    // Read taxel positions from the ini files
+    bool ReadTaxelPos(std::string filename_idx, std::string filename_pos, std::string part);
 };

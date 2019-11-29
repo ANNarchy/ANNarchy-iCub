@@ -32,45 +32,47 @@ class JointReader {
     // Destructor
     ~JointReader();
 
+    /*** public methods for the user ***/
     // initialize the joint reader with given parameters
     bool Init(std::string part, double sigma, int pop_n, double deg_per_neuron = 0.);
-    // get the size of the populations encoding the joint angles
-    std::vector<int> GetNeuronsPerJoint();
-    // get the resolution in degree of the populations encoding the joint angles
-    std::vector<double> GetJointsDegRes();
-    // get number of controlled joints
-    int GetJointCount();
     // close joint reader with cleanup
     void Close();
+    // get number of controlled joints
+    int GetJointCount();
+    // get the resolution in degree of the populations encoding the joint angles
+    std::vector<double> GetJointsDegRes();
+    // get the size of the populations encoding the joint angles
+    std::vector<int> GetNeuronsPerJoint();
 
     // read one joint and return joint angle directly as double value
     double ReadDouble(int joint);
-    // read one joint and return the joint angle encoded in a vector
-    std::vector<double> ReadOne(int joint);
     // read all joints and return the joint angles encoded in vectors
-    std::vector<std::vector<double>> ReadAll();
+    std::vector<std::vector<double>> ReadPopAll();
+    // read one joint and return the joint angle encoded in a vector
+    std::vector<double> ReadPopOne(int joint);
 
  private:
+    /*** configuration variables ***/
     bool dev_init = false;    // variable for initialization check
-    std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
-
     std::string icub_part;    // string describing the part of the iCub
 
-    int joint_res;    // neuron count for the population coding, if degree per neuron is set by argument
-    std::vector<double>
-        joint_deg_res;    // degree per neuron for the population coding, value per joint; if neuron count is set by argument
-    int joints;           // number of joints
-    double sigma_pop;     // sigma for Gaussian envelope in the population coding
+    std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
+
+    /*** population coding parameters ***/
+    std::vector<double> joint_deg_res;    // degree per neuron for the population coding, value per joint
+    int joints;                           // number of joints
+    double sigma_pop;                     // sigma for Gaussian envelope in the population coding
 
     std::vector<double> joint_min;                  // minimum possible joint angles
     std::vector<double> joint_max;                  // maximum possible joint angles
     std::vector<std::vector<double>> neuron_deg;    // vector of vectors representing the degree values for the neuron populations
 
+    /*** yarp data structures ***/
     yarp::sig::Vector joint_angles;    // yarp vector for reading all joint angles
     yarp::dev::PolyDriver driver;      // yarp driver needed for reading joint encoders
     yarp::dev::IEncoders *ienc;        // iCub joint encoder interface
 
-    // auxilary functions //
+    /*** auxilary functions ***/
     // check if init function was called
     bool CheckInit();
     // check if iCub part key is valid

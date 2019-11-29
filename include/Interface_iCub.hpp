@@ -35,6 +35,7 @@ struct iCubANN {
     std::map<std::string, JointWriter *> parts_writer;     // associated joint writers (one for every robot part)
     std::map<std::string, SkinReader *> tactile_reader;    // associated skin reader
 
+    /***  Add intstances of the interface modules ***/
     // add an instance of joint reader
     void AddJointReader(std::string name);
     // add an instance of joint writer
@@ -44,60 +45,55 @@ struct iCubANN {
     // add an instance of visual reader
     void AddVisualReader();
 
+    /***  Remove the visual reader intstance ***/
+    // remove the instance of the visual reader
     void RemoveVisualReader();
-
-    // Access to visual reader member functions //
-    // init Visual reader with given parameters for image resolution, field of
-    // view and eye selection
-    bool VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter);
-    // start reading images from the iCub with YARP-RFModule
-    bool VisualRStart(int argc, char *argv[]);
-    // stop reading images from the iCub, by terminating the RFModule
-    void VisualRStop();
-    // read image vector from the image buffer and remove it from the buffer
-    std::vector<double> VisualRReadFromBuf();
 
     // Access to joint reader member functions //
     // initialize the joint reader with given parameters
     bool JointRInit(std::string name, std::string part, double sigma, int pop_size, double deg_per_neuron);
-    // get the size of the populations encoding the joint angles
-    std::vector<int> JointRGetNeuronsPerJoint(std::string name);
-    // get the resolution in degree of the populations encoding the joint angles
-    std::vector<double> JointRGetJointsDegRes(std::string name);
-    // get number of controlled joints
-    int JointRGetJointCount(std::string name);
     // close joint reader with cleanup
     void JointRClose(std::string name);
+    // get number of controlled joints
+    int JointRGetJointCount(std::string name);
+    // get the resolution in degree of the populations encoding the joint angles
+    std::vector<double> JointRGetJointsDegRes(std::string name);
+    // get the size of the populations encoding the joint angles
+    std::vector<int> JointRGetNeuronsPerJoint(std::string name);
     // read one joint and return joint angle directly as double value
     double JointRReadDouble(std::string name, int joint);
     // read one joint and return the joint angle encoded in a vector
-    std::vector<double> JointRReadOne(std::string name, int joint);
+    std::vector<double> JointRReadPopOne(std::string name, int joint);
     // read all joints and return the joint angles encoded in vectors
-    std::vector<std::vector<double>> JointRReadAll(std::string name);
+    std::vector<std::vector<double>> JointRReadPopAll(std::string name);
 
     // Access to joint writer member functions //
     // initialize the joint writer with given parameters
-    bool JointWInit(std::string name, std::string part, int pop_size, double deg_per_neuron);
-    // get the size of the populations encoding the joint angles
-    std::vector<int> JointWGetNeuronsPerJoint(std::string name);
-    // get the resolution in degree of the populations encoding the joint angles
-    std::vector<double> JointWGetJointsDegRes(std::string name);
-    // get number of controlled joints
-    int JointWGetJointCount(std::string name);
+    bool JointWInit(std::string name, std::string part, int pop_size, double deg_per_neuron, double speed);
     // close joint reader with cleanup
     void JointWClose(std::string name);
+    // get number of controlled joints
+    int JointWGetJointCount(std::string name);
+    // get the resolution in degree of the populations encoding the joint angles
+    std::vector<double> JointWGetJointsDegRes(std::string name);
+    // get the size of the populations encoding the joint angles
+    std::vector<int> JointWGetNeuronsPerJoint(std::string name);
+    // set joint velocity
+    bool JointWSetJointVelocity(std::string name, double speed, int joint);
+    // write all joints as double values
+    bool JointWWriteDoubleAll(std::string name, std::vector<double> position, bool blocking);
     // write one joint as double value
     bool JointWWriteDouble(std::string name, double position, int joint, bool blocking);
-    // write one joint with the joint angle encoded in a population
-    bool JointWWriteOne(std::string name, std::vector<double> position_pop, int joint, bool blocking);
     // write all joints with joint angles encoded in populations
-    bool JointWWriteAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking);
+    bool JointWWritePopAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking);
+    // write one joint with the joint angle encoded in a population
+    bool JointWWritePopOne(std::string name, std::vector<double> position_pop, int joint, bool blocking);
 
     // Access to skin reader member functions //
     // init skin reader with given parameters
     bool SkinRInit(std::string name, char arm, bool norm_data);
-    // read sensor data
-    bool SkinRReadTactile(std::string name);
+    // close and clean skin reader
+    void SkinRClose(std::string name);
     // return tactile data for hand skin
     std::vector<std::vector<double>> SkinRGetTactileHand(std::string name);
     // return tactile data for forearm skin
@@ -106,8 +102,19 @@ struct iCubANN {
     std::vector<std::vector<double>> SkinRGetTactileArm(std::string name);
     // return the taxel positions given by the ini files
     std::vector<std::vector<double>> SkinRGetTaxelPos(std::string name, std::string skin_part);
-    // close and clean skin reader
-    void SkinRClose(std::string name);
+    // read sensor data
+    bool SkinRReadTactile(std::string name);
+
+    // Access to visual reader member functions //
+    // init Visual reader with given parameters for image resolution, field of view and eye selection
+    bool VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter);
+    // read image vector from the image buffer and remove it from the buffer
+    std::vector<double> VisualRReadFromBuf();
+    // start reading images from the iCub with YARP-RFModule
+    bool VisualRStart(int argc, char *argv[]);
+    // stop reading images from the iCub, by terminating the RFModule
+    void VisualRStop();
+
 };
 
 extern iCubANN my_interface;
