@@ -692,7 +692,7 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.SkinRGetTactileArm(s)
+        return np.array(my_interface.SkinRGetTactileArm(s))
 
     # return tactile data for forearm skin
     def skinR_get_tactile_forearm(self, name):
@@ -712,7 +712,7 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.SkinRGetTactileForearm(s)
+        return np.array(my_interface.SkinRGetTactileForearm(s))
 
     # return tactile data for hand skin
     def skinR_get_tactile_hand(self, name):
@@ -732,7 +732,7 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.SkinRGetTactileHand(s)
+        return np.array(my_interface.SkinRGetTactileHand(s))
 
     # return the taxel positions given by the ini files
     def skinR_get_taxel_pos(self, name, skin_part):
