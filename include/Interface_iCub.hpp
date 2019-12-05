@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019 Torsten Follak
+ *  Copyright (C) 2019 Torsten Follak; Helge Ülo Dinkelbach
  *
  *  Interface_iCub.hpp is part of the iCub ANNarchy interface
  *
