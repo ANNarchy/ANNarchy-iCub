@@ -21,7 +21,7 @@ SkinReader:
 
 
 ## Folder structure
-Interface_ANNarchy_iCub -> Main folder containing the whole interface
+- Interface_ANNarchy_iCub -> Main folder containing the whole interface
     - include -> This folder contains the header files for the interface modules.
         - INI_Reader -> The INI-Reader is an external module, which is used to handle ini-files.
     - src -> This folder contains the source files for the interface modules.
@@ -45,7 +45,8 @@ https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git
 
 
 ## Authors
-Torsten Follak
+Torsten Follak (torsten.follak@informatik.tu-chemnitz.de)
+Helge Ülo Dinkelbach
 
 ## Dependencies
 Python  >= 3.5
