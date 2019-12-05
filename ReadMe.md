@@ -2,13 +2,13 @@ This program is an interface between the Neurosimulator ANNarchy and the iCub ro
 
 
 ## Interface description
-Possible actions are the reading and writing of joint angles get the current sate or move the robot joints. Further, the cameras and the tactile sensors data can be received.
+Possible actions are the reading and writing of joint angles get the current sate or move the robot joints. Further, the cameras and the tactile sensors data can be received.  
 
-The interface has a modular structure with a main struct and several subclasses.
-The main struct is the "iCubANN" struct, handling the subclass instances. The subcalss and also the different mudles are JointReader, JointWriter, VisualReader and SkinReader with the following functionalities:
+The interface has a modular structure with a main struct and several subclasses.  
+The main struct is the "iCubANN" struct, handling the subclass instances. The subcalss and also the different mudles are JointReader, JointWriter, VisualReader and SkinReader with the following functionalities:  
 
 JointReader:
-    This module handles the joint reading. The iCub robot is divided in multiple robot parts, which are the head, right arm, left arm, torso right leg and left leg. For each of this part a seperate joint reader instance is needed. Therefore, one has to add as much as one need to the iCubANN struct with the "AddJointReader" method. Before the first usage of the joint reader, it must be initialized with some specifications like the robot part. Then the joint angles can be received in two ways, directly as a double value for a single joint or in a population code for one joint or for all joints of the associated iCub part. 
+    This module handles the joint reading. The iCub robot is divided in multiple robot parts, which are the head, right arm, left arm, torso right leg and left leg. For each of this part a seperate joint reader instance is needed.  Therefore, one has to add as much as one need to the iCubANN struct with the "AddJointReader" method. Before the first usage of the joint reader, it must be initialized with some specifications like the robot part. Then the joint angles can be received in two ways, directly as a double value for a single joint or in a population code for one joint or for all joints of the associated iCub part.  
 
 JointWriter:
     The joint writer has a similar structure to the joint reader. Like there for each iCub part a separate instance has to be added to the iCubANN struct. They must also be initialized before usage. For the writing of the joint angles the same ways are possible like for the reading. The joint angle can be written as a double for one joint or as a population code for one joint or for all joints of the associated part. 
@@ -34,21 +34,21 @@ SkinReader:
 
 
 ## useful links
-Wiki for the iCub robot:
-http://wiki.icub.org/wiki/Manual
+Wiki for the iCub robot:  
+http://wiki.icub.org/wiki/Manual  
 
-YARP website:
-http://www.yarp.it/index.html
+YARP website:  
+http://www.yarp.it/index.html  
 
-git repository with scripts to control the iCub simulator:
-https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git
+git repository with scripts to control the iCub simulator:  
+https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git  
 
 
 ## Authors
-Torsten Follak (torsten.follak@informatik.tu-chemnitz.de)
-Helge Ülo Dinkelbach
+Torsten Follak (torsten.follak@informatik.tu-chemnitz.de)  
+Helge Ülo Dinkelbach  
 
 ## Dependencies
-Python  >= 3.5
-YARP    >= 3.2
-OpenCV  >= 3.4
+Python  >= 3.5  
+YARP    >= 3.2  
+OpenCV  >= 3.4  
