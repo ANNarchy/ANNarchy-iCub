@@ -791,7 +791,7 @@ cdef class iCubANN_wrapper:
                 double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width       -- output image width in pixel (input width: 320px)
                 int img_height      -- output image height in pixel (input height: 240px)
-                fast_filter         --
+                fast_filter         -- flag to select the filter for image upscaling; True for a faster filter; default value is True
 
             return:
                 bool                -- return True, if successful

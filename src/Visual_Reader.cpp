@@ -46,7 +46,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
                 double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width       -- output image width in pixel (input width: 320px)
                 int img_height      -- output image height in pixel (input height: 240px)
-                bool fast_filter    -- 
+                bool fast_filter    -- flag to select the filter for image upscaling; True for a faster filter
 
         return: bool                -- return True, if successful
     */
@@ -58,8 +58,8 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 
         // compute output field of view borders in input image
         if (fov_width <= icub_fov_x) {
-            out_fov_x_low = static_cast<int>(ceil(FovX2PixelX(-fov_width / 2.0) / 2.0));
-            out_fov_x_up = static_cast<int>(floor(FovX2PixelX(fov_width / 2.0) / 2.0));
+            out_fov_x_low = static_cast<int>(ceil(FovX2PixelX(-fov_width / 2.0)));
+            out_fov_x_up = static_cast<int>(floor(FovX2PixelX(fov_width / 2.0)));
         } else {
             std::cerr << "[Visual Reader] Selected field of view width is out of range" << std::endl;
             return false;
@@ -85,11 +85,11 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         if (typeid(precision) == typeid(double)) {
             // tmpMat1.create(out_height, out_width, CV_64FC1);
             new_type = CV_64FC1;
-            std::cout << "double" << std::endl;
+            std::cout << "[Visual Reader] Double precision is selected." << std::endl;
         } else if (typeid(precision) == typeid(float)) {
             // tmpMat1.create(out_height, out_width, CV_32FC1);
             new_type = CV_32FC1;
-            std::cout << "float" << std::endl;
+            std::cout << "[Visual Reader] Float precision is selected." << std::endl;
         } else {
             std::cerr << "[Visual Reader] Precision type is not valid!" << std::endl;
             return false;

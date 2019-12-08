@@ -94,9 +94,9 @@ def call_test_jreader(ann_wrapper):
     print('readdouble')
     print(ann_wrapper.jointR_read_double("J_Reader", 3))
     print('readone')
-    print(ann_wrapper.jointR_read_one("J_Reader", 3))
+    print(ann_wrapper.jointR_read_pop_one("J_Reader", 3))
     print('readall')
-    print(ann_wrapper.jointR_read_all("J_Reader"))
+    print(ann_wrapper.jointR_read_pop_all("J_Reader"))
 
     print('finish JReader reading joints')
     print('\n')
@@ -151,10 +151,10 @@ def call_test_jwriter(ann_wrapper):
     print(ann_wrapper.jointW_write_double("J_Writer", 10.0, 4, True))
     time.sleep(2.5)
     print('writeone')
-    print(ann_wrapper.jointW_write_one("J_Writer", test_pos, 4, True))
+    print(ann_wrapper.jointW_write_pop_one("J_Writer", test_pos, 4, True))
     time.sleep(2.5)
     print('writeall')
-    print(ann_wrapper.jointW_write_all("J_Writer", pop_all, True))
+    print(ann_wrapper.jointW_write_pop_all("J_Writer", pop_all, True))
 
     print('finish JWriter writing joints')
     print('\n')
@@ -217,25 +217,25 @@ def call_test_vreader(ann_wrapper):
     print(ann_wrapper.visualR_init('r', 75, 48, 320, 240))  # invalid field of view width
     print(ann_wrapper.visualR_init('r', 60, 56, 320, 240))  # invalid field of view height
     print(ann_wrapper.visualR_init('t', 60, 48, 320, 240))  # invalid eye character
-    print(ann_wrapper.visualR_init('r', 60, 48, 160, 120))  # output size above input size
-    print(ann_wrapper.visualR_init('r'))                    # use of default values
+    print(ann_wrapper.visualR_init('r', 60, 48, 160, 120))  # output size below input size
+    print(ann_wrapper.visualR_init('r'))                    # use of default values; init already done
 
     print('finish VReader init')
     print('\n')
 
     ann_wrapper.visualR_start()
-    time.sleep(0.5)
+    time.sleep(1.5)
     test_img = ann_wrapper.visualR_read_fromBuf()
+    print(test_img.shape)
     if test_img.shape[0] > 0:
-        test_img = test_img.reshape(120, 160).T
+        test_img = test_img.reshape(120, 160)
         print(type(test_img), type(test_img[0][0]))
+        plt.imshow(test_img, cmap='gray')
+        plt.show()
+        plt.pause(0.05)
     else:
         print('No buffered image!')
-    print(test_img.shape)
-    print(test_img)
-    plt.imshow(test_img, cmap='gray')
-    plt.show()
-    plt.pause(0.05)
+
     ann_wrapper.visualR_stop()
 
 

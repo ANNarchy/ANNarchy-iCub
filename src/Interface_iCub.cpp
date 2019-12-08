@@ -554,6 +554,7 @@ bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img
                 double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°) 
                 int img_width       -- output image width in pixel (input width: 320px) 
                 int img_height      -- output image height in pixel (input height: 240px)
+                bool fast_filter    -- flag to select the filter for image upscaling; True for a faster filter
 
         return: bool                -- return True, if successful
     */
