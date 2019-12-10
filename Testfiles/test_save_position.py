@@ -13,7 +13,7 @@ if yarp.Network.checkNetwork() != True:
 
 # prepare a property object
 props = yarp.Property()
-part = "head"
+part = "right_arm"
 props.put("device","remote_controlboard")
 props.put("remote","/icubSim/" + part)
 props.put("local","/client/" + part)
@@ -31,7 +31,7 @@ jnts=iPos.getAxes()
 
 for i in range(jnts):
     iCtrl.setControlMode(i, yarp.VOCAB_CM_POSITION)
-    
+
 # save the arm joint positions
 # iPos, iEnc, jnts, driver = mot.motor_init('right_arm')
 # test_pos0 = mot.get_joint_position(iEnc, jnts)

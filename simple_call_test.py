@@ -134,26 +134,33 @@ def call_test_jwriter(ann_wrapper):
     # print joint resolutions for joint writer
     print(ann_wrapper.jointW_get_joints_deg_res("J_Writer"))
     print(ann_wrapper.jointW_get_neurons_per_joint("J_Writer"))
+    print(ann_wrapper.jointW_set_joint_velocity("J_Writer", 15.0))
+
 
     print(ann_wrapper.jointW_get_joints_deg_res("J_Writer1"))
     print(ann_wrapper.jointW_get_neurons_per_joint("J_Writer1"))
+    print(ann_wrapper.jointW_set_joint_velocity("J_Writer1", 10.0, joint=3))
 
     print('finish JWriter resolutions')
     print('\n')
 
     test_pos = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5)
     print(test_pos)
+    double_all = np.zeros((6))
     pop_all = np.zeros((6, 15))
     for i in range(6):
         pop_all[i] = encode(ann_wrapper.PART_KEY_HEAD, i, 15, 1, 0.5)
 
-    print('writedouble')
+    print('write double_one')
     print(ann_wrapper.jointW_write_double("J_Writer", 10.0, 4, True))
     time.sleep(2.5)
-    print('writeone')
+    print('write double_all')
+    print(ann_wrapper.jointW_write_double_all("J_Writer", double_all, True))
+    time.sleep(2.5)
+    print('write pop_one')
     print(ann_wrapper.jointW_write_pop_one("J_Writer", test_pos, 4, True))
     time.sleep(2.5)
-    print('writeall')
+    print('write pop_all')
     print(ann_wrapper.jointW_write_pop_all("J_Writer", pop_all, True))
 
     print('finish JWriter writing joints')
@@ -238,6 +245,13 @@ def call_test_vreader(ann_wrapper):
 
     ann_wrapper.visualR_stop()
 
+    ann_wrapper.rm_visual_reader()
+    ann_wrapper.add_visual_reader()
+    print(ann_wrapper.visualR_init('l'))                    # use of default values; reinitialization
+
+    ann_wrapper.rm_visual_reader()
+    ann_wrapper.add_visual_reader()
+    print(ann_wrapper.visualR_init('b'))                    # use of default values; reinitialization
 
 #########################################################
 if __name__ == "__main__":

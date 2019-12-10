@@ -22,7 +22,7 @@ eye_y_position = eye_loc[1]     # y-position of the eyes
 with_arm = True
 ####################### Object/model positions #######################
 position_param = {}
-position_param['obj_x'] = [ -0.1, 0.00, 0.10 ]  # object x position in m 
+position_param['obj_x'] = [ -0.1, 0.00, 0.10 ]  # object x position in m
 position_param['obj_y'] = [ 0.84, 0.94, 1.04 ]  # object y position in m
 position_param['obj_z'] = [ 0.65, 0.75, 0.85 ]  # object z position in m
 
@@ -42,9 +42,9 @@ orientation_robot_hand = np.array([ 0.1113, -0.9845, 0.1357, 3.0023 ])  # in rob
 
 ###################### Transformation matrices: ######################
 ######## robot coordinate system <-> world coordinate system #########
-Transfermat_robot2world = np.array([[  0., -1., 0.,  0.0000 ], 
-                                    [  0.,  0., 1.,  0.5976 ], 
-                                    [ -1.,  0., 0., -0.0260 ], 
+Transfermat_robot2world = np.array([[  0., -1., 0.,  0.0000 ],
+                                    [  0.,  0., 1.,  0.5976 ],
+                                    [ -1.,  0., 0., -0.0260 ],
                                     [  0.,  0., 0.,  1.0000 ]])
 Transfermat_world2robot = np.linalg.inv(Transfermat_robot2world)
 

@@ -57,7 +57,7 @@ orient_hand = mot.npvec_2_yarpvec(orientation_robot_hand)
 
 pos     = yarp.Vector(3)
 orient  = yarp.Vector(4)
-    
+
 # prepare a property object
 props = yarp.Property()
 props.put("device","cartesiancontrollerclient")

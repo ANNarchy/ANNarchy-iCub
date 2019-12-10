@@ -96,14 +96,14 @@ def speed_test_jreader(ann_wrapper, test_count):
         read_pos_double = np.zeros((joints))
         time_start_double = time.time()
         for i in range(test_count):
-            for i in range(read_pos_double.shape[0]):
+            for i in range(joints):
                 read_pos_double[i] = ann_wrapper.jointR_read_double(name, i)
         time_stop_double = time.time()
         results_double[name] = (time_stop_double - time_start_double) / test_count
 
     print('________ Test results: Double')
     for part in results_double:
-        print("Time double ", part, ":", results_double[part])
+        print("Time double ", part, ":", round(results_double[part], 4), 's')
     print('\n')
 
     # test speed reading population single
@@ -115,14 +115,14 @@ def speed_test_jreader(ann_wrapper, test_count):
         read_pos_pop_single = np.zeros((joints, n_pop))
         time_start_pop_single = time.time()
         for i in range(test_count):
-            for i in range(read_pos_pop_single.shape[0]):
-                read_pos_pop_single[i] = ann_wrapper.jointR_read_one(name, i)
+            for i in range(joints):
+                read_pos_pop_single[i] = ann_wrapper.jointR_read_pop_one(name, i)
         time_stop_pop_single = time.time()
         results_pop_single[name] = (time_stop_pop_single - time_start_pop_single) / test_count
 
     print('________ Test results: Population_single')
     for part in results_pop_single:
-        print("Time pop_single", part , ":", results_pop_single[part])
+        print("Time pop_single", part , ":", round(results_pop_single[part], 4), 's')
     print('\n')
 
     # test speed reading population all
@@ -134,13 +134,13 @@ def speed_test_jreader(ann_wrapper, test_count):
         read_pos_pop_all = np.zeros((joints, n_pop))
         time_start_pop_all = time.time()
         for i in range(test_count):
-            read_pos_pop_all = ann_wrapper.jointR_read_all(name)
+            read_pos_pop_all = ann_wrapper.jointR_read_pop_all(name)
         time_stop_pop_all = time.time()
         results_pop_all[name] = (time_stop_pop_all - time_start_pop_all) / test_count
 
     print('________ Test results: Population_all')
     for part in results_pop_all:
-        print("Time pop_all", part , ":", results_pop_all[part])
+        print("Time pop_all", part , ":", round(results_pop_all[part], 4), 's')
     print('\n')
 
     print('____________________________________________________________\n')
@@ -213,6 +213,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
         for key in positions:
             if positions[key][1] == name:
                 print('______ Test position:', key)
+                results_double[name + '_' + key] = 0
                 for i in range(test_count):
                     time_start = time.time()
                     for i in range(joints):
@@ -228,7 +229,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
 
     print('________ Test results: Double')
     for key in results_double:
-        print('Test:', key, 'results:', results_double[key])
+        print('Test:', key, 'results:', round(results_double[key], 4), 's')
     print('\n')
 
 
@@ -239,10 +240,11 @@ def speed_test_jwriter(ann_wrapper, test_count):
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
+            results_pop_single[name + '_' + key] = 0
             for i in range(test_count):
                 time_start = time.time()
                 for i in range(joints):
-                    ann_wrapper.jointW_write_one(name, part_enc[name][key][i], i, True)
+                    ann_wrapper.jointW_write_pop_one(name, part_enc[name][key][i], i, True)
                 time_stop = time.time()
                 results_pop_single[name + '_' + key] += time_stop -time_start
 
@@ -253,7 +255,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
 
     print('________ Test results: Population_single')
     for key in results_pop_single:
-        print('Test:', key, 'results:', results_pop_single[key])
+        print('Test:', key, 'results:', round(results_pop_single[key], 4), 's')
     print('\n')
 
 
@@ -263,9 +265,10 @@ def speed_test_jwriter(ann_wrapper, test_count):
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
+            results_pop_all[name + '_' + key] = 0
             for i in range(test_count):
                 time_start = time.time()
-                ann_wrapper.jointW_write_all(name, part_enc[name][key], True)
+                ann_wrapper.jointW_write_pop_all(name, part_enc[name][key], True)
                 time_stop = time.time()
                 results_pop_all[name + '_' + key] += time_stop -time_start
 
@@ -276,7 +279,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
 
     print('________ Test results: Population_all')
     for key in results_pop_all:
-        print('Test:', key, 'results:', results_pop_all[key])
+        print('Test:', key, 'results:', round(results_pop_all[key], 4), 's')
 
     print('____________________________________________________________\n')
 
@@ -432,9 +435,9 @@ def speed_test_vreader(ann_wrapper, test_count):
 
     np.save(path + 'field_size.npy', img_field)
 
-    print('Time with full resolution:', 1. / ((t_stop_full - t_start_full) / test_count), "fps")
-    print('Time with quarter resolution:', 1.0 / ((t_stop_quart - t_start_quart) / test_count), "fps")
-    print('Time with quarter resolution and half visual field:', 1/ ((t_stop_field - t_start_field) / test_count), "fps")
+    print('Time with full resolution:', round(1. / ((t_stop_full - t_start_full) / test_count), 4), "fps")
+    print('Time with quarter resolution:', round(1.0 / ((t_stop_quart - t_start_quart) / test_count), 4), "fps")
+    print('Time with quarter resolution and half visual field:', round(1/ ((t_stop_field - t_start_field) / test_count), 4), "fps")
 
 
 #########################################################

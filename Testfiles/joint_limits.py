@@ -1,7 +1,7 @@
 """
 The following data are the joint limits for the iCub. Here, the minimum and maximum value is given.
-The data is retrieved from the iCub-simulator. In the simulator files (directory: icub-main/app/simConfig/conf, 
-with icub-main as main directory of the simulator repository) for every robot part an ini file with the joint limits is given. 
+The data is retrieved from the iCub-simulator. In the simulator files (directory: icub-main/app/simConfig/conf,
+with icub-main as main directory of the simulator repository) for every robot part an ini file with the joint limits is given.
 In order to ensure a save usage with the real robot, the values should be compared to the values in the robot documentation to avoid collisions.
 """
 
@@ -9,9 +9,9 @@ In order to ensure a save usage with the real robot, the values should be compar
 head = {}
 head['joint_0_min'] = -40.0
 head['joint_1_min'] = -70.0
-head['joint_2_min'] = -55.0 
+head['joint_2_min'] = -55.0
 head['joint_3_min'] = -35.0
-head['joint_4_min'] = -50.0 
+head['joint_4_min'] = -50.0
 head['joint_5_min'] = -0.0
 
 head['joint_0_max'] =  30.0
@@ -94,7 +94,7 @@ left_arm['joint_12_max'] =  180.0
 left_arm['joint_13_max'] =  90.0
 left_arm['joint_14_max'] =  180.0
 left_arm['joint_15_max'] =  270.0
-                                                                       
+
 
 # [right_leg]
 right_leg = {}

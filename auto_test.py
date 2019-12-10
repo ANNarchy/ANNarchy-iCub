@@ -113,9 +113,9 @@ def test_joint_positioning(ann_wrapper):
     ann_wrapper.jointR_init("head", ann_wrapper.PART_KEY_HEAD, sigma, n_pop, neuron_res)
 
     # init joint writer
-    ann_wrapper.jointW_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, neuron_res)
-    ann_wrapper.jointW_init("left_arm", ann_wrapper.PART_KEY_LEFT_ARM, n_pop, neuron_res)
-    ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, neuron_res)
+    ann_wrapper.jointW_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, neuron_res, 25.0)
+    ann_wrapper.jointW_init("left_arm", ann_wrapper.PART_KEY_LEFT_ARM, n_pop, neuron_res, 25.0)
+    ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, neuron_res, 25.0)
     print('____ Initialized all joint reader and writer ____')
     print('____________________________________________________________\n')
 
@@ -141,8 +141,8 @@ def test_joint_positioning(ann_wrapper):
                 test_result = True
                 error_joints = []
                 for i in range(read_pos_double.shape[0]):
-                    max_lim = abs(round(positions[key][0][i], 2)) + 0.01 * abs(round(positions[key][0][i], 2))
-                    min_lim = abs(round(positions[key][0][i], 2)) - 0.01 * abs(round(positions[key][0][i], 2))
+                    max_lim = abs(round(positions[key][0][i], 2)) + 0.1 * abs(round(positions[key][0][i], 2))
+                    min_lim = abs(round(positions[key][0][i], 2)) - 0.1 * abs(round(positions[key][0][i], 2))
                     if (abs(round(read_pos_double[i], 2)) > max_lim) or (abs(round(read_pos_double[i], 2)) < min_lim):
                         test_result = False
                         error_joints.append(i)
@@ -166,12 +166,12 @@ def test_joint_positioning(ann_wrapper):
         for key in part_enc[name]:
             print('______ Test position:', key)
             for i in range(positions[key][0].shape[0]):
-                ann_wrapper.jointW_write_one(name, part_enc[name][key][i], i, True)
+                ann_wrapper.jointW_write_pop_one(name, part_enc[name][key][i], i, True)
             time.sleep(2)
 
             read_pos_pop_S = []
             for i in range(positions[key][0].shape[0]):
-                read_pos_pop_S.append(np.round(ann_wrapper.jointR_read_one(name, i), decimals=3))
+                read_pos_pop_S.append(np.round(ann_wrapper.jointR_read_pop_one(name, i), decimals=3))
             read_pop_single[key] = read_pos_pop_S
 
             test_result = True
@@ -199,10 +199,10 @@ def test_joint_positioning(ann_wrapper):
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
-            ann_wrapper.jointW_write_all(name, part_enc[name][key], True)
+            ann_wrapper.jointW_write_pop_all(name, part_enc[name][key], True)
             time.sleep(2)
 
-            read_pos_pop_a = ann_wrapper.jointR_read_all(name)
+            read_pos_pop_a = ann_wrapper.jointR_read_pop_all(name)
             read_pop_all[key] = read_pos_pop_a
 
             test_result = True
@@ -308,7 +308,7 @@ def test_tactile_reading(ann_wrapper):
     print(" Touched arm:\n   ", "norm data:", np.array(data_arm_norm).max() == 1.0, "\n    raw data:", data_arm_raw.max() == 255.0)
     print(" Touched forearm:\n   ", "norm data:", np.array(data_farm_norm).max() == 1.0, "\n    raw data:", data_farm_raw.max() == 255.0)
     print(" Touched hand:\n   ", "norm data:", np.array(data_hand_norm).max() == 1.0, "\n    raw data:", data_hand_raw.max() == 255.)
-    
+
     np.save(path + "tact_arm_data_norm.npy", data_arm_norm)
     np.save(path + "tact_forearm_data_norm.npy", data_farm_norm)
     np.save(path + "tact_hand_data_norm.npy", data_hand_norm)
