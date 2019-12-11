@@ -5,7 +5,7 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-import iCubCPP  # requires iCubCPP in the present directory
+import iCub_Interface  # requires iCub_Interface in the present directory
 import Testfiles.lib.world_controller as wc
 from Testfiles.joint_limits import joint_limits as j_lim
 
@@ -166,9 +166,9 @@ def speed_test_jwriter(ann_wrapper, test_count):
     # load test positions
     position_path = "./Testfiles/test_positions/"
     positions = {}
-    positions['pos_hand_T_r'] = (np.load(position_path + "test_pos_T.npy"), 'right_arm')
-    positions['pos_hand_complex_r'] = (np.load(position_path + "test_hand_complex.npy"), 'right_arm')
-    positions['pos_hand_home_r'] = (np.load(position_path + "test_pos_home.npy"), 'right_arm')
+    positions['pos_arm_T_r'] = (np.load(position_path + "test_pos_T.npy"), 'right_arm')
+    positions['pos_arm_complex_r'] = (np.load(position_path + "test_hand_complex.npy"), 'right_arm')
+    positions['pos_arm_home_r'] = (np.load(position_path + "test_pos_home.npy"), 'right_arm')
     positions['pos_head'] = (np.load(position_path + "test_pos_head.npy"), 'head')
     positions['pos_head_complex'] = (np.load(position_path + "test_pos_head_complex.npy"), 'head')
     positions['pos_head_zero'] = (np.load(position_path + "test_pos_head_zero.npy"), 'head')
@@ -176,7 +176,6 @@ def speed_test_jwriter(ann_wrapper, test_count):
     zero_pos = {}
     zero_pos['head'] = np.zeros(6)
     zero_pos['right_arm'] = np.load(position_path + "zero_pos_arm.npy")
-    zero_pos['left_arm'] = np.load(position_path + "zero_pos_arm.npy")
 
     # encode positions
     print('__ Encode test positions __')
@@ -198,7 +197,6 @@ def speed_test_jwriter(ann_wrapper, test_count):
 
     # init joint writer
     ann_wrapper.jointW_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, neuron_res, 100.0)
-    ann_wrapper.jointW_init("left_arm", ann_wrapper.PART_KEY_LEFT_ARM, n_pop, neuron_res, 100.0)
     ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, neuron_res, 100.0)
     print('____ Initialized all joint writer ____')
     print('____________________________________________________________\n')
@@ -452,17 +450,18 @@ def vis_move_test(ann_wrapper):
     zero_pos['head'] = np.zeros(6)
     zero_pos['right_arm'] = np.load(position_path + "test_pos_home.npy")
 
-    path = "./Testfiles/Visiou_movement/"
+    path = "./Testfiles/Vis_movement/"
     if not os.path.isdir(path):
         os.mkdir(path)
 
     n_pop = 50
+    speed_arm = 15
     imgs = []
 
     ann_wrapper.add_visual_reader()
     ann_wrapper.add_joint_writer("moving")
     ann_wrapper.add_joint_writer("head")
-    speed_arm = 1
+    
     ann_wrapper.visualR_init('r', 60, 48, 80, 60)
     ann_wrapper.jointW_init("moving", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, speed_arm)
     ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, 100)
@@ -517,27 +516,29 @@ def vis_move_test(ann_wrapper):
 
 #########################################################
 if __name__ == "__main__":
-    wrapper = iCubCPP.iCubANN_wrapper()
+    wrapper = iCub_Interface.iCubANN_wrapper()
     test_cnt = 10
 
     if len(sys.argv) > 1:
-        command = sys.argv[1]
-        if command == 'all':
-            speed_test_jreader(wrapper, test_cnt)
-            speed_test_jwriter(wrapper, test_cnt)
-            speed_test_sreader(wrapper, test_cnt)
-            speed_test_vreader(wrapper, test_cnt)
-            vis_move_test(wrapper)
-        elif command == "jreader":
-            speed_test_jreader(wrapper, test_cnt)
-        elif command == "jwriter":
-            speed_test_jwriter(wrapper, test_cnt)
-        elif command == "sreader":
-            speed_test_sreader(wrapper, test_cnt)
-        elif command == "vreader":
-            speed_test_vreader(wrapper, test_cnt)
-        elif command == "visuo_move":
-            vis_move_test(wrapper)
+        for command in sys.argv[1:]: 
+            if command == 'all':
+                speed_test_jreader(wrapper, test_cnt)
+                speed_test_jwriter(wrapper, test_cnt)
+                speed_test_sreader(wrapper, test_cnt)
+                speed_test_vreader(wrapper, test_cnt)
+                vis_move_test(wrapper)
+            elif command == "jreader":
+                speed_test_jreader(wrapper, test_cnt)
+            elif command == "jwriter":
+                speed_test_jwriter(wrapper, test_cnt)
+            elif command == "sreader":
+                speed_test_sreader(wrapper, test_cnt)
+            elif command == "vreader":
+                speed_test_vreader(wrapper, test_cnt)
+            elif command == "vis_move":
+                vis_move_test(wrapper)
+            else:
+                print('No valid test command!')
     else:
         print('No valid test command!')
 

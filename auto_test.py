@@ -5,7 +5,7 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-import iCubCPP  # requires iCubCPP in the present directory
+import iCub_Interface  # requires iCub_Interface in the present directory
 import Testfiles.lib.world_controller as wc
 from Testfiles.joint_limits import joint_limits as j_lim
 
@@ -71,12 +71,12 @@ def test_joint_positioning(ann_wrapper):
     # load test positions
     position_path = "./Testfiles/test_positions/"
     positions = {}
-    positions['pos_hand_T_r'] = (np.load(position_path + "test_pos_T.npy"), 'right_arm')
-    positions['pos_hand_complex_r'] = (np.load(position_path + "test_hand_complex.npy"), 'right_arm')
-    positions['pos_hand_home_r'] = (np.load(position_path + "test_pos_home.npy"), 'right_arm')
-    positions['pos_hand_T_l'] = (np.load(position_path + "test_pos_T.npy"), 'left_arm')
-    positions['pos_hand_complex_l'] = (np.load(position_path + "test_hand_complex.npy"), 'left_arm')
-    positions['pos_hand_home_l'] = (np.load(position_path + "test_pos_home.npy"), 'left_arm')
+    positions['pos_arm_T_r'] = (np.load(position_path + "test_pos_T.npy"), 'right_arm')
+    positions['pos_arm_complex_r'] = (np.load(position_path + "test_hand_complex.npy"), 'right_arm')
+    positions['pos_arm_home_r'] = (np.load(position_path + "test_pos_home.npy"), 'right_arm')
+    positions['pos_arm_T_l'] = (np.load(position_path + "test_pos_T.npy"), 'left_arm')
+    positions['pos_arm_complex_l'] = (np.load(position_path + "test_hand_complex.npy"), 'left_arm')
+    positions['pos_arm_home_l'] = (np.load(position_path + "test_pos_home.npy"), 'left_arm')
     positions['pos_head'] = (np.load(position_path + "test_pos_head.npy"), 'head')
     positions['pos_head_complex'] = (np.load(position_path + "test_pos_head_complex.npy"), 'head')
     positions['pos_head_zero'] = (np.load(position_path + "test_pos_head_zero.npy"), 'head')
@@ -386,20 +386,22 @@ def test_visual_perception(ann_wrapper):
 
 #########################################################
 if __name__ == "__main__":
-    wrapper = iCubCPP.iCubANN_wrapper()
+    wrapper = iCub_Interface.iCubANN_wrapper()
 
     if len(sys.argv) > 1:
-        command = sys.argv[1]
-        if command == 'all':
-            test_joint_positioning(wrapper)
-            test_visual_perception(wrapper)
-            test_tactile_reading(wrapper)
-        elif command == "positioning":
-            test_joint_positioning(wrapper)
-        elif command == "tactile":
-            test_tactile_reading(wrapper)
-        elif command == "vision":
-            test_visual_perception(wrapper)
+        for command in sys.argv[1:]: 
+            if command == 'all':
+                test_joint_positioning(wrapper)
+                test_visual_perception(wrapper)
+                test_tactile_reading(wrapper)
+            elif command == "positioning":
+                test_joint_positioning(wrapper)
+            elif command == "tactile":
+                test_tactile_reading(wrapper)
+            elif command == "vision":
+                test_visual_perception(wrapper)
+            else:
+                print('No valid test command!')
     else:
         print('No valid test command!')
 

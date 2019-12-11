@@ -4,7 +4,7 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-import iCubCPP  # requires iCubCPP in the present directory
+import iCub_Interface  # requires iCub_Interface in the present directory
 from Testfiles.joint_limits import joint_limits as j_lim
 
 
@@ -254,23 +254,25 @@ def call_test_vreader(ann_wrapper):
 
 #########################################################
 if __name__ == "__main__":
-    wrapper = iCubCPP.iCubANN_wrapper()
+    wrapper = iCub_Interface.iCubANN_wrapper()
 
     if len(sys.argv) > 1:
-        command = sys.argv[1]
-        if command == 'all':
-            call_test_jreader(wrapper)
-            call_test_jwriter(wrapper)
-            call_test_sreader(wrapper)
-            call_test_vreader(wrapper)
-        elif command == "jreader":
-            call_test_jreader(wrapper)
-        elif command == "jwriter":
-            call_test_jwriter(wrapper)
-        elif command == "sreader":
-            call_test_sreader(wrapper)
-        elif command == "vreader":
-            call_test_vreader(wrapper)
+        for command in sys.argv[1:]: 
+            if command == 'all':
+                call_test_jreader(wrapper)
+                call_test_jwriter(wrapper)
+                call_test_sreader(wrapper)
+                call_test_vreader(wrapper)
+            elif command == "jreader":
+                call_test_jreader(wrapper)
+            elif command == "jwriter":
+                call_test_jwriter(wrapper)
+            elif command == "sreader":
+                call_test_sreader(wrapper)
+            elif command == "vreader":
+                call_test_vreader(wrapper)
+            else:
+                print('No valid test command!')
     else:
         print('No valid test command!')
 
