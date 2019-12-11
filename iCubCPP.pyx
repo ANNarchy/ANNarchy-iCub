@@ -510,7 +510,7 @@ cdef class iCubANN_wrapper:
         return np.array(my_interface.JointWGetNeuronsPerJoint(s))
 
     # set joint velocity
-    def jointW_set_joint_velocity(name, speed, joint=(-1)):
+    def jointW_set_joint_velocity(self, name, speed, joint=(-1)):
         """
             Calls bool iCubANN::JointWSetJointVelocity(std::string name, double speed, int joint)
 
@@ -526,7 +526,7 @@ cdef class iCubANN_wrapper:
                 bool                -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
-        cdef s = name.encode('UTF-8')
+        cdef string s = name.encode('UTF-8')
         # call the interface
         return my_interface.JointWSetJointVelocity(s, speed, joint)
 

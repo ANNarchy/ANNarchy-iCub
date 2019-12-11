@@ -145,7 +145,6 @@ def call_test_jwriter(ann_wrapper):
     print('\n')
 
     test_pos = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5)
-    print(test_pos)
     double_all = np.zeros((6))
     pop_all = np.zeros((6, 15))
     for i in range(6):
