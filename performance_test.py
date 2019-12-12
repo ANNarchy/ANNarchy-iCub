@@ -16,17 +16,17 @@ eye_loc = [0.0, 0.9375, 0.055]  # location of the center point between both eyes
 #########################################################
 def normal_pdf(value, mean, sigma):
     """
-        Calculate the normal distribution function value for a given value.
+        Return the function value of a normal distribution for a given value.
 
         params:
-            value            -- value to calculate normal distribution at
-            mean             -- mean of the normal distribution
-            sigma            -- sigma of the normal distribution
+            value           -- value to calculate normal distribution at
+            mean            -- mean of the normal distribution
+            sigma           -- sigma of the normal distribution
 
         return:
-            function value for the normal distribution
+                            -- function value for the normal distribution
     """
-    inv_sqrt_2pi = 1 / (sigma * np.sqrt(2 * np.pi))
+    inv_sqrt_2pi = 1.0 / (sigma * np.sqrt(2 * np.pi))
     a = (value - mean) / sigma
 
     return inv_sqrt_2pi * np.exp(-0.5 * a * a)
@@ -34,9 +34,15 @@ def normal_pdf(value, mean, sigma):
 
 def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0):
     """
+        Encode a joint angle as double value in a population code.
+
         params:
-                joint_angle      -- joint angle read from the robot
-                size             -- size of the population coding
+            part            -- robot part
+            joint           -- joint number
+            pop_size        -- size of the population
+            joint_angle     -- joint angle read from the robot
+            sigma           -- sigma for population coding gaussian
+            resolution      -- if non-zero fixed resolution for all joints instead of fixed population size
 
         return:
                                 -- population encoded joint angle
@@ -65,10 +71,18 @@ def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0):
 
 #########################################################
 def speed_test_jreader(ann_wrapper, test_count):
-    n_pop = 100
-    sigma = 1.5
-    neuron_res = 0.0
-    parts = ["right_arm", "head"]
+    """
+        Test the performance of the joint reader module.
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+            test_count      -- number of test trials
+    """
+
+    n_pop = 100         # population size
+    sigma = 1.5         # sigma for population coding gaussian
+    neuron_res = 0.0    # population resolution
+    parts = ["right_arm", "head"]   # tested iCub parts
 
     print('____________________________________________________________\n')
     print('__ Add and init joint reader modules __')
@@ -86,8 +100,7 @@ def speed_test_jreader(ann_wrapper, test_count):
     print('____ Initialized all joint reader and writer ____')
     print('____________________________________________________________\n')
 
-
-    # test speed reading double
+    # test speed for reading joint angles as double values
     print('__ Type of reading: Double')
     results_double = {}
     for name in parts:
@@ -101,12 +114,13 @@ def speed_test_jreader(ann_wrapper, test_count):
         time_stop_double = time.time()
         results_double[name] = (time_stop_double - time_start_double) / test_count
 
+    # show the trst results
     print('________ Test results: Double')
     for part in results_double:
         print("Time double ", part, ":", round(results_double[part], 4), 's')
     print('\n')
 
-    # test speed reading population single
+    # test speed for reading joint angles as population code, coding a single joint
     print('__ Type of reading: Population_single')
     results_pop_single = {}
     for name in parts:
@@ -120,12 +134,13 @@ def speed_test_jreader(ann_wrapper, test_count):
         time_stop_pop_single = time.time()
         results_pop_single[name] = (time_stop_pop_single - time_start_pop_single) / test_count
 
+    # show the trst results
     print('________ Test results: Population_single')
     for part in results_pop_single:
         print("Time pop_single", part , ":", round(results_pop_single[part], 4), 's')
     print('\n')
 
-    # test speed reading population all
+    # test speed for reading joint angles as population code, coding all joints combined
     print('__ Type of reading: Population_all')
     results_pop_all = {}
     for name in parts:
@@ -138,6 +153,7 @@ def speed_test_jreader(ann_wrapper, test_count):
         time_stop_pop_all = time.time()
         results_pop_all[name] = (time_stop_pop_all - time_start_pop_all) / test_count
 
+    # show the trst results
     print('________ Test results: Population_all')
     for part in results_pop_all:
         print("Time pop_all", part , ":", round(results_pop_all[part], 4), 's')
@@ -156,15 +172,23 @@ def speed_test_jreader(ann_wrapper, test_count):
 
 #########################################################
 def speed_test_jwriter(ann_wrapper, test_count):
-    n_pop = 100
-    sigma = 1.5
-    neuron_res = 0.0
+    """
+        Test the performance of the joint writer module.
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+            test_count      -- number of test trials
+    """
+
+    n_pop = 100         # population size
+    sigma = 1.5         # sigma for population coding gaussian
+    neuron_res = 0.0    # population resolution
+    position_path = "./Testfiles/test_positions/"
 
     print('____________________________________________________________')
     print('__ Load test positions __')
 
     # load test positions
-    position_path = "./Testfiles/test_positions/"
     positions = {}
     positions['pos_arm_T_r'] = (np.load(position_path + "test_pos_T.npy"), 'right_arm')
     positions['pos_arm_complex_r'] = (np.load(position_path + "test_hand_complex.npy"), 'right_arm')
@@ -190,19 +214,18 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('____________________________________________________________\n')
     print('__ Add and init joint writer modules __')
 
+    # add joint writer instances
     for name in part_enc:
-        # add joint writer instances
         ann_wrapper.add_joint_writer(name)
     print('____ Added all joint writer ____')
 
-    # init joint writer
+    # init joint writer instances
     ann_wrapper.jointW_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, neuron_res, 100.0)
     ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, neuron_res, 100.0)
     print('____ Initialized all joint writer ____')
     print('____________________________________________________________\n')
 
-
-    # test positioning
+    # test joint motion with joint angles as double values
     print('__ Type of positioning: Double')
     results_double = {}
     for name in part_enc:
@@ -224,13 +247,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
                     time.sleep(0.5)
                 results_double[name + '_' + key] /= test_count
 
-
+    # show test results
     print('________ Test results: Double')
     for key in results_double:
         print('Test:', key, 'results:', round(results_double[key], 4), 's')
     print('\n')
 
-
+    # test joint motion with joint angles encoded in population code, coding single joint
     print('__ Type of positioning: Population_single')
     results_pop_single = {}
     for name in part_enc:
@@ -251,12 +274,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 time.sleep(0.5)
             results_pop_single[name + '_' + key] /= test_count
 
+    # show test results
     print('________ Test results: Population_single')
     for key in results_pop_single:
         print('Test:', key, 'results:', round(results_pop_single[key], 4), 's')
     print('\n')
 
-
+    # test joint motion with joint angles encoded in population code, coding all joints combined
     print('__ Type of positioning: Population_all')
     results_pop_all = {}
     for name in part_enc:
@@ -275,15 +299,16 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 time.sleep(0.5)
             results_pop_all[name + '_' + key] /= test_count
 
+    # show test results
     print('________ Test results: Population_all')
     for key in results_pop_all:
         print('Test:', key, 'results:', round(results_pop_all[key], 4), 's')
 
     print('____________________________________________________________\n')
-
     print('__ Close joint writer modules __')
+
+    # close joint writer instances
     for part in part_enc:
-        # close joint writer instances
         ann_wrapper.jointW_close(part)
 
     print('____ Closed joint writer modules ____')
@@ -292,13 +317,19 @@ def speed_test_jwriter(ann_wrapper, test_count):
 
 #########################################################
 def speed_test_sreader(ann_wrapper, test_count):
+    """
+        Test the performance of the skin reader module.
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+            test_count      -- number of test trials
+    """
 
     print('____________________________________________________________')
     print('__ Add and init skin reader module __')
     # add skin reader instances
     ann_wrapper.add_skin_reader("S_Reader")
     ann_wrapper.add_skin_reader("S_Reader1")
-
 
     # init skin reader
     print("Init:", ann_wrapper.skinR_init("S_Reader", "r", True)) # normalized
@@ -349,6 +380,13 @@ def speed_test_sreader(ann_wrapper, test_count):
 
 #########################################################
 def speed_test_vreader(ann_wrapper, test_count):
+    """
+        Test the performance of the visual reader module.
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+            test_count      -- number of test trials
+    """
 
     imgs_full = []
     imgs_quarter = []
@@ -382,9 +420,11 @@ def speed_test_vreader(ann_wrapper, test_count):
     ann_wrapper.visualR_stop()
     ann_wrapper.rm_visual_reader()
 
+    # store obtained images
     np.save(path + 'full_size.npy', img_full)
 
     time.sleep(1.0)
+    # add visual reader instance
     ann_wrapper.add_visual_reader()
 
     print('____________________________________________________________')
@@ -407,9 +447,11 @@ def speed_test_vreader(ann_wrapper, test_count):
     ann_wrapper.visualR_stop()
     ann_wrapper.rm_visual_reader()
 
+    # store obtained images
     np.save(path + 'quarter_size.npy', img_quarter)
 
     time.sleep(1.0)
+    # add visual reader instance
     ann_wrapper.add_visual_reader()
 
     print('____________________________________________________________')
@@ -418,7 +460,7 @@ def speed_test_vreader(ann_wrapper, test_count):
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
-    print('____ Test speed performance with quarter resolution ____')
+    print('____ Test speed performance with quarter resolution and reduced visual field ____')
     t_start_field = time.time()
     ann_wrapper.visualR_start()
     while len(imgs_field) < test_count:
@@ -440,8 +482,18 @@ def speed_test_vreader(ann_wrapper, test_count):
 
 #########################################################
 def vis_move_test(ann_wrapper):
+    """
+        Test the performance of the visual reader module.
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+            test_count      -- number of test trials
+    """
+    n_pop = 50
+    speed_arm = 15
+    speed_head = 15
+
     position_path = "./Testfiles/test_positions/"
-    # position = np.load(position_path + "test_visuomove.npy")
     pos = {}
     pos[True] = np.load(position_path + "test_vismov0.npy")
     pos[False] = np.load(position_path + "test_vismov1.npy")
@@ -450,31 +502,36 @@ def vis_move_test(ann_wrapper):
     zero_pos['head'] = np.zeros(6)
     zero_pos['right_arm'] = np.load(position_path + "test_pos_home.npy")
 
+    # create folder to store test results, in case it does not exist already
     path = "./Testfiles/Vis_movement/"
     if not os.path.isdir(path):
         os.mkdir(path)
 
-    n_pop = 50
-    speed_arm = 15
-    imgs = []
-
+    # add visual reader and joint writer instances
     ann_wrapper.add_visual_reader()
     ann_wrapper.add_joint_writer("moving")
     ann_wrapper.add_joint_writer("head")
     
+    # init visual reader and joint writer instances
     ann_wrapper.visualR_init('r', 60, 48, 80, 60)
     ann_wrapper.jointW_init("moving", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, speed_arm)
-    ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, 100)
+    ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, speed_head)
 
+    # move the right arm to the start position
     for i in range(ann_wrapper.jointW_get_joint_count("moving")):
         ann_wrapper.jointW_write_double("moving", pos[True][i], i, True)
 
+    # create a simulator world controller instance
     sim_ctrl = wc.WorldController()
+
+    # obtain the iCub hand position in the world reference frame
     hand_loc = sim_ctrl.get_hand_location("rhand")
 
+    # compute the eye and and head position to look the iCub hand
     dx = hand_loc[0] - eye_loc[0]
     dy = hand_loc[1] - eye_loc[1]
     dz = hand_loc[2] - eye_loc[2]
+
     alpha = bog2deg * np.arctan(dy/dz)
     beta =  - bog2deg * np.arctan(dx/dz)
     target_pos = np.zeros(ann_wrapper.jointW_get_joint_count("head"))
@@ -484,14 +541,18 @@ def vis_move_test(ann_wrapper):
     target_pos[2] = -1.0/2.0 * beta
     target_pos[4] = 1.0/2.0 * beta - 10
 
+    # move the head and eyes to look at the iCub right hand
     for i in range(ann_wrapper.jointW_get_joint_count("head")):
         ann_wrapper.jointW_write_double_all("head", target_pos, True)
     time.sleep(2)
 
+    # start the the visual reader module to obtain images from the iCub
     ann_wrapper.visualR_start()
 
+    # move the arm, while recording the images
     for i in range(ann_wrapper.jointW_get_joint_count("moving")):
         ann_wrapper.jointW_write_double_all("moving", pos[False], True)
+    imgs = []
     t_start = time.time()
     pos_choice = True
     while len(imgs) < 100:
@@ -503,13 +564,17 @@ def vis_move_test(ann_wrapper):
                 pos_choice = not pos_choice
                 t_start = time.time()
 
+    # stop the visual reader
     ann_wrapper.visualR_stop()
 
+    # save the recorded images 
     np.save(path + 'visual_percept_' + str(speed_arm) + '.npy', imgs)
 
+    # return the arm and the head to a defined position
     ann_wrapper.jointW_write_double_all("moving", zero_pos["right_arm"], True)
     ann_wrapper.jointW_write_double_all("head", zero_pos["head"], True)
 
+    # close the joint writer modules
     ann_wrapper.jointW_close("moving")
     ann_wrapper.jointW_close("head")
 

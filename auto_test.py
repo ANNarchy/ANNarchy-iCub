@@ -13,16 +13,17 @@ from Testfiles.joint_limits import joint_limits as j_lim
 #########################################################
 def normal_pdf(value, mean, sigma):
     """
+        Return the function value of a normal distribution for a given value.
+
         params:
-                value            -- value to calculate normal distribution at
-                mean             -- mean of the normal distribution
-                sigma            -- sigma of the normal distribution
+            value           -- value to calculate normal distribution at
+            mean            -- mean of the normal distribution
+            sigma           -- sigma of the normal distribution
 
         return:
-                                -- function value for the normal distribution
+                            -- function value for the normal distribution
     """
-    # inv_sqrt_2pi = 4.0 / (sigma * np.sqrt(2 * np.pi))
-    inv_sqrt_2pi = 1.0
+    inv_sqrt_2pi = 1.0 / (sigma * np.sqrt(2 * np.pi))
     a = (value - mean) / sigma
 
     return inv_sqrt_2pi * np.exp(-0.5 * a * a)
@@ -30,12 +31,18 @@ def normal_pdf(value, mean, sigma):
 
 def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0):
     """
+        Encode a joint angle as double value in a population code.
+
         params:
-                joint_angle      -- joint angle read from the robot
-                size             -- size of the population coding
+            part            -- robot part
+            joint           -- joint number
+            pop_size        -- size of the population
+            joint_angle     -- joint angle read from the robot
+            sigma           -- sigma for population coding gaussian
+            resolution      -- if non-zero fixed resolution for all joints instead of fixed population size
 
         return:
-                                -- population encoded joint angle
+                            -- population encoded joint angle
     """
 
     joint_min = j_lim[part]['joint_' + str(joint) + '_min']
@@ -61,15 +68,25 @@ def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0):
 
 #########################################################
 def test_joint_positioning(ann_wrapper):
+    """
+        Test the joint control in case of writing and reading. The results are compared to check the correct movement of the joints.
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+    """
     n_pop = 100
     sigma = 1.5
     neuron_res = 0.0
     path = './Testfiles/Movement/'
+    position_path = "./Testfiles/test_positions/"
+
+    if not os.path.isdir(path):
+        os.mkdir(path)
+
     print('____________________________________________________________')
     print('__ Load test positions __')
 
     # load test positions
-    position_path = "./Testfiles/test_positions/"
     positions = {}
     positions['pos_arm_T_r'] = (np.load(position_path + "test_pos_T.npy"), 'right_arm')
     positions['pos_arm_complex_r'] = (np.load(position_path + "test_hand_complex.npy"), 'right_arm')
@@ -80,9 +97,6 @@ def test_joint_positioning(ann_wrapper):
     positions['pos_head'] = (np.load(position_path + "test_pos_head.npy"), 'head')
     positions['pos_head_complex'] = (np.load(position_path + "test_pos_head_complex.npy"), 'head')
     positions['pos_head_zero'] = (np.load(position_path + "test_pos_head_zero.npy"), 'head')
-
-    if not os.path.isdir(path):
-        os.mkdir(path)
 
     # encode positions
     print('__ Encode test positions __')
@@ -96,7 +110,6 @@ def test_joint_positioning(ann_wrapper):
         part_enc[positions[key][1]][key] = pos_enc
 
     print('____________________________________________________________\n')
-
     print('__ Add and init joint reader and writer modules __')
 
     # add joint reader instances
@@ -120,24 +133,28 @@ def test_joint_positioning(ann_wrapper):
     print('____________________________________________________________\n')
 
 
-    # test positioning
+    # test the positioning with values for a single joint and motion of all joints
     print('__ Type of positioning: Double')
     read_double = {}
     test_results = {}
+
     for name in part_enc:
         print('____ Test part:', name)
         for key in positions:
             if positions[key][1] == name:
                 print('______ Test position:', key)
+                # move the joints
                 for i in range(positions[key][0].shape[0]):
                     ann_wrapper.jointW_write_double(name, positions[key][0][i], i, True)
                 time.sleep(1)
 
+                # read the joint positions
                 read_pos_double = np.zeros((positions[key][0].shape[0]))
                 for i in range(read_pos_double.shape[0]):
                     read_pos_double[i] = round(ann_wrapper.jointR_read_double(name, i), 2)
                 read_double[key] = read_pos_double
 
+                # compare the written positions with the returned joint positions
                 test_result = True
                 error_joints = []
                 for i in range(read_pos_double.shape[0]):
@@ -149,6 +166,7 @@ def test_joint_positioning(ann_wrapper):
                 test_results[name + '_' + key] = (test_result, error_joints)
                 print(test_result)
 
+    # save the read joint positions
     for key in read_double:
         np.save(path + key + "_double.npy", read_double[key])
 
@@ -158,6 +176,7 @@ def test_joint_positioning(ann_wrapper):
 
     print('\n')
 
+    # test the positioning with population coding for a single joint and motion of all joints
     print('__ Type of positioning: Population_single')
     read_pop_single = {}
     test_results = {}
@@ -165,15 +184,18 @@ def test_joint_positioning(ann_wrapper):
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
+            # move the joints
             for i in range(positions[key][0].shape[0]):
                 ann_wrapper.jointW_write_pop_one(name, part_enc[name][key][i], i, True)
-            time.sleep(2)
+            time.sleep(1)
 
+            # read the joint positions
             read_pos_pop_S = []
             for i in range(positions[key][0].shape[0]):
                 read_pos_pop_S.append(np.round(ann_wrapper.jointR_read_pop_one(name, i), decimals=3))
             read_pop_single[key] = read_pos_pop_S
 
+            # compare the written positions with the returned joint positions
             test_result = True
             error_joints = []
             for i in range(len(read_pos_pop_S)):
@@ -183,15 +205,15 @@ def test_joint_positioning(ann_wrapper):
             test_results[name + '_' + key] = (test_result, error_joints)
             print(test_result)
 
+    # save the read joint positions
     for key in read_pop_single:
         np.save(path + key + "_pop_single.npy", read_pop_single[key])
 
     print('________ Test results: Population_single')
     for key in test_results:
-        print('Test:', key, 'results:', test_results[key])
+        print('Test:', key, 'results:', test_results[key], '\n')
 
-    print('\n')
-
+    # test the positioning with population coding combined for all joints
     print('__ Type of positioning: Population_all')
     read_pop_all = {}
     test_results = {}
@@ -199,12 +221,15 @@ def test_joint_positioning(ann_wrapper):
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
+            # move the joints
             ann_wrapper.jointW_write_pop_all(name, part_enc[name][key], True)
-            time.sleep(2)
+            time.sleep(1)
 
+            # read the joint positions
             read_pos_pop_a = ann_wrapper.jointR_read_pop_all(name)
             read_pop_all[key] = read_pos_pop_a
 
+            # compare the written positions with the returned joint positions
             test_result = True
             error_joints = []
             for i in range(len(read_pos_pop_a)):
@@ -214,6 +239,7 @@ def test_joint_positioning(ann_wrapper):
             test_results[name + '_' + key] = (test_result, error_joints)
             print(test_result)
 
+    # save the read joint positions
     for key in read_pop_all:
         np.save(path + key + "_pop_all.npy", read_pop_all[key])
 
@@ -223,12 +249,10 @@ def test_joint_positioning(ann_wrapper):
 
     print('____________________________________________________________\n')
 
-    # close joint reader
+    # close joint reader and writer instances
     print('__ Close joint reader and writer modules __')
     for part in part_enc:
         ann_wrapper.jointR_close(part)
-
-        # add joint writer instances
         ann_wrapper.jointW_close(part)
 
     print('____ Closed joint reader and writer modules ____')
@@ -237,11 +261,19 @@ def test_joint_positioning(ann_wrapper):
 
 #########################################################
 def test_tactile_reading(ann_wrapper):
+    """
+        Test the tactile sensing module of the interface, by touching the robot arm with a sphere at multiple points. 
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+    """
+    data_count = 5
 
     path = "./Testfiles/Tactile/"
     if not os.path.isdir(path):
         os.mkdir(path)
-    sim_ctrl = wc.WorldController()
+
+    # set sphere positions
     loc_sph = []
     loc_p0 = np.array([-0.0, 0.6, 0.22])
     loc_p1 = np.array([-0.14, 0.6, 0.22])
@@ -256,8 +288,11 @@ def test_tactile_reading(ann_wrapper):
     loc_sph.append(loc_p4)
     loc_sph.append(loc_p5)
 
+    # instanciate the simulator world controller
+    sim_ctrl = wc.WorldController()
+
+    # create a sphere in the simulator
     sphere = sim_ctrl.create_object("ssph", [0.025], loc_p0, [0.0, 0.0, 1.0])
-    data_count = 5
 
     print('____________________________________________________________')
     print('__ Add and init skin reader module __')
@@ -276,6 +311,7 @@ def test_tactile_reading(ann_wrapper):
     data_farm_norm = []
     data_hand_norm = []
     pos = loc_p0
+    # test the tactile sensing
     for i in range(len(loc_sph) - 1):
         print("step:", i)
         delta_pos = loc_sph[i+1] - pos
@@ -283,12 +319,15 @@ def test_tactile_reading(ann_wrapper):
         if d_pos.sum() != 0:
             for j in range(data_count):
                 pos += d_pos
+                # move the sphere in the simulator
                 sim_ctrl.move_object(sphere, pos)
                 time.sleep(0.1)
 
+                # read the tactile information from the sensors
                 ann_wrapper.skinR_read_tactile("S_Reader")
                 ann_wrapper.skinR_read_tactile("S_Reader1")
 
+                # return the read data from the interface
                 data_arm_norm.append(np.array(ann_wrapper.skinR_get_tactile_arm("S_Reader")))
                 data_farm_norm.append(np.array(ann_wrapper.skinR_get_tactile_forearm("S_Reader")))
                 data_hand_norm.append(np.array(ann_wrapper.skinR_get_tactile_hand("S_Reader")))
@@ -298,6 +337,7 @@ def test_tactile_reading(ann_wrapper):
                     pos = loc_p2
                     sim_ctrl.move_object(sphere, pos)
 
+    # return the read data from the interface
     data_arm_raw = np.array(ann_wrapper.skinR_get_tactile_arm("S_Reader1"))
     data_farm_raw = np.array(ann_wrapper.skinR_get_tactile_forearm("S_Reader1"))
     data_hand_raw = np.array(ann_wrapper.skinR_get_tactile_hand("S_Reader1"))
@@ -309,6 +349,7 @@ def test_tactile_reading(ann_wrapper):
     print(" Touched forearm:\n   ", "norm data:", np.array(data_farm_norm).max() == 1.0, "\n    raw data:", data_farm_raw.max() == 255.0)
     print(" Touched hand:\n   ", "norm data:", np.array(data_hand_norm).max() == 1.0, "\n    raw data:", data_hand_raw.max() == 255.)
 
+    # save the tactile data normalized and raw
     np.save(path + "tact_arm_data_norm.npy", data_arm_norm)
     np.save(path + "tact_forearm_data_norm.npy", data_farm_norm)
     np.save(path + "tact_hand_data_norm.npy", data_hand_norm)
@@ -323,25 +364,36 @@ def test_tactile_reading(ann_wrapper):
     ann_wrapper.skinR_close("S_Reader")
     ann_wrapper.skinR_close("S_Reader1")
 
+    # remove all objects from the simulator and delete the world controller
     sim_ctrl.del_all()
     del sim_ctrl
 
 
 #########################################################
 def test_visual_perception(ann_wrapper):
+    """
+        Test the visual perception module, by presenting the iCub several objects and save the recorded images.
 
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+    """
     fov_w = 60
     fov_h = 48
     img_w = 320
     img_h = 240
     img_count = 10
+    loc_sph = [0.2, 1.0, 0.7]
+    loc_box = [-0.15, 0.8, 0.6]
+
     path = "./Testfiles/Vision/"
     if not os.path.isdir(path):
         os.mkdir(path)
-
+    
+    # instanciate the simulator world controller
     sim_ctrl = wc.WorldController()
-    loc_sph = [0.2, 1.0, 0.7]
-    box = sim_ctrl.create_object("sbox", [0.1, 0.1, 0.1], [-0.15, 0.8, 0.6], [1.0, 0.0, 0.0])
+
+    # create a sphere and a box object in the simulator
+    box = sim_ctrl.create_object("sbox", [0.1, 0.1, 0.1], loc_box, [1.0, 0.0, 0.0])
     sphere = sim_ctrl.create_object("ssph", [0.05], loc_sph, [0.0, 0.0, 1.0])
 
     print('____________________________________________________________')
@@ -356,30 +408,35 @@ def test_visual_perception(ann_wrapper):
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
+    # start the RFModule to obtain the images from the iCub 
     read_imgs = []
     ann_wrapper.visualR_start()
     time.sleep(0.15)
+    # replace the sphere object
     loc_sph[1] = 0.75
     sim_ctrl.move_object(sphere, loc_sph)
     time.sleep(0.35)
 
     print('____ Obtain visual information ____')
-
-    for i in range(img_count):
+    t = 0
+    t_start = time.time()
+    while len(read_imgs) < img_count or t > 10.0:
+        t = time.time() - t_start
         read_img = ann_wrapper.visualR_read_fromBuf()
         if read_img.shape[0] > 0:
+            print('Obtained new image.')
             read_img = read_img.reshape(img_h, img_w).T
             read_imgs.append(read_img)
-            # plt.imshow(read_img.T, cmap='gray')
-            # plt.show()
-            # plt.pause(0.05)
-        else:
-            print('No buffered image!')
+        # else:
+        #     print('No buffered image!')
+    print(round(t, 4), 's')
+    # store the recorded images
     np.save(path + 'Vision_full_size.npy', read_imgs)
 
     print('____________________________________________________________')
     print('__ Stop and close visual reader module __')
     ann_wrapper.visualR_stop()
+    # remove all objects in the simulator and remove the world controller
     sim_ctrl.del_all()
     del sim_ctrl
 
@@ -389,7 +446,7 @@ if __name__ == "__main__":
     wrapper = iCub_Interface.iCubANN_wrapper()
 
     if len(sys.argv) > 1:
-        for command in sys.argv[1:]: 
+        for command in sys.argv[1:]:
             if command == 'all':
                 test_joint_positioning(wrapper)
                 test_visual_perception(wrapper)

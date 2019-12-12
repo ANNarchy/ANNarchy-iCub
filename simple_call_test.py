@@ -11,17 +11,17 @@ from Testfiles.joint_limits import joint_limits as j_lim
 #########################################################
 def normal_pdf(value, mean, sigma):
     """
-        Calculate the normal distribution function value for a given value.
+        Return the function value of a normal distribution for a given value.
 
         params:
-            value            -- value to calculate normal distribution at
-            mean             -- mean of the normal distribution
-            sigma            -- sigma of the normal distribution
+            value           -- value to calculate normal distribution at
+            mean            -- mean of the normal distribution
+            sigma           -- sigma of the normal distribution
 
         return:
-            function value for the normal distribution
+                            -- function value for the normal distribution
     """
-    inv_sqrt_2pi = 1 / (sigma * np.sqrt(2 * np.pi))
+    inv_sqrt_2pi = 1.0 / (sigma * np.sqrt(2 * np.pi))
     a = (value - mean) / sigma
 
     return inv_sqrt_2pi * np.exp(-0.5 * a * a)
@@ -29,14 +29,18 @@ def normal_pdf(value, mean, sigma):
 
 def encode(part, joint, pop_size, joint_angle, sigma):
     """
-        Encode a double joint anlge value in a population code.
+        Encode a joint angle as double value in a population code.
 
         params:
-            joint_angle      -- joint angle read from the robot
-            size             -- size of the population coding
+            part            -- robot part
+            joint           -- joint number
+            pop_size        -- size of the population
+            joint_angle     -- joint angle read from the robot
+            sigma           -- sigma for population coding gaussian
+            resolution      -- if non-zero fixed resolution for all joints instead of fixed population size
 
         return:
-            population encoded joint angle
+                                -- population encoded joint angle
     """
     neuron_deg = np.zeros((pop_size,))
     pos_pop = np.zeros((pop_size,))
@@ -58,6 +62,13 @@ def encode(part, joint, pop_size, joint_angle, sigma):
 
 #########################################################
 def call_test_jreader(ann_wrapper):
+    """
+        Call test for the joint reader module to check different errors.
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+    """
+
     # add joint reader instances
     ann_wrapper.add_joint_reader("J_Reader")
     ann_wrapper.add_joint_reader("J_Reader")    # duplicate check
@@ -111,6 +122,13 @@ def call_test_jreader(ann_wrapper):
 
 #########################################################
 def call_test_jwriter(ann_wrapper):
+    """
+        Call test for the joint writer module to check different errors.
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+    """
+
     # add joint writer instances
     ann_wrapper.add_joint_writer("J_Writer")
     ann_wrapper.add_joint_writer("J_Writer")   # duplicate check
@@ -131,7 +149,7 @@ def call_test_jwriter(ann_wrapper):
     print('finish JWriter init')
     print('\n')
 
-    # print joint resolutions for joint writer
+    # print joint population resolutions and velocity for joint writer
     print(ann_wrapper.jointW_get_joints_deg_res("J_Writer"))
     print(ann_wrapper.jointW_get_neurons_per_joint("J_Writer"))
     print(ann_wrapper.jointW_set_joint_velocity("J_Writer", 15.0))
@@ -144,12 +162,14 @@ def call_test_jwriter(ann_wrapper):
     print('finish JWriter resolutions')
     print('\n')
 
+    # define test positions
     test_pos = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5)
     double_all = np.zeros((6))
     pop_all = np.zeros((6, 15))
     for i in range(6):
         pop_all[i] = encode(ann_wrapper.PART_KEY_HEAD, i, 15, 1, 0.5)
 
+    # test writing joint angles
     print('write double_one')
     print(ann_wrapper.jointW_write_double("J_Writer", 10.0, 4, True))
     time.sleep(2.5)
@@ -165,6 +185,7 @@ def call_test_jwriter(ann_wrapper):
     print('finish JWriter writing joints')
     print('\n')
 
+    # close joint writer modules
     print(ann_wrapper.jointW_close("J_Writer"))
     print(ann_wrapper.jointW_close("J_Writer1"))
 
@@ -174,6 +195,13 @@ def call_test_jwriter(ann_wrapper):
 
 #########################################################
 def call_test_sreader(ann_wrapper):
+    """
+        Call test for the skin reader module to check different errors.
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+    """
+
     # add skin reader instances
     ann_wrapper.add_skin_reader("S_Reader")
     ann_wrapper.add_skin_reader("S_Reader")    # duplicate check
@@ -212,6 +240,13 @@ def call_test_sreader(ann_wrapper):
 
 #########################################################
 def call_test_vreader(ann_wrapper):
+    """
+        Call test for the visual reader module to check different errors.
+
+        params:
+            ann_wrapper     -- iCub_ANNarchy Interface
+    """
+
     # add visual reader instance
     ann_wrapper.add_visual_reader()
     ann_wrapper.add_visual_reader()
@@ -229,6 +264,7 @@ def call_test_vreader(ann_wrapper):
     print('finish VReader init')
     print('\n')
 
+    # record images from the iCub cameras
     ann_wrapper.visualR_start()
     time.sleep(1.5)
     test_img = ann_wrapper.visualR_read_fromBuf()
@@ -242,15 +278,18 @@ def call_test_vreader(ann_wrapper):
     else:
         print('No buffered image!')
 
+    # stop the visual reader instance
     ann_wrapper.visualR_stop()
 
+    # first remove the old visual reader instance, then add and init a new visual reader instance  
     ann_wrapper.rm_visual_reader()
     ann_wrapper.add_visual_reader()
-    print(ann_wrapper.visualR_init('l'))                    # use of default values; reinitialization
+    print(ann_wrapper.visualR_init('l'))                    # use of default values; reinitialization left eye
 
+    # first remove the old visual reader instance, then add and init a new visual reader instance  
     ann_wrapper.rm_visual_reader()
     ann_wrapper.add_visual_reader()
-    print(ann_wrapper.visualR_init('b'))                    # use of default values; reinitialization
+    print(ann_wrapper.visualR_init('b'))                    # use of default values; reinitialization binocular
 
 #########################################################
 if __name__ == "__main__":
