@@ -28,6 +28,9 @@
 
 #include <opencv2/opencv.hpp>
 
+/**
+ * \brief  Read-out of the camera images from the iCub robot
+ */
 class VisualReader : private yarp::os::RFModule {
     typedef double precision;
 
@@ -36,14 +39,37 @@ class VisualReader : private yarp::os::RFModule {
     ~VisualReader();
 
     /*** public methods for the user ***/
-    // init Visual reader with given parameters for image resolution, field of view and eye selection
+
+    /**
+     * \brief Init Visual reader with given parameters for image resolution, field of view and eye selection.
+     * \param[in] eye character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer)
+     * \param[in] fov_width output field of view width in degree [0, 60] (input fov width: 60°) 
+     * \param[in] fov_height output field of view height in degree [0, 48] (input fov height: 48°) 
+     * \param[in] img_width output image width in pixel (input width: 320px) 
+     * \param[in] img_height output image height in pixel (input height: 240px)
+     * \param[in] fast_filter flag to select the filter for image upscaling; True for a faster filter
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
     bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter);
-    // start reading images from the iCub with YARP-RFModule
-    bool Start(int argc, char *argv[]);
-    // stop reading images from the iCub, by terminating the RFModule
-    void Stop();
-    // read image vector from the image buffer and remove it from the buffer
+
+    /**
+     * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
+     * \return image (1D-vector) from the image buffer
+     */
     std::vector<precision> ReadFromBuf();
+
+    /**
+     * \brief Start reading images from the iCub with YARP-RFModule.
+     * \param[in] argc main function inputs from program call; can be used to configure RFModule; not implemented yet
+     * \param[in] argv main function inputs from program call; can be used to configure RFModule; not implemented yet
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
+    bool Start(int argc, char *argv[]);
+
+    /**
+     * \brief Stop reading images from the iCub, by terminating the RFModule.
+     */
+    void Stop();
 
  private:
     /** configuration variables **/
@@ -80,8 +106,10 @@ class VisualReader : private yarp::os::RFModule {
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;     // port for the iCub left eye image
 
     yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb;
-    cv::Mat tmpMat, monoMat, ROV;
-    cv::Mat tmpMat1;
+    yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb_r, *iEyeRgb_l;
+
+    cv::Mat tmpMat, monoMat, ROV, tmpMat1;
+    cv::Mat tmpMat_r, tmpMat_l, monoMat_r, monoMat_l, ROV_r, ROV_l, tmpMat1_r, tmpMat1_l;
     int new_type;
 
     /*** methods for the YARP-RFModule ***/

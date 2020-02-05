@@ -29,11 +29,17 @@
 
 #include <opencv2/opencv.hpp>
 
+/**
+ * \brief  Struct for the skin taxel positiiion data per iCub part 
+ */
 struct TaxelData {
-    std::vector<int> idx;
-    std::vector<std::vector<double>> arr;
+    std::vector<int> idx;                    // index array
+    std::vector<std::vector<double>> arr;    // taxel position array -> x;y;z position for the idx taxel
 };
 
+/**
+ * \brief  Read-out of the skin sensor data from the iCubs artificial skin
+ */
 class SkinReader {
  public:
     // Constructor
@@ -42,21 +48,49 @@ class SkinReader {
     ~SkinReader();
 
     /*** public methods for the user ***/
-    // init skin reader with given parameters
+    /**
+     * \brief Initialize skin reader with given parameters.
+     * \param[in] arm character to choose the arm side (r/R for right; l/L for left)
+     * \param[in] norm_data if True, data is normalized from 0..255 to 0..1.0
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
     bool Init(char arm, bool norm_data);
-    // close and clean skin reader
+
+    /**
+     * \brief  Close and clean skin reader
+     */
     void Close();
 
-    // read sensor data
-    bool ReadTactile();
-    // return tactile data for upper arm skin
+    /**
+     * \brief Return tactile data for upper arm skin.
+     * \return vector, containing the tactile data of the upper arm for the last time steps
+     */
     std::vector<std::vector<double>> GetTactileArm();
-    // return tactile data for forearm skin
+
+    /**
+     * \brief Return tactile data for forearm skin.
+     * \return vector, containing the tactile data of the upper arm for the last time steps
+     */
     std::vector<std::vector<double>> GetTactileForearm();
-    // return tactile data for hand skin
+
+    /**
+     * \brief Return tactile data for hand skin.
+     * \return vector, containing the tactile data of the upper arm for the last time steps
+     */
     std::vector<std::vector<double>> GetTactileHand();
-    // return the taxel positions given by the ini files
+
+    /**
+     * \brief Return the taxel positions given by the ini files.
+     * \param[in] skin_part Skin part to load the data for ("arm", "forearm", "hand")
+     * \return Vector containing taxel positions -> reference frame depending on skin part
+     */
     std::vector<std::vector<double>> GetTaxelPos(std::string skin_part);
+
+    /**
+     * \brief The sensor data is read and buffered inside. It can be accessed through #SkinRGetTactileArm, #SkinRGetTactileForearm and #SkinRGetTactileHand.
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
+    bool ReadTactile();
 
  private:
     /*** configuration variables ***/

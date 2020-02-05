@@ -41,7 +41,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
     /*
         Initialize Visual reader with given parameters for image resolution, field of view and eye selection
 
-        params: char eye            -- characteer representing the selected eye (l/L; r/R)
+        params: char eye            -- character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer)
                 double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
                 double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width       -- output image width in pixel (input width: 320px)
@@ -89,7 +89,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         } else if (typeid(precision) == typeid(float)) {
             // tmpMat1.create(out_height, out_width, CV_32FC1);
             new_type = CV_32FC1;
-            std::cout << "[Visual Reader] Float precision is selected." << std::endl;
+            std::cout << "[Visual Reader] Single precision is selected." << std::endl;
         } else {
             std::cerr << "[Visual Reader] Precision type is not valid!" << std::endl;
             return false;
@@ -133,6 +133,20 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
                 std::cerr << "[Visual Reader] Could not connect to left eye camera port!" << std::endl;
                 return false;
             }
+        } else if (eye == 'b' || eye == 'B') {    // both eyes chosen
+            act_eye = 'B';
+            std::string port_name_l = "/V_Reader/image/left:i";
+            port_left.open(port_name_l);
+            if (!yarp::os::Network::connect("/icubSim/cam/left", port_name_l.c_str())) {
+                std::cerr << "[Visual Reader] Could not connect to left eye camera port!" << std::endl;
+                return false;
+            }
+            std::string port_name_r = "/V_Reader/image/right:i";
+            port_right.open(port_name_r);
+            if (!yarp::os::Network::connect("/icubSim/cam/right", port_name_r.c_str())) {
+                std::cerr << "[Visual Reader] Could not connect to right eye camera port!" << std::endl;
+                return false;
+            }
         } else {
             std::cerr << "[Visual Reader] Invalid character for eye selection!" << std::endl;
             return false;
@@ -148,7 +162,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 
 std::vector<double> VisualReader::ReadFromBuf() {
     /*
-        Read image vector from the image buffer and remove from the buffer
+        Read image vector from the image buffer and remove from the buffer. Call twice in binocular mode (first right eye image second left eye image).
 
         return: std::vector<double>     -- image (1D-vector) from the image buffer
     */
@@ -229,46 +243,98 @@ bool VisualReader::updateModule() {
 
     // auto t1_load = Clock::now();
 
-    // read image from the iCub and get CV-Matrix
-    if (act_eye == 'L') {
-        iEyeRgb = port_left.read();
-    }
-    if (act_eye == 'R') {
-        iEyeRgb = port_right.read();
-    }
+    if (act_eye == 'B') {
+        // read image from the iCub and get CV-Matrix
+        iEyeRgb_r = port_left.read();
+        iEyeRgb_l = port_right.read();
 
-    if (iEyeRgb == nullptr) {
-        return false;
-    }
-    cv::Mat RgbMat = yarp::cv::toCvMat(*iEyeRgb);
+        if (iEyeRgb_r == nullptr || iEyeRgb_l == nullptr) {
+            return false;
+        }
+        cv::Mat RgbMat_r = yarp::cv::toCvMat(*iEyeRgb_r);
+        cv::Mat RgbMat_l = yarp::cv::toCvMat(*iEyeRgb_l);
 
-    // convert rgb image to grayscale image
-    cv::cvtColor(RgbMat, tmpMat, cv::COLOR_RGB2GRAY);
+        // convert rgb image to grayscale image
+        cv::cvtColor(RgbMat_r, tmpMat_r, cv::COLOR_RGB2GRAY);
+        cv::cvtColor(RgbMat_l, tmpMat_l, cv::COLOR_RGB2GRAY);
 
-    // extracting the output part of the field of view
-    if (!cut_img) {
-        ROV = tmpMat;
+        // extracting the output part of the field of view
+        if (!cut_img) {
+            ROV_r = tmpMat_r;
+            ROV_l = tmpMat_l;
+        } else {
+            ROV_r = tmpMat_r(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+            ROV_l = tmpMat_l(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+        }
+
+        // resize ROV to given output resolution
+        if (res_scale_x == 1 && res_scale_x == 1) {
+            monoMat_r = ROV_r;
+            monoMat_l = ROV_l;
+
+        } else if (res_scale_x < 1 || res_scale_x < 1) {
+            cv::resize(ROV_r, monoMat_r, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
+            cv::resize(ROV_l, monoMat_l, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
+
+        } else {
+            cv::resize(ROV_r, monoMat_r, cv::Size(), res_scale_x, res_scale_y, filter_ds);
+            cv::resize(ROV_l, monoMat_l, cv::Size(), res_scale_x, res_scale_y, filter_ds);
+        }
+
+        // normalize the image from 0..255 to 0..1.0
+        monoMat_r.convertTo(tmpMat1_r, new_type, norm_fact);
+        monoMat_l.convertTo(tmpMat1_l, new_type, norm_fact);
+
+        // flat the image matrix to 1D-vector
+        std::vector<precision> img_vec_norm_r = Mat2Vec(tmpMat1_r);
+        std::vector<precision> img_vec_norm_l = Mat2Vec(tmpMat1_l);
+
+        // store image in the buffer
+        img_buffer->push_back(img_vec_norm_r);
+        img_buffer->push_back(img_vec_norm_l);
+
     } else {
-        ROV = tmpMat(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+        // read image from the iCub and get CV-Matrix
+        if (act_eye == 'L') {
+            iEyeRgb = port_left.read();
+        }
+        if (act_eye == 'R') {
+            iEyeRgb = port_right.read();
+        }
+
+        if (iEyeRgb == nullptr) {
+            return false;
+        }
+        cv::Mat RgbMat = yarp::cv::toCvMat(*iEyeRgb);
+
+        // convert rgb image to grayscale image
+        cv::cvtColor(RgbMat, tmpMat, cv::COLOR_RGB2GRAY);
+
+        // extracting the output part of the field of view
+        if (!cut_img) {
+            ROV = tmpMat;
+        } else {
+            ROV = tmpMat(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+        }
+
+        // resize ROV to given output resolution
+        if (res_scale_x == 1 && res_scale_x == 1) {
+            monoMat = ROV;
+        } else if (res_scale_x < 1 || res_scale_x < 1) {
+            cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
+        } else {
+            cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, filter_ds);
+        }
+
+        // normalize the image from 0..255 to 0..1.0
+        monoMat.convertTo(tmpMat1, new_type, norm_fact);
+
+        // flat the image matrix to 1D-vector
+        std::vector<precision> img_vec_norm = Mat2Vec(tmpMat1);
+
+        // store image in the buffer
+        img_buffer->push_back(img_vec_norm);
     }
-
-    // resize ROV to given output resolution
-    if (res_scale_x == 1 && res_scale_x == 1) {
-        monoMat = ROV;
-    } else if (res_scale_x < 1 || res_scale_x < 1) {
-        cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
-    } else {
-        cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, filter_ds);
-    }
-
-    // normalize the image from 0..255 to 0..1.0
-    monoMat.convertTo(tmpMat1, CV_64FC1, norm_fact);
-
-    // flat the image matrix to 1D-vector
-    std::vector<precision> img_vec_norm = Mat2Vec(tmpMat1);
-
-    // store image in the buffer
-    img_buffer->push_back(img_vec_norm);
 
     // auto t2_load = Clock::now();
     // std::cout << "[Visual Reader] Load image in: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2_load - t1_load).count()

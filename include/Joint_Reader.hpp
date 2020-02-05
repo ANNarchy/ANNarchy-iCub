@@ -25,6 +25,9 @@
 #include <string>
 #include <vector>
 
+/**
+ * \brief  Read-out of the joint angles of the iCub robot
+ */
 class JointReader {
  public:
     // Constructor
@@ -33,22 +36,58 @@ class JointReader {
     ~JointReader();
 
     /*** public methods for the user ***/
-    // initialize the joint reader with given parameters
+
+    /**
+     * \brief Initialize the joint reader with given parameters
+     * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
+     * \param[in] sigma Standard deviation for the joints angles populations coding.
+     * \param[in] pop_n Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+     * \param[in] deg_per_neuron (default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
     bool Init(std::string part, double sigma, int pop_n, double deg_per_neuron = 0.);
-    // close joint reader with cleanup
+
+    /**
+     * \brief  Close joint reader with cleanup
+     */
     void Close();
-    // get number of controlled joints
+
+    /**
+     * \brief  Return number of controlled joints
+     * \return Number of joints, being controlled by the reader
+     */
     int GetJointCount();
-    // get the resolution in degree of the populations encoding the joint angles
+
+    /**
+     * \brief  Return the resolution in degree of the populations encoding the joint angles.
+     * \return Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0. 
+     */    
     std::vector<double> GetJointsDegRes();
-    // get the size of the populations encoding the joint angles
+
+    /**
+     * \brief Return the size of the populations encoding the joint angles
+     * \return Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10
+     */
     std::vector<int> GetNeuronsPerJoint();
 
-    // read one joint and return joint angle directly as double value
+    /**
+     * \brief Read one joint and return joint angle directly in degree as double value
+     * \param[in] joint joint number of the robot part
+     * \return Joint angle read from the robot in degree.
+     */
     double ReadDouble(int joint);
-    // read all joints and return the joint angles encoded in vectors
+
+    /**
+     * \brief Read all joints and return the joint angles encoded in populations.
+     * \return Population vectors encoding every joint angle from associated robot part.
+     */
     std::vector<std::vector<double>> ReadPopAll();
-    // read one joint and return the joint angle encoded in a vector
+
+    /**
+     * \brief Read one joint and return the joint angle encoded in a population.
+     * \param[in] joint joint number of the robot part
+     * \return Population vector encoding the joint angle.
+     */
     std::vector<double> ReadPopOne(int joint);
 
  private:

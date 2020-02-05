@@ -25,6 +25,9 @@
 #include <string>
 #include <vector>
 
+/**
+ * \brief Write the joint angles to the iCub robots joints to move them.
+ */
 class JointWriter {
  public:
     // Constructor
@@ -33,26 +36,80 @@ class JointWriter {
     ~JointWriter();
 
     /*** public methods for the user ***/
-    // initialize the joint writer with given parameters
+
+    /**
+     * \brief Initialize the joint writer with given parameters
+     * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
+     * \param[in] pop_size Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+     * \param[in] deg_per_neuron (default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+     * \param[in] speed Velocity to set for the joint movements.
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
     bool Init(std::string part, int pop_size, double deg_per_neuron = 0.0, double speed = 10.0);
-    // close joint reader with cleanup
+
+    /**
+     * \brief  Close joint writer with cleanup
+     */
     void Close();
-    // get number of controlled joints
+
+    /**
+     * \brief  Return number of controlled joints
+     * \return Number of joints, being controlled by the writer
+     */
     int GetJointCount();
-    // get the resolution in degree of the populations encoding the joint angles
+
+    /**
+     * \brief  Return the resolution in degree of the populations encoding the joint angles.
+     * \return Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0. 
+     */
     std::vector<double> GetJointsDegRes();
-    // get the size of the populations encoding the joint angles
+
+    /**
+     * \brief Return the size of the populations encoding the joint angles
+     * \return Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10
+     */
     std::vector<int> GetNeuronsPerJoint();
-    // set velocity for a given joint or all joints
+
+    /**
+     * \brief Return the size of the populations encoding the joint angles
+     * \param[in] speed Name of the selected joint writer
+     * \param[in] joint (default -1) joint number of the robot part, default -1 for all joints
+     * \return True, if set was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
     bool SetJointVelocity(double speed, int joint);
 
-    // write all joints as double values
+    /**
+     * \brief Write all joints with double values.
+     * \param[in] position Joint angles to write to the robot joints
+     * \param[in] blocking if True, function waits for end of movement
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
     bool WriteDoubleAll(std::vector<double> position, bool blocking);
-    // write one joint as double value
+
+    /**
+     * \brief Write one joint with double value.
+     * \param[in] position Joint angle to write to the robot joint (in degree)
+     * \param[in] joint Joint number of the robot part
+     * \param[in] blocking if True, function waits for end of movement
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
     bool WriteDouble(double position, int joint, bool blocking);
-    // write all joints with joint angles encoded in populations
+
+    /**
+     * \brief Write all joints with joint angles encoded in populations
+     * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part 
+     * \param[in] blocking if True, function waits for end of movement
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
     bool WritePopAll(std::vector<std::vector<double>> position_pops, bool blocking);
-    // write one joint with the joint angle encoded in a population
+
+    /**
+     * \brief Write one joint with the joint angle encoded in a population.
+     * \param[in] position_pop Population encoded joint angle for writing to the robot joint 
+     * \param[in] joint Joint number of the robot part 
+     * \param[in] blocking if True, function waits for end of movement
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
     bool WritePopOne(std::vector<double> position_pop, int joint, bool blocking);
 
  private:
