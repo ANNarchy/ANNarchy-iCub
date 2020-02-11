@@ -1,13 +1,15 @@
 # python related files
 *.pyc
 
+test_*.py
+
 # results
 *.npy
 
 
 # application
 *.so
-iCubCPP.cpp
+iCub_Interface.cpp
 
 
 # VSCode files

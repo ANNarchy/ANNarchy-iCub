@@ -24,7 +24,6 @@
    <div id="projectname">ANNarchy iCub Interface
    &#160;<span id="projectnumber">0.1</span>
    </div>
-   <div id="projectbrief">comfortable.</div>
   </td>
  </tr>
  </tbody>
@@ -104,7 +103,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">    Call test for the joint reader module to check different errors.
 
+    params:
+        ann_wrapper     -- iCub_ANNarchy Interface
+</pre> 
 </div>
 </div>
 <a id="a4003e5f73a3ec788ef18d18f67b3d389"></a>
@@ -122,7 +125,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">    Call test for the joint writer module to check different errors.
 
+    params:
+        ann_wrapper     -- iCub_ANNarchy Interface
+</pre> 
 </div>
 </div>
 <a id="a544cfd3914bf97bcd39f8300db020d46"></a>
@@ -140,7 +147,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">    Call test for the skin reader module to check different errors.
 
+    params:
+        ann_wrapper     -- iCub_ANNarchy Interface
+</pre> 
 </div>
 </div>
 <a id="a7705bd30f8602304d2ff400ca614b96c"></a>
@@ -158,7 +169,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">    Call test for the visual reader module to check different errors.
 
+    params:
+        ann_wrapper     -- iCub_ANNarchy Interface
+</pre> 
 </div>
 </div>
 <a id="a79224fc9c3e724829f1a82e90317b228"></a>
@@ -204,14 +219,18 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">    Encode a double joint anlge value in a population code.
+<pre class="fragment">    Encode a joint angle as double value in a population code.
 
     params:
-        joint_angle      -- joint angle read from the robot
-        size             -- size of the population coding
+        part            -- robot part
+        joint           -- joint number
+        pop_size        -- size of the population
+        joint_angle     -- joint angle read from the robot
+        sigma           -- sigma for population coding gaussian
+        resolution      -- if non-zero fixed resolution for all joints instead of fixed population size
 
     return:
-        population encoded joint angle
+                            -- population encoded joint angle
 </pre> 
 </div>
 </div>
@@ -246,15 +265,15 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">    Calculate the normal distribution function value for a given value.
+<pre class="fragment">    Return the function value of a normal distribution for a given value.
 
     params:
-        value            -- value to calculate normal distribution at
-        mean             -- mean of the normal distribution
-        sigma            -- sigma of the normal distribution
+        value           -- value to calculate normal distribution at
+        mean            -- mean of the normal distribution
+        sigma           -- sigma of the normal distribution
 
     return:
-        function value for the normal distribution
+                        -- function value for the normal distribution
 </pre> 
 </div>
 </div>

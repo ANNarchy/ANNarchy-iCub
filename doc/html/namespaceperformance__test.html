@@ -24,7 +24,6 @@
    <div id="projectname">ANNarchy iCub Interface
    &#160;<span id="projectnumber">0.1</span>
    </div>
-   <div id="projectbrief">comfortable.</div>
   </td>
  </tr>
  </tbody>
@@ -148,9 +147,15 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">    params:
-            joint_angle      -- joint angle read from the robot
-            size             -- size of the population coding
+<pre class="fragment">    Encode a joint angle as double value in a population code.
+
+    params:
+        part            -- robot part
+        joint           -- joint number
+        pop_size        -- size of the population
+        joint_angle     -- joint angle read from the robot
+        sigma           -- sigma for population coding gaussian
+        resolution      -- if non-zero fixed resolution for all joints instead of fixed population size
 
     return:
                             -- population encoded joint angle
@@ -188,15 +193,15 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">    Calculate the normal distribution function value for a given value.
+<pre class="fragment">    Return the function value of a normal distribution for a given value.
 
     params:
-        value            -- value to calculate normal distribution at
-        mean             -- mean of the normal distribution
-        sigma            -- sigma of the normal distribution
+        value           -- value to calculate normal distribution at
+        mean            -- mean of the normal distribution
+        sigma           -- sigma of the normal distribution
 
     return:
-        function value for the normal distribution
+                        -- function value for the normal distribution
 </pre> 
 </div>
 </div>
@@ -225,7 +230,12 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">    Test the performance of the joint reader module.
 
+    params:
+        ann_wrapper     -- iCub_ANNarchy Interface
+        test_count      -- number of test trials
+</pre> 
 </div>
 </div>
 <a id="a48fc0c2e42e03d7919d885eab18e5f9c"></a>
@@ -253,7 +263,12 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">    Test the performance of the joint writer module.
 
+    params:
+        ann_wrapper     -- iCub_ANNarchy Interface
+        test_count      -- number of test trials
+</pre> 
 </div>
 </div>
 <a id="a5af3d5a8a22574154a0676bb701debbf"></a>
@@ -281,7 +296,12 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">    Test the performance of the skin reader module.
 
+    params:
+        ann_wrapper     -- iCub_ANNarchy Interface
+        test_count      -- number of test trials
+</pre> 
 </div>
 </div>
 <a id="af2e388fcf2c0d798fde122e5a616ceeb"></a>
@@ -309,7 +329,12 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">    Test the performance of the visual reader module.
 
+    params:
+        ann_wrapper     -- iCub_ANNarchy Interface
+        test_count      -- number of test trials
+</pre> 
 </div>
 </div>
 <a id="aa0edac3ee29fe7c03ed193d5d69c1cb1"></a>
@@ -327,7 +352,12 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<pre class="fragment">    Test the performance of the visual reader module.
 
+    params:
+        ann_wrapper     -- iCub_ANNarchy Interface
+        test_count      -- number of test trials
+</pre> 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>

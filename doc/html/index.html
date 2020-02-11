@@ -24,7 +24,6 @@
    <div id="projectname">ANNarchy iCub Interface
    &#160;<span id="projectnumber">0.1</span>
    </div>
-   <div id="projectbrief">comfortable.</div>
   </td>
  </tr>
  </tbody>
@@ -64,7 +63,39 @@ $(function() {
 <div class="title">ANNarchy iCub Interface Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-</div><!-- contents -->
+<div class="textblock"><p>This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator). It is written in C++ with an Cython wrapping to Python.</p>
+<h2>Interface description</h2>
+<p>Possible actions are the reading and writing of joint angles get the current sate or move the robot joints. Further, the cameras and the tactile sensors data can be received.</p>
+<p>The interface has a modular structure with a main struct and several subclasses. The main struct is the "iCubANN" struct, handling the subclass instances. The subcalss and also the different mudles are <a class="el" href="classJointReader.html" title="Read-out of the joint angles of the iCub robot. ">JointReader</a>, <a class="el" href="classJointWriter.html" title="Write the joint angles to the iCub robots joints to move them. ">JointWriter</a>, <a class="el" href="classVisualReader.html" title="Read-out of the camera images from the iCub robot. ">VisualReader</a> and <a class="el" href="classSkinReader.html" title="Read-out of the skin sensor data from the iCubs artificial skin. ">SkinReader</a> with the following functionalities:</p>
+<p><a class="el" href="classJointReader.html" title="Read-out of the joint angles of the iCub robot. ">JointReader</a>: This module handles the joint reading. The iCub robot is divided in multiple robot parts, which are the head, right arm, left arm, torso right leg and left leg. For each of this part a seperate joint reader instance is needed. Therefore, one has to add as much as one need to the <a class="el" href="structiCubANN.html" title="Interfaces the different modules (Reader/Writer) and handles the use of multiple module instances...">iCubANN</a> struct with the "AddJointReader" method. Before the first usage of the joint reader, it must be initialized with some specifications like the robot part. Then the joint angles can be received in two ways, directly as a double value for a single joint or in a population code for one joint or for all joints of the associated iCub part.</p>
+<p><a class="el" href="classJointWriter.html" title="Write the joint angles to the iCub robots joints to move them. ">JointWriter</a>: The joint writer has a similar structure to the joint reader. Like there for each iCub part a separate instance has to be added to the <a class="el" href="structiCubANN.html" title="Interfaces the different modules (Reader/Writer) and handles the use of multiple module instances...">iCubANN</a> struct. They must also be initialized before usage. For the writing of the joint angles the same ways are possible like for the reading. The joint angle can be written as a double for one joint or as a population code for one joint or for all joints of the associated part.</p>
+<p><a class="el" href="classVisualReader.html" title="Read-out of the camera images from the iCub robot. ">VisualReader</a>: This module handles the receiving of the camera images. At this time only one visual reader instance is possible due to YARP limitations for the used YARP RFModule (run only one Module). This reader can be initilized for the right or left eye, limiting the visual data to be monocular. The grayscaled image is returned as an onedimensional vector with a normalization from 0.0 (black) to 1.0 (white).</p>
+<p><a class="el" href="classSkinReader.html" title="Read-out of the skin sensor data from the iCubs artificial skin. ">SkinReader</a>: This module handles the tactile data from the iCub's artificial skin. The robot is at several parts equipped with skin modules, reacting to pressure. The sensor data for the arm can be read out with this module. The skin of the iCubs arm is seperated in three modules, being the arm, forearm and hand. The tactile data is returned as a vector with doubles in a range of 0.0 to 1.0. Here 0. iss no pressure and 1.0 is the maximum sensor response.</p>
+<h2>Folder structure</h2>
+<ul>
+<li><p class="startli">Interface_ANNarchy_iCub -&gt; Main folder containing the whole interface</p><ul>
+<li>include -&gt; This folder contains the header files for the interface modules.<ul>
+<li>INI_Reader -&gt; The INI-Reader is an external module, which is used to handle ini-files.</li>
+</ul>
+</li>
+<li>src -&gt; This folder contains the source files for the interface modules.</li>
+<li>data -&gt; Folder capsulate the data files used by the interface.<ul>
+<li>sensor_positions -&gt; This folder caontains the files from the iCub simulator installation with the position data for the tactile sensors. joint_limits.ini -&gt; In the ini file the joint limitations for the iCub are given. !!! This should be checked before the usage with the real robot, to avoid damage. !!!</li>
+</ul>
+</li>
+</ul>
+<p class="startli">iCubCPP.pyx -&gt; This is the Cython file to wrap the C++ code for the usage in Python.</p>
+</li>
+</ul>
+<h2>useful links</h2>
+<p>Wiki for the iCub robot: <a href="http://wiki.icub.org/wiki/Manual">http://wiki.icub.org/wiki/Manual</a></p>
+<p>YARP website: <a href="http://www.yarp.it/index.html">http://www.yarp.it/index.html</a></p>
+<p>git repository with scripts to control the iCub simulator: <a href="https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git">https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git</a></p>
+<h2>Authors</h2>
+<p>Torsten Follak (<a href="#" onclick="location.href='mai'+'lto:'+'tor'+'st'+'en.'+'fo'+'lla'+'k@'+'inf'+'or'+'mat'+'ik'+'.tu'+'-c'+'hem'+'ni'+'tz.'+'de'; return false;">torst<span style="display: none;">.nosp@m.</span>en.f<span style="display: none;">.nosp@m.</span>ollak<span style="display: none;">.nosp@m.</span>@inf<span style="display: none;">.nosp@m.</span>ormat<span style="display: none;">.nosp@m.</span>ik.t<span style="display: none;">.nosp@m.</span>u-che<span style="display: none;">.nosp@m.</span>mnit<span style="display: none;">.nosp@m.</span>z.de</a>) Helge Ülo Dinkelbach</p>
+<h2>Dependencies</h2>
+<p>Python &gt;= 3.5 YARP &gt;= 3.2 OpenCV &gt;= 3.4 </p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

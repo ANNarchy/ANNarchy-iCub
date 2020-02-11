@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['readme',['ReadMe',['../md__home_toto_Desktop_Interface_ANNarchy_iCub_ReadMe.html',1,'']]],
   ['read_5frobot_5feye',['read_robot_eye',['../namespacelib_1_1image__processing.html#aa5bfa97f5999ddffc9a677920b57c8b7',1,'lib::image_processing']]],
   ['read_5frobot_5feyes',['read_robot_eyes',['../namespacelib_1_1image__processing.html#a0cc2b9528e7e5f5feca65bb2b8837b2b',1,'lib::image_processing']]],
   ['readdouble',['ReadDouble',['../classJointReader.html#a42d2fb9c17d33b1f6f0ae6f6017789a8',1,'JointReader']]],
