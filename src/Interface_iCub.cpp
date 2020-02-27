@@ -93,7 +93,7 @@ void iCubANN::RemoveJointReader(std::string name) {
     */
     if (parts_reader.count(name) == 0) {
         delete parts_reader[name];
-        parts_reader.erase[name];
+        parts_reader.erase(name);
     } else {
         std::cerr << "[Joint Reader] Name \"" + name + "\" does not exists." << std::endl;
     }
@@ -105,7 +105,7 @@ void iCubANN::RemoveJointWriter(std::string name) {
     */
     if (parts_writer.count(name) == 0) {
         delete parts_writer[name];
-        parts_writer.erase[name];
+        parts_writer.erase(name);
     } else {
         std::cerr << "[Joint Writer] Name \"" + name + "\" does not exists." << std::endl;
     }
@@ -117,7 +117,7 @@ void iCubANN::RemoveSkinReader(std::string name) {
     */
     if (tactile_reader.count(name) == 0) {
         delete tactile_reader[name];
-        tactile_reader.erase[name];
+        tactile_reader.erase(name);
     } else {
         std::cerr << "[Skin Reader] Name \"" + name + "\" does not exists." << std::endl;
     }
@@ -388,7 +388,7 @@ bool iCubANN::JointWSetJointVelocity(std::string name, double speed, int joint) 
     }
 }
 
-bool iCubANN::JointWWriteDoubleAll(std::string name, std::vector<double> position, bool blocking) {
+bool iCubANN::JointWWriteDoubleAll(std::string name, std::vector<double> position, bool blocking, std::string mode) {
     /*
         Write all joints with double values
 
@@ -400,14 +400,14 @@ bool iCubANN::JointWWriteDoubleAll(std::string name, std::vector<double> positio
     */
 
     if (parts_writer.count(name)) {
-        return parts_writer[name]->WriteDoubleAll(position, blocking);
+        return parts_writer[name]->WriteDoubleAll(position, blocking, mode);
     } else {
         std::cerr << "[Joint Writer] " << name << ": This name is not defined." << std::endl;
         return false;
     }
 }
 
-bool iCubANN::JointWWriteDouble(std::string name, double position, int joint, bool blocking) {
+bool iCubANN::JointWWriteDouble(std::string name, double position, int joint, bool blocking, std::string mode) {
     /*
         Write one joint with double value
 
@@ -420,14 +420,14 @@ bool iCubANN::JointWWriteDouble(std::string name, double position, int joint, bo
     */
 
     if (parts_writer.count(name)) {
-        return parts_writer[name]->WriteDouble(position, joint, blocking);
+        return parts_writer[name]->WriteDouble(position, joint, blocking, mode);
     } else {
         std::cerr << "[Joint Writer] " << name << ": This name is not defined." << std::endl;
         return false;
     }
 }
 
-bool iCubANN::JointWWritePopAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking) {
+bool iCubANN::JointWWritePopAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking, std::string mode) {
     /*
         Write all joints with joint angles encoded in populations
 
@@ -439,14 +439,14 @@ bool iCubANN::JointWWritePopAll(std::string name, std::vector<std::vector<double
     */
 
     if (parts_writer.count(name)) {
-        return parts_writer[name]->WritePopAll(position_pops, blocking);
+        return parts_writer[name]->WritePopAll(position_pops, blocking, mode);
     } else {
         std::cerr << "[Joint Writer] " << name << ": This name is not defined." << std::endl;
         return false;
     }
 }
 
-bool iCubANN::JointWWritePopOne(std::string name, std::vector<double> position_pop, int joint, bool blocking) {
+bool iCubANN::JointWWritePopOne(std::string name, std::vector<double> position_pop, int joint, bool blocking, std::string mode) {
     /*
         Write one joint with the joint angle encoded in a population
 
@@ -459,7 +459,7 @@ bool iCubANN::JointWWritePopOne(std::string name, std::vector<double> position_p
     */
 
     if (parts_writer.count(name)) {
-        return parts_writer[name]->WritePopOne(position_pop, joint, blocking);
+        return parts_writer[name]->WritePopOne(position_pop, joint, blocking, mode);
     } else {
         std::cerr << "[Joint Writer] " << name << ": This name is not defined." << std::endl;
         return false;

@@ -81,13 +81,13 @@ cdef extern from "Interface_iCub.hpp":
         # set joint velocity
         bint JointWSetJointVelocity(string, double, int)
         # write all joints with double values
-        bint JointWWriteDoubleAll(string, vector[double], bint)
+        bint JointWWriteDoubleAll(string, vector[double], bint, string)
         # write one joint with double value
-        bint JointWWriteDouble(string, double, int, bint)
+        bint JointWWriteDouble(string, double, int, bint, string)
         # write all joints with joint angles encoded in populations
-        bint JointWWritePopAll(string, vector[vector[double]], bint)
+        bint JointWWritePopAll(string, vector[vector[double]], bint, string)
         # write one joint with the joint angle encoded in a population
-        bint JointWWritePopOne(string, vector[double], int, bint)
+        bint JointWWritePopOne(string, vector[double], int, bint, string)
 
 
         ### Access to skin reader member functions ###
@@ -531,7 +531,7 @@ cdef class iCubANN_wrapper:
         return my_interface.JointWSetJointVelocity(s, speed, joint)
 
     # write all joints with double values
-    def jointW_write_double_all(self, name, position, blocking=True):
+    def jointW_write_double_all(self, name, position, mode, blocking=True):
         """
             Calls bool iCubANN::JointWWriteDoubleAll(std::string name, std::vector<double> position, bool blocking)
 
@@ -542,6 +542,7 @@ cdef class iCubANN_wrapper:
                 std::string name                -- name of the selected joint writer
                 std::vector<double> position    -- joint angles to write to the robot joints
                 bool blocking                   -- if True, function waits for end of motion; default True
+                std::string mode                -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
 
             return:
                 bool                            -- return True, if successful
@@ -552,10 +553,10 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWriteDoubleAll(s, position, block)
+        return my_interface.JointWWriteDoubleAll(s, position, block, mode)
 
     # write one joint with double value
-    def jointW_write_double(self, name, position, joint, blocking=True):
+    def jointW_write_double(self, name, position, joint, mode, blocking=True):
         """
             Calls bool iCubANN::JointWWriteDouble(std::string name, double position, int joint, bool blocking)
 
@@ -567,6 +568,7 @@ cdef class iCubANN_wrapper:
                 double position     -- joint angle to write to the robot joint
                 int joint           -- joint number of the robot part
                 bool blocking       -- if True, function waits for end of motion; default True
+                std::string mode                -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
 
             return:
                 bool                -- return True, if successful
@@ -577,10 +579,10 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWriteDouble(s, position, joint, block)
+        return my_interface.JointWWriteDouble(s, position, joint, block, mode)
 
     # write all joints with joint angles encoded in populations vectors
-    def jointW_write_pop_all(self, name, position_pops, blocking=True):
+    def jointW_write_pop_all(self, name, position_pops, mode, blocking=True):
         """
             Calls bool iCubANN::JointWWritePopAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking)
 
@@ -591,6 +593,7 @@ cdef class iCubANN_wrapper:
                 std::string name                    -- name of the selected joint writer
                 std::vector<std::vector<double>>    -- populations encoding every joint angle for writing them to the associated robot part
                 bool blocking                       -- if True, function waits for end of motion; default True
+                std::string mode                -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
 
             return:
                 bool                                -- return True, if successful
@@ -601,11 +604,11 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWritePopAll(s, position_pops, block)
+        return my_interface.JointWWritePopAll(s, position_pops, block, mode)
 
 
     # write one joint with the joint angle encoded in a population vector
-    def jointW_write_pop_one(self, name, position_pop, joint, blocking=True):
+    def jointW_write_pop_one(self, name, position_pop, joint, mode, blocking=True):
         """
             Calls bool iCubANN::JointWWritePopOne(std::string name, std::vector<double> position_pop, int joint, bool blocking)
 
@@ -617,6 +620,7 @@ cdef class iCubANN_wrapper:
                 std::vector<double>     -- population encoded joint angle for writing to the robot joint
                 int joint               -- joint number of the robot part
                 bool blocking           -- if True, function waits for end of motion; default True
+                std::string mode                -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
 
             return:
                 bool                    -- return True, if successful
@@ -627,7 +631,7 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWritePopOne(s, position_pop, joint, block)
+        return my_interface.JointWWritePopOne(s, position_pop, joint, block, mode)
 
     ### end access to joint writer member functions
 

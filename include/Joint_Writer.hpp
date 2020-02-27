@@ -42,7 +42,7 @@ class JointWriter {
      * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
      * \param[in] pop_size Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
      * \param[in] deg_per_neuron (default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
-     * \param[in] speed Velocity to set for the joint movements.
+     * \param[in] speed Velocity to set for the joint motions.
      * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool Init(std::string part, int pop_size, double deg_per_neuron = 0.0, double speed = 10.0);
@@ -81,36 +81,40 @@ class JointWriter {
     /**
      * \brief Write all joints with double values.
      * \param[in] position Joint angles to write to the robot joints
-     * \param[in] blocking if True, function waits for end of movement
+     * \param[in] blocking if True, function waits for end of motion
+     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool WriteDoubleAll(std::vector<double> position, bool blocking);
+    bool WriteDoubleAll(std::vector<double> position, bool blocking, std::string mode);
 
     /**
      * \brief Write one joint with double value.
      * \param[in] position Joint angle to write to the robot joint (in degree)
      * \param[in] joint Joint number of the robot part
-     * \param[in] blocking if True, function waits for end of movement
+     * \param[in] blocking if True, function waits for end of motion
+     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool WriteDouble(double position, int joint, bool blocking);
+    bool WriteDouble(double position, int joint, bool blocking, std::string mode);
 
     /**
      * \brief Write all joints with joint angles encoded in populations
      * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part 
-     * \param[in] blocking if True, function waits for end of movement
+     * \param[in] blocking if True, function waits for end of motion
+     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool WritePopAll(std::vector<std::vector<double>> position_pops, bool blocking);
+    bool WritePopAll(std::vector<std::vector<double>> position_pops, bool blocking, std::string mode);
 
     /**
      * \brief Write one joint with the joint angle encoded in a population.
      * \param[in] position_pop Population encoded joint angle for writing to the robot joint 
      * \param[in] joint Joint number of the robot part 
-     * \param[in] blocking if True, function waits for end of movement
+     * \param[in] blocking if True, function waits for end of motion
+     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool WritePopOne(std::vector<double> position_pop, int joint, bool blocking);
+    bool WritePopOne(std::vector<double> position_pop, int joint, bool blocking, std::string mode);
 
  private:
     /** configuration variables **/
@@ -121,12 +125,14 @@ class JointWriter {
     std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
 
     /*** population coding data structures ***/
-    std::vector<double> joint_deg_res;    // degree per neuron for the population coding, value per joint
+    std::vector<double> joint_deg_res_abs;    // degree per neuron for the population coding, value per joint
+    std::vector<double> joint_deg_res_rel;    // degree per neuron for the population coding, value per joint
     int joints;                           // number of joints
 
     std::vector<double> joint_min;                  // minimum possible joint angles
     std::vector<double> joint_max;                  // maximum possible joint angles
-    std::vector<std::vector<double>> neuron_deg;    // vector of vectors representing the degree values for the neuron populations
+    std::vector<std::vector<double>> neuron_deg_abs;    // vector of vectors representing the degree values for the neuron populations
+    std::vector<std::vector<double>> neuron_deg_rel;    // vector of vectors representing the degree values for the neuron populations
 
     /*** yarp data structures ***/
     yarp::sig::Vector joint_angles;       // yarp vector for reading all joint angles
@@ -139,5 +145,5 @@ class JointWriter {
     // check if iCub part key is valid
     bool CheckPartKey(std::string key);
     // decode the population coded joint angle to double value
-    double Decode(std::vector<double> position_pop, int joint);
+    double Decode(std::vector<double> position_pop, int joint, std::vector<std::vector<double>> neuron_deg);
 };

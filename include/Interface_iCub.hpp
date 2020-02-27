@@ -195,9 +195,10 @@ struct iCubANN {
      * \param[in] name Name of the selected joint writer
      * \param[in] position Joint angles to write to the robot joints
      * \param[in] blocking if True, function waits for end of movement
+     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool JointWWriteDoubleAll(std::string name, std::vector<double> position, bool blocking);
+    bool JointWWriteDoubleAll(std::string name, std::vector<double> position, bool blocking, std::string mode);
 
     /**
      * \brief Write one joint with double value.
@@ -205,18 +206,20 @@ struct iCubANN {
      * \param[in] position Joint angle to write to the robot joint (in degree)
      * \param[in] joint Joint number of the robot part
      * \param[in] blocking if True, function waits for end of movement
+     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool JointWWriteDouble(std::string name, double position, int joint, bool blocking);
+    bool JointWWriteDouble(std::string name, double position, int joint, bool blocking, std::string mode);
 
     /**
      * \brief Write all joints with joint angles encoded in populations
      * \param[in] name Name of the selected joint writer
      * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part 
      * \param[in] blocking if True, function waits for end of movement
+     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool JointWWritePopAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking);
+    bool JointWWritePopAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking, std::string mode);
 
     /**
      * \brief Write one joint with the joint angle encoded in a population.
@@ -224,9 +227,10 @@ struct iCubANN {
      * \param[in] position_pop Population encoded joint angle for writing to the robot joint 
      * \param[in] joint Joint number of the robot part 
      * \param[in] blocking if True, function waits for end of movement
+     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool JointWWritePopOne(std::string name, std::vector<double> position_pop, int joint, bool blocking);
+    bool JointWWritePopOne(std::string name, std::vector<double> position_pop, int joint, bool blocking, std::string mode);
 
     // Access to skin reader member functions //
     /**
