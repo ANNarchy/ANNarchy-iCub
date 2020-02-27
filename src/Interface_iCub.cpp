@@ -87,6 +87,43 @@ void iCubANN::AddVisualReader() {
 }
 
 /***  Remove the visual reader intstance ***/
+void iCubANN::RemoveJointReader(std::string name) {
+    /* 
+        Remove the instance of the joint reader
+    */
+    if (parts_reader.count(name) == 0) {
+        delete parts_reader[name];
+        parts_reader.erase[name];
+    } else {
+        std::cerr << "[Joint Reader] Name \"" + name + "\" does not exists." << std::endl;
+    }
+}
+/***  Remove the visual reader intstance ***/
+void iCubANN::RemoveJointWriter(std::string name) {
+    /* 
+        Remove the instance of the joint writer
+    */
+    if (parts_writer.count(name) == 0) {
+        delete parts_writer[name];
+        parts_writer.erase[name];
+    } else {
+        std::cerr << "[Joint Writer] Name \"" + name + "\" does not exists." << std::endl;
+    }
+}
+/***  Remove the visual reader intstance ***/
+void iCubANN::RemoveSkinReader(std::string name) {
+    /* 
+        Remove the instance of the skin reader
+    */
+    if (tactile_reader.count(name) == 0) {
+        delete tactile_reader[name];
+        tactile_reader.erase[name];
+    } else {
+        std::cerr << "[Skin Reader] Name \"" + name + "\" does not exists." << std::endl;
+    }
+}
+
+/***  Remove the visual reader intstance ***/
 void iCubANN::RemoveVisualReader() {
     /* 
         Remove the instance of the visual reader

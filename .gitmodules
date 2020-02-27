@@ -1,0 +1,3 @@
+[submodule "Testfiles/iCub_Python_Lib"]
+	path = Testfiles/iCub_Python_Lib
+	url = https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_Python_Lib.git

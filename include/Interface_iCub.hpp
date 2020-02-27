@@ -59,7 +59,22 @@ struct iCubANN {
      */
     void AddVisualReader();
 
-    /***  Remove the visual reader intstance ***/
+    /***  Remove intstances of the interface modules ***/
+    /**
+     * \brief Remove the instance of the joint reader module.
+     * \param[in] name name of the joint reader in the map
+     */
+    void RemoveJointReader(std::string name);
+    /**
+     * \brief Remove the instance of the joint writer module. 
+     * \param[in] name name of the joint writer in the map
+     */
+    void RemoveJointWriter(std::string name);
+    /**
+     * \brief Remove the instance of the skin reader module. 
+     * \param[in] name name of the skin reader in the map
+     */
+    void RemoveSkinReader(std::string name);
     /**
      * \brief Remove the instance of the visual reader module.
      */
