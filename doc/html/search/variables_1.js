@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['b',['b',['../namespacetest__load.html#ae7a8ec45184f3cd67978ed83935b9f7f',1,'test_load']]],
-  ['bog2deg',['bog2deg',['../namespaceperformance__test.html#afe43390eef5887e1915a5c16a5753e08',1,'performance_test.bog2deg()'],['../namespacelib_1_1auxilaries.html#ac2a362ddca4cd313677bc017de00afeb',1,'lib.auxilaries.bog2deg()'],['../namespaceparameter__object__images.html#a47e5767e3942d50db766a1de20f24605',1,'parameter_object_images.bog2deg()']]]
+  ['a',['a',['../namespacetest__load.html#a75fb63c6d301c1a0c334eaf90f7deb71',1,'test_load']]],
+  ['act_5feye',['act_eye',['../classVisualReader.html#ac93d1bc5fc7055c7fb92656237acbc92',1,'VisualReader']]],
+  ['arm_5fdata',['arm_data',['../classSkinReader.html#a57ac0f40ed48ebc7b0b5d658c14b758e',1,'SkinReader']]],
+  ['arr',['arr',['../structTaxelData.html#a329dd1275e4aadaf47a2fb99550dd060',1,'TaxelData']]]
 ];

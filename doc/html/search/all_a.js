@@ -1,8 +1,14 @@
 var searchData=
 [
   ['jnts',['jnts',['../namespacetest__save__position.html#a213311fb1c7b0465aeea257dd9b0ab1c',1,'test_save_position']]],
+  ['joint_5fangles',['joint_angles',['../classJointReader.html#a7eaf984c771cdaa35deac3ff71a8819b',1,'JointReader::joint_angles()'],['../classJointWriter.html#a0a6860be2e9d23c731531153e49a0c29',1,'JointWriter::joint_angles()']]],
+  ['joint_5fdeg_5fres',['joint_deg_res',['../classJointReader.html#a1bfec6b501faf46701f0ffa5de5957b6',1,'JointReader']]],
+  ['joint_5fdeg_5fres_5fabs',['joint_deg_res_abs',['../classJointWriter.html#a45db0cbacf7c705c42fbe861dd15445f',1,'JointWriter']]],
+  ['joint_5fdeg_5fres_5frel',['joint_deg_res_rel',['../classJointWriter.html#a4a12dab995ad76dff57ca65b26bd43a0',1,'JointWriter']]],
   ['joint_5flimits',['joint_limits',['../namespacejoint__limits.html',1,'joint_limits'],['../namespacejoint__limits.html#ae540d2359ed52defee5d7f276b681dac',1,'joint_limits.joint_limits()']]],
   ['joint_5flimits_2epy',['joint_limits.py',['../joint__limits_8py.html',1,'']]],
+  ['joint_5fmax',['joint_max',['../classJointReader.html#aca6fffb99a60a93079977b28944642a0',1,'JointReader::joint_max()'],['../classJointWriter.html#acff1e673265fb969fd40d325e9813db7',1,'JointWriter::joint_max()']]],
+  ['joint_5fmin',['joint_min',['../classJointReader.html#a6babc91bfce927fbfcbcc4790e990646',1,'JointReader::joint_min()'],['../classJointWriter.html#ae37a2f9d49a2b2a251890a81ec6ada2c',1,'JointWriter::joint_min()']]],
   ['joint_5freader_2ecpp',['Joint_Reader.cpp',['../Joint__Reader_8cpp.html',1,'']]],
   ['joint_5freader_2ehpp',['Joint_Reader.hpp',['../Joint__Reader_8hpp.html',1,'']]],
   ['joint_5fwriter_2ecpp',['Joint_Writer.cpp',['../Joint__Writer_8cpp.html',1,'']]],
@@ -16,6 +22,7 @@ var searchData=
   ['jointrreaddouble',['JointRReadDouble',['../structiCubANN.html#a6359924926cbf824101f107da77dca92',1,'iCubANN']]],
   ['jointrreadpopall',['JointRReadPopAll',['../structiCubANN.html#ad6ffff4d7c93c2801cd606fb1475dc99',1,'iCubANN']]],
   ['jointrreadpopone',['JointRReadPopOne',['../structiCubANN.html#a4aea3fc2c379bfae6720a0c6b6bea8fd',1,'iCubANN']]],
+  ['joints',['joints',['../classJointReader.html#a4d3d6a75afc6d594ddc327aed46d92c2',1,'JointReader::joints()'],['../classJointWriter.html#a4e30ebd76f111fa20574e5787664f510',1,'JointWriter::joints()']]],
   ['jointwclose',['JointWClose',['../structiCubANN.html#aac0aa0fbfc91c50e010866b256e11462',1,'iCubANN']]],
   ['jointwgetjointcount',['JointWGetJointCount',['../structiCubANN.html#a811df17547d410a0b651178ac107f1e4',1,'iCubANN']]],
   ['jointwgetjointsdegres',['JointWGetJointsDegRes',['../structiCubANN.html#a65dddf9ee61abe37fd63113a0055f756',1,'iCubANN']]],
@@ -23,8 +30,10 @@ var searchData=
   ['jointwinit',['JointWInit',['../structiCubANN.html#a54c7e1218b7bd69e76da8c517056ed25',1,'iCubANN']]],
   ['jointwriter',['JointWriter',['../classJointWriter.html',1,'JointWriter'],['../classJointWriter.html#a206d13821043ca9e4005922144f4cb0b',1,'JointWriter::JointWriter()']]],
   ['jointwsetjointvelocity',['JointWSetJointVelocity',['../structiCubANN.html#a1cdddc238d3d9156d258d61e09ba86bc',1,'iCubANN']]],
-  ['jointwwritedouble',['JointWWriteDouble',['../structiCubANN.html#a77822a875c63449ae0ce7ddccfd2334e',1,'iCubANN']]],
-  ['jointwwritedoubleall',['JointWWriteDoubleAll',['../structiCubANN.html#a33502441ce5ac5c387f1efbc2ea1df27',1,'iCubANN']]],
-  ['jointwwritepopall',['JointWWritePopAll',['../structiCubANN.html#ae0a9987e4cfbebc6aee98c36b507f952',1,'iCubANN']]],
-  ['jointwwritepopone',['JointWWritePopOne',['../structiCubANN.html#a556d0449f9015390d9fdba3729866b95',1,'iCubANN']]]
+  ['jointwwritedoubleall',['JointWWriteDoubleAll',['../structiCubANN.html#afbf948330d224b71c24b945f24b6bd14',1,'iCubANN']]],
+  ['jointwwritedoublemultiple',['JointWWriteDoubleMultiple',['../structiCubANN.html#a9d5d6888b0c055f06a4aa279f606b136',1,'iCubANN']]],
+  ['jointwwritedoubleone',['JointWWriteDoubleOne',['../structiCubANN.html#ad31bf84281c841b5711a83fc441fac05',1,'iCubANN']]],
+  ['jointwwritepopall',['JointWWritePopAll',['../structiCubANN.html#a9b270197678f920b58149250bfd18445',1,'iCubANN']]],
+  ['jointwwritepopmultiple',['JointWWritePopMultiple',['../structiCubANN.html#a024f58fa9643a9d7d8ae3eb4e415352b',1,'iCubANN']]],
+  ['jointwwritepopone',['JointWWritePopOne',['../structiCubANN.html#a125e36f895d8eea650d84f7e192a59a6',1,'iCubANN']]]
 ];

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['cmap',['cmap',['../namespacetest__plot.html#acef084c25df9575e3666b85cdc01bfcd',1,'test_plot']]],
-  ['color',['color',['../namespacelib_1_1create__arm.html#a56f8f162601dbd61a5d9e3c0c99d6f6a',1,'lib::create_arm']]]
+  ['b',['b',['../namespacetest__load.html#ae7a8ec45184f3cd67978ed83935b9f7f',1,'test_load']]],
+  ['bog2deg',['bog2deg',['../namespaceperformance__test.html#afe43390eef5887e1915a5c16a5753e08',1,'performance_test']]],
+  ['buffer_5flen',['buffer_len',['../classVisualReader.html#a5cc85abf2f582aeb10bf899e06c508dc',1,'VisualReader']]]
 ];

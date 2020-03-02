@@ -61,6 +61,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classJointWriter-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">JointWriter Class Reference</div>  </div>
@@ -71,6 +73,15 @@ $(function() {
  <a href="classJointWriter.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Joint__Writer_8hpp_source.html">Joint_Writer.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for JointWriter:</div>
+<div class="dyncontent">
+<div class="center"><img src="classJointWriter__coll__graph.png" border="0" usemap="#JointWriter_coll__map" alt="Collaboration graph"/></div>
+<map name="JointWriter_coll__map" id="JointWriter_coll__map">
+<area shape="rect" id="node3" title="STL class. " alt="" coords="181,103,261,130"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="5,96,132,137"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -96,18 +107,64 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a83cd717afc5c4f0eec45f7b5b8f24456"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a83cd717afc5c4f0eec45f7b5b8f24456">SetJointVelocity</a> (double speed, int joint)</td></tr>
 <tr class="memdesc:a83cd717afc5c4f0eec45f7b5b8f24456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of the populations encoding the joint angles.  <a href="#a83cd717afc5c4f0eec45f7b5b8f24456">More...</a><br /></td></tr>
 <tr class="separator:a83cd717afc5c4f0eec45f7b5b8f24456"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa50bbd2db13fa47e7aec0a939d9c2342"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#aa50bbd2db13fa47e7aec0a939d9c2342">WriteDoubleAll</a> (std::vector&lt; double &gt; position, bool blocking)</td></tr>
-<tr class="memdesc:aa50bbd2db13fa47e7aec0a939d9c2342"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with double values.  <a href="#aa50bbd2db13fa47e7aec0a939d9c2342">More...</a><br /></td></tr>
-<tr class="separator:aa50bbd2db13fa47e7aec0a939d9c2342"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc0d961a5441a48eedb878724ef98fed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#acc0d961a5441a48eedb878724ef98fed">WriteDouble</a> (double position, int joint, bool blocking)</td></tr>
-<tr class="memdesc:acc0d961a5441a48eedb878724ef98fed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write one joint with double value.  <a href="#acc0d961a5441a48eedb878724ef98fed">More...</a><br /></td></tr>
-<tr class="separator:acc0d961a5441a48eedb878724ef98fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf97f612c8f32d9715cb8da180d604bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#acf97f612c8f32d9715cb8da180d604bc">WritePopAll</a> (std::vector&lt; std::vector&lt; double &gt;&gt; position_pops, bool blocking)</td></tr>
-<tr class="memdesc:acf97f612c8f32d9715cb8da180d604bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with joint angles encoded in populations.  <a href="#acf97f612c8f32d9715cb8da180d604bc">More...</a><br /></td></tr>
-<tr class="separator:acf97f612c8f32d9715cb8da180d604bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a385de9b7a15f2c0a96e90c6eb77cbc89"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a385de9b7a15f2c0a96e90c6eb77cbc89">WritePopOne</a> (std::vector&lt; double &gt; position_pop, int joint, bool blocking)</td></tr>
-<tr class="memdesc:a385de9b7a15f2c0a96e90c6eb77cbc89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write one joint with the joint angle encoded in a population.  <a href="#a385de9b7a15f2c0a96e90c6eb77cbc89">More...</a><br /></td></tr>
-<tr class="separator:a385de9b7a15f2c0a96e90c6eb77cbc89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b21bf4504ade96db501c8fc46c15a24"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a0b21bf4504ade96db501c8fc46c15a24">WriteDoubleAll</a> (std::vector&lt; double &gt; position, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:a0b21bf4504ade96db501c8fc46c15a24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with double values.  <a href="#a0b21bf4504ade96db501c8fc46c15a24">More...</a><br /></td></tr>
+<tr class="separator:a0b21bf4504ade96db501c8fc46c15a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3abbe9cee661f4b51c50f6c6454fd43d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a3abbe9cee661f4b51c50f6c6454fd43d">WriteDoubleMultiple</a> (std::vector&lt; double &gt; position, std::vector&lt; int &gt; joint_selection, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:a3abbe9cee661f4b51c50f6c6454fd43d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with double values.  <a href="#a3abbe9cee661f4b51c50f6c6454fd43d">More...</a><br /></td></tr>
+<tr class="separator:a3abbe9cee661f4b51c50f6c6454fd43d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6dfb700a2962f300900edadab1d9876"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#ab6dfb700a2962f300900edadab1d9876">WriteDoubleOne</a> (double position, int joint, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:ab6dfb700a2962f300900edadab1d9876"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write one joint with double value.  <a href="#ab6dfb700a2962f300900edadab1d9876">More...</a><br /></td></tr>
+<tr class="separator:ab6dfb700a2962f300900edadab1d9876"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cfb27b5e39e54f6f17ab4122c113884"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a8cfb27b5e39e54f6f17ab4122c113884">WritePopAll</a> (std::vector&lt; std::vector&lt; double &gt;&gt; position_pops, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:a8cfb27b5e39e54f6f17ab4122c113884"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with joint angles encoded in populations.  <a href="#a8cfb27b5e39e54f6f17ab4122c113884">More...</a><br /></td></tr>
+<tr class="separator:a8cfb27b5e39e54f6f17ab4122c113884"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73b6bf7cf7fb9824037faa2ec10869b3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a73b6bf7cf7fb9824037faa2ec10869b3">WritePopMultiple</a> (std::vector&lt; std::vector&lt; double &gt;&gt; position_pops, std::vector&lt; int &gt; joint_selection, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:a73b6bf7cf7fb9824037faa2ec10869b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with joint angles encoded in populations.  <a href="#a73b6bf7cf7fb9824037faa2ec10869b3">More...</a><br /></td></tr>
+<tr class="separator:a73b6bf7cf7fb9824037faa2ec10869b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6d675257fb04c5f61ece1d50fbf68f1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#ac6d675257fb04c5f61ece1d50fbf68f1">WritePopOne</a> (std::vector&lt; double &gt; position_pop, int joint, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:ac6d675257fb04c5f61ece1d50fbf68f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write one joint with the joint angle encoded in a population.  <a href="#ac6d675257fb04c5f61ece1d50fbf68f1">More...</a><br /></td></tr>
+<tr class="separator:ac6d675257fb04c5f61ece1d50fbf68f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a354309f86d6fe6da96e2acb048161706"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a354309f86d6fe6da96e2acb048161706">CheckInit</a> ()</td></tr>
+<tr class="separator:a354309f86d6fe6da96e2acb048161706"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc8c13571c1d4f85577fb49e067acf1b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#adc8c13571c1d4f85577fb49e067acf1b">CheckPartKey</a> (std::string key)</td></tr>
+<tr class="separator:adc8c13571c1d4f85577fb49e067acf1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6d12174992a8e7acd6f2dc44343c112"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#aa6d12174992a8e7acd6f2dc44343c112">Decode</a> (std::vector&lt; double &gt; position_pop, int joint, std::vector&lt; std::vector&lt; double &gt;&gt; neuron_deg)</td></tr>
+<tr class="separator:aa6d12174992a8e7acd6f2dc44343c112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:ac7b8821a93525a2bc10c552bcdd25e4a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#ac7b8821a93525a2bc10c552bcdd25e4a">dev_init</a> = false</td></tr>
+<tr class="separator:ac7b8821a93525a2bc10c552bcdd25e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afab3ad934fcbb27d914928fc7c455bef"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#afab3ad934fcbb27d914928fc7c455bef">velocity_max</a> = 100</td></tr>
+<tr class="separator:afab3ad934fcbb27d914928fc7c455bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad87a8b283f05a2adc91f37f3f9ef2005"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#ad87a8b283f05a2adc91f37f3f9ef2005">icub_part</a></td></tr>
+<tr class="separator:ad87a8b283f05a2adc91f37f3f9ef2005"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a648730d338b9c51cdb37e24eae347c5b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a648730d338b9c51cdb37e24eae347c5b">key_map</a> {&quot;head&quot;, &quot;torso&quot;, &quot;right_arm&quot;, &quot;left_arm&quot;, &quot;right_leg&quot;, &quot;left_leg&quot;}</td></tr>
+<tr class="separator:a648730d338b9c51cdb37e24eae347c5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45db0cbacf7c705c42fbe861dd15445f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a45db0cbacf7c705c42fbe861dd15445f">joint_deg_res_abs</a></td></tr>
+<tr class="separator:a45db0cbacf7c705c42fbe861dd15445f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a12dab995ad76dff57ca65b26bd43a0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a4a12dab995ad76dff57ca65b26bd43a0">joint_deg_res_rel</a></td></tr>
+<tr class="separator:a4a12dab995ad76dff57ca65b26bd43a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e30ebd76f111fa20574e5787664f510"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a4e30ebd76f111fa20574e5787664f510">joints</a></td></tr>
+<tr class="separator:a4e30ebd76f111fa20574e5787664f510"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae37a2f9d49a2b2a251890a81ec6ada2c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#ae37a2f9d49a2b2a251890a81ec6ada2c">joint_min</a></td></tr>
+<tr class="separator:ae37a2f9d49a2b2a251890a81ec6ada2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acff1e673265fb969fd40d325e9813db7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#acff1e673265fb969fd40d325e9813db7">joint_max</a></td></tr>
+<tr class="separator:acff1e673265fb969fd40d325e9813db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d36eb578e7808065985e80a0bbdfa61"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a2d36eb578e7808065985e80a0bbdfa61">neuron_deg_abs</a></td></tr>
+<tr class="separator:a2d36eb578e7808065985e80a0bbdfa61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a52d06f69f380d3a77cdd60a4c96c36"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a7a52d06f69f380d3a77cdd60a4c96c36">neuron_deg_rel</a></td></tr>
+<tr class="separator:a7a52d06f69f380d3a77cdd60a4c96c36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a6860be2e9d23c731531153e49a0c29"><td class="memItemLeft" align="right" valign="top">yarp::sig::Vector&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a0a6860be2e9d23c731531153e49a0c29">joint_angles</a></td></tr>
+<tr class="separator:a0a6860be2e9d23c731531153e49a0c29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93759d4d71bb86440a97f594d3006dbf"><td class="memItemLeft" align="right" valign="top">yarp::dev::PolyDriver&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#a93759d4d71bb86440a97f594d3006dbf">driver</a></td></tr>
+<tr class="separator:a93759d4d71bb86440a97f594d3006dbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2669be94c27eb18d2e0151e174a3b5c"><td class="memItemLeft" align="right" valign="top">yarp::dev::IPositionControl *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointWriter.html#af2669be94c27eb18d2e0151e174a3b5c">ipos</a></td></tr>
+<tr class="separator:af2669be94c27eb18d2e0151e174a3b5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Write the joint angles to the iCub robots joints to move them. </p>
@@ -155,6 +212,57 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a354309f86d6fe6da96e2acb048161706"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a354309f86d6fe6da96e2acb048161706">&#9670;&nbsp;</a></span>CheckInit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool JointWriter::CheckInit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc8c13571c1d4f85577fb49e067acf1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc8c13571c1d4f85577fb49e067acf1b">&#9670;&nbsp;</a></span>CheckPartKey()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool JointWriter::CheckPartKey </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aaffac87ae3bb0b441b67ce08bb92c3c0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaffac87ae3bb0b441b67ce08bb92c3c0">&#9670;&nbsp;</a></span>Close()</h2>
 
@@ -171,6 +279,48 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Close joint writer with cleanup. </p>
+
+</div>
+</div>
+<a id="aa6d12174992a8e7acd6f2dc44343c112"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6d12174992a8e7acd6f2dc44343c112">&#9670;&nbsp;</a></span>Decode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double JointWriter::Decode </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; double &gt;&#160;</td>
+          <td class="paramname"><em>position_pop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>joint</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::vector&lt; double &gt;&gt;&#160;</td>
+          <td class="paramname"><em>neuron_deg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -278,7 +428,7 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">part</td><td>A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pop_size</td><td>Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">deg_per_neuron</td><td>(default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">speed</td><td>Velocity to set for the joint movements. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">speed</td><td>Velocity to set for the joint motions. </td></tr>
   </table>
   </dd>
 </dl>
@@ -324,53 +474,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="acc0d961a5441a48eedb878724ef98fed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc0d961a5441a48eedb878724ef98fed">&#9670;&nbsp;</a></span>WriteDouble()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool JointWriter::WriteDouble </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>position</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>joint</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>blocking</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Write one joint with double value. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">position</td><td>Joint angle to write to the robot joint (in degree) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">joint</td><td>Joint number of the robot part </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of movement </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
-
-</div>
-</div>
-<a id="aa50bbd2db13fa47e7aec0a939d9c2342"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa50bbd2db13fa47e7aec0a939d9c2342">&#9670;&nbsp;</a></span>WriteDoubleAll()</h2>
+<a id="a0b21bf4504ade96db501c8fc46c15a24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b21bf4504ade96db501c8fc46c15a24">&#9670;&nbsp;</a></span>WriteDoubleAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -385,7 +490,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>blocking</em>&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -399,7 +510,8 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">position</td><td>Joint angles to write to the robot joints </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of movement </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of motion </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
   </table>
   </dd>
 </dl>
@@ -407,8 +519,112 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="acf97f612c8f32d9715cb8da180d604bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf97f612c8f32d9715cb8da180d604bc">&#9670;&nbsp;</a></span>WritePopAll()</h2>
+<a id="a3abbe9cee661f4b51c50f6c6454fd43d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3abbe9cee661f4b51c50f6c6454fd43d">&#9670;&nbsp;</a></span>WriteDoubleMultiple()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool JointWriter::WriteDoubleMultiple </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; double &gt;&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>joint_selection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write all joints with double values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">position</td><td>Joint angles to write to the robot joints </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">joint_selection</td><td>Joint indizes of the joints, which should be moved (head: 3, 4, 5 -&gt; all eye movements) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of motion </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+
+</div>
+</div>
+<a id="ab6dfb700a2962f300900edadab1d9876"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6dfb700a2962f300900edadab1d9876">&#9670;&nbsp;</a></span>WriteDoubleOne()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool JointWriter::WriteDoubleOne </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>joint</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write one joint with double value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">position</td><td>Joint angle to write to the robot joint (in degree) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">joint</td><td>Joint number of the robot part </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of motion </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+
+</div>
+</div>
+<a id="a8cfb27b5e39e54f6f17ab4122c113884"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cfb27b5e39e54f6f17ab4122c113884">&#9670;&nbsp;</a></span>WritePopAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -423,7 +639,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>blocking</em>&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -437,7 +659,8 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">position_pops</td><td>Populations encoding every joint angle for writing them to the associated robot part </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of movement </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of motion </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
   </table>
   </dd>
 </dl>
@@ -445,8 +668,60 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a385de9b7a15f2c0a96e90c6eb77cbc89"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a385de9b7a15f2c0a96e90c6eb77cbc89">&#9670;&nbsp;</a></span>WritePopOne()</h2>
+<a id="a73b6bf7cf7fb9824037faa2ec10869b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73b6bf7cf7fb9824037faa2ec10869b3">&#9670;&nbsp;</a></span>WritePopMultiple()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool JointWriter::WritePopMultiple </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; std::vector&lt; double &gt;&gt;&#160;</td>
+          <td class="paramname"><em>position_pops</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>joint_selection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write all joints with joint angles encoded in populations. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">position_pops</td><td>Populations encoding every joint angle for writing them to the associated robot part </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">joint_selection</td><td>Joint indizes of the joints, which should be moved (head: 3, 4, 5 -&gt; all eye movements) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of motion </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+
+</div>
+</div>
+<a id="ac6d675257fb04c5f61ece1d50fbf68f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6d675257fb04c5f61ece1d50fbf68f1">&#9670;&nbsp;</a></span>WritePopOne()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -467,7 +742,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>blocking</em>&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -482,11 +763,322 @@ Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">position_pop</td><td>Population encoded joint angle for writing to the robot joint </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">joint</td><td>Joint number of the robot part </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of movement </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of motion </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ac7b8821a93525a2bc10c552bcdd25e4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7b8821a93525a2bc10c552bcdd25e4a">&#9670;&nbsp;</a></span>dev_init</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool JointWriter::dev_init = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>configuration variables </p>
+
+</div>
+</div>
+<a id="a93759d4d71bb86440a97f594d3006dbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93759d4d71bb86440a97f594d3006dbf">&#9670;&nbsp;</a></span>driver</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">yarp::dev::PolyDriver JointWriter::driver</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad87a8b283f05a2adc91f37f3f9ef2005"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad87a8b283f05a2adc91f37f3f9ef2005">&#9670;&nbsp;</a></span>icub_part</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string JointWriter::icub_part</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af2669be94c27eb18d2e0151e174a3b5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2669be94c27eb18d2e0151e174a3b5c">&#9670;&nbsp;</a></span>ipos</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">yarp::dev::IPositionControl* JointWriter::ipos</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0a6860be2e9d23c731531153e49a0c29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a6860be2e9d23c731531153e49a0c29">&#9670;&nbsp;</a></span>joint_angles</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">yarp::sig::Vector JointWriter::joint_angles</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a45db0cbacf7c705c42fbe861dd15445f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45db0cbacf7c705c42fbe861dd15445f">&#9670;&nbsp;</a></span>joint_deg_res_abs</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; JointWriter::joint_deg_res_abs</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4a12dab995ad76dff57ca65b26bd43a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a12dab995ad76dff57ca65b26bd43a0">&#9670;&nbsp;</a></span>joint_deg_res_rel</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; JointWriter::joint_deg_res_rel</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acff1e673265fb969fd40d325e9813db7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acff1e673265fb969fd40d325e9813db7">&#9670;&nbsp;</a></span>joint_max</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; JointWriter::joint_max</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae37a2f9d49a2b2a251890a81ec6ada2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae37a2f9d49a2b2a251890a81ec6ada2c">&#9670;&nbsp;</a></span>joint_min</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; JointWriter::joint_min</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4e30ebd76f111fa20574e5787664f510"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e30ebd76f111fa20574e5787664f510">&#9670;&nbsp;</a></span>joints</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int JointWriter::joints</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a648730d338b9c51cdb37e24eae347c5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a648730d338b9c51cdb37e24eae347c5b">&#9670;&nbsp;</a></span>key_map</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; JointWriter::key_map {&quot;head&quot;, &quot;torso&quot;, &quot;right_arm&quot;, &quot;left_arm&quot;, &quot;right_leg&quot;, &quot;left_leg&quot;}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2d36eb578e7808065985e80a0bbdfa61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d36eb578e7808065985e80a0bbdfa61">&#9670;&nbsp;</a></span>neuron_deg_abs</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::vector&lt;double&gt; &gt; JointWriter::neuron_deg_abs</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7a52d06f69f380d3a77cdd60a4c96c36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a52d06f69f380d3a77cdd60a4c96c36">&#9670;&nbsp;</a></span>neuron_deg_rel</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::vector&lt;double&gt; &gt; JointWriter::neuron_deg_rel</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afab3ad934fcbb27d914928fc7c455bef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afab3ad934fcbb27d914928fc7c455bef">&#9670;&nbsp;</a></span>velocity_max</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double JointWriter::velocity_max = 100</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

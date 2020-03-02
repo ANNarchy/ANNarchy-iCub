@@ -1,31 +1,5 @@
 var searchData=
 [
-  ['deaddriver_5frarm',['DeadDriver_rarm',['../namespacetest__hand__orientation.html#a44926690e77b4bddd9691bf3e52d634e',1,'test_hand_orientation']]],
-  ['delta_5fdict',['delta_dict',['../namespacelib_1_1create__arm.html#a7b767c08d6f633466d8947bf3cd72886',1,'lib::create_arm']]],
-  ['delta_5ffing1',['delta_fing1',['../namespacelib_1_1create__arm.html#a8985fb435711a0d4ff146194086ae077',1,'lib::create_arm']]],
-  ['delta_5ffing2',['delta_fing2',['../namespacelib_1_1create__arm.html#a7b75a2f5c0231ee7282334885fe540f0',1,'lib::create_arm']]],
-  ['delta_5ffing3',['delta_fing3',['../namespacelib_1_1create__arm.html#a3df80963ca17020d64942436d185fea8',1,'lib::create_arm']]],
-  ['delta_5ffing4',['delta_fing4',['../namespacelib_1_1create__arm.html#ae9a088f24f67d42f05aaad036605d35b',1,'lib::create_arm']]],
-  ['delta_5ffing5',['delta_fing5',['../namespacelib_1_1create__arm.html#abb34edef36fd65cc66030fccf83d6415',1,'lib::create_arm']]],
-  ['delta_5flowarm',['delta_lowArm',['../namespacelib_1_1create__arm.html#a856f701bc468a0508b9682d45ff87bdb',1,'lib::create_arm']]],
-  ['delta_5fmod_5flowarm',['delta_mod_lowArm',['../namespacelib_1_1create__arm.html#a792f41fe1fe8c887e7b8b1266539a15e',1,'lib::create_arm']]],
-  ['delta_5fmod_5fpalm',['delta_mod_palm',['../namespacelib_1_1create__arm.html#ad024f23130aea626e22eb7b94d12bc63',1,'lib::create_arm']]],
-  ['delta_5fmod_5fuparm',['delta_mod_upArm',['../namespacelib_1_1create__arm.html#a2e684e1f12e64ea8a897621ea48614f9',1,'lib::create_arm']]],
-  ['delta_5fshoulder',['delta_shoulder',['../namespacelib_1_1create__arm.html#a455a8de87156f561f66e7996f2e29fbd',1,'lib::create_arm']]],
-  ['delta_5fuparm',['delta_upArm',['../namespacelib_1_1create__arm.html#a45dfb6e7eb023c576877f54dc989c59f',1,'lib::create_arm']]],
-  ['dfing1',['dfing1',['../namespacelib_1_1create__arm.html#a67f4d962404bda810f25cced54011a5e',1,'lib::create_arm']]],
-  ['dfing2',['dfing2',['../namespacelib_1_1create__arm.html#ab755d1148aeabc38fa3102200747df01',1,'lib::create_arm']]],
-  ['dfing3',['dfing3',['../namespacelib_1_1create__arm.html#ac68753f3d13822b1276327e09fff79e8',1,'lib::create_arm']]],
-  ['dfing4',['dfing4',['../namespacelib_1_1create__arm.html#a10f30437b888cf69f3c175cb7e81902a',1,'lib::create_arm']]],
-  ['dfing5',['dfing5',['../namespacelib_1_1create__arm.html#a0e4440b7d1ec26456e071108c7353299',1,'lib::create_arm']]],
-  ['dictionary_5fbear',['dictionary_bear',['../namespacelib_1_1model__groups.html#af9598705da38e80ba13c533ee3ee03b6',1,'lib::model_groups']]],
-  ['dictionary_5fcar',['dictionary_car',['../namespacelib_1_1model__groups.html#ad575f8b2b8795371424d460007afe386',1,'lib::model_groups']]],
-  ['dictionary_5fpen',['dictionary_pen',['../namespacelib_1_1model__groups.html#aa3cc4e19042196143f5c659ed458f7ae',1,'lib::model_groups']]],
-  ['dlowarm',['dlowArm',['../namespacelib_1_1create__arm.html#a30dad4b10544317f7e2b58ec7e5b19cd',1,'lib::create_arm']]],
-  ['dmod_5flowarm',['dmod_lowArm',['../namespacelib_1_1create__arm.html#ad757c22cb548d81fcf42ad54b379e250',1,'lib::create_arm']]],
-  ['dmod_5fpalm',['dmod_palm',['../namespacelib_1_1create__arm.html#ac1cc87fcb18f11a621f6380f61d25272',1,'lib::create_arm']]],
-  ['dmod_5fuparm',['dmod_upArm',['../namespacelib_1_1create__arm.html#a53b5c30714bece70e999432159d43567',1,'lib::create_arm']]],
-  ['driver',['driver',['../namespacetest__save__position.html#a41ed31a93a366c9657aef769513be1fe',1,'test_save_position']]],
-  ['dshould',['dshould',['../namespacelib_1_1create__arm.html#af2b3e0c11d15812e690fb0ece4ae9754',1,'lib::create_arm']]],
-  ['duparm',['dupArm',['../namespacelib_1_1create__arm.html#a75f4ce7b49fc966b7debf734df2b7831',1,'lib::create_arm']]]
+  ['cmap',['cmap',['../namespacetest__plot.html#acef084c25df9575e3666b85cdc01bfcd',1,'test_plot']]],
+  ['cut_5fimg',['cut_img',['../classVisualReader.html#a624e95854ad200fdb1e9986b5c0141fc',1,'VisualReader']]]
 ];

@@ -61,6 +61,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classJointReader-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">JointReader Class Reference</div>  </div>
@@ -71,6 +73,15 @@ $(function() {
  <a href="classJointReader.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Joint__Reader_8hpp_source.html">Joint_Reader.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for JointReader:</div>
+<div class="dyncontent">
+<div class="center"><img src="classJointReader__coll__graph.png" border="0" usemap="#JointReader_coll__map" alt="Collaboration graph"/></div>
+<map name="JointReader_coll__map" id="JointReader_coll__map">
+<area shape="rect" id="node3" title="STL class. " alt="" coords="181,103,261,130"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="5,96,132,137"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -102,6 +113,44 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1e04826bec1695f818a8965471f9e756"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a1e04826bec1695f818a8965471f9e756">ReadPopOne</a> (int joint)</td></tr>
 <tr class="memdesc:a1e04826bec1695f818a8965471f9e756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one joint and return the joint angle encoded in a population.  <a href="#a1e04826bec1695f818a8965471f9e756">More...</a><br /></td></tr>
 <tr class="separator:a1e04826bec1695f818a8965471f9e756"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a5965d36ebe8c4f49eaf6b55cf50849f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a5965d36ebe8c4f49eaf6b55cf50849f8">CheckInit</a> ()</td></tr>
+<tr class="separator:a5965d36ebe8c4f49eaf6b55cf50849f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac756afc1ef491f20ba9fc3ffbb68f2dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#ac756afc1ef491f20ba9fc3ffbb68f2dd">CheckPartKey</a> (std::string key)</td></tr>
+<tr class="separator:ac756afc1ef491f20ba9fc3ffbb68f2dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b12344f6ddd96f99a66fc6303435073"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a8b12344f6ddd96f99a66fc6303435073">Encode</a> (double joint_angle, int joint)</td></tr>
+<tr class="separator:a8b12344f6ddd96f99a66fc6303435073"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a947ba4ccb96125d4da138f51479292"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a3a947ba4ccb96125d4da138f51479292">NormalPdf</a> (double value, double mean, double sigma)</td></tr>
+<tr class="separator:a3a947ba4ccb96125d4da138f51479292"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a56dac1bdf430c8fec8b7067ee2cc9e58"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a56dac1bdf430c8fec8b7067ee2cc9e58">dev_init</a> = false</td></tr>
+<tr class="separator:a56dac1bdf430c8fec8b7067ee2cc9e58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ad2bc9c74127b2dd2bab4e5d2b5ba67"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a3ad2bc9c74127b2dd2bab4e5d2b5ba67">icub_part</a></td></tr>
+<tr class="separator:a3ad2bc9c74127b2dd2bab4e5d2b5ba67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1f5de21bd9920cbf09271c0b80a3ca1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#aa1f5de21bd9920cbf09271c0b80a3ca1">key_map</a> {&quot;head&quot;, &quot;torso&quot;, &quot;right_arm&quot;, &quot;left_arm&quot;, &quot;right_leg&quot;, &quot;left_leg&quot;}</td></tr>
+<tr class="separator:aa1f5de21bd9920cbf09271c0b80a3ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bfec6b501faf46701f0ffa5de5957b6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a1bfec6b501faf46701f0ffa5de5957b6">joint_deg_res</a></td></tr>
+<tr class="separator:a1bfec6b501faf46701f0ffa5de5957b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d3d6a75afc6d594ddc327aed46d92c2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a4d3d6a75afc6d594ddc327aed46d92c2">joints</a></td></tr>
+<tr class="separator:a4d3d6a75afc6d594ddc327aed46d92c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7a820e92bc01eceb82b04b4d3ad9331"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#ae7a820e92bc01eceb82b04b4d3ad9331">sigma_pop</a></td></tr>
+<tr class="separator:ae7a820e92bc01eceb82b04b4d3ad9331"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6babc91bfce927fbfcbcc4790e990646"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a6babc91bfce927fbfcbcc4790e990646">joint_min</a></td></tr>
+<tr class="separator:a6babc91bfce927fbfcbcc4790e990646"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca6fffb99a60a93079977b28944642a0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#aca6fffb99a60a93079977b28944642a0">joint_max</a></td></tr>
+<tr class="separator:aca6fffb99a60a93079977b28944642a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c330c1c5693d48ed58d8c181c7fd40b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a3c330c1c5693d48ed58d8c181c7fd40b">neuron_deg</a></td></tr>
+<tr class="separator:a3c330c1c5693d48ed58d8c181c7fd40b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eaf984c771cdaa35deac3ff71a8819b"><td class="memItemLeft" align="right" valign="top">yarp::sig::Vector&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a7eaf984c771cdaa35deac3ff71a8819b">joint_angles</a></td></tr>
+<tr class="separator:a7eaf984c771cdaa35deac3ff71a8819b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20ce5b114d5be792417499d1d793d1a6"><td class="memItemLeft" align="right" valign="top">yarp::dev::PolyDriver&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#a20ce5b114d5be792417499d1d793d1a6">driver</a></td></tr>
+<tr class="separator:a20ce5b114d5be792417499d1d793d1a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac10711547160a608d7fdf235ca98eb0d"><td class="memItemLeft" align="right" valign="top">yarp::dev::IEncoders *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classJointReader.html#ac10711547160a608d7fdf235ca98eb0d">ienc</a></td></tr>
+<tr class="separator:ac10711547160a608d7fdf235ca98eb0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Read-out of the joint angles of the iCub robot. </p>
@@ -149,6 +198,57 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a5965d36ebe8c4f49eaf6b55cf50849f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5965d36ebe8c4f49eaf6b55cf50849f8">&#9670;&nbsp;</a></span>CheckInit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool JointReader::CheckInit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac756afc1ef491f20ba9fc3ffbb68f2dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac756afc1ef491f20ba9fc3ffbb68f2dd">&#9670;&nbsp;</a></span>CheckPartKey()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool JointReader::CheckPartKey </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a630ce1a9ad4634a39dea88980e7b8440"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a630ce1a9ad4634a39dea88980e7b8440">&#9670;&nbsp;</a></span>Close()</h2>
 
@@ -165,6 +265,42 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Close joint reader with cleanup. </p>
+
+</div>
+</div>
+<a id="a8b12344f6ddd96f99a66fc6303435073"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b12344f6ddd96f99a66fc6303435073">&#9670;&nbsp;</a></span>Encode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; double &gt; JointReader::Encode </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>joint_angle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>joint</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -280,6 +416,48 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a3a947ba4ccb96125d4da138f51479292"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a947ba4ccb96125d4da138f51479292">&#9670;&nbsp;</a></span>NormalPdf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double JointReader::NormalPdf </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>mean</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sigma</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a42d2fb9c17d33b1f6f0ae6f6017789a8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a42d2fb9c17d33b1f6f0ae6f6017789a8">&#9670;&nbsp;</a></span>ReadDouble()</h2>
 
@@ -351,6 +529,271 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Population vector encoding the joint angle. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a56dac1bdf430c8fec8b7067ee2cc9e58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56dac1bdf430c8fec8b7067ee2cc9e58">&#9670;&nbsp;</a></span>dev_init</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool JointReader::dev_init = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a20ce5b114d5be792417499d1d793d1a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20ce5b114d5be792417499d1d793d1a6">&#9670;&nbsp;</a></span>driver</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">yarp::dev::PolyDriver JointReader::driver</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3ad2bc9c74127b2dd2bab4e5d2b5ba67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ad2bc9c74127b2dd2bab4e5d2b5ba67">&#9670;&nbsp;</a></span>icub_part</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string JointReader::icub_part</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac10711547160a608d7fdf235ca98eb0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac10711547160a608d7fdf235ca98eb0d">&#9670;&nbsp;</a></span>ienc</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">yarp::dev::IEncoders* JointReader::ienc</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7eaf984c771cdaa35deac3ff71a8819b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7eaf984c771cdaa35deac3ff71a8819b">&#9670;&nbsp;</a></span>joint_angles</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">yarp::sig::Vector JointReader::joint_angles</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1bfec6b501faf46701f0ffa5de5957b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bfec6b501faf46701f0ffa5de5957b6">&#9670;&nbsp;</a></span>joint_deg_res</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; JointReader::joint_deg_res</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca6fffb99a60a93079977b28944642a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca6fffb99a60a93079977b28944642a0">&#9670;&nbsp;</a></span>joint_max</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; JointReader::joint_max</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6babc91bfce927fbfcbcc4790e990646"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6babc91bfce927fbfcbcc4790e990646">&#9670;&nbsp;</a></span>joint_min</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; JointReader::joint_min</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4d3d6a75afc6d594ddc327aed46d92c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d3d6a75afc6d594ddc327aed46d92c2">&#9670;&nbsp;</a></span>joints</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int JointReader::joints</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa1f5de21bd9920cbf09271c0b80a3ca1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1f5de21bd9920cbf09271c0b80a3ca1">&#9670;&nbsp;</a></span>key_map</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; JointReader::key_map {&quot;head&quot;, &quot;torso&quot;, &quot;right_arm&quot;, &quot;left_arm&quot;, &quot;right_leg&quot;, &quot;left_leg&quot;}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3c330c1c5693d48ed58d8c181c7fd40b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c330c1c5693d48ed58d8c181c7fd40b">&#9670;&nbsp;</a></span>neuron_deg</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::vector&lt;double&gt; &gt; JointReader::neuron_deg</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7a820e92bc01eceb82b04b4d3ad9331"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7a820e92bc01eceb82b04b4d3ad9331">&#9670;&nbsp;</a></span>sigma_pop</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double JointReader::sigma_pop</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

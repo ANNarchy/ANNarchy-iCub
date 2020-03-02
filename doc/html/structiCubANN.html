@@ -61,7 +61,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="structiCubANN-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">iCubANN Struct Reference</div>  </div>
@@ -77,12 +77,13 @@ Collaboration diagram for iCubANN:</div>
 <div class="dyncontent">
 <div class="center"><img src="structiCubANN__coll__graph.png" border="0" usemap="#iCubANN_coll__map" alt="Collaboration graph"/></div>
 <map name="iCubANN_coll__map" id="iCubANN_coll__map">
-<area shape="rect" id="node3" href="classJointReader.html" title="Read&#45;out of the joint angles of the iCub robot. " alt="" coords="204,5,296,32"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="210,147,290,173"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="5,139,132,181"/>
-<area shape="rect" id="node7" href="classSkinReader.html" title="Read&#45;out of the skin sensor data from the iCubs artificial skin. " alt="" coords="205,237,295,264"/>
-<area shape="rect" id="node9" href="classJointWriter.html" title="Write the joint angles to the iCub robots joints to move them. " alt="" coords="207,56,293,83"/>
-<area shape="rect" id="node10" href="classVisualReader.html" title="Read&#45;out of the camera images from the iCub robot. " alt="" coords="447,279,547,305"/>
+<area shape="rect" id="node4" href="classJointWriter.html" title="Write the joint angles to the iCub robots joints to move them. " alt="" coords="820,288,905,315"/>
+<area shape="rect" id="node12" href="classJointReader.html" title="Read&#45;out of the joint angles of the iCub robot. " alt="" coords="817,607,909,633"/>
+<area shape="rect" id="node15" href="classSkinReader.html" title="Read&#45;out of the skin sensor data from the iCubs artificial skin. " alt="" coords="817,117,908,144"/>
+<area shape="rect" id="node17" href="structTaxelData.html" title="Struct for the skin taxel positiiion data per iCub part. " alt="" coords="233,77,316,104"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="235,337,315,364"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="21,330,148,371"/>
+<area shape="rect" id="node20" href="classVisualReader.html" title="Read&#45;out of the camera images from the iCub robot. " alt="" coords="1106,773,1206,800"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -100,6 +101,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6054ba928b8f1c9605c0f6b7e6114f37"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a6054ba928b8f1c9605c0f6b7e6114f37">AddVisualReader</a> ()</td></tr>
 <tr class="memdesc:a6054ba928b8f1c9605c0f6b7e6114f37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add the instance of the visual reader module. This has to be initialized with the init-method.  <a href="#a6054ba928b8f1c9605c0f6b7e6114f37">More...</a><br /></td></tr>
 <tr class="separator:a6054ba928b8f1c9605c0f6b7e6114f37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8b3c45cf11b9ea3827e2029fd42ab6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#af8b3c45cf11b9ea3827e2029fd42ab6a">RemoveJointReader</a> (std::string name)</td></tr>
+<tr class="memdesc:af8b3c45cf11b9ea3827e2029fd42ab6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the instance of the joint reader module.  <a href="#af8b3c45cf11b9ea3827e2029fd42ab6a">More...</a><br /></td></tr>
+<tr class="separator:af8b3c45cf11b9ea3827e2029fd42ab6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a860ff6967f15476c04e76df3c634e946"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a860ff6967f15476c04e76df3c634e946">RemoveJointWriter</a> (std::string name)</td></tr>
+<tr class="memdesc:a860ff6967f15476c04e76df3c634e946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the instance of the joint writer module.  <a href="#a860ff6967f15476c04e76df3c634e946">More...</a><br /></td></tr>
+<tr class="separator:a860ff6967f15476c04e76df3c634e946"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92175f1d068177905bfbe52cd5728775"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a92175f1d068177905bfbe52cd5728775">RemoveSkinReader</a> (std::string name)</td></tr>
+<tr class="memdesc:a92175f1d068177905bfbe52cd5728775"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the instance of the skin reader module.  <a href="#a92175f1d068177905bfbe52cd5728775">More...</a><br /></td></tr>
+<tr class="separator:a92175f1d068177905bfbe52cd5728775"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a001284a5d54aa54c3bb44c72465386"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a7a001284a5d54aa54c3bb44c72465386">RemoveVisualReader</a> ()</td></tr>
 <tr class="memdesc:a7a001284a5d54aa54c3bb44c72465386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the instance of the visual reader module.  <a href="#a7a001284a5d54aa54c3bb44c72465386">More...</a><br /></td></tr>
 <tr class="separator:a7a001284a5d54aa54c3bb44c72465386"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,18 +155,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1cdddc238d3d9156d258d61e09ba86bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a1cdddc238d3d9156d258d61e09ba86bc">JointWSetJointVelocity</a> (std::string name, double speed, int joint)</td></tr>
 <tr class="memdesc:a1cdddc238d3d9156d258d61e09ba86bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of the populations encoding the joint angles.  <a href="#a1cdddc238d3d9156d258d61e09ba86bc">More...</a><br /></td></tr>
 <tr class="separator:a1cdddc238d3d9156d258d61e09ba86bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33502441ce5ac5c387f1efbc2ea1df27"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a33502441ce5ac5c387f1efbc2ea1df27">JointWWriteDoubleAll</a> (std::string name, std::vector&lt; double &gt; position, bool blocking)</td></tr>
-<tr class="memdesc:a33502441ce5ac5c387f1efbc2ea1df27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with double values.  <a href="#a33502441ce5ac5c387f1efbc2ea1df27">More...</a><br /></td></tr>
-<tr class="separator:a33502441ce5ac5c387f1efbc2ea1df27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77822a875c63449ae0ce7ddccfd2334e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a77822a875c63449ae0ce7ddccfd2334e">JointWWriteDouble</a> (std::string name, double position, int joint, bool blocking)</td></tr>
-<tr class="memdesc:a77822a875c63449ae0ce7ddccfd2334e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write one joint with double value.  <a href="#a77822a875c63449ae0ce7ddccfd2334e">More...</a><br /></td></tr>
-<tr class="separator:a77822a875c63449ae0ce7ddccfd2334e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0a9987e4cfbebc6aee98c36b507f952"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#ae0a9987e4cfbebc6aee98c36b507f952">JointWWritePopAll</a> (std::string name, std::vector&lt; std::vector&lt; double &gt;&gt; position_pops, bool blocking)</td></tr>
-<tr class="memdesc:ae0a9987e4cfbebc6aee98c36b507f952"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with joint angles encoded in populations.  <a href="#ae0a9987e4cfbebc6aee98c36b507f952">More...</a><br /></td></tr>
-<tr class="separator:ae0a9987e4cfbebc6aee98c36b507f952"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a556d0449f9015390d9fdba3729866b95"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a556d0449f9015390d9fdba3729866b95">JointWWritePopOne</a> (std::string name, std::vector&lt; double &gt; position_pop, int joint, bool blocking)</td></tr>
-<tr class="memdesc:a556d0449f9015390d9fdba3729866b95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write one joint with the joint angle encoded in a population.  <a href="#a556d0449f9015390d9fdba3729866b95">More...</a><br /></td></tr>
-<tr class="separator:a556d0449f9015390d9fdba3729866b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbf948330d224b71c24b945f24b6bd14"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#afbf948330d224b71c24b945f24b6bd14">JointWWriteDoubleAll</a> (std::string name, std::vector&lt; double &gt; position, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:afbf948330d224b71c24b945f24b6bd14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with double values.  <a href="#afbf948330d224b71c24b945f24b6bd14">More...</a><br /></td></tr>
+<tr class="separator:afbf948330d224b71c24b945f24b6bd14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d5d6888b0c055f06a4aa279f606b136"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a9d5d6888b0c055f06a4aa279f606b136">JointWWriteDoubleMultiple</a> (std::string name, std::vector&lt; double &gt; position, std::vector&lt; int &gt; joint_selection, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:a9d5d6888b0c055f06a4aa279f606b136"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with double values.  <a href="#a9d5d6888b0c055f06a4aa279f606b136">More...</a><br /></td></tr>
+<tr class="separator:a9d5d6888b0c055f06a4aa279f606b136"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad31bf84281c841b5711a83fc441fac05"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#ad31bf84281c841b5711a83fc441fac05">JointWWriteDoubleOne</a> (std::string name, double position, int joint, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:ad31bf84281c841b5711a83fc441fac05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write one joint with double value.  <a href="#ad31bf84281c841b5711a83fc441fac05">More...</a><br /></td></tr>
+<tr class="separator:ad31bf84281c841b5711a83fc441fac05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b270197678f920b58149250bfd18445"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a9b270197678f920b58149250bfd18445">JointWWritePopAll</a> (std::string name, std::vector&lt; std::vector&lt; double &gt;&gt; position_pops, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:a9b270197678f920b58149250bfd18445"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with joint angles encoded in populations.  <a href="#a9b270197678f920b58149250bfd18445">More...</a><br /></td></tr>
+<tr class="separator:a9b270197678f920b58149250bfd18445"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a024f58fa9643a9d7d8ae3eb4e415352b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a024f58fa9643a9d7d8ae3eb4e415352b">JointWWritePopMultiple</a> (std::string name, std::vector&lt; std::vector&lt; double &gt;&gt; position_pops, std::vector&lt; int &gt; joint_selection, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:a024f58fa9643a9d7d8ae3eb4e415352b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with joint angles encoded in populations.  <a href="#a024f58fa9643a9d7d8ae3eb4e415352b">More...</a><br /></td></tr>
+<tr class="separator:a024f58fa9643a9d7d8ae3eb4e415352b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a125e36f895d8eea650d84f7e192a59a6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a125e36f895d8eea650d84f7e192a59a6">JointWWritePopOne</a> (std::string name, std::vector&lt; double &gt; position_pop, int joint, bool blocking, std::string mode)</td></tr>
+<tr class="memdesc:a125e36f895d8eea650d84f7e192a59a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write one joint with the joint angle encoded in a population.  <a href="#a125e36f895d8eea650d84f7e192a59a6">More...</a><br /></td></tr>
+<tr class="separator:a125e36f895d8eea650d84f7e192a59a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38628f8696f1001e16c8939343fe2619"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a38628f8696f1001e16c8939343fe2619">SkinRInit</a> (std::string name, char arm, bool norm_data)</td></tr>
 <tr class="memdesc:a38628f8696f1001e16c8939343fe2619"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize skin reader with given parameters.  <a href="#a38628f8696f1001e16c8939343fe2619">More...</a><br /></td></tr>
 <tr class="separator:a38628f8696f1001e16c8939343fe2619"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -191,19 +207,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a070360e6f3a046cf9099945e281a5bcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop reading images from the iCub, by terminating the RFModule.  <a href="#a070360e6f3a046cf9099945e281a5bcd">More...</a><br /></td></tr>
 <tr class="separator:a070360e6f3a046cf9099945e281a5bcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a15127090865eb970e90b7128c18c059d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classVisualReader.html">VisualReader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a15127090865eb970e90b7128c18c059d">visual_input</a></td></tr>
-<tr class="separator:a15127090865eb970e90b7128c18c059d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0908626e8002bd13aff672bbe56649a8"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, <a class="el" href="classJointReader.html">JointReader</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a0908626e8002bd13aff672bbe56649a8">parts_reader</a></td></tr>
-<tr class="memdesc:a0908626e8002bd13aff672bbe56649a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated visual reader (only one possible for left/right eye)  <a href="#a0908626e8002bd13aff672bbe56649a8">More...</a><br /></td></tr>
-<tr class="separator:a0908626e8002bd13aff672bbe56649a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14ddd7c562eacbc7dbf58be987973213"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, <a class="el" href="classJointWriter.html">JointWriter</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a14ddd7c562eacbc7dbf58be987973213">parts_writer</a></td></tr>
-<tr class="memdesc:a14ddd7c562eacbc7dbf58be987973213"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated joint readers (one for every robot part)  <a href="#a14ddd7c562eacbc7dbf58be987973213">More...</a><br /></td></tr>
-<tr class="separator:a14ddd7c562eacbc7dbf58be987973213"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0064fe3088cc8106f56e4399fa1951bb"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, <a class="el" href="classSkinReader.html">SkinReader</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a0064fe3088cc8106f56e4399fa1951bb">tactile_reader</a></td></tr>
-<tr class="memdesc:a0064fe3088cc8106f56e4399fa1951bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated joint writers (one for every robot part)  <a href="#a0064fe3088cc8106f56e4399fa1951bb">More...</a><br /></td></tr>
-<tr class="separator:a0064fe3088cc8106f56e4399fa1951bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:ade945649fd5d174f389d503a0813acae"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classVisualReader.html">VisualReader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#ade945649fd5d174f389d503a0813acae">visual_input</a></td></tr>
+<tr class="separator:ade945649fd5d174f389d503a0813acae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f0dfd29e53e799774117b49f1ae2477"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::unique_ptr&lt; <a class="el" href="classJointReader.html">JointReader</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a9f0dfd29e53e799774117b49f1ae2477">parts_reader</a></td></tr>
+<tr class="memdesc:a9f0dfd29e53e799774117b49f1ae2477"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated visual reader (only one possible for left/right eye)  <a href="#a9f0dfd29e53e799774117b49f1ae2477">More...</a><br /></td></tr>
+<tr class="separator:a9f0dfd29e53e799774117b49f1ae2477"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a953cc0c98f661a8f8b868a51ada5f969"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::unique_ptr&lt; <a class="el" href="classJointWriter.html">JointWriter</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a953cc0c98f661a8f8b868a51ada5f969">parts_writer</a></td></tr>
+<tr class="memdesc:a953cc0c98f661a8f8b868a51ada5f969"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated joint readers (one for every robot part)  <a href="#a953cc0c98f661a8f8b868a51ada5f969">More...</a><br /></td></tr>
+<tr class="separator:a953cc0c98f661a8f8b868a51ada5f969"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0755849f6f597baced0e4d304d59750"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::unique_ptr&lt; <a class="el" href="classSkinReader.html">SkinReader</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#aa0755849f6f597baced0e4d304d59750">tactile_reader</a></td></tr>
+<tr class="memdesc:aa0755849f6f597baced0e4d304d59750"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated joint writers (one for every robot part)  <a href="#aa0755849f6f597baced0e4d304d59750">More...</a><br /></td></tr>
+<tr class="separator:aa0755849f6f597baced0e4d304d59750"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interfaces the different modules (Reader/Writer) and handles the use of multiple module instances. </p>
@@ -785,60 +801,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a77822a875c63449ae0ce7ddccfd2334e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77822a875c63449ae0ce7ddccfd2334e">&#9670;&nbsp;</a></span>JointWWriteDouble()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool iCubANN::JointWWriteDouble </td>
-          <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>position</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>joint</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>blocking</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Write one joint with double value. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Name of the selected joint writer </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">position</td><td>Joint angle to write to the robot joint (in degree) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">joint</td><td>Joint number of the robot part </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of movement </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
-
-</div>
-</div>
-<a id="a33502441ce5ac5c387f1efbc2ea1df27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33502441ce5ac5c387f1efbc2ea1df27">&#9670;&nbsp;</a></span>JointWWriteDoubleAll()</h2>
+<a id="afbf948330d224b71c24b945f24b6bd14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbf948330d224b71c24b945f24b6bd14">&#9670;&nbsp;</a></span>JointWWriteDoubleAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -859,7 +823,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>blocking</em>&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -875,6 +845,7 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Name of the selected joint writer </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">position</td><td>Joint angles to write to the robot joints </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of movement </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
   </table>
   </dd>
 </dl>
@@ -882,8 +853,126 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae0a9987e4cfbebc6aee98c36b507f952"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0a9987e4cfbebc6aee98c36b507f952">&#9670;&nbsp;</a></span>JointWWritePopAll()</h2>
+<a id="a9d5d6888b0c055f06a4aa279f606b136"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d5d6888b0c055f06a4aa279f606b136">&#9670;&nbsp;</a></span>JointWWriteDoubleMultiple()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool iCubANN::JointWWriteDoubleMultiple </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; double &gt;&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>joint_selection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write all joints with double values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Name of the selected joint writer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">position</td><td>Joint angles to write to the robot joints </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">joint_selection</td><td>Joint indizes of the joints, which should be moved (head: [3, 4, 5] -&gt; all eye movements) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of motion </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+
+</div>
+</div>
+<a id="ad31bf84281c841b5711a83fc441fac05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad31bf84281c841b5711a83fc441fac05">&#9670;&nbsp;</a></span>JointWWriteDoubleOne()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool iCubANN::JointWWriteDoubleOne </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>joint</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write one joint with double value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Name of the selected joint writer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">position</td><td>Joint angle to write to the robot joint (in degree) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">joint</td><td>Joint number of the robot part </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of movement </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+
+</div>
+</div>
+<a id="a9b270197678f920b58149250bfd18445"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b270197678f920b58149250bfd18445">&#9670;&nbsp;</a></span>JointWWritePopAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -904,7 +993,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>blocking</em>&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -920,6 +1015,7 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Name of the selected joint writer </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">position_pops</td><td>Populations encoding every joint angle for writing them to the associated robot part </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of movement </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
   </table>
   </dd>
 </dl>
@@ -927,8 +1023,67 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a556d0449f9015390d9fdba3729866b95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a556d0449f9015390d9fdba3729866b95">&#9670;&nbsp;</a></span>JointWWritePopOne()</h2>
+<a id="a024f58fa9643a9d7d8ae3eb4e415352b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a024f58fa9643a9d7d8ae3eb4e415352b">&#9670;&nbsp;</a></span>JointWWritePopMultiple()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool iCubANN::JointWWritePopMultiple </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::vector&lt; double &gt;&gt;&#160;</td>
+          <td class="paramname"><em>position_pops</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>joint_selection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write all joints with joint angles encoded in populations. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Name of the selected joint writer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">position_pops</td><td>Populations encoding every joint angle for writing them to the associated robot part </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">joint_selection</td><td>Joint indizes of the joints, which should be moved (head: [3, 4, 5] -&gt; all eye movements) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of motion </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+
+</div>
+</div>
+<a id="a125e36f895d8eea650d84f7e192a59a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a125e36f895d8eea650d84f7e192a59a6">&#9670;&nbsp;</a></span>JointWWritePopOne()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -955,7 +1110,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>blocking</em>&#160;</td>
+          <td class="paramname"><em>blocking</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -972,10 +1133,89 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">position_pop</td><td>Population encoded joint angle for writing to the robot joint </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">joint</td><td>Joint number of the robot part </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">blocking</td><td>if True, function waits for end of movement </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">string</td><td>to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+
+</div>
+</div>
+<a id="af8b3c45cf11b9ea3827e2029fd42ab6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8b3c45cf11b9ea3827e2029fd42ab6a">&#9670;&nbsp;</a></span>RemoveJointReader()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void iCubANN::RemoveJointReader </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove the instance of the joint reader module. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>name of the joint reader in the map </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a860ff6967f15476c04e76df3c634e946"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a860ff6967f15476c04e76df3c634e946">&#9670;&nbsp;</a></span>RemoveJointWriter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void iCubANN::RemoveJointWriter </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove the instance of the joint writer module. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>name of the joint writer in the map </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a92175f1d068177905bfbe52cd5728775"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92175f1d068177905bfbe52cd5728775">&#9670;&nbsp;</a></span>RemoveSkinReader()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void iCubANN::RemoveSkinReader </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove the instance of the skin reader module. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>name of the skin reader in the map </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1359,64 +1599,96 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a0908626e8002bd13aff672bbe56649a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0908626e8002bd13aff672bbe56649a8">&#9670;&nbsp;</a></span>parts_reader</h2>
+<a id="a9f0dfd29e53e799774117b49f1ae2477"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f0dfd29e53e799774117b49f1ae2477">&#9670;&nbsp;</a></span>parts_reader</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;std::string, <a class="el" href="classJointReader.html">JointReader</a> *&gt; iCubANN::parts_reader</td>
+          <td class="memname">std::map&lt;std::string, std::unique_ptr&lt;<a class="el" href="classJointReader.html">JointReader</a>&gt; &gt; iCubANN::parts_reader</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>associated visual reader (only one possible for left/right eye) </p>
 
 </div>
 </div>
-<a id="a14ddd7c562eacbc7dbf58be987973213"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14ddd7c562eacbc7dbf58be987973213">&#9670;&nbsp;</a></span>parts_writer</h2>
+<a id="a953cc0c98f661a8f8b868a51ada5f969"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a953cc0c98f661a8f8b868a51ada5f969">&#9670;&nbsp;</a></span>parts_writer</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;std::string, <a class="el" href="classJointWriter.html">JointWriter</a> *&gt; iCubANN::parts_writer</td>
+          <td class="memname">std::map&lt;std::string, std::unique_ptr&lt;<a class="el" href="classJointWriter.html">JointWriter</a>&gt; &gt; iCubANN::parts_writer</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>associated joint readers (one for every robot part) </p>
 
 </div>
 </div>
-<a id="a0064fe3088cc8106f56e4399fa1951bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0064fe3088cc8106f56e4399fa1951bb">&#9670;&nbsp;</a></span>tactile_reader</h2>
+<a id="aa0755849f6f597baced0e4d304d59750"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0755849f6f597baced0e4d304d59750">&#9670;&nbsp;</a></span>tactile_reader</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;std::string, <a class="el" href="classSkinReader.html">SkinReader</a> *&gt; iCubANN::tactile_reader</td>
+          <td class="memname">std::map&lt;std::string, std::unique_ptr&lt;<a class="el" href="classSkinReader.html">SkinReader</a>&gt; &gt; iCubANN::tactile_reader</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>associated joint writers (one for every robot part) </p>
 
 </div>
 </div>
-<a id="a15127090865eb970e90b7128c18c059d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15127090865eb970e90b7128c18c059d">&#9670;&nbsp;</a></span>visual_input</h2>
+<a id="ade945649fd5d174f389d503a0813acae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade945649fd5d174f389d503a0813acae">&#9670;&nbsp;</a></span>visual_input</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classVisualReader.html">VisualReader</a>* iCubANN::visual_input</td>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classVisualReader.html">VisualReader</a>&gt; iCubANN::visual_input</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

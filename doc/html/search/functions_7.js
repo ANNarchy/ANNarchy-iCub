@@ -1,23 +1,10 @@
 var searchData=
 [
-  ['jointrclose',['JointRClose',['../structiCubANN.html#ae174c068e1587f3a82883c2e9b337f07',1,'iCubANN']]],
-  ['jointreader',['JointReader',['../classJointReader.html#a87b608749f395f52327d7f81ff16480b',1,'JointReader']]],
-  ['jointrgetjointcount',['JointRGetJointCount',['../structiCubANN.html#a4a7e511c7f4e61f0c0a2e9aabd928554',1,'iCubANN']]],
-  ['jointrgetjointsdegres',['JointRGetJointsDegRes',['../structiCubANN.html#a73a412ff322fddcd7b6e2778873e25d6',1,'iCubANN']]],
-  ['jointrgetneuronsperjoint',['JointRGetNeuronsPerJoint',['../structiCubANN.html#a25dd106370409b9ef6f6f8abb801c763',1,'iCubANN']]],
-  ['jointrinit',['JointRInit',['../structiCubANN.html#a567cd7cd034d133e591535c26434cf40',1,'iCubANN']]],
-  ['jointrreaddouble',['JointRReadDouble',['../structiCubANN.html#a6359924926cbf824101f107da77dca92',1,'iCubANN']]],
-  ['jointrreadpopall',['JointRReadPopAll',['../structiCubANN.html#ad6ffff4d7c93c2801cd606fb1475dc99',1,'iCubANN']]],
-  ['jointrreadpopone',['JointRReadPopOne',['../structiCubANN.html#a4aea3fc2c379bfae6720a0c6b6bea8fd',1,'iCubANN']]],
-  ['jointwclose',['JointWClose',['../structiCubANN.html#aac0aa0fbfc91c50e010866b256e11462',1,'iCubANN']]],
-  ['jointwgetjointcount',['JointWGetJointCount',['../structiCubANN.html#a811df17547d410a0b651178ac107f1e4',1,'iCubANN']]],
-  ['jointwgetjointsdegres',['JointWGetJointsDegRes',['../structiCubANN.html#a65dddf9ee61abe37fd63113a0055f756',1,'iCubANN']]],
-  ['jointwgetneuronsperjoint',['JointWGetNeuronsPerJoint',['../structiCubANN.html#ac161efb25435622fed97242702362709',1,'iCubANN']]],
-  ['jointwinit',['JointWInit',['../structiCubANN.html#a54c7e1218b7bd69e76da8c517056ed25',1,'iCubANN']]],
-  ['jointwriter',['JointWriter',['../classJointWriter.html#a206d13821043ca9e4005922144f4cb0b',1,'JointWriter']]],
-  ['jointwsetjointvelocity',['JointWSetJointVelocity',['../structiCubANN.html#a1cdddc238d3d9156d258d61e09ba86bc',1,'iCubANN']]],
-  ['jointwwritedouble',['JointWWriteDouble',['../structiCubANN.html#a77822a875c63449ae0ce7ddccfd2334e',1,'iCubANN']]],
-  ['jointwwritedoubleall',['JointWWriteDoubleAll',['../structiCubANN.html#a33502441ce5ac5c387f1efbc2ea1df27',1,'iCubANN']]],
-  ['jointwwritepopall',['JointWWritePopAll',['../structiCubANN.html#ae0a9987e4cfbebc6aee98c36b507f952',1,'iCubANN']]],
-  ['jointwwritepopone',['JointWWritePopOne',['../structiCubANN.html#a556d0449f9015390d9fdba3729866b95',1,'iCubANN']]]
+  ['ini_5fparse',['ini_parse',['../ini_8cpp.html#a2fab292681265b7774e2a2885abb758c',1,'ini_parse(const char *filename, ini_handler handler, void *user):&#160;ini.cpp'],['../ini_8h.html#a2fab292681265b7774e2a2885abb758c',1,'ini_parse(const char *filename, ini_handler handler, void *user):&#160;ini.cpp']]],
+  ['ini_5fparse_5ffile',['ini_parse_file',['../ini_8cpp.html#a876bf8b62ade275320db827b929f9289',1,'ini_parse_file(FILE *file, ini_handler handler, void *user):&#160;ini.cpp'],['../ini_8h.html#a876bf8b62ade275320db827b929f9289',1,'ini_parse_file(FILE *file, ini_handler handler, void *user):&#160;ini.cpp']]],
+  ['ini_5fparse_5fstream',['ini_parse_stream',['../ini_8cpp.html#ad8b766ac18397b0b262559203ea7f602',1,'ini_parse_stream(ini_reader reader, void *stream, ini_handler handler, void *user):&#160;ini.cpp'],['../ini_8h.html#ad8b766ac18397b0b262559203ea7f602',1,'ini_parse_stream(ini_reader reader, void *stream, ini_handler handler, void *user):&#160;ini.cpp']]],
+  ['ini_5fparse_5fstring',['ini_parse_string',['../ini_8cpp.html#aeb90a0b5e4226351899d28ead4eed6fa',1,'ini_parse_string(const char *string, ini_handler handler, void *user):&#160;ini.cpp'],['../ini_8h.html#aeb90a0b5e4226351899d28ead4eed6fa',1,'ini_parse_string(const char *string, ini_handler handler, void *user):&#160;ini.cpp']]],
+  ['inireader',['INIReader',['../classINIReader.html#a303dc5352470dba2af23719d40f4298d',1,'INIReader']]],
+  ['init',['Init',['../classJointReader.html#a2f697daa1167564a7f9bbd53988acc91',1,'JointReader::Init()'],['../classJointWriter.html#a678635f040aa6ffc5674a84c830fe5b7',1,'JointWriter::Init()'],['../classSkinReader.html#aa9435aeff7c6eee44c466c96ecb559ae',1,'SkinReader::Init()'],['../classVisualReader.html#a960b92c0f458b2125854920df48ef58a',1,'VisualReader::Init()']]],
+  ['interruptmodule',['interruptModule',['../classVisualReader.html#a60b13d948711e11fd2b0ca18dbac3eca',1,'VisualReader']]]
 ];

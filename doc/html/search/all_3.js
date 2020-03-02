@@ -1,18 +1,17 @@
 var searchData=
 [
-  ['calc_5feye_5fpos',['calc_eye_pos',['../namespacelib_1_1auxilaries.html#a282f961a1d9439eef1a57fb54e0e86da',1,'lib::auxilaries']]],
-  ['calc_5fobj_5fpos',['calc_obj_pos',['../namespacelib_1_1auxilaries.html#a7248fcabf9c5a42a55a2f61ad56152c4',1,'lib::auxilaries']]],
   ['call_5ftest_5fjreader',['call_test_jreader',['../namespacesimple__call__test.html#a949f2d3e6ba89d1204b79d505d15402f',1,'simple_call_test']]],
   ['call_5ftest_5fjwriter',['call_test_jwriter',['../namespacesimple__call__test.html#a4003e5f73a3ec788ef18d18f67b3d389',1,'simple_call_test']]],
   ['call_5ftest_5fsreader',['call_test_sreader',['../namespacesimple__call__test.html#a544cfd3914bf97bcd39f8300db020d46',1,'simple_call_test']]],
   ['call_5ftest_5fvreader',['call_test_vreader',['../namespacesimple__call__test.html#a7705bd30f8602304d2ff400ca614b96c',1,'simple_call_test']]],
+  ['change_5fcolor',['change_color',['../classiCub__Python__Lib_1_1gazebo__world__controller_1_1WorldController.html#a303ccb534c72dd1c606f6aea410564d8',1,'iCub_Python_Lib::gazebo_world_controller::WorldController']]],
+  ['checkinit',['CheckInit',['../classJointReader.html#a5965d36ebe8c4f49eaf6b55cf50849f8',1,'JointReader::CheckInit()'],['../classJointWriter.html#a354309f86d6fe6da96e2acb048161706',1,'JointWriter::CheckInit()'],['../classSkinReader.html#abcf21fb9bf0c5be34f55b1398173d7cf',1,'SkinReader::CheckInit()'],['../classVisualReader.html#ab6ca10dd6cf436596c718b09c34f4fcd',1,'VisualReader::CheckInit()']]],
+  ['checkpartkey',['CheckPartKey',['../classJointReader.html#ac756afc1ef491f20ba9fc3ffbb68f2dd',1,'JointReader::CheckPartKey()'],['../classJointWriter.html#adc8c13571c1d4f85577fb49e067acf1b',1,'JointWriter::CheckPartKey()']]],
   ['clock',['Clock',['../Visual__Reader_8cpp.html#a0ef8d951d1ca5ab3cfaf7ab4c7a6fd80',1,'Visual_Reader.cpp']]],
-  ['close',['Close',['../classJointReader.html#a630ce1a9ad4634a39dea88980e7b8440',1,'JointReader::Close()'],['../classJointWriter.html#aaffac87ae3bb0b441b67ce08bb92c3c0',1,'JointWriter::Close()'],['../classSkinReader.html#a96dd06173e329f2438721ed702b356db',1,'SkinReader::Close()']]],
+  ['close',['Close',['../classJointReader.html#a630ce1a9ad4634a39dea88980e7b8440',1,'JointReader::Close()'],['../classJointWriter.html#aaffac87ae3bb0b441b67ce08bb92c3c0',1,'JointWriter::Close()'],['../classSkinReader.html#a96dd06173e329f2438721ed702b356db',1,'SkinReader::Close()'],['../classVisualReader.html#afd37c8e29cde69f776e8da6e1642ff42',1,'VisualReader::close()']]],
   ['cmap',['cmap',['../namespacetest__plot.html#acef084c25df9575e3666b85cdc01bfcd',1,'test_plot']]],
-  ['color',['color',['../namespacelib_1_1create__arm.html#a56f8f162601dbd61a5d9e3c0c99d6f6a',1,'lib::create_arm']]],
-  ['control_5fmodel_5fgroups_2epy',['control_model_groups.py',['../control__model__groups_8py.html',1,'']]],
-  ['create_5farm',['create_arm',['../namespacelib_1_1create__arm.html#ada43f0f16ebd20345408ff91834d9b29',1,'lib::create_arm']]],
-  ['create_5farm_2epy',['create_arm.py',['../create__arm_8py.html',1,'']]],
-  ['create_5fmodel',['create_model',['../classlib_1_1world__controller_1_1WorldController.html#a9f555601288e18e88b28740d3b79aab8',1,'lib::world_controller::WorldController']]],
-  ['create_5fobject',['create_object',['../classlib_1_1world__controller_1_1WorldController.html#a4d763077ed377944851428fb6c18a599',1,'lib::world_controller::WorldController']]]
+  ['configure',['configure',['../classVisualReader.html#a7936f04c2f87cd7c7ca4e0d8e26076cf',1,'VisualReader']]],
+  ['create_5fmodel',['create_model',['../classiCub__Python__Lib_1_1gazebo__world__controller_1_1WorldController.html#acddf81f4721fbc4d72caa77fcf7954dc',1,'iCub_Python_Lib.gazebo_world_controller.WorldController.create_model()'],['../classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#aed94bb7ed14eb258f80db331f71fd312',1,'iCub_Python_Lib.iCubSim_world_controller.WorldController.create_model()']]],
+  ['create_5fobject',['create_object',['../classiCub__Python__Lib_1_1gazebo__world__controller_1_1WorldController.html#ac7420e53ec858e4872ecae4447d5aa24',1,'iCub_Python_Lib.gazebo_world_controller.WorldController.create_object()'],['../classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#abc55254d0469996fd1e083dd37a8ca26',1,'iCub_Python_Lib.iCubSim_world_controller.WorldController.create_object()']]],
+  ['cut_5fimg',['cut_img',['../classVisualReader.html#a624e95854ad200fdb1e9986b5c0141fc',1,'VisualReader']]]
 ];
