@@ -38,7 +38,7 @@ void iCubANN::AddJointReader(std::string name) {
     */
 
     if (parts_reader.count(name) == 0) {
-        parts_reader[name] = new JointReader();
+        parts_reader[name] = std::unique_ptr<JointReader>(new JointReader());
     } else {
         std::cerr << "[Joint Reader] Name \"" + name + "\" is already used." << std::endl;
     }
@@ -52,7 +52,7 @@ void iCubANN::AddJointWriter(std::string name) {
     */
 
     if (parts_writer.count(name) == 0) {
-        parts_writer[name] = new JointWriter();
+        parts_writer[name] = std::unique_ptr<JointWriter>(new JointWriter());
     } else {
         std::cerr << "[Joint Writer] Name \"" + name + "\" is already used." << std::endl;
     }
@@ -66,7 +66,7 @@ void iCubANN::AddSkinReader(std::string name) {
     */
 
     if (tactile_reader.count(name) == 0) {
-        tactile_reader[name] = new SkinReader();
+        tactile_reader[name] = std::unique_ptr<SkinReader>(new SkinReader());
     } else {
         std::cerr << "[Skin Reader] Name \"" + name + "\" is already used." << std::endl;
     }
@@ -80,57 +80,55 @@ void iCubANN::AddVisualReader() {
     */
 
     if (visual_input == NULL) {
-        visual_input = new VisualReader();
+        visual_input = std::unique_ptr<VisualReader>(new VisualReader());
     } else {
         std::cerr << "[Visual Reader] Visual Reader is already defined." << std::endl;
     }
 }
 
-/***  Remove the visual reader intstance ***/
+/***  Remove intstances of the interface modules ***/
 void iCubANN::RemoveJointReader(std::string name) {
     /* 
         Remove the instance of the joint reader
     */
-    if (parts_reader.count(name) == 0) {
-        delete parts_reader[name];
+    if (parts_reader.count(name) != 0) {
         parts_reader.erase(name);
     } else {
         std::cerr << "[Joint Reader] Name \"" + name + "\" does not exists." << std::endl;
     }
 }
-/***  Remove the visual reader intstance ***/
+
 void iCubANN::RemoveJointWriter(std::string name) {
     /* 
         Remove the instance of the joint writer
     */
-    if (parts_writer.count(name) == 0) {
-        delete parts_writer[name];
+    if (parts_writer.count(name) != 0) {
         parts_writer.erase(name);
     } else {
         std::cerr << "[Joint Writer] Name \"" + name + "\" does not exists." << std::endl;
     }
 }
-/***  Remove the visual reader intstance ***/
+
 void iCubANN::RemoveSkinReader(std::string name) {
     /* 
         Remove the instance of the skin reader
     */
-    if (tactile_reader.count(name) == 0) {
-        delete tactile_reader[name];
+    if (tactile_reader.count(name) != 0) {
         tactile_reader.erase(name);
     } else {
         std::cerr << "[Skin Reader] Name \"" + name + "\" does not exists." << std::endl;
     }
 }
 
-/***  Remove the visual reader intstance ***/
 void iCubANN::RemoveVisualReader() {
     /* 
         Remove the instance of the visual reader
     */
-
-    delete visual_input;
-    visual_input = NULL;
+    if (visual_input != NULL) {
+        visual_input = NULL;
+    } else {
+        std::cerr << "[Visual Reader] Visual Reader does not exists." << std::endl;
+    }
 }
 
 // Access to joint reader member functions //
@@ -407,7 +405,27 @@ bool iCubANN::JointWWriteDoubleAll(std::string name, std::vector<double> positio
     }
 }
 
-bool iCubANN::JointWWriteDouble(std::string name, double position, int joint, bool blocking, std::string mode) {
+bool iCubANN::JointWWriteDoubleMultiple(std::string name, std::vector<double> position, std::vector<int> joint_selection, bool blocking,
+                                        std::string mode) {
+    /*
+        Write multiple joints with double values
+
+        params: std::string name                -- name of the selected joint writer
+                std::vector<double> position    -- joint angles to write to the robot joints
+                bool blocking                   -- if True, function waits for end of movement
+
+        return: bool                            -- return True, if successful
+    */
+
+    if (parts_writer.count(name)) {
+        return parts_writer[name]->WriteDoubleMultiple(position, joint_selection, blocking, mode);
+    } else {
+        std::cerr << "[Joint Writer] " << name << ": This name is not defined." << std::endl;
+        return false;
+    }
+}
+
+bool iCubANN::JointWWriteDoubleOne(std::string name, double position, int joint, bool blocking, std::string mode) {
     /*
         Write one joint with double value
 
@@ -420,7 +438,7 @@ bool iCubANN::JointWWriteDouble(std::string name, double position, int joint, bo
     */
 
     if (parts_writer.count(name)) {
-        return parts_writer[name]->WriteDouble(position, joint, blocking, mode);
+        return parts_writer[name]->WriteDoubleOne(position, joint, blocking, mode);
     } else {
         std::cerr << "[Joint Writer] " << name << ": This name is not defined." << std::endl;
         return false;
@@ -440,6 +458,26 @@ bool iCubANN::JointWWritePopAll(std::string name, std::vector<std::vector<double
 
     if (parts_writer.count(name)) {
         return parts_writer[name]->WritePopAll(position_pops, blocking, mode);
+    } else {
+        std::cerr << "[Joint Writer] " << name << ": This name is not defined." << std::endl;
+        return false;
+    }
+}
+
+bool iCubANN::JointWWritePopMultiple(std::string name, std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection,
+                                     bool blocking, std::string mode) {
+    /*
+        Write multiple joints with joint angles encoded in populations
+
+        params: std::string name                    -- name of the selected joint writer 
+                std::vector<std::vector<double>>    -- populations encoding every joint angle for writing them to the associated robot part 
+                bool blocking                       -- if True, function waits for end of movement
+
+        return: bool                                -- return True, if successful
+    */
+
+    if (parts_writer.count(name)) {
+        return parts_writer[name]->WritePopMultiple(position_pops, joint_selection, blocking, mode);
     } else {
         std::cerr << "[Joint Writer] " << name << ": This name is not defined." << std::endl;
         return false;

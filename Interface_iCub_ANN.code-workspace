@@ -69,9 +69,16 @@
 			"numeric": "cpp",
 			"cfenv": "cpp",
 			"typeindex": "cpp",
-			"valarray": "cpp"
+			"valarray": "cpp",
+			"random": "cpp"
 		},
 		"terminal.integrated.shell.windows": "cmd.exe",
-		"C_Cpp.workspaceParsingPriority": "medium"
+		"C_Cpp.workspaceParsingPriority": "medium",
+		"C_Cpp.default.includePath": [
+			"./include"
+		],
+        "editor.detectIndentation": false,
+        "editor.tabCompletion": "on",
+
 	}
 }

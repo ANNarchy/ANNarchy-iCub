@@ -21,6 +21,7 @@
 #include <yarp/os/all.h>
 #include <yarp/sig/all.h>
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 
@@ -31,7 +32,7 @@
 JointWriter::~JointWriter() { Close(); }
 
 /*** public methods for the user ***/
-bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron=0.0, double speed) {
+bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, double speed) {
     /*
         Initialize the joint writer with given parameters
 
@@ -82,7 +83,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron=0.0
         neuron_deg_abs.resize(joints);
         neuron_deg_rel.resize(joints);
         joint_deg_res_abs.resize(joints);
-        joint_deg_res_rel.resize(joints)
+        joint_deg_res_rel.resize(joints);
 
         // setup ini-Reader for joint limits
         double joint_range;
@@ -100,7 +101,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron=0.0
 
             // printf("joint: %i, min: %f, max: %f\n", i, joint_min[i], joint_max[i]);
 
-            if (joint_min == joint_max) {
+            if (joint_min[i] == joint_max[i]) {
                 std::cerr << "[Joint Writer " << icub_part << "] Error in reading joint parameters from .ini file " << std::endl;
                 driver.close();
                 return false;
@@ -108,7 +109,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron=0.0
 
             // compute population code resolution
             joint_range = joint_max[i] - joint_min[i];
-            if (pop_size > 0) {             // with given population size
+            if (pop_size > 0) {    // with given population size
                 // absolute joint angles
                 neuron_deg_abs[i].resize(pop_size);
                 joint_deg_res_abs[i] = joint_range / pop_size;
@@ -123,7 +124,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron=0.0
                 for (int j = 0; j < neuron_deg_rel[i].size(); j++) {
                     neuron_deg_rel[i][j] = -joint_range + j * joint_deg_res_rel[i];
                 }
-            } else if (deg_per_neuron > 0.0) {            // with given neuron resolution
+            } else if (deg_per_neuron > 0.0) {    // with given neuron resolution
                 // absolute joint angles
                 int joint_res = std::floor(joint_range / deg_per_neuron);
                 neuron_deg_abs[i].resize(joint_res);
@@ -133,7 +134,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron=0.0
                     neuron_deg_abs[i][j] = joint_min[i] + j * deg_per_neuron;
                 }
                 // relative joint angles
-                int joint_res = std::floor(2*joint_range / deg_per_neuron);
+                joint_res = std::floor(2 * joint_range / deg_per_neuron);
                 neuron_deg_rel[i].resize(joint_res);
                 joint_deg_res_rel[i] = deg_per_neuron;
 
@@ -141,7 +142,8 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron=0.0
                     neuron_deg_rel[i][j] = -joint_range + j * deg_per_neuron;
                 }
             } else {
-                std::cerr << "[Joint Reader " << icub_part << "] Error in population size definition. Check the values for pop_size or deg_per_neuron!" << std::endl;
+                std::cerr << "[Joint Reader " << icub_part
+                          << "] Error in population size definition. Check the values for pop_size or deg_per_neuron!" << std::endl;
                 driver.close();
                 return false;
             }
@@ -197,7 +199,7 @@ std::vector<int> JointWriter::GetNeuronsPerJoint() {
     std::vector<int> neuron_counts(joints);
     if (CheckInit()) {
         for (int i = 0; i < joints; i++) {
-            neuron_counts[i] = neuron_deg[i].size();
+            neuron_counts[i] = neuron_deg_abs[i].size();
         }
     }
     return neuron_counts;
@@ -240,6 +242,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
 
         params: double position     -- joint angles to write to the robot joints
                 bool blocking       -- if True, function waits for end of motion
+                string mode         -- motion mode: absolute or relative
 
         return: bool                -- return True, if successful
     */
@@ -251,19 +254,19 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
             return false;
         }
 
-        // execute motion dependent on selected mode 
+        for (int i = 0; i < position.size(); i++) {
+            position[i] = std::clamp(position[i], joint_min[i], joint_max[i]);
+        }
+
+        // execute motion dependent on selected mode
         bool start = false;
-        switch (mode)
-        {
-        case "abs":
+        if (mode == "abs") {
             start = ipos->positionMove(position.data());
-            break;
-        case "rel":
+        } else if (mode == "rel") {
             start = ipos->relativeMove(position.data());
-            break;
-        default:
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
-            break;
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
+                      << std::endl;
         }
 
         // move joints blocking/non-blocking
@@ -284,13 +287,75 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
     }
 }
 
-bool JointWriter::WriteDouble(double position, int joint, bool blocking, std::string mode) {
+bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, bool blocking, std::string mode) {
+    /*
+        Write multiple joints with double values
+
+        params: double position     -- joint angles to write to the robot joints
+                bool blocking       -- if True, function waits for end of motion
+                string mode         -- motion mode: absolute or relative
+
+        return: bool                -- return True, if successful
+    */
+
+    if (CheckInit()) {
+        // Check joint count
+        if (joint_selection.size() < joints) {
+            std::cerr << "[Joint Writer " << icub_part << "] To many joints for the robot part!" << std::endl;
+            return false;
+        }
+
+        if (joint_selection.size() != position.size()) {
+            std::cerr << "[Joint Writer " << icub_part << "] Position count and joint count does not fit together!" << std::endl;
+            return false;
+        }
+
+        if (*(std::max_element(joint_selection.begin(), joint_selection.end())) >= joints) {
+            std::cerr << "[Joint Writer " << icub_part << "] Maximum joint number is out of range!" << std::endl;
+            return false;
+        }
+
+        for (int i = 0; i < position.size(); i++) {
+            position[i] = std::clamp(position[i], joint_min[joint_selection[i]], joint_max[joint_selection[i]]);
+        }
+
+        // execute motion dependent on selected mode
+        bool start = false;
+        if (mode == "abs") {
+            start = ipos->positionMove(joint_selection.size(), joint_selection.data(), position.data());
+        } else if (mode == "rel") {
+            start = ipos->relativeMove(joint_selection.size(), joint_selection.data(), position.data());
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
+                      << std::endl;
+        }
+
+        // move joints blocking/non-blocking
+        if (start) {
+            if (blocking) {
+                bool motion = false;
+                while (!motion) {
+                    if (!ipos->checkMotionDone(&motion)) {
+                        std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving occured!" << std::endl;
+                        return false;
+                    }
+                }
+            }
+        }
+        return start;
+    } else {
+        return false;
+    }
+}
+
+bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std::string mode) {
     /*
         Write one joint with double value
         
         params: double position     -- joint angle to write to the robot joint
                 int joint           -- joint number of the robot part
                 bool blocking       -- if True, function waits for end of motion
+                string mode         -- motion mode: absolute or relative
 
         return: bool                -- return True, if successful
     */
@@ -302,19 +367,17 @@ bool JointWriter::WriteDouble(double position, int joint, bool blocking, std::st
             return false;
         }
 
-        // execute motion dependent on selected mode 
+        position = std::clamp(position, joint_min[joint], joint_max[joint]);
+
+        // execute motion dependent on selected mode
         bool start = false;
-        switch (mode)
-        {
-        case "abs":
+        if (mode == "abs") {
             start = ipos->positionMove(joint, position);
-            break;
-        case "rel":
+        } else if (mode == "rel") {
             start = ipos->relativeMove(joint, position);
-            break;
-        default:
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
-            break;
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
+                      << std::endl;
         }
         // move joint blocking/non-blocking
         if (start) {
@@ -340,6 +403,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bo
 
         params: std::vector<std::vector<double>>    -- populations encoding every joint angle for writing them to the associated robot part
                 bool blocking                       -- if True, function waits for end of motion
+                string mode                         -- motion mode: absolute or relative
 
         return: bool                                -- return True, if successful
     */
@@ -351,13 +415,9 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bo
             return false;
         }
 
-
-
         // execute motion dependent on selected mode
         bool start = false;
-        switch (mode)
-        {
-            case "abs":
+        if (mode == "abs") {
             // Decode positions from populations
             for (int i = 0; i < joints; i++) {
                 joint_angles[i] = Decode(position_pops[i], i, neuron_deg_abs);
@@ -367,8 +427,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bo
                 }
             }
             start = ipos->positionMove(joint_angles.data());
-            break;
-        case "rel":
+        } else if (mode == "rel") {
             // Decode positions from populations
             for (int i = 0; i < joints; i++) {
                 joint_angles[i] = Decode(position_pops[i], i, neuron_deg_rel);
@@ -378,10 +437,83 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bo
                 }
             }
             start = ipos->relativeMove(joint_angles.data());
-            break;
-        default:
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
-            break;
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
+                      << std::endl;
+        }
+
+        // move joints blocking/non-blocking
+        if (start) {
+            if (blocking) {
+                bool motion = false;
+                while (!motion) {
+                    if (!ipos->checkMotionDone(&motion)) {
+                        std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving occured!" << std::endl;
+                        return false;
+                    }
+                }
+            }
+        }
+        return start;
+    } else {
+        return false;
+    }
+}
+
+bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, bool blocking,
+                                   std::string mode) {
+    /*
+        Write all joints with joint angles encoded in populations
+
+        params: std::vector<std::vector<double>>    -- populations encoding every joint angle for writing them to the associated robot part
+                bool blocking                       -- if True, function waits for end of motion
+                string mode                         -- motion mode: absolute or relative
+
+        return: bool                                -- return True, if successful
+    */
+
+    if (CheckInit()) {
+        // Check joint count
+        if (joint_selection.size() < joints) {
+            std::cerr << "[Joint Writer " << icub_part << "] To many joints for the robot part!" << std::endl;
+            return false;
+        }
+
+        if (joint_selection.size() != position_pops.size()) {
+            std::cerr << "[Joint Writer " << icub_part << "] Position count and joint count does not fit together!" << std::endl;
+            return false;
+        }
+
+        if (*(std::max_element(joint_selection.begin(), joint_selection.end())) >= joints) {
+            std::cerr << "[Joint Writer " << icub_part << "] Maximum joint number is out of range!" << std::endl;
+            return false;
+        }
+
+        // execute motion dependent on selected mode
+        bool start = false;
+        if (mode == "abs") {
+            // Decode positions from populations
+            for (int i = 0; i < joints; i++) {
+                joint_angles[i] = Decode(position_pops[i], i, neuron_deg_abs);
+                if (std::isnan(joint_angles[i])) {
+                    std::cerr << "[Joint Writer " << icub_part << "] Invalid joint angle in population code!" << std::endl;
+                    return false;
+                }
+            }
+            start = ipos->positionMove(joint_angles.data());
+        } else if (mode == "rel") {
+            // Decode positions from populations
+            for (int i = 0; i < joints; i++) {
+                joint_angles[i] = Decode(position_pops[i], i, neuron_deg_rel);
+                if (std::isnan(joint_angles[i])) {
+                    std::cerr << "[Joint Writer " << icub_part << "] Invalid joint angle in population code!" << std::endl;
+                    return false;
+                }
+            }
+            start = ipos->relativeMove(joint_angles.data());
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
+                      << std::endl;
         }
 
         // move joints blocking/non-blocking
@@ -409,6 +541,7 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
         params: std::vector<double>     -- population encoded joint angle for writing to the robot joint
                 int joint               -- joint number of the robot part
                 bool blocking           -- if True, function waits for end of motion
+                string mode             -- motion mode: absolute or relative
 
         return: bool                    -- return True, if successful
     */
@@ -422,9 +555,7 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
 
         // execute motion dependent on selected mode
         bool start = false;
-        switch (mode)
-        {
-        case "abs":
+        if (mode == "abs") {
             // Decode absolute position from population
             double angle = Decode(position_pop, joint, neuron_deg_abs);
             if (std::isnan(angle)) {
@@ -432,8 +563,7 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
                 return false;
             }
             start = ipos->positionMove(joint, angle);
-            break;
-        case "rel":
+        } else if (mode == "rel") {
             // Decode relative position from population
             double angle = Decode(position_pop, joint, neuron_deg_rel);
             if (std::isnan(angle)) {
@@ -441,11 +571,11 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
                 return false;
             }
             start = ipos->relativeMove(joint, angle);
-            break;
-        default:
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
-            break;
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
+                      << std::endl;
         }
+
         // move joint blocking/non-blocking
         if (start) {
             if (blocking) {

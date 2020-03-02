@@ -20,6 +20,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -28,16 +29,17 @@
 #include "Skin_Reader.hpp"
 #include "Visual_Reader.hpp"
 
-
 /**
  * \brief Interfaces the different modules (Reader/Writer) and handles the use of multiple module instances.
  */
 struct iCubANN {
-    VisualReader *visual_input;                         /** \brief associated visual reader (only one possible for left/right eye) */
-    std::map<std::string, JointReader *> parts_reader;  /** \brief associated joint readers (one for every robot part) */
-    std::map<std::string, JointWriter *> parts_writer;  /** \brief associated joint writers (one for every robot part) */
-    std::map<std::string, SkinReader *> tactile_reader; /** \brief associated skin reader */
+ private:
+    std::unique_ptr<VisualReader> visual_input;             /** \brief associated visual reader (only one possible for left/right eye) */
+    std::map<std::string, std::unique_ptr<JointReader>> parts_reader;  /** \brief associated joint readers (one for every robot part) */
+    std::map<std::string, std::unique_ptr<JointWriter> > parts_writer;  /** \brief associated joint writers (one for every robot part) */
+    std::map<std::string, std::unique_ptr<SkinReader>> tactile_reader; /** \brief associated skin reader */
 
+ public:
     /***  Add intstances of the interface modules ***/
     /**
      * \brief Add an instance of the joint reader module. This has to be initialized with the init-method.
@@ -201,6 +203,18 @@ struct iCubANN {
     bool JointWWriteDoubleAll(std::string name, std::vector<double> position, bool blocking, std::string mode);
 
     /**
+     * \brief Write all joints with double values.
+     * \param[in] name Name of the selected joint writer
+     * \param[in] position Joint angles to write to the robot joints
+     * \param[in] joint_selection Joint indizes of the joints, which should be moved (head: [3, 4, 5] -> all eye movements)
+     * \param[in] blocking if True, function waits for end of motion
+     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
+    bool JointWWriteDoubleMultiple(std::string name, std::vector<double> position, std::vector<int> joint_selection, bool blocking,
+                                   std::string mode);
+
+    /**
      * \brief Write one joint with double value.
      * \param[in] name Name of the selected joint writer
      * \param[in] position Joint angle to write to the robot joint (in degree)
@@ -209,7 +223,7 @@ struct iCubANN {
      * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool JointWWriteDouble(std::string name, double position, int joint, bool blocking, std::string mode);
+    bool JointWWriteDoubleOne(std::string name, double position, int joint, bool blocking, std::string mode);
 
     /**
      * \brief Write all joints with joint angles encoded in populations
@@ -220,6 +234,18 @@ struct iCubANN {
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool JointWWritePopAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking, std::string mode);
+
+    /**
+     * \brief Write all joints with joint angles encoded in populations
+     * \param[in] name Name of the selected joint writer
+     * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part 
+     * \param[in] joint_selection Joint indizes of the joints, which should be moved (head: [3, 4, 5] -> all eye movements)
+     * \param[in] blocking if True, function waits for end of motion
+     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     */
+    bool JointWWritePopMultiple(std::string name, std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection,
+                                bool blocking, std::string mode);
 
     /**
      * \brief Write one joint with the joint angle encoded in a population.

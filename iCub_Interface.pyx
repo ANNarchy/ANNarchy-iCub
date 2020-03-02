@@ -82,10 +82,14 @@ cdef extern from "Interface_iCub.hpp":
         bint JointWSetJointVelocity(string, double, int)
         # write all joints with double values
         bint JointWWriteDoubleAll(string, vector[double], bint, string)
+        # write multiple joints with double values
+        bint JointWWriteDoubleMultiple(string, vector[double], vector[int], bint, string)
         # write one joint with double value
-        bint JointWWriteDouble(string, double, int, bint, string)
+        bint JointWWriteDoubleOne(string, double, int, bint, string)
         # write all joints with joint angles encoded in populations
         bint JointWWritePopAll(string, vector[vector[double]], bint, string)
+        # write multiple joints with joint angles encoded in populations
+        bint JointWWritePopMultiple(string, vector[vector[double]], vector[int], bint, string)
         # write one joint with the joint angle encoded in a population
         bint JointWWritePopOne(string, vector[double], int, bint, string)
 
@@ -533,7 +537,7 @@ cdef class iCubANN_wrapper:
     # write all joints with double values
     def jointW_write_double_all(self, name, position, mode, blocking=True):
         """
-            Calls bool iCubANN::JointWWriteDoubleAll(std::string name, std::vector<double> position, bool blocking)
+            Calls bool iCubANN::JointWWriteDoubleAll(std::string name, std::vector<double> position, bool blocking, std::string mode)
 
             function:
                 Write all joints with double values
@@ -549,16 +553,45 @@ cdef class iCubANN_wrapper:
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
+        cdef string s1 = mode.encode('UTF-8')
 
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWriteDoubleAll(s, position, block, mode)
+        return my_interface.JointWWriteDoubleAll(s, position, block, s1)
+
+    # write all joints with double values
+    def jointW_write_double_multiple(self, name, position, joints, mode, blocking=True):
+        """
+            Calls bool JointWWriteDoubleMultiple(std::string name, std::vector<double> position, std::vector<int> joint_selection, bool blocking, std::string mode);
+
+            function:
+                Write all joints with double values
+
+            params:
+                std::string name                -- name of the selected joint writer
+                std::vector<double> position    -- joint angles to write to the robot joints
+                std::vector<int> joints         -- Joint indizes of the joints, which should be moved (head: [3, 4, 5] -> all eye movements)
+                bool blocking                   -- if True, function waits for end of motion; default True
+                std::string mode                -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+
+            return:
+                bool                            -- return True, if successful
+        """
+        # we need to transform py-string to c++ compatible string
+        cdef string s = name.encode('UTF-8')
+        cdef string s1 = mode.encode('UTF-8')
+
+        cdef bint block = blocking.__int__()
+
+        # call the interface
+        return my_interface.JointWWriteDoubleMultiple(s, position, joints, block, s1)
+
 
     # write one joint with double value
-    def jointW_write_double(self, name, position, joint, mode, blocking=True):
+    def jointW_write_double_one(self, name, position, joint, mode, blocking=True):
         """
-            Calls bool iCubANN::JointWWriteDouble(std::string name, double position, int joint, bool blocking)
+            Calls bool iCubANN::JointWWriteDouble(std::string name, double position, int joint, bool blocking, std::string mode)
 
             function:
                 Write one joint with double value
@@ -568,23 +601,24 @@ cdef class iCubANN_wrapper:
                 double position     -- joint angle to write to the robot joint
                 int joint           -- joint number of the robot part
                 bool blocking       -- if True, function waits for end of motion; default True
-                std::string mode                -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+                std::string mode    -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
 
             return:
                 bool                -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
+        cdef string s1 = mode.encode('UTF-8')
 
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWriteDouble(s, position, joint, block, mode)
+        return my_interface.JointWWriteDoubleOne(s, position, joint, block, s1)
 
     # write all joints with joint angles encoded in populations vectors
     def jointW_write_pop_all(self, name, position_pops, mode, blocking=True):
         """
-            Calls bool iCubANN::JointWWritePopAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking)
+            Calls bool iCubANN::JointWWritePopAll(std::string name, std::vector<std::vector<double>> position_pops, bool blocking, std::string mode)
 
             function:
                 Write all joints with joint angles encoded in populations vectors
@@ -600,17 +634,44 @@ cdef class iCubANN_wrapper:
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
+        cdef string s1 = mode.encode('UTF-8')
 
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWritePopAll(s, position_pops, block, mode)
+        return my_interface.JointWWritePopAll(s, position_pops, block, s1)
 
+    # write multiple joints with joint angles encoded in populations vectors
+    def jointW_write_pop_multiple(self, name, position_pops, joints, mode, blocking=True):
+        """
+            Calls bool JointWWritePopMultiple(std::string name, std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, bool blocking, std::string mode);
+
+            function:
+                Write all joints with joint angles encoded in populations vectors
+
+            params:
+                std::string name                    -- name of the selected joint writer
+                std::vector<std::vector<double>>    -- populations encoding every joint angle for writing them to the associated robot part
+                std::vector<int> joints             -- Joint indizes of the joints, which should be moved (head: [3, 4, 5] -> all eye movements)
+                bool blocking                       -- if True, function waits for end of motion; default True
+                std::string mode                    -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+
+            return:
+                bool                                -- return True, if successful
+        """
+        # we need to transform py-string to c++ compatible string
+        cdef string s = name.encode('UTF-8')
+        cdef string s1 = mode.encode('UTF-8')
+
+        cdef bint block = blocking.__int__()
+
+        # call the interface
+        return my_interface.JointWWritePopMultiple(s, position_pops, joints, block, s1)
 
     # write one joint with the joint angle encoded in a population vector
     def jointW_write_pop_one(self, name, position_pop, joint, mode, blocking=True):
         """
-            Calls bool iCubANN::JointWWritePopOne(std::string name, std::vector<double> position_pop, int joint, bool blocking)
+            Calls bool iCubANN::JointWWritePopOne(std::string name, std::vector<double> position_pop, int joint, bool blocking, std::string mode)
 
             function:
                 Write one joint with the joint angle encoded in a population vector
@@ -627,11 +688,12 @@ cdef class iCubANN_wrapper:
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
+        cdef string s1 = mode.encode('UTF-8')
 
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWritePopOne(s, position_pop, joint, block, mode)
+        return my_interface.JointWWritePopOne(s, position_pop, joint, block, s1)
 
     ### end access to joint writer member functions
 
