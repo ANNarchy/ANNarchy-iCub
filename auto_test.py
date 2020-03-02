@@ -6,7 +6,9 @@ import matplotlib.pylab as plt
 import numpy as np
 
 import iCub_Interface  # requires iCub_Interface in the present directory
-import Testfiles.lib.world_controller as wc
+import Testfiles.iCub_Python_Lib.iCubSim_world_controller as iSim_wc
+import Testfiles.iCub_Python_Lib.gazebo_world_controller as gzbo_wc
+import Testfiles.test_parameter as params
 from Testfiles.joint_limits import joint_limits as j_lim
 
 
@@ -145,7 +147,7 @@ def test_joint_positioning(ann_wrapper):
                 print('______ Test position:', key)
                 # move the joints
                 for i in range(positions[key][0].shape[0]):
-                    ann_wrapper.jointW_write_double(name, positions[key][0][i], i, True)
+                    ann_wrapper.jointW_write_double(name, positions[key][0][i], i, "abs", True)
                 time.sleep(1)
 
                 # read the joint positions
@@ -186,7 +188,7 @@ def test_joint_positioning(ann_wrapper):
             print('______ Test position:', key)
             # move the joints
             for i in range(positions[key][0].shape[0]):
-                ann_wrapper.jointW_write_pop_one(name, part_enc[name][key][i], i, True)
+                ann_wrapper.jointW_write_pop_one(name, part_enc[name][key][i], i, "abs", True)
             time.sleep(1)
 
             # read the joint positions
@@ -222,7 +224,7 @@ def test_joint_positioning(ann_wrapper):
         for key in part_enc[name]:
             print('______ Test position:', key)
             # move the joints
-            ann_wrapper.jointW_write_pop_all(name, part_enc[name][key], True)
+            ann_wrapper.jointW_write_pop_all(name, part_enc[name][key], "abs", True)
             time.sleep(1)
 
             # read the joint positions
@@ -381,20 +383,25 @@ def test_visual_perception(ann_wrapper):
     fov_h = 48
     img_w = 320
     img_h = 240
-    img_count = 10
-    loc_sph = [0.2, 1.0, 0.7]
-    loc_box = [-0.15, 0.8, 0.6]
 
     path = "./Testfiles/Vision/"
     if not os.path.isdir(path):
         os.mkdir(path)
     
-    # instanciate the simulator world controller
-    sim_ctrl = wc.WorldController()
+    if(params.gazebo):
+        # instanciate the simulator world controller
+        sim_ctrl = gzbo_wc.WorldController()
 
-    # create a sphere and a box object in the simulator
-    box = sim_ctrl.create_object("sbox", [0.1, 0.1, 0.1], loc_box, [1.0, 0.0, 0.0])
-    sphere = sim_ctrl.create_object("ssph", [0.05], loc_sph, [0.0, 0.0, 1.0])
+        # create a sphere and a box object in the simulator
+        box = sim_ctrl.create_object("box", [0.1, 0.1, 0.1], params.loc_box, [0.0, 0., 0.], [1.0, 0.0, 0.0])
+        sphere = sim_ctrl.create_object("sphere", [0.05], params.loc_sph, [0.0, 0., 0.], [0.0, 0.0, 1.0])
+    else:
+        # instanciate the simulator world controller
+        sim_ctrl = iSim_wc.WorldController()
+
+        # create a sphere and a box object in the simulator
+        box = sim_ctrl.create_object("sbox", [0.1, 0.1, 0.1], params.loc_box, [1.0, 0.0, 0.0])
+        sphere = sim_ctrl.create_object("ssph", [0.05], params.loc_sph, [0.0, 0.0, 1.0])
 
     print('____________________________________________________________')
     print('__ Add and init visual reader module __')
@@ -412,15 +419,20 @@ def test_visual_perception(ann_wrapper):
     read_imgs = []
     ann_wrapper.visualR_start()
     time.sleep(0.15)
-    # replace the sphere object
-    loc_sph[1] = 0.75
-    sim_ctrl.move_object(sphere, loc_sph)
+    if(params.gazebo):
+        # move the sphere object
+        params.loc_sph[2] = 0.75
+        sim_ctrl.set_pose(sphere, params.loc_sph, [0., 0., 0.])
+    else:
+        # move the sphere object
+        params.loc_sph[1] = 0.75
+        sim_ctrl.move_object(sphere, params.loc_sph)
     time.sleep(0.35)
 
     print('____ Obtain visual information ____')
     t = 0
     t_start = time.time()
-    while len(read_imgs) < img_count or t > 10.0:
+    while len(read_imgs) < params.img_count or t > 10.0:
         t = time.time() - t_start
         read_img = ann_wrapper.visualR_read_fromBuf()
         if read_img.shape[0] > 0:
@@ -436,6 +448,7 @@ def test_visual_perception(ann_wrapper):
     print('____________________________________________________________')
     print('__ Stop and close visual reader module __')
     ann_wrapper.visualR_stop()
+
     # remove all objects in the simulator and remove the world controller
     sim_ctrl.del_all()
     del sim_ctrl

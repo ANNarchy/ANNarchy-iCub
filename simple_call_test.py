@@ -171,16 +171,16 @@ def call_test_jwriter(ann_wrapper):
 
     # test writing joint angles
     print('write double_one')
-    print(ann_wrapper.jointW_write_double("J_Writer", 10.0, 4, True))
+    print(ann_wrapper.jointW_write_double("J_Writer", 10.0, 4, "abs", True))
     time.sleep(2.5)
     print('write double_all')
-    print(ann_wrapper.jointW_write_double_all("J_Writer", double_all, True))
+    print(ann_wrapper.jointW_write_double_all("J_Writer", double_all, "abs", True))
     time.sleep(2.5)
     print('write pop_one')
-    print(ann_wrapper.jointW_write_pop_one("J_Writer", test_pos, 4, True))
+    print(ann_wrapper.jointW_write_pop_one("J_Writer", test_pos, 4, "abs", True))
     time.sleep(2.5)
     print('write pop_all')
-    print(ann_wrapper.jointW_write_pop_all("J_Writer", pop_all, True))
+    print(ann_wrapper.jointW_write_pop_all("J_Writer", pop_all, "abs", True))
 
     print('finish JWriter writing joints')
     print('\n')

@@ -6,7 +6,10 @@ import matplotlib.pylab as plt
 import numpy as np
 
 import iCub_Interface  # requires iCub_Interface in the present directory
-import Testfiles.lib.world_controller as wc
+import Testfiles.iCub_Python_Lib.iCubSim_world_controller as iSim_wc
+import Testfiles.iCub_Python_Lib.gazebo_world_controller as gzbo_wc
+import Testfiles.test_parameter as params
+
 from Testfiles.joint_limits import joint_limits as j_lim
 
 bog2deg = 180.0 / np.pi         # factor for radiant to degree conversion
@@ -238,12 +241,12 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 for i in range(test_count):
                     time_start = time.time()
                     for i in range(joints):
-                        ann_wrapper.jointW_write_double(name, positions[key][0][i], i, True)
+                        ann_wrapper.jointW_write_double(name, positions[key][0][i], i, "abs", True)
                     time_stop = time.time()
                     results_double[name + '_' + key] += time_stop -time_start
 
                     for i in range(joints):
-                        ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, True)
+                        ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, "abs", True)
                     time.sleep(0.5)
                 results_double[name + '_' + key] /= test_count
 
@@ -265,12 +268,12 @@ def speed_test_jwriter(ann_wrapper, test_count):
             for i in range(test_count):
                 time_start = time.time()
                 for i in range(joints):
-                    ann_wrapper.jointW_write_pop_one(name, part_enc[name][key][i], i, True)
+                    ann_wrapper.jointW_write_pop_one(name, part_enc[name][key][i], i, "abs", True)
                 time_stop = time.time()
                 results_pop_single[name + '_' + key] += time_stop -time_start
 
                 for i in range(joints):
-                    ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, True)
+                    ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, "abs", True)
                 time.sleep(0.5)
             results_pop_single[name + '_' + key] /= test_count
 
@@ -290,12 +293,12 @@ def speed_test_jwriter(ann_wrapper, test_count):
             results_pop_all[name + '_' + key] = 0
             for i in range(test_count):
                 time_start = time.time()
-                ann_wrapper.jointW_write_pop_all(name, part_enc[name][key], True)
+                ann_wrapper.jointW_write_pop_all(name, part_enc[name][key], "abs", True)
                 time_stop = time.time()
                 results_pop_all[name + '_' + key] += time_stop -time_start
 
                 for i in range(joints):
-                    ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, True)
+                    ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, "abs", True)
                 time.sleep(0.5)
             results_pop_all[name + '_' + key] /= test_count
 
@@ -519,13 +522,18 @@ def vis_move_test(ann_wrapper):
 
     # move the right arm to the start position
     for i in range(ann_wrapper.jointW_get_joint_count("moving")):
-        ann_wrapper.jointW_write_double("moving", pos[True][i], i, True)
+        ann_wrapper.jointW_write_double("moving", pos[True][i], i, "abs", True)
 
-    # create a simulator world controller instance
-    sim_ctrl = wc.WorldController()
+    if (params.gazebo):
+        hand_loc = [ 0.19, -0.043, 0.67 ]
+    else:
+        # create a simulator world controller instance
+        sim_ctrl = iSim_wc.WorldController()
 
-    # obtain the iCub hand position in the world reference frame
-    hand_loc = sim_ctrl.get_hand_location("rhand")
+        # obtain the iCub hand position in the world reference frame
+        hand_loc = sim_ctrl.get_hand_location("rhand")
+
+        del sim_ctrl
 
     # compute the eye and and head position to look the iCub hand
     dx = hand_loc[0] - eye_loc[0]
@@ -543,7 +551,7 @@ def vis_move_test(ann_wrapper):
 
     # move the head and eyes to look at the iCub right hand
     for i in range(ann_wrapper.jointW_get_joint_count("head")):
-        ann_wrapper.jointW_write_double_all("head", target_pos, True)
+        ann_wrapper.jointW_write_double_all("head", target_pos, "abs", True)
     time.sleep(2)
 
     # start the the visual reader module to obtain images from the iCub
@@ -551,7 +559,7 @@ def vis_move_test(ann_wrapper):
 
     # move the arm, while recording the images
     for i in range(ann_wrapper.jointW_get_joint_count("moving")):
-        ann_wrapper.jointW_write_double_all("moving", pos[False], True)
+        ann_wrapper.jointW_write_double_all("moving", pos[False], "abs", True)
     imgs = []
     t_start = time.time()
     pos_choice = True
@@ -560,7 +568,7 @@ def vis_move_test(ann_wrapper):
         dt = time.time() - t_start
         if dt > 0.5:
             for i in range(ann_wrapper.jointW_get_joint_count("moving")):
-                ann_wrapper.jointW_write_double_all("moving", pos[pos_choice], False)
+                ann_wrapper.jointW_write_double_all("moving", pos[pos_choice], "abs", False)
                 pos_choice = not pos_choice
                 t_start = time.time()
 
@@ -571,8 +579,8 @@ def vis_move_test(ann_wrapper):
     np.save(path + 'visual_percept_' + str(speed_arm) + '.npy', imgs)
 
     # return the arm and the head to a defined position
-    ann_wrapper.jointW_write_double_all("moving", zero_pos["right_arm"], True)
-    ann_wrapper.jointW_write_double_all("head", zero_pos["head"], True)
+    ann_wrapper.jointW_write_double_all("moving", zero_pos["right_arm"], "abs", True)
+    ann_wrapper.jointW_write_double_all("head", zero_pos["head"], "abs", True)
 
     # close the joint writer modules
     ann_wrapper.jointW_close("moving")
