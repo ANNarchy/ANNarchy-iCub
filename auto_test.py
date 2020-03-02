@@ -8,7 +8,7 @@ import numpy as np
 import iCub_Interface  # requires iCub_Interface in the present directory
 import Testfiles.iCub_Python_Lib.iCubSim_world_controller as iSim_wc
 import Testfiles.iCub_Python_Lib.gazebo_world_controller as gzbo_wc
-import Testfiles.test_parameter as params
+import Testfiles.testing_parameter as params
 from Testfiles.joint_limits import joint_limits as j_lim
 
 
@@ -264,7 +264,7 @@ def test_joint_positioning(ann_wrapper):
 #########################################################
 def test_tactile_reading(ann_wrapper):
     """
-        Test the tactile sensing module of the interface, by touching the robot arm with a sphere at multiple points. 
+        Test the tactile sensing module of the interface, by touching the robot arm with a sphere at multiple points.
 
         params:
             ann_wrapper     -- iCub_ANNarchy Interface
@@ -387,7 +387,7 @@ def test_visual_perception(ann_wrapper):
     path = "./Testfiles/Vision/"
     if not os.path.isdir(path):
         os.mkdir(path)
-    
+
     if(params.gazebo):
         # instanciate the simulator world controller
         sim_ctrl = gzbo_wc.WorldController()
@@ -415,7 +415,7 @@ def test_visual_perception(ann_wrapper):
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
-    # start the RFModule to obtain the images from the iCub 
+    # start the RFModule to obtain the images from the iCub
     read_imgs = []
     ann_wrapper.visualR_start()
     time.sleep(0.15)

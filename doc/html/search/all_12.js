@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['save_5fpath_5fvm',['save_path_vm',['../namespacetesting__parameter.html#a994ffbddf6ce61d468ae77daebd75a61',1,'testing_parameter']]],
+  ['save_5fpath_5fvr',['save_path_vr',['../namespacetesting__parameter.html#aabc38f8b6dbea5674f9eee6fcb600291',1,'testing_parameter']]],
   ['set_5fmodel_5fpath',['set_model_path',['../classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#a5de92c392ad2b2e7059eb1344b97a5c9',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]],
   ['set_5fname',['set_name',['../classiCub__Python__Lib_1_1gazebo__world__controller_1_1WorldController.html#a51efdd215d4806a6c3a5c302dcd6aa61',1,'iCub_Python_Lib::gazebo_world_controller::WorldController']]],
   ['set_5fpos_5fvector',['set_pos_vector',['../namespaceiCub__Python__Lib_1_1YARP__motor__control.html#aac6a9dab36b509c54540da79656809a4',1,'iCub_Python_Lib::YARP_motor_control']]],
@@ -16,6 +18,8 @@ var searchData=
   ['show_5fsignal',['show_signal',['../namespaceiCub__Python__Lib_1_1plot__image__processing.html#af99c4fa8b1954ad4eabe7e26836bb99f',1,'iCub_Python_Lib::plot_image_processing']]],
   ['show_5fsignal_5fopencv',['show_signal_opencv',['../namespaceiCub__Python__Lib_1_1plot__image__processing.html#afe1909b69326cb54704259cb0a97a21e',1,'iCub_Python_Lib::plot_image_processing']]],
   ['side',['side',['../classSkinReader.html#a9a159b997f541ee4ba04a57aa4aaa96c',1,'SkinReader']]],
+  ['sigma_5fjr',['sigma_jr',['../namespacetesting__parameter.html#a265f5ce260f98eb0660baff1c62f11db',1,'testing_parameter']]],
+  ['sigma_5fjw',['sigma_jw',['../namespacetesting__parameter.html#aa6bda28199208b30e34b702d0cfdad76',1,'testing_parameter']]],
   ['sigma_5fpop',['sigma_pop',['../classJointReader.html#ae7a820e92bc01eceb82b04b4d3ad9331',1,'JointReader']]],
   ['simple_5fcall_5ftest',['simple_call_test',['../namespacesimple__call__test.html',1,'']]],
   ['simple_5fcall_5ftest_2epy',['simple_call_test.py',['../simple__call__test_8py.html',1,'']]],
@@ -29,6 +33,8 @@ var searchData=
   ['skinrgettaxelpos',['SkinRGetTaxelPos',['../structiCubANN.html#a927dd8528b6d32c67eae649969029858',1,'iCubANN']]],
   ['skinrinit',['SkinRInit',['../structiCubANN.html#a38628f8696f1001e16c8939343fe2619',1,'iCubANN']]],
   ['skinrreadtactile',['SkinRReadTactile',['../structiCubANN.html#af6be5da3316a6e4445d07eea078ee238',1,'iCubANN']]],
+  ['speed_5farm_5fvm',['speed_arm_vm',['../namespacetesting__parameter.html#a078c504ef796a74ccfc8400f19c30627',1,'testing_parameter']]],
+  ['speed_5fhead_5fvm',['speed_head_vm',['../namespacetesting__parameter.html#a7cf976fffcb69dc114039da5bc880412',1,'testing_parameter']]],
   ['speed_5ftest_5fjreader',['speed_test_jreader',['../namespaceperformance__test.html#a499633a6249b048df1ffc7aba69146a2',1,'performance_test']]],
   ['speed_5ftest_5fjwriter',['speed_test_jwriter',['../namespaceperformance__test.html#a48fc0c2e42e03d7919d885eab18e5f9c',1,'performance_test']]],
   ['speed_5ftest_5fsreader',['speed_test_sreader',['../namespaceperformance__test.html#a5af3d5a8a22574154a0676bb701debbf',1,'performance_test']]],

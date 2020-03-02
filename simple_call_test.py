@@ -4,7 +4,7 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-import iCub_Interface  # requires iCub_Interface in the present directory
+import iCub_Interface   # requires iCub_Interface in the present directory; or Python need to know it
 from Testfiles.joint_limits import joint_limits as j_lim
 
 
@@ -88,6 +88,8 @@ def call_test_jreader(ann_wrapper):
     ann_wrapper.jointR_init("J_Reader2", ann_wrapper.PART_KEY_LEFT_ARM, 0.5, 0, 0.0)    # wrong population sizing
     ann_wrapper.jointR_init("NO_NAME", ann_wrapper.PART_KEY_LEFT_ARM, 0.5, 15)          # not existent name
 
+    ann_wrapper.rm_joint_reader("J_Reader2")
+    
     print('finish JReader init')
     print('\n')
 
@@ -102,11 +104,13 @@ def call_test_jreader(ann_wrapper):
     print('\n')
 
     # test read joints with joint reader
-    print('readdouble')
-    print(ann_wrapper.jointR_read_double("J_Reader", 3))
-    print('readone')
+    print('read double_one')
+    print(ann_wrapper.jointR_read_double_one("J_Reader", 3))
+    print('read double_all')
+    print(ann_wrapper.jointR_read_double_all("J_Reader"))
+    print('read pop_one')
     print(ann_wrapper.jointR_read_pop_one("J_Reader", 3))
-    print('readall')
+    print('read pop_all')
     print(ann_wrapper.jointR_read_pop_all("J_Reader"))
 
     print('finish JReader reading joints')
@@ -146,6 +150,8 @@ def call_test_jwriter(ann_wrapper):
     ann_wrapper.jointW_init("NO_NAME", ann_wrapper.PART_KEY_LEFT_ARM, 15)       # not existent name
     ann_wrapper.jointW_init("J_Writer1", ann_wrapper.PART_KEY_RIGHT_ARM, 0, 2.0)
 
+    ann_wrapper.rm_joint_writer("J_Writer2")
+
     print('finish JWriter init')
     print('\n')
 
@@ -165,13 +171,21 @@ def call_test_jwriter(ann_wrapper):
     # define test positions
     test_pos = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5)
     double_all = np.zeros((6))
+    double_all_rel = np.ones((6)) * 5.0
+    pop_multiple = np.zeros((3, 15)) 
+    for i in range(3):
+        pop_multiple[i] = encode(ann_wrapper.PART_KEY_HEAD, i + 3, 15, 10., 0.5)
     pop_all = np.zeros((6, 15))
     for i in range(6):
-        pop_all[i] = encode(ann_wrapper.PART_KEY_HEAD, i, 15, 1, 0.5)
+        pop_all[i] = encode(ann_wrapper.PART_KEY_HEAD, i, 15, 5., 0.5)
 
-    # test writing joint angles
+    print("write absolute values")
+    # test writing absolute joint angles
     print('write double_one')
-    print(ann_wrapper.jointW_write_double("J_Writer", 10.0, 4, "abs", True))
+    print(ann_wrapper.jointW_write_double_one("J_Writer", 10.0, 4, "abs", True))
+    time.sleep(2.5)
+    print('write double_multiple')
+    print(ann_wrapper.jointW_write_double_multiple("J_Writer",  [10., 10., 10.],  [3, 4, 5], "abs", True))
     time.sleep(2.5)
     print('write double_all')
     print(ann_wrapper.jointW_write_double_all("J_Writer", double_all, "abs", True))
@@ -179,8 +193,31 @@ def call_test_jwriter(ann_wrapper):
     print('write pop_one')
     print(ann_wrapper.jointW_write_pop_one("J_Writer", test_pos, 4, "abs", True))
     time.sleep(2.5)
+    print('write pop_multiple')
+    print(ann_wrapper.jointW_write_pop_multiple("J_Writer", pop_multiple, [3, 4, 5], "abs", True))
+    time.sleep(2.5)
     print('write pop_all')
     print(ann_wrapper.jointW_write_pop_all("J_Writer", pop_all, "abs", True))
+
+    print("write relative values")
+    # test writing relative joint angles
+    print('write double_one')
+    print(ann_wrapper.jointW_write_double_one("J_Writer", 10.0, 4, "rel", True))
+    time.sleep(2.5)
+    print('write double_multiple')
+    print(ann_wrapper.jointW_write_double_multiple("J_Writer", [10., 10., 10.], [3, 4, 5], "rel", True))
+    time.sleep(2.5)
+    print('write double_all')
+    print(ann_wrapper.jointW_write_double_all("J_Writer", double_all_rel, "rel", True))
+    time.sleep(2.5)
+    print('write pop_one')
+    print(ann_wrapper.jointW_write_pop_one("J_Writer", test_pos, 4, "rel", True))
+    time.sleep(2.5)
+    print('write pop_multiple')
+    print(ann_wrapper.jointW_write_pop_multiple("J_Writer", pop_multiple, [3, 4, 5], "rel", True))
+    time.sleep(2.5)
+    print('write pop_all')
+    print(ann_wrapper.jointW_write_pop_all("J_Writer", pop_all, "rel", True))
 
     print('finish JWriter writing joints')
     print('\n')
@@ -216,6 +253,8 @@ def call_test_sreader(ann_wrapper):
     ann_wrapper.skinR_init("NO_NAME", "r", True)        # non existent name
     ann_wrapper.skinR_init("S_Reader1", "g", False)     # wrong eye descriptor
     ann_wrapper.skinR_init("S_Reader1", "l", False)     # correct init; non norm
+
+    ann_wrapper.rm_skin_reader("S_Reader1")
 
     print('finish SReader init')
     print('\n')
@@ -281,12 +320,12 @@ def call_test_vreader(ann_wrapper):
     # stop the visual reader instance
     ann_wrapper.visualR_stop()
 
-    # first remove the old visual reader instance, then add and init a new visual reader instance  
+    # first remove the old visual reader instance, then add and init a new visual reader instance
     ann_wrapper.rm_visual_reader()
     ann_wrapper.add_visual_reader()
     print(ann_wrapper.visualR_init('l'))                    # use of default values; reinitialization left eye
 
-    # first remove the old visual reader instance, then add and init a new visual reader instance  
+    # first remove the old visual reader instance, then add and init a new visual reader instance
     ann_wrapper.rm_visual_reader()
     ann_wrapper.add_visual_reader()
     print(ann_wrapper.visualR_init('b'))                    # use of default values; reinitialization binocular
@@ -296,11 +335,15 @@ if __name__ == "__main__":
     wrapper = iCub_Interface.iCubANN_wrapper()
 
     if len(sys.argv) > 1:
-        for command in sys.argv[1:]: 
+        for command in sys.argv[1:]:
             if command == 'all':
                 call_test_jreader(wrapper)
                 call_test_jwriter(wrapper)
                 call_test_sreader(wrapper)
+                call_test_vreader(wrapper)
+            elif command == "noskin":
+                call_test_jreader(wrapper)
+                call_test_jwriter(wrapper)
                 call_test_vreader(wrapper)
             elif command == "jreader":
                 call_test_jreader(wrapper)

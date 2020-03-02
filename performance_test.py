@@ -8,7 +8,7 @@ import numpy as np
 import iCub_Interface  # requires iCub_Interface in the present directory
 import Testfiles.iCub_Python_Lib.iCubSim_world_controller as iSim_wc
 import Testfiles.iCub_Python_Lib.gazebo_world_controller as gzbo_wc
-import Testfiles.test_parameter as params
+import Testfiles.testing_parameter as params
 
 from Testfiles.joint_limits import joint_limits as j_lim
 
@@ -82,10 +82,10 @@ def speed_test_jreader(ann_wrapper, test_count):
             test_count      -- number of test trials
     """
 
-    n_pop = 100         # population size
-    sigma = 1.5         # sigma for population coding gaussian
-    neuron_res = 0.0    # population resolution
-    parts = ["right_arm", "head"]   # tested iCub parts
+    n_pop = params.n_pop_jr         # population size
+    sigma = params.sigma_jr         # sigma for population coding gaussian
+    neuron_res = params.neuron_res_jr    # population resolution
+    parts = params.parts   # tested iCub parts
 
     print('____________________________________________________________\n')
     print('__ Add and init joint reader modules __')
@@ -104,8 +104,8 @@ def speed_test_jreader(ann_wrapper, test_count):
     print('____________________________________________________________\n')
 
     # test speed for reading joint angles as double values
-    print('__ Type of reading: Double')
-    results_double = {}
+    print('__ Type of reading: Double_one')
+    results_double_one = {}
     for name in parts:
         print('____ Test part:', name)
         joints = ann_wrapper.jointR_get_joint_count(name)
@@ -113,18 +113,36 @@ def speed_test_jreader(ann_wrapper, test_count):
         time_start_double = time.time()
         for i in range(test_count):
             for i in range(joints):
-                read_pos_double[i] = ann_wrapper.jointR_read_double(name, i)
+                read_pos_double[i] = ann_wrapper.jointR_read_double_one(name, i)
         time_stop_double = time.time()
-        results_double[name] = (time_stop_double - time_start_double) / test_count
+        results_double_one[name] = (time_stop_double - time_start_double) / test_count
 
-    # show the trst results
-    print('________ Test results: Double')
-    for part in results_double:
-        print("Time double ", part, ":", round(results_double[part], 4), 's')
+    # show the test results
+    print('________ Test results: Double_one')
+    for part in results_double_one:
+        print("Time double ", part, ":", round(results_double_one[part], 4), 's')
+    print('\n')
+
+    # test speed for reading joint angles as population code, coding all joints combined
+    print('__ Type of reading: Double_all')
+    results_double_all = {}
+    for name in parts:
+        print('____ Test part:', name)
+        joints = ann_wrapper.jointR_get_joint_count(name)
+        time_start_double_all = time.time()
+        for i in range(test_count):
+            read_pos_double_all = ann_wrapper.jointR_read_double_all(name)
+        time_stop_double_all = time.time()
+        results_double_all[name] = (time_stop_double_all - time_start_double_all) / test_count
+
+    # show the test results
+    print('________ Test results: Double_all')
+    for part in results_double_all:
+        print("Time pop_all", part , ":", round(results_double_all[part], 4), 's')
     print('\n')
 
     # test speed for reading joint angles as population code, coding a single joint
-    print('__ Type of reading: Population_single')
+    print('__ Type of reading: Population_one')
     results_pop_single = {}
     for name in parts:
         print('____ Test part:', name)
@@ -137,8 +155,8 @@ def speed_test_jreader(ann_wrapper, test_count):
         time_stop_pop_single = time.time()
         results_pop_single[name] = (time_stop_pop_single - time_start_pop_single) / test_count
 
-    # show the trst results
-    print('________ Test results: Population_single')
+    # show the test results
+    print('________ Test results: Population_one')
     for part in results_pop_single:
         print("Time pop_single", part , ":", round(results_pop_single[part], 4), 's')
     print('\n')
@@ -149,14 +167,13 @@ def speed_test_jreader(ann_wrapper, test_count):
     for name in parts:
         print('____ Test part:', name)
         joints = ann_wrapper.jointR_get_joint_count(name)
-        read_pos_pop_all = np.zeros((joints, n_pop))
         time_start_pop_all = time.time()
         for i in range(test_count):
             read_pos_pop_all = ann_wrapper.jointR_read_pop_all(name)
         time_stop_pop_all = time.time()
         results_pop_all[name] = (time_stop_pop_all - time_start_pop_all) / test_count
 
-    # show the trst results
+    # show the test results
     print('________ Test results: Population_all')
     for part in results_pop_all:
         print("Time pop_all", part , ":", round(results_pop_all[part], 4), 's')
@@ -183,10 +200,10 @@ def speed_test_jwriter(ann_wrapper, test_count):
             test_count      -- number of test trials
     """
 
-    n_pop = 100         # population size
-    sigma = 1.5         # sigma for population coding gaussian
-    neuron_res = 0.0    # population resolution
-    position_path = "./Testfiles/test_positions/"
+    n_pop = params.n_pop_jw             # population size
+    sigma = params.sigma_jw             # sigma for population coding gaussian
+    neuron_res = params.neuron_res_jw   # population resolution
+    position_path = params.position_path
 
     print('____________________________________________________________')
     print('__ Load test positions __')
@@ -228,62 +245,141 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('____ Initialized all joint writer ____')
     print('____________________________________________________________\n')
 
-    # test joint motion with joint angles as double values
-    print('__ Type of positioning: Double')
-    results_double = {}
+    #########################################################
+    # test joint motion with the joint angle as double value for one joint (absolute position)
+    print('__ Type of positioning: Double_one')
+    results_double_one = {}
     for name in part_enc:
         joints = ann_wrapper.jointW_get_joint_count(name)
         print('____ Test part:', name)
         for key in positions:
             if positions[key][1] == name:
                 print('______ Test position:', key)
-                results_double[name + '_' + key] = 0
+                results_double_one[name + '_' + key] = 0
                 for i in range(test_count):
                     time_start = time.time()
                     for i in range(joints):
-                        ann_wrapper.jointW_write_double(name, positions[key][0][i], i, "abs", True)
+                        ann_wrapper.jointW_write_double_one(name, positions[key][0][i], i, "abs", True)
                     time_stop = time.time()
-                    results_double[name + '_' + key] += time_stop -time_start
+                    results_double_one[name + '_' + key] += time_stop -time_start
 
                     for i in range(joints):
-                        ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, "abs", True)
+                        ann_wrapper.jointW_write_double_one(name, zero_pos[name][i], i, "abs", True)
                     time.sleep(0.5)
-                results_double[name + '_' + key] /= test_count
+                results_double_one[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Double')
-    for key in results_double:
-        print('Test:', key, 'results:', round(results_double[key], 4), 's')
+    print('________ Test results: Double_one')
+    for key in results_double_one:
+        print('Test:', key, 'results:', round(results_double_one[key], 4), 's')
     print('\n')
 
-    # test joint motion with joint angles encoded in population code, coding single joint
-    print('__ Type of positioning: Population_single')
-    results_pop_single = {}
+    # test joint motion with the joint angles as double values for multiple joints (absolute position)
+    print('__ Type of positioning: Double_multiple')
+    results_double_multiple = {}
+    for name in part_enc:
+        joints = ann_wrapper.jointW_get_joint_count(name)
+        print('____ Test part:', name)
+        for key in positions:
+            if positions[key][1] == name:
+                print('______ Test position:', key)
+                results_double_multiple[name + '_' + key] = 0
+                for i in range(test_count):
+                    time_start = time.time()
+                    ann_wrapper.jointW_write_double_multiple(name, positions[key][0][3:6], range(3, 6), "abs", True)
+                    time_stop = time.time()
+                    results_double_multiple[name + '_' + key] += time_stop -time_start
+
+                    ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                    time.sleep(0.5)
+                results_double_multiple[name + '_' + key] /= test_count
+
+    # show test results
+    print('________ Test results: Double_multiple')
+    for key in results_double_one:
+        print('Test:', key, 'results:', round(results_double_multiple[key], 4), 's')
+    print('\n')
+
+    # test joint motion with the joint angles as double values for all joints (absolute position)
+    print('__ Type of positioning: Double_all')
+    results_double_all = {}
+    for name in part_enc:
+        joints = ann_wrapper.jointW_get_joint_count(name)
+        print('____ Test part:', name)
+        for key in positions:
+            if positions[key][1] == name:
+                print('______ Test position:', key)
+                results_double_all[name + '_' + key] = 0
+                for i in range(test_count):
+                    time_start = time.time()
+                    ann_wrapper.jointW_write_double_all(name, positions[key][0], "abs", True)
+                    time_stop = time.time()
+                    results_double_all[name + '_' + key] += time_stop -time_start
+
+                    ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                    time.sleep(0.5)
+                results_double_all[name + '_' + key] /= test_count
+
+    # show test results
+    print('________ Test results: Double_all')
+    for key in results_double_all:
+        print('Test:', key, 'results:', round(results_double_all[key], 4), 's')
+    print('\n')
+
+    #########################################################
+    # test joint motion with joint angles encoded in population code, coding single joint (absolute position)
+    print('__ Type of positioning: Population_one')
+    results_pop_one = {}
     for name in part_enc:
         joints = ann_wrapper.jointW_get_joint_count(name)
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
-            results_pop_single[name + '_' + key] = 0
+            results_pop_one[name + '_' + key] = 0
             for i in range(test_count):
                 time_start = time.time()
                 for i in range(joints):
                     ann_wrapper.jointW_write_pop_one(name, part_enc[name][key][i], i, "abs", True)
                 time_stop = time.time()
-                results_pop_single[name + '_' + key] += time_stop -time_start
+                results_pop_one[name + '_' + key] += time_stop -time_start
 
-                for i in range(joints):
-                    ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, "abs", True)
+                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
                 time.sleep(0.5)
-            results_pop_single[name + '_' + key] /= test_count
+            results_pop_one[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Population_single')
-    for key in results_pop_single:
-        print('Test:', key, 'results:', round(results_pop_single[key], 4), 's')
+    print('________ Test results: Population_one')
+    for key in results_pop_one:
+        print('Test:', key, 'results:', round(results_pop_one[key], 4), 's')
     print('\n')
 
-    # test joint motion with joint angles encoded in population code, coding all joints combined
+    # test joint motion with joint angles encoded in population code, coding multiple joints combined (absolute position)
+    print('__ Type of positioning: Population_multiple')
+    results_pop_multiple = {}
+    for name in part_enc:
+        joints = ann_wrapper.jointW_get_joint_count(name)
+        print('____ Test part:', name)
+        for key in part_enc[name]:
+            print('______ Test position:', key)
+            results_pop_multiple[name + '_' + key] = 0
+            for i in range(test_count):
+                time_start = time.time()
+                for i in range(joints):
+                    ann_wrapper.jointW_write_pop_multiple(name, part_enc[name][key][3:6], range(3, 6), "abs", True)
+                time_stop = time.time()
+                results_pop_multiple[name + '_' + key] += time_stop -time_start
+
+                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                time.sleep(0.5)
+            results_pop_multiple[name + '_' + key] /= test_count
+
+    # show test results
+    print('________ Test results: Population_multiple')
+    for key in results_pop_multiple:
+        print('Test:', key, 'results:', round(results_pop_multiple[key], 4), 's')
+    print('\n')
+
+    # test joint motion with joint angles encoded in population code, coding all joints combined (absolute position)
     print('__ Type of positioning: Population_all')
     results_pop_all = {}
     for name in part_enc:
@@ -297,8 +393,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 time_stop = time.time()
                 results_pop_all[name + '_' + key] += time_stop -time_start
 
-                for i in range(joints):
-                    ann_wrapper.jointW_write_double(name, zero_pos[name][i], i, "abs", True)
+                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
                 time.sleep(0.5)
             results_pop_all[name + '_' + key] /= test_count
 
@@ -395,7 +490,7 @@ def speed_test_vreader(ann_wrapper, test_count):
     imgs_quarter = []
     imgs_field = []
 
-    path = "./Testfiles/Vision/"
+    path = params.save_path_vr
     if not os.path.isdir(path):
         os.mkdir(path)
 
@@ -492,11 +587,11 @@ def vis_move_test(ann_wrapper):
             ann_wrapper     -- iCub_ANNarchy Interface
             test_count      -- number of test trials
     """
-    n_pop = 50
-    speed_arm = 15
-    speed_head = 15
+    n_pop = params.n_pop_vm
+    speed_arm = params.speed_arm_vm
+    speed_head = params.speed_head_vm
 
-    position_path = "./Testfiles/test_positions/"
+    position_path = params.position_path
     pos = {}
     pos[True] = np.load(position_path + "test_vismov0.npy")
     pos[False] = np.load(position_path + "test_vismov1.npy")
@@ -506,7 +601,7 @@ def vis_move_test(ann_wrapper):
     zero_pos['right_arm'] = np.load(position_path + "test_pos_home.npy")
 
     # create folder to store test results, in case it does not exist already
-    path = "./Testfiles/Vis_movement/"
+    path = params.save_path_vm
     if not os.path.isdir(path):
         os.mkdir(path)
 
@@ -514,7 +609,7 @@ def vis_move_test(ann_wrapper):
     ann_wrapper.add_visual_reader()
     ann_wrapper.add_joint_writer("moving")
     ann_wrapper.add_joint_writer("head")
-    
+
     # init visual reader and joint writer instances
     ann_wrapper.visualR_init('r', 60, 48, 80, 60)
     ann_wrapper.jointW_init("moving", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, speed_arm)
@@ -575,7 +670,7 @@ def vis_move_test(ann_wrapper):
     # stop the visual reader
     ann_wrapper.visualR_stop()
 
-    # save the recorded images 
+    # save the recorded images
     np.save(path + 'visual_percept_' + str(speed_arm) + '.npy', imgs)
 
     # return the arm and the head to a defined position
@@ -590,10 +685,10 @@ def vis_move_test(ann_wrapper):
 #########################################################
 if __name__ == "__main__":
     wrapper = iCub_Interface.iCubANN_wrapper()
-    test_cnt = 10
+    test_cnt = params.test_count
 
     if len(sys.argv) > 1:
-        for command in sys.argv[1:]: 
+        for command in sys.argv[1:]:
             if command == 'all':
                 speed_test_jreader(wrapper, test_cnt)
                 speed_test_jwriter(wrapper, test_cnt)

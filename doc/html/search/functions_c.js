@@ -2,7 +2,8 @@ var searchData=
 [
   ['read_5frobot_5feye',['read_robot_eye',['../namespaceiCub__Python__Lib_1_1YARP__image__processing.html#ad10643c714e7995503aa08a0e2234b16',1,'iCub_Python_Lib::YARP_image_processing']]],
   ['read_5frobot_5feyes',['read_robot_eyes',['../namespaceiCub__Python__Lib_1_1YARP__image__processing.html#aa1c91934de1db42b732e12a8bb25eda7',1,'iCub_Python_Lib::YARP_image_processing']]],
-  ['readdouble',['ReadDouble',['../classJointReader.html#a42d2fb9c17d33b1f6f0ae6f6017789a8',1,'JointReader']]],
+  ['readdoubleall',['ReadDoubleAll',['../classJointReader.html#ad8577c98fa2df010547d37252947a88f',1,'JointReader']]],
+  ['readdoubleone',['ReadDoubleOne',['../classJointReader.html#a74efecae39a9eeceb727db3424bc6b14',1,'JointReader']]],
   ['readfrombuf',['ReadFromBuf',['../classVisualReader.html#a13d766820136b5fc9ca51eb43d4f182e',1,'VisualReader']]],
   ['readpopall',['ReadPopAll',['../classJointReader.html#a0a88164824a3280c31e70864f3415f81',1,'JointReader']]],
   ['readpopone',['ReadPopOne',['../classJointReader.html#a1e04826bec1695f818a8965471f9e756',1,'JointReader']]],

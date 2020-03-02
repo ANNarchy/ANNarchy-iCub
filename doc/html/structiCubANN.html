@@ -128,9 +128,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a25dd106370409b9ef6f6f8abb801c763"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a25dd106370409b9ef6f6f8abb801c763">JointRGetNeuronsPerJoint</a> (std::string name)</td></tr>
 <tr class="memdesc:a25dd106370409b9ef6f6f8abb801c763"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of the populations encoding the joint angles.  <a href="#a25dd106370409b9ef6f6f8abb801c763">More...</a><br /></td></tr>
 <tr class="separator:a25dd106370409b9ef6f6f8abb801c763"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6359924926cbf824101f107da77dca92"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a6359924926cbf824101f107da77dca92">JointRReadDouble</a> (std::string name, int joint)</td></tr>
-<tr class="memdesc:a6359924926cbf824101f107da77dca92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one joint and return joint angle directly in degree as double value.  <a href="#a6359924926cbf824101f107da77dca92">More...</a><br /></td></tr>
-<tr class="separator:a6359924926cbf824101f107da77dca92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01def5c79813b01405d7ca9dd2a5ecde"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a01def5c79813b01405d7ca9dd2a5ecde">JointRReadDoubleAll</a> (std::string name)</td></tr>
+<tr class="memdesc:a01def5c79813b01405d7ca9dd2a5ecde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read all joints and return joint angles directly in degree as double values.  <a href="#a01def5c79813b01405d7ca9dd2a5ecde">More...</a><br /></td></tr>
+<tr class="separator:a01def5c79813b01405d7ca9dd2a5ecde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a449d32f40c8bd1774b46637c23959eca"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#a449d32f40c8bd1774b46637c23959eca">JointRReadDoubleOne</a> (std::string name, int joint)</td></tr>
+<tr class="memdesc:a449d32f40c8bd1774b46637c23959eca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read one joint and return joint angle directly in degree as double value.  <a href="#a449d32f40c8bd1774b46637c23959eca">More...</a><br /></td></tr>
+<tr class="separator:a449d32f40c8bd1774b46637c23959eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6ffff4d7c93c2801cd606fb1475dc99"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiCubANN.html#ad6ffff4d7c93c2801cd606fb1475dc99">JointRReadPopAll</a> (std::string name)</td></tr>
 <tr class="memdesc:ad6ffff4d7c93c2801cd606fb1475dc99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read all joints and return the joint angles encoded in populations.  <a href="#ad6ffff4d7c93c2801cd606fb1475dc99">More...</a><br /></td></tr>
 <tr class="separator:ad6ffff4d7c93c2801cd606fb1475dc99"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -397,7 +400,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0. Empty vector at error. </dd></dl>
 
 </div>
 </div>
@@ -424,7 +427,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10 </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10. Empty vector at error. </dd></dl>
 
 </div>
 </div>
@@ -487,14 +490,41 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6359924926cbf824101f107da77dca92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6359924926cbf824101f107da77dca92">&#9670;&nbsp;</a></span>JointRReadDouble()</h2>
+<a id="a01def5c79813b01405d7ca9dd2a5ecde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01def5c79813b01405d7ca9dd2a5ecde">&#9670;&nbsp;</a></span>JointRReadDoubleAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double iCubANN::JointRReadDouble </td>
+          <td class="memname">std::vector&lt; double &gt; iCubANN::JointRReadDoubleAll </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read all joints and return joint angles directly in degree as double values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Name of the selected joint reader </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Joint angles, read from the robot in degree. Empty vector at error. </dd></dl>
+
+</div>
+</div>
+<a id="a449d32f40c8bd1774b46637c23959eca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a449d32f40c8bd1774b46637c23959eca">&#9670;&nbsp;</a></span>JointRReadDoubleOne()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double iCubANN::JointRReadDoubleOne </td>
           <td>(</td>
           <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>name</em>, </td>
@@ -521,7 +551,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Joint angle read from the robot in degree. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Joint angle read from the robot in degree. NAN at error. </dd></dl>
 
 </div>
 </div>
@@ -548,7 +578,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Population vectors encoding every joint angle from associated robot part. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Population vectors encoding every joint angle from associated robot part. Empty vector at error. </dd></dl>
 
 </div>
 </div>
@@ -586,7 +616,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Population vector encoding the joint angle. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Population vector encoding the joint angle. Empty vector at error. </dd></dl>
 
 </div>
 </div>
@@ -666,7 +696,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0. Empty vector at error. </dd></dl>
 
 </div>
 </div>
@@ -693,7 +723,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10 </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10. Empty vector at error. </dd></dl>
 
 </div>
 </div>
@@ -1287,7 +1317,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>vector, containing the tactile data of the upper arm for the last time steps </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>vector, containing the tactile data of the upper arm for the last time steps. Empty vector at error. </dd></dl>
 
 </div>
 </div>
@@ -1314,7 +1344,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>vector, containing the tactile data of the upper arm for the last time steps </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>vector, containing the tactile data of the upper arm for the last time steps. Empty vector at error. </dd></dl>
 
 </div>
 </div>
@@ -1341,7 +1371,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>vector, containing the tactile data of the upper arm for the last time steps </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>vector, containing the tactile data of the upper arm for the last time steps. Empty vector at error. </dd></dl>
 
 </div>
 </div>
@@ -1379,7 +1409,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Vector containing taxel positions -&gt; reference frame depending on skin part </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector containing taxel positions -&gt; reference frame depending on skin part. Empty vector at error. </dd></dl>
 
 </div>
 </div>
@@ -1537,7 +1567,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image) </p>
-<dl class="section return"><dt>Returns</dt><dd>image (1D-vector) from the image buffer </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>image (1D-vector) from the image buffer. Empty vector at error. </dd></dl>
 
 </div>
 </div>

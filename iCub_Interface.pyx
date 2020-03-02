@@ -44,6 +44,12 @@ cdef extern from "Interface_iCub.hpp":
         # add the instance of visual reader
         void AddVisualReader()
 
+        # remove an instance of joint reader
+        void RemoveJointReader(string)
+        # remove an instance of joint writer
+        void RemoveJointWriter(string)
+        # remove an instance of skin reader
+        void RemoveSkinReader(string)
         # remove the instance of visual reader
         void RemoveVisualReader()
 
@@ -60,7 +66,7 @@ cdef extern from "Interface_iCub.hpp":
         # get the size of the populations encoding the joint angles
         vector[int] JointRGetNeuronsPerJoint(string)
         # read all joints and return joint angles directly as double values
-        double JointRReadDoubleAll(string)
+        vector[double] JointRReadDoubleAll(string)
         # read one joint and return joint angle directly as double value
         double JointRReadDoubleOne(string , int)
         # read all joints and return the joint angles encoded in vectors
@@ -181,9 +187,13 @@ cdef class iCubANN_wrapper:
         #my_interface.init() - we need a special init?
 
     ### Manage instances of the reader/writer modules ###
+    # add an instance of joint reader
     def add_joint_reader(self, name):
         """
             Calls iCubANN::AddJointReader(std::string name)
+
+            function:
+                Add an instance of joint reader with a given name
 
             params: std::string name        -- name for the added joint reader in the map, can be freely selected
         """
@@ -193,9 +203,13 @@ cdef class iCubANN_wrapper:
         # call the interface
         my_interface.AddJointReader(s)
 
+    # add an instance of joint writer
     def add_joint_writer(self, name):
         """
             Calls iCubANN::AddJointWriter(std::string name)
+
+            function:
+                Add an instance of joint writer with a given name
 
             params:
                 std::string name        -- name for the added joint writer in the map, can be freely selected
@@ -206,9 +220,13 @@ cdef class iCubANN_wrapper:
         # call the interface
         my_interface.AddJointWriter(s)
 
+    # add an instance of skin reader
     def add_skin_reader(self, name):
         """
             Calls iCubANN::AddSkinReader(std::string name)
+
+            function:
+                Add an instance of skin reader with a given name
 
             params:
                 std::string name        -- name for the added skin reader in the map, can be freely selected
@@ -219,21 +237,78 @@ cdef class iCubANN_wrapper:
         # call the interface
         my_interface.AddSkinReader(s)
 
+    # add an instance of visual reader
     def add_visual_reader(self):
         """
             Calls iCubANN::AddVisualReader()
 
-            params:
-                std::string name        -- name for the added visual reader in the map, can be freely selected
+            function:
+                Add an instance of visual reader
         """
         # call the interface
         my_interface.AddVisualReader()
 
+    # remove an instance of joint reader
+    def rm_joint_reader(self, name):
+        """
+            Calls iCubANN::RemoveJointReader(std::string name)
 
+            function:
+                Remove the instance of joint reader with the given name
+
+            params: std::string name        -- name of the joint reader in the map, which should be remove
+        """
+        # we need to transform py-string to c++ compatible string
+        cdef string s = name.encode('UTF-8')
+
+        # call the interface
+        my_interface.RemoveJointReader(s)
+
+    # remove an instance of joint writer
+    def rm_joint_writer(self, name):
+        """
+            Calls iCubANN::RemoveJointWriter(std::string name)
+
+            function:
+                Remove the instance of joint writer with the given name
+
+            params:
+                std::string name        -- name of the joint writer in the map, which should be remove
+        """
+        # we need to transform py-string to c++ compatible string
+        cdef string s = name.encode('UTF-8')
+
+        # call the interface
+        my_interface.RemoveJointWriter(s)
+
+    # remove an instance of skin reader
+    def rm_skin_reader(self, name):
+        """
+            Calls iCubANN::RemoveSkinReader(std::string name)
+
+            function:
+                Remove the instance of skin reader with the given name
+
+            params:
+                std::string name        -- name of the skin reader in the map, which should be remove
+        """
+        # we need to transform py-string to c++ compatible string
+        cdef string s = name.encode('UTF-8')
+
+        # call the interface
+        my_interface.RemoveSkinReader(s)
+
+    # remove the instance of visual reader
     def rm_visual_reader(self):
+        """
+            Calls iCubANN::AddVisualReader()
+
+            function:
+                Remove the visual reader instance
+        """
         # call the interface
         my_interface.RemoveVisualReader()
-    
+
     ### end Manage instances of the reader/writer module
 
 
@@ -301,7 +376,7 @@ cdef class iCubANN_wrapper:
 
         # call the interface
         return my_interface.JointRGetJointCount(s)
-    
+
     # get the resolution in degree of the populations encoding the joint angles
     def jointR_get_joints_deg_res(self, name):
         """
@@ -343,7 +418,7 @@ cdef class iCubANN_wrapper:
         return np.array(my_interface.JointRGetNeuronsPerJoint(s))
 
     # read all joints and return joint angles directly as double values
-    def jointR_read_double_all(self, name, joint):
+    def jointR_read_double_all(self, name):
         """
             Calls double iCubANN::JointRReadDoubleAll(std::string name)
 
@@ -360,7 +435,7 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.JointRReadDoubleAll(s, joint)
+        return my_interface.JointRReadDoubleAll(s)
 
     # read one joint and return joint angle directly as double value
     def jointR_read_double_one(self, name, joint):
@@ -580,7 +655,7 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWriteDoubleAll(s, position, block, s1)
+        return my_interface.JointWWriteDoubleAll(s,  position, block, s1)
 
     # write all joints with double values
     def jointW_write_double_multiple(self, name, position, joints, mode, blocking=True):
@@ -607,7 +682,7 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWriteDoubleMultiple(s, position, joints, block, s1)
+        return my_interface.JointWWriteDoubleMultiple(s,  position,  joints, block, s1)
 
 
     # write one joint with double value
@@ -661,7 +736,7 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWritePopAll(s, position_pops, block, s1)
+        return my_interface.JointWWritePopAll(s,  position_pops, block, s1)
 
     # write multiple joints with joint angles encoded in populations vectors
     def jointW_write_pop_multiple(self, name, position_pops, joints, mode, blocking=True):
@@ -715,7 +790,7 @@ cdef class iCubANN_wrapper:
         cdef bint block = blocking.__int__()
 
         # call the interface
-        return my_interface.JointWWritePopOne(s, position_pop, joint, block, s1)
+        return my_interface.JointWWritePopOne(s,  position_pop, joint, block, s1)
 
     ### end access to joint writer member functions
 
