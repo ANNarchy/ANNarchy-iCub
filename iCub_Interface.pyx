@@ -59,8 +59,10 @@ cdef extern from "Interface_iCub.hpp":
         vector[double] JointRGetJointsDegRes(string)
         # get the size of the populations encoding the joint angles
         vector[int] JointRGetNeuronsPerJoint(string)
+        # read all joints and return joint angles directly as double values
+        double JointRReadDoubleAll(string)
         # read one joint and return joint angle directly as double value
-        double JointRReadDouble(string , int)
+        double JointRReadDoubleOne(string , int)
         # read all joints and return the joint angles encoded in vectors
         vector[vector[double]] JointRReadPopAll(string)
         # read one joint and return the joint angle encoded in a vector
@@ -340,10 +342,30 @@ cdef class iCubANN_wrapper:
         # call the interface
         return np.array(my_interface.JointRGetNeuronsPerJoint(s))
 
-    # read one joint and return joint angle directly as double value
-    def jointR_read_double(self, name, joint):
+    # read all joints and return joint angles directly as double values
+    def jointR_read_double_all(self, name, joint):
         """
-            Calls double iCubANN::JointRReadDouble(std::string name, int joint)
+            Calls double iCubANN::JointRReadDoubleAll(std::string name)
+
+            function:
+                Read all joints and return joint angles directly as double values
+
+            params:
+                std::string name    -- name of the selected joint reader
+
+            return:
+                double              -- joint angles read from the robot; empty vector at error
+        """
+        # we need to transform py-string to c++ compatible string
+        cdef string s = name.encode('UTF-8')
+
+        # call the interface
+        return my_interface.JointRReadDoubleAll(s, joint)
+
+    # read one joint and return joint angle directly as double value
+    def jointR_read_double_one(self, name, joint):
+        """
+            Calls double iCubANN::JointRReadDoubleOne(std::string name, int joint)
 
             function:
                 Read one joint and return joint angle directly as double value
@@ -353,13 +375,13 @@ cdef class iCubANN_wrapper:
                 int joint           -- joint number of the robot part
 
             return:
-                double              -- joint angle read from the robot
+                double              -- joint angle read from the robot; NAN at error
         """
         # we need to transform py-string to c++ compatible string
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        return my_interface.JointRReadDouble(s, joint)
+        return my_interface.JointRReadDoubleOne(s, joint)
 
     # read all joints and return the joint angles encoded in vectors (population coding)
     def jointR_read_pop_all(self, name):

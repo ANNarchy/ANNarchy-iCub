@@ -34,9 +34,9 @@
  */
 struct iCubANN {
  private:
-    std::unique_ptr<VisualReader> visual_input;             /** \brief associated visual reader (only one possible for left/right eye) */
+    std::unique_ptr<VisualReader> visual_input; /** \brief associated visual reader (only one possible for left/right eye) */
     std::map<std::string, std::unique_ptr<JointReader>> parts_reader;  /** \brief associated joint readers (one for every robot part) */
-    std::map<std::string, std::unique_ptr<JointWriter> > parts_writer;  /** \brief associated joint writers (one for every robot part) */
+    std::map<std::string, std::unique_ptr<JointWriter>> parts_writer;  /** \brief associated joint writers (one for every robot part) */
     std::map<std::string, std::unique_ptr<SkinReader>> tactile_reader; /** \brief associated skin reader */
 
  public:
@@ -110,29 +110,36 @@ struct iCubANN {
     /**
      * \brief  Return the resolution in degree of the populations encoding the joint angles.
      * \param[in] name Name of the selected joint reader
-     * \return Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0. 
+     * \return Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0.  Empty vector at error.
      */
     std::vector<double> JointRGetJointsDegRes(std::string name);
 
     /**
      * \brief Return the size of the populations encoding the joint angles
      * \param[in] name Name of the selected joint reader
-     * \return Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10
+     * \return Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10. Empty vector at error.
      */
     std::vector<int> JointRGetNeuronsPerJoint(std::string name);
+
+    /**
+     * \brief Read all joints and return joint angles directly in degree as double values
+     * \param[in] name Name of the selected joint reader
+     * \return Joint angles, read from the robot in degree. Empty vector at error.
+     */
+    std::vector<double> JointRReadDoubleAll(std::string name);
 
     /**
      * \brief Read one joint and return joint angle directly in degree as double value
      * \param[in] name Name of the selected joint reader
      * \param[in] joint joint number of the robot part
-     * \return Joint angle read from the robot in degree.
+     * \return Joint angle read from the robot in degree. NAN at error.
      */
-    double JointRReadDouble(std::string name, int joint);
+    double JointRReadDoubleOne(std::string name, int joint);
 
     /**
      * \brief Read all joints and return the joint angles encoded in populations.
      * \param[in] name Name of the selected joint reader
-     * \return Population vectors encoding every joint angle from associated robot part.
+     * \return Population vectors encoding every joint angle from associated robot part. Empty vector at error.
      */
     std::vector<std::vector<double>> JointRReadPopAll(std::string name);
 
@@ -140,7 +147,7 @@ struct iCubANN {
      * \brief Read one joint and return the joint angle encoded in a population.
      * \param[in] name Name of the selected joint reader
      * \param[in] joint joint number of the robot part
-     * \return Population vector encoding the joint angle.
+     * \return Population vector encoding the joint angle. Empty vector at error.
      */
     std::vector<double> JointRReadPopOne(std::string name, int joint);
 
@@ -172,14 +179,14 @@ struct iCubANN {
     /**
      * \brief  Return the resolution in degree of the populations encoding the joint angles.
      * \param[in] name Name of the selected joint writer
-     * \return Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0. 
+     * \return Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0.  Empty vector at error.
      */
     std::vector<double> JointWGetJointsDegRes(std::string name);
 
     /**
      * \brief Return the size of the populations encoding the joint angles
      * \param[in] name Name of the selected joint writer
-     * \return Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10
+     * \return Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10. Empty vector at error.
      */
     std::vector<int> JointWGetNeuronsPerJoint(std::string name);
 
@@ -277,21 +284,21 @@ struct iCubANN {
     /**
      * \brief Return tactile data for upper arm skin.
      * \param[in] name Name of the selected skin reader
-     * \return vector, containing the tactile data of the upper arm for the last time steps
+     * \return vector, containing the tactile data of the upper arm for the last time steps. Empty vector at error.
      */
     std::vector<std::vector<double>> SkinRGetTactileArm(std::string name);
 
     /**
      * \brief Return tactile data for forearm skin.
      * \param[in] name Name of the selected skin reader
-     * \return vector, containing the tactile data of the upper arm for the last time steps
+     * \return vector, containing the tactile data of the upper arm for the last time steps. Empty vector at error.
      */
     std::vector<std::vector<double>> SkinRGetTactileForearm(std::string name);
 
     /**
      * \brief Return tactile data for hand skin.
      * \param[in] name Name of the selected skin reader
-     * \return vector, containing the tactile data of the upper arm for the last time steps
+     * \return vector, containing the tactile data of the upper arm for the last time steps. Empty vector at error.
      */
     std::vector<std::vector<double>> SkinRGetTactileHand(std::string name);
 
@@ -299,7 +306,7 @@ struct iCubANN {
      * \brief Return the taxel positions given by the ini files.
      * \param[in] name Name of the selected skin reader
      * \param[in] skin_part Skin part to load the data for ("arm", "forearm", "hand")
-     * \return Vector containing taxel positions -> reference frame depending on skin part
+     * \return Vector containing taxel positions -> reference frame depending on skin part. Empty vector at error.
      */
     std::vector<std::vector<double>> SkinRGetTaxelPos(std::string name, std::string skin_part);
 
@@ -326,7 +333,7 @@ struct iCubANN {
 
     /**
      * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
-     * \return image (1D-vector) from the image buffer
+     * \return image (1D-vector) from the image buffer. Empty vector at error.
      */
     std::vector<double> VisualRReadFromBuf();
 

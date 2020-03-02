@@ -159,6 +159,7 @@ class JointWriter {
     yarp::sig::Vector joint_angles;       // yarp vector for reading all joint angles
     yarp::dev::PolyDriver driver;         // yarp driver needed for reading joint encoders
     yarp::dev::IPositionControl *ipos;    // iCub position control interface
+    yarp::dev::IEncoders *ienc;           // iCub position control interface
 
     /*** auxilary methods ***/
     // check if init function was called

@@ -221,22 +221,39 @@ std::vector<int> iCubANN::JointRGetNeuronsPerJoint(std::string name) {
     }
 }
 
-double iCubANN::JointRReadDouble(std::string name, int joint) {
+std::vector<double> iCubANN::JointRReadDoubleAll(std::string name) {
+    /*
+        Read one joint and return joint angle directly as double value
+
+        params: std::string name    -- name of the selected joint reader
+
+        return: double              -- joint angle read from the robot
+    */
+
+    if (parts_reader.count(name)) {
+        return parts_reader[name]->ReadDoubleAll();
+    } else {
+        std::cerr << "[Joint Reader] " << name << ": This name is not defined." << std::endl;
+        std::vector<double> empty;
+        return empty;
+    }
+}
+
+double iCubANN::JointRReadDoubleOne(std::string name, int joint) {
     /*
         Read one joint and return joint angle directly as double value
 
         params: std::string name    -- name of the selected joint reader
                 int joint           -- joint number of the robot part
 
-        return: double              -- joint angle read from the robot
+        return: double              -- joint angle read from the robot; NAN at error
     */
 
     if (parts_reader.count(name)) {
-        return parts_reader[name]->ReadDouble(joint);
+        return parts_reader[name]->ReadDoubleOne(joint);
     } else {
         std::cerr << "[Joint Reader] " << name << ": This name is not defined." << std::endl;
-        double empty;
-        return empty;
+        return NAN;
     }
 }
 

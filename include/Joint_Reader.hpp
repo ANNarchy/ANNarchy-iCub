@@ -71,11 +71,17 @@ class JointReader {
     std::vector<int> GetNeuronsPerJoint();
 
     /**
-     * \brief Read one joint and return joint angle directly in degree as double value
-     * \param[in] joint joint number of the robot part
-     * \return Joint angle read from the robot in degree.
+     * \brief Read all joints and return joint angles directly in degree as double values
+     * \return Joint angles, read from the robot in degree.
      */
-    double ReadDouble(int joint);
+    std::vector<double> ReadDoubleAll();
+
+    /**
+     * \brief Read one joint and return joint angle directly in degree as double value
+     * \param[in] joint Joint number of the robot part
+     * \return Joint angle, read from the robot in degree.
+     */
+    double ReadDoubleOne(int joint);
 
     /**
      * \brief Read all joints and return the joint angles encoded in populations.

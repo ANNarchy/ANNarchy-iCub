@@ -77,7 +77,11 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
             return false;
         }
 
-        driver.view(ienc);
+        if (!driver.view(ienc)) {
+            std::cerr << "[Joint Writer " << icub_part << "] Unable to open motor control interfaces!" << std::endl;
+            return false;
+        }
+
         ienc->getAxes(&joints);
         joint_angles.resize(joints);
         neuron_deg.resize(joints);
@@ -177,7 +181,24 @@ std::vector<int> JointReader::GetNeuronsPerJoint() {
     return neuron_counts;
 }
 
-double JointReader::ReadDouble(int joint) {
+std::vector<double> JointReader::ReadDoubleAll() {
+    /*
+        Read all joints and return joint angles directly as double value
+
+        return: std::vector<double>     -- joint angles read from the robot
+    */
+
+    std::vector<double> angles;
+    if (CheckInit()) {
+        angles.resize(joints);
+        if (!ienc->getEncoders(angles.data())) {
+            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angles from iCub!" << std::endl;
+        }
+    }
+    return angles;
+}
+
+double JointReader::ReadDoubleOne(int joint) {
     /*
         Read one joint and return joint angle directly as double value
 
@@ -188,11 +209,12 @@ double JointReader::ReadDouble(int joint) {
 
     double angle = 0.0;
     if (CheckInit()) {
-        if (joint >= joints || joint < 0) {
+        if (joint < joints || joint > 0) {
+            if (!ienc->getEncoder(joint, &angle)) {
+                std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
+            }
+        } else {
             std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
-        }
-        if (!ienc->getEncoder(joint, &angle)) {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
         }
     }
     return angle;
@@ -208,12 +230,14 @@ std::vector<std::vector<double>> JointReader::ReadPopAll() {
     auto angle_pops = std::vector<std::vector<double>>(joints, std::vector<double>());
 
     if (CheckInit()) {
-        double angles[joints];
-        if (!ienc->getEncoders(angles)) {
+        std::vector<double> angles;
+        angles.resize(joints);
+        if (ienc->getEncoders(angles.data())) {
+            for (int i = 0; i < joints; i++) {
+                angle_pops[i] = Encode(angles[i], i);
+            }
+        } else {
             std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
-        }
-        for (int i = 0; i < joints; i++) {
-            angle_pops[i] = Encode(angles[i], i);
         }
     }
     return angle_pops;
@@ -230,15 +254,16 @@ std::vector<double> JointReader::ReadPopOne(int joint) {
 
     std::vector<double> angle_pop;
     if (CheckInit()) {
-        if (joint >= joints || joint < 0) {
+        if (joint < joints || joint > 0) {
+            double angle;
+            if (ienc->getEncoder(joint, &angle)) {
+                angle_pop = Encode(angle, joint);
+            } else {
+                std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
+            }
+        } else {
             std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
         }
-
-        double angle;
-        if (!ienc->getEncoder(joint, &angle)) {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
-        }
-        angle_pop = Encode(angle, joint);
     }
     return angle_pop;
 }

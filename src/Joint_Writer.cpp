@@ -75,7 +75,12 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
             std::cerr << "[Joint Writer " << icub_part << "] Unable to open" << options.find("device").asString() << "!" << std::endl;
             return false;
         }
-        driver.view(ipos);
+
+        if (!driver.view(ipos) || !driver.view(ienc)) {
+            std::cerr << "[Joint Writer " << icub_part << "] Unable to open motor control interfaces!" << std::endl;
+            return false;
+        }
+
         ipos->getAxes(&joints);
 
         // resize vector for saving joint parameter
@@ -254,15 +259,30 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
             return false;
         }
 
-        for (int i = 0; i < position.size(); i++) {
-            position[i] = std::clamp(position[i], joint_min[i], joint_max[i]);
-        }
-
         // execute motion dependent on selected mode
         bool start = false;
         if (mode == "abs") {
+            // clamp to joint limits
+            for (int i = 0; i < position.size(); i++) {
+                position[i] = std::clamp(position[i], joint_min[i], joint_max[i]);
+            }
+            // start motion
             start = ipos->positionMove(position.data());
         } else if (mode == "rel") {
+            // clamp to joint limits
+            std::vector<double> act_pos;
+            act_pos.resize(joints);
+            ienc->getEncoders(act_pos.data());
+            for (int i = 0; i <= joints; i++) {
+                double new_pos = act_pos[i] + position[i];
+                if (new_pos > joint_max[i]) {
+                    position[i] = joint_max[i] - act_pos[i];
+                }
+                if (new_pos < joint_min[i]) {
+                    position[i] = joint_min[i] - act_pos[i];
+                }
+            }
+            // start motion
             start = ipos->relativeMove(position.data());
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
@@ -315,15 +335,32 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
             return false;
         }
 
-        for (int i = 0; i < position.size(); i++) {
-            position[i] = std::clamp(position[i], joint_min[joint_selection[i]], joint_max[joint_selection[i]]);
-        }
-
         // execute motion dependent on selected mode
         bool start = false;
         if (mode == "abs") {
+            // clamp to joint limits
+            for (int i = 0; i < position.size(); i++) {
+                position[i] = std::clamp(position[i], joint_min[joint_selection[i]], joint_max[joint_selection[i]]);
+            }
+            // start motion
             start = ipos->positionMove(joint_selection.size(), joint_selection.data(), position.data());
         } else if (mode == "rel") {
+            // clamp to joint limits
+            std::vector<double> act_pos;
+            act_pos.resize(joints);
+            ienc->getEncoders(act_pos.data());
+            int i = 0;
+            for (std::vector<int>::iterator it = joint_selection.begin(); it != joint_selection.end(); ++it) {
+                double new_pos = act_pos[*it] + position[i];
+                if (new_pos > joint_max[*it]) {
+                    position[i] = joint_max[*it] - act_pos[*it];
+                }
+                if (new_pos < joint_min[*it]) {
+                    position[i] = joint_min[*it] - act_pos[*it];
+                }
+                i++;
+            }
+            // start motion
             start = ipos->relativeMove(joint_selection.size(), joint_selection.data(), position.data());
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
@@ -367,13 +404,25 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
             return false;
         }
 
-        position = std::clamp(position, joint_min[joint], joint_max[joint]);
-
         // execute motion dependent on selected mode
         bool start = false;
         if (mode == "abs") {
+            // clamp to joint limits
+            position = std::clamp(position, joint_min[joint], joint_max[joint]);
+            // start motion
             start = ipos->positionMove(joint, position);
         } else if (mode == "rel") {
+            // clamp to joint limits
+            double act_pos;
+            ienc->getEncoder(joint, &act_pos);
+            double new_pos = act_pos + position;
+            if (new_pos > joint_max[joint]) {
+                position = joint_max[joint] - act_pos;
+            }
+            if (new_pos < joint_min[joint]) {
+                position = joint_min[joint] - act_pos;
+            }
+            // start motion
             start = ipos->relativeMove(joint, position);
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
@@ -426,6 +475,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bo
                     return false;
                 }
             }
+            // start motion
             start = ipos->positionMove(joint_angles.data());
         } else if (mode == "rel") {
             // Decode positions from populations
@@ -436,6 +486,22 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bo
                     return false;
                 }
             }
+
+            // clamp to joint limits
+            std::vector<double> act_pos;
+            act_pos.resize(joints);
+            ienc->getEncoders(act_pos.data());
+            for (int i = 0; i <= joints; i++) {
+                double new_pos = act_pos[i] + joint_angles[i];
+                if (new_pos > joint_max[i]) {
+                    joint_angles[i] = joint_max[i] - act_pos[i];
+                }
+                if (new_pos < joint_min[i]) {
+                    joint_angles[i] = joint_min[i] - act_pos[i];
+                }
+            }
+
+            // start motion
             start = ipos->relativeMove(joint_angles.data());
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
@@ -493,24 +559,43 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
         bool start = false;
         if (mode == "abs") {
             // Decode positions from populations
-            for (int i = 0; i < joints; i++) {
-                joint_angles[i] = Decode(position_pops[i], i, neuron_deg_abs);
+            for (int i = 0; i < joint_selection.size(); i++) {
+                joint_angles[i] = Decode(position_pops[i], joint_selection[i], neuron_deg_abs);
                 if (std::isnan(joint_angles[i])) {
                     std::cerr << "[Joint Writer " << icub_part << "] Invalid joint angle in population code!" << std::endl;
                     return false;
                 }
             }
-            start = ipos->positionMove(joint_angles.data());
+            // start motion
+            start = ipos->positionMove(joint_selection.size(), joint_selection.data(), joint_angles.data());
+
         } else if (mode == "rel") {
             // Decode positions from populations
-            for (int i = 0; i < joints; i++) {
-                joint_angles[i] = Decode(position_pops[i], i, neuron_deg_rel);
+            for (int i = 0; i < joint_selection.size(); i++) {
+                joint_angles[i] = Decode(position_pops[i], joint_selection[i], neuron_deg_rel);
                 if (std::isnan(joint_angles[i])) {
                     std::cerr << "[Joint Writer " << icub_part << "] Invalid joint angle in population code!" << std::endl;
                     return false;
                 }
             }
-            start = ipos->relativeMove(joint_angles.data());
+            // clamp to joint limits
+            std::vector<double> act_pos;
+            act_pos.resize(joints);
+            ienc->getEncoders(act_pos.data());
+            int i = 0;
+            for (std::vector<int>::iterator it = joint_selection.begin(); it != joint_selection.end(); ++it) {
+                double new_pos = act_pos[*it] + joint_angles[i];
+                if (new_pos > joint_max[*it]) {
+                    joint_angles[i] = joint_max[*it] - act_pos[*it];
+                }
+                if (new_pos < joint_min[*it]) {
+                    joint_angles[i] = joint_min[*it] - act_pos[*it];
+                }
+                i++;
+            }
+            // start motion
+            start = ipos->relativeMove(joint_selection.size(), joint_selection.data(), joint_angles.data());
+
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
                       << std::endl;
@@ -562,6 +647,7 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
                 std::cerr << "[Joint Writer " << icub_part << "] Invalid joint angle in population code!" << std::endl;
                 return false;
             }
+            // start motion
             start = ipos->positionMove(joint, angle);
         } else if (mode == "rel") {
             // Decode relative position from population
@@ -570,6 +656,19 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
                 std::cerr << "[Joint Writer " << icub_part << "] Invalid joint angle in population code!" << std::endl;
                 return false;
             }
+
+            // clamp to joint limits
+            double act_pos;
+            ienc->getEncoder(joint, &act_pos);
+            double new_pos = act_pos + angle;
+            if (new_pos > joint_max[joint]) {
+                angle = joint_max[joint] - act_pos;
+            }
+            if (new_pos < joint_min[joint]) {
+                angle = joint_min[joint] - act_pos;
+            }
+
+            // start motion
             start = ipos->relativeMove(joint, angle);
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
