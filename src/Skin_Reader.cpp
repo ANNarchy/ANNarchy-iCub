@@ -47,7 +47,6 @@ bool SkinReader::Init(char arm, bool norm_data) {
 
     if (!dev_init) {
         // Init YARP-Network
-        yarp::os::Network::init();
         if (!yarp::os::Network::checkNetwork()) {
             std::cerr << "[Skin Reader] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
@@ -172,7 +171,6 @@ void SkinReader::Close() {
         port_arm.close();
     }
 
-    yarp::os::Network::fini();
     dev_init = false;
 }
 

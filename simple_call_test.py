@@ -171,7 +171,7 @@ def call_test_jwriter(ann_wrapper):
     # define test positions
     test_pos = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5)
     double_all = np.zeros((6))
-    double_all_rel = np.ones((6)) * 5.0
+    double_all_rel = np.ones((6)) * 5.1
     pop_multiple = np.zeros((3, 15)) 
     for i in range(3):
         pop_multiple[i] = encode(ann_wrapper.PART_KEY_HEAD, i + 3, 15, 10., 0.5)
@@ -319,7 +319,6 @@ def call_test_vreader(ann_wrapper):
 
     # stop the visual reader instance
     ann_wrapper.visualR_stop()
-
     # first remove the old visual reader instance, then add and init a new visual reader instance
     ann_wrapper.rm_visual_reader()
     ann_wrapper.add_visual_reader()
@@ -329,6 +328,7 @@ def call_test_vreader(ann_wrapper):
     ann_wrapper.rm_visual_reader()
     ann_wrapper.add_visual_reader()
     print(ann_wrapper.visualR_init('b'))                    # use of default values; reinitialization binocular
+    ann_wrapper.rm_visual_reader()
 
 #########################################################
 if __name__ == "__main__":
@@ -359,4 +359,4 @@ if __name__ == "__main__":
         print('No valid test command!')
 
     del wrapper
-    print('finish')
+    print('finished call tests')

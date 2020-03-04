@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <yarp/os/all.h>
+
 #include <map>
 #include <memory>
 #include <string>
@@ -32,14 +34,20 @@
 /**
  * \brief Interfaces the different modules (Reader/Writer) and handles the use of multiple module instances.
  */
-struct iCubANN {
+class iCubANN {
  private:
+    yarp::os::Network Yarp;
     std::unique_ptr<VisualReader> visual_input; /** \brief associated visual reader (only one possible for left/right eye) */
     std::map<std::string, std::unique_ptr<JointReader>> parts_reader;  /** \brief associated joint readers (one for every robot part) */
     std::map<std::string, std::unique_ptr<JointWriter>> parts_writer;  /** \brief associated joint writers (one for every robot part) */
     std::map<std::string, std::unique_ptr<SkinReader>> tactile_reader; /** \brief associated skin reader */
 
  public:
+    // Constructor
+    iCubANN() = default;
+    // Destructor
+    ~iCubANN();
+
     /***  Add intstances of the interface modules ***/
     /**
      * \brief Add an instance of the joint reader module. This has to be initialized with the init-method.

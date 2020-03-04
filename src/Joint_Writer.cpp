@@ -59,7 +59,6 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         }
 
         // Check Yarp-network
-        yarp::os::Network::init();
         if (!yarp::os::Network::checkNetwork()) {
             std::cerr << "[Joint Writer " << icub_part << "] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
@@ -165,11 +164,9 @@ void JointWriter::Close() {
     /*
         Close joint writer with cleanup
     */
-
-    if (CheckInit()) {
+    if (driver.isValid()) {
         driver.close();
     }
-    yarp::os::Network::fini();
     dev_init = false;
 }
 
@@ -258,7 +255,8 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
             std::cerr << "[Joint Writer " << icub_part << "] Array size does not fit with joint count!" << std::endl;
             return false;
         }
-
+        std::vector<double> act_pos;
+        act_pos.resize(joints);
         // execute motion dependent on selected mode
         bool start = false;
         if (mode == "abs") {
@@ -269,10 +267,12 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
             // start motion
             start = ipos->positionMove(position.data());
         } else if (mode == "rel") {
+            std::cout << position << std::endl;
             // clamp to joint limits
-            std::vector<double> act_pos;
-            act_pos.resize(joints);
+
+            std::cout << act_pos << std::endl;
             ienc->getEncoders(act_pos.data());
+            std::cout << act_pos << std::endl;
             for (int i = 0; i <= joints; i++) {
                 double new_pos = act_pos[i] + position[i];
                 if (new_pos > joint_max[i]) {
@@ -282,6 +282,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
                     position[i] = joint_min[i] - act_pos[i];
                 }
             }
+            std::cout << position << std::endl;
             // start motion
             start = ipos->relativeMove(position.data());
         } else {
@@ -301,6 +302,8 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
                 }
             }
         }
+        ienc->getEncoders(act_pos.data());
+        std::cout << act_pos << std::endl;
         return start;
     } else {
         return false;
@@ -320,8 +323,8 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
 
     if (CheckInit()) {
         // Check joint count
-        if (joint_selection.size() < joints) {
-            std::cerr << "[Joint Writer " << icub_part << "] To many joints for the robot part!" << std::endl;
+        if (joint_selection.size() > joints) {
+            std::cerr << "[Joint Writer " << icub_part << "] Too many joints for the robot part!" << std::endl;
             return false;
         }
 
@@ -403,6 +406,7 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
             std::cerr << "[Joint Writer " << icub_part << "] Selected joint out of range!" << std::endl;
             return false;
         }
+        double act_pos;
 
         // execute motion dependent on selected mode
         bool start = false;
@@ -413,9 +417,13 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
             start = ipos->positionMove(joint, position);
         } else if (mode == "rel") {
             // clamp to joint limits
-            double act_pos;
             ienc->getEncoder(joint, &act_pos);
+            std::cout << "act pos:" << act_pos << std::endl;
+            std::cout << "delta:" << position << std::endl;
+
             double new_pos = act_pos + position;
+            std::cout << "predicted pos:" << new_pos << std::endl;
+
             if (new_pos > joint_max[joint]) {
                 position = joint_max[joint] - act_pos;
             }
@@ -439,7 +447,13 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
                     }
                 }
             }
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] Could not start motion!" << std::endl;
+            return false;
         }
+
+        ienc->getEncoder(joint, &act_pos);
+        std::cout << "real pos:" << act_pos << std::endl;
         return start;
     } else {
         return false;
@@ -540,8 +554,8 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
 
     if (CheckInit()) {
         // Check joint count
-        if (joint_selection.size() < joints) {
-            std::cerr << "[Joint Writer " << icub_part << "] To many joints for the robot part!" << std::endl;
+        if (joint_selection.size() > joints) {
+            std::cerr << "[Joint Writer " << icub_part << "] Too many joints for the robot part!" << std::endl;
             return false;
         }
 

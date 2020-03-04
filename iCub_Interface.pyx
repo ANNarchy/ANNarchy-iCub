@@ -32,7 +32,7 @@ import numpy as np
 
 cdef extern from "Interface_iCub.hpp":
 
-    cdef struct iCubANN:
+    cdef cppclass iCubANN:
 
         ### Manage instances of the reader/writer modules ###
         # add an instance of joint reader

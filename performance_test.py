@@ -221,6 +221,20 @@ def speed_test_jwriter(ann_wrapper, test_count):
     zero_pos['head'] = np.zeros(6)
     zero_pos['right_arm'] = np.load(position_path + "zero_pos_arm.npy")
 
+    for idx, data in enumerate(positions):
+        print(idx, positions[data][0])
+    for idx, data in enumerate(zero_pos):
+        print(idx, zero_pos[data][0])
+
+    # delta positions
+    deltas = {}
+    deltas['pos_arm_T_r'] = (positions['pos_arm_T_r'][0] - zero_pos['right_arm'], 'right_arm')
+    deltas['pos_arm_complex_r'] = (positions['pos_arm_complex_r'][0] - zero_pos['right_arm'], 'right_arm')
+    deltas['pos_arm_home_r'] = (positions['pos_arm_home_r'][0] - zero_pos['right_arm'], 'right_arm')
+    deltas['pos_head'] = (positions['pos_head'][0] - zero_pos['head'], 'head')
+    deltas['pos_head_complex'] = (positions['pos_head_complex'][0] - zero_pos['head'], 'head')
+    deltas['pos_head_zero'] = (positions['pos_head_zero'][0] - zero_pos['head'], 'head')
+
     # encode positions
     print('__ Encode test positions __')
     part_enc = {'right_arm': {}, 'head': {}}
@@ -230,6 +244,16 @@ def speed_test_jwriter(ann_wrapper, test_count):
             positions[key][0][i] = round(positions[key][0][i], 2)
             pos_enc.append(encode(positions[key][1], i, n_pop, positions[key][0][i], sigma, neuron_res))
         part_enc[positions[key][1]][key] = pos_enc
+
+    # encode deltas
+    print('__ Encode test positions __')
+    part_enc_delta = {'right_arm': {}, 'head': {}}
+    for key in deltas:
+        pos_enc = []
+        for i in range(deltas[key][0].shape[0]):
+            deltas[key][0][i] = round(deltas[key][0][i], 2)
+            pos_enc.append(encode(deltas[key][1], i, n_pop, deltas[key][0][i], sigma, neuron_res))
+        part_enc_delta[deltas[key][1]][key] = pos_enc
 
     print('____________________________________________________________\n')
     print('__ Add and init joint writer modules __')
@@ -401,6 +425,166 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('________ Test results: Population_all')
     for key in results_pop_all:
         print('Test:', key, 'results:', round(results_pop_all[key], 4), 's')
+    
+
+    #########################################################
+    # test joint motion with the joint angle as double value for one joint (relative position)
+    print('__ Type of positioning: Double_one')
+    results_double_one = {}
+    for name in part_enc:
+        joints = ann_wrapper.jointW_get_joint_count(name)
+        print('____ Test part:', name)
+        for key in positions:
+            if positions[key][1] == name:
+                print('______ Test position:', key)
+                results_double_one[name + '_' + key] = 0
+                for i in range(test_count):
+                    time_start = time.time()
+                    for i in range(joints):
+                        ann_wrapper.jointW_write_double_one(name, deltas[key][0][i], i, "rel", True)
+                    time_stop = time.time()
+                    results_double_one[name + '_' + key] += time_stop -time_start
+
+                    for i in range(joints):
+                        ann_wrapper.jointW_write_double_one(name, zero_pos[name][i], i, "abs", True)
+                    time.sleep(0.5)
+                results_double_one[name + '_' + key] /= test_count
+
+    # show test results
+    print('________ Test results: Double_one')
+    for key in results_double_one:
+        print('Test:', key, 'results:', round(results_double_one[key], 4), 's')
+    print('\n')
+
+    # test joint motion with the joint angles as double values for multiple joints (relative position)
+    print('__ Type of positioning: Double_multiple')
+    results_double_multiple = {}
+    for name in part_enc:
+        joints = ann_wrapper.jointW_get_joint_count(name)
+        print('____ Test part:', name)
+        for key in positions:
+            if positions[key][1] == name:
+                print('______ Test position:', key)
+                results_double_multiple[name + '_' + key] = 0
+                for i in range(test_count):
+                    time_start = time.time()
+                    ann_wrapper.jointW_write_double_multiple(name, deltas[key][0][3:6], range(3, 6), "rel", True)
+                    time_stop = time.time()
+                    results_double_multiple[name + '_' + key] += time_stop -time_start
+
+                    ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                    time.sleep(0.5)
+                results_double_multiple[name + '_' + key] /= test_count
+
+    # show test results
+    print('________ Test results: Double_multiple')
+    for key in results_double_one:
+        print('Test:', key, 'results:', round(results_double_multiple[key], 4), 's')
+    print('\n')
+
+    # test joint motion with the joint angles as double values for all joints (relative position)
+    print('__ Type of positioning: Double_all')
+    results_double_all = {}
+    for name in part_enc:
+        joints = ann_wrapper.jointW_get_joint_count(name)
+        print('____ Test part:', name)
+        for key in positions:
+            if positions[key][1] == name:
+                print('______ Test position:', key)
+                results_double_all[name + '_' + key] = 0
+                for i in range(test_count):
+                    time_start = time.time()
+                    ann_wrapper.jointW_write_double_all(name, deltas[key][0], "rel", True)
+                    time_stop = time.time()
+                    results_double_all[name + '_' + key] += time_stop -time_start
+
+                    ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                    time.sleep(0.5)
+                results_double_all[name + '_' + key] /= test_count
+
+    # show test results
+    print('________ Test results: Double_all')
+    for key in results_double_all:
+        print('Test:', key, 'results:', round(results_double_all[key], 4), 's')
+    print('\n')
+
+    #########################################################
+    # test joint motion with joint angles encoded in population code, coding single joint (relative position)
+    print('__ Type of positioning: Population_one')
+    results_pop_one = {}
+    for name in part_enc:
+        joints = ann_wrapper.jointW_get_joint_count(name)
+        print('____ Test part:', name)
+        for key in part_enc[name]:
+            print('______ Test position:', key)
+            results_pop_one[name + '_' + key] = 0
+            for i in range(test_count):
+                time_start = time.time()
+                for i in range(joints):
+                    ann_wrapper.jointW_write_pop_one(name, part_enc_delta[name][key][i], i, "rel", True)
+                time_stop = time.time()
+                results_pop_one[name + '_' + key] += time_stop -time_start
+
+                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                time.sleep(0.5)
+            results_pop_one[name + '_' + key] /= test_count
+
+    # show test results
+    print('________ Test results: Population_one')
+    for key in results_pop_one:
+        print('Test:', key, 'results:', round(results_pop_one[key], 4), 's')
+    print('\n')
+
+    # test joint motion with joint angles encoded in population code, coding multiple joints combined (relative position)
+    print('__ Type of positioning: Population_multiple')
+    results_pop_multiple = {}
+    for name in part_enc:
+        joints = ann_wrapper.jointW_get_joint_count(name)
+        print('____ Test part:', name)
+        for key in part_enc[name]:
+            print('______ Test position:', key)
+            results_pop_multiple[name + '_' + key] = 0
+            for i in range(test_count):
+                time_start = time.time()
+                for i in range(joints):
+                    ann_wrapper.jointW_write_pop_multiple(name, part_enc_delta[name][key][3:6], range(3, 6), "rel", True)
+                time_stop = time.time()
+                results_pop_multiple[name + '_' + key] += time_stop -time_start
+
+                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                time.sleep(0.5)
+            results_pop_multiple[name + '_' + key] /= test_count
+
+    # show test results
+    print('________ Test results: Population_multiple')
+    for key in results_pop_multiple:
+        print('Test:', key, 'results:', round(results_pop_multiple[key], 4), 's')
+    print('\n')
+
+    # test joint motion with joint angles encoded in population code, coding all joints combined (relative position)
+    print('__ Type of positioning: Population_all')
+    results_pop_all = {}
+    for name in part_enc:
+        print('____ Test part:', name)
+        for key in part_enc[name]:
+            print('______ Test position:', key)
+            results_pop_all[name + '_' + key] = 0
+            for i in range(test_count):
+                time_start = time.time()
+                ann_wrapper.jointW_write_pop_all(name, part_enc_delta[name][key], "rel", True)
+                time_stop = time.time()
+                results_pop_all[name + '_' + key] += time_stop -time_start
+
+                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                time.sleep(0.5)
+            results_pop_all[name + '_' + key] /= test_count
+
+    # show test results
+    print('________ Test results: Population_all')
+    for key in results_pop_all:
+        print('Test:', key, 'results:', round(results_pop_all[key], 4), 's')
+    
+    #########################################################
 
     print('____________________________________________________________\n')
     print('__ Close joint writer modules __')

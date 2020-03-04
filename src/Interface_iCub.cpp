@@ -29,6 +29,14 @@
 
 iCubANN my_interface;
 
+// Destructor
+iCubANN::~iCubANN() {
+    parts_writer.clear();
+    parts_reader.clear();
+    tactile_reader.clear();
+    Yarp.fini();
+}
+
 /***  Add intstances of the interface modules ***/
 void iCubANN::AddJointReader(std::string name) {
     /*

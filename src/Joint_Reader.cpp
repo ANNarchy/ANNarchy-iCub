@@ -30,7 +30,9 @@
 #include "Joint_Reader.hpp"
 
 // Destructor
-JointReader::~JointReader() { Close(); }
+JointReader::~JointReader() {
+    Close();
+}
 
 /*** public methods for the user ***/
 bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_per_neuron) {
@@ -61,7 +63,6 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         }
         sigma_pop = sigma;
 
-        yarp::os::Network::init();
         if (!yarp::os::Network::checkNetwork()) {
             std::cerr << "[Joint Reader " << icub_part << "] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
@@ -137,10 +138,9 @@ void JointReader::Close() {
     /*
         Close joint reader with cleanup
     */
-    if (CheckInit()) {
+    if (driver.isValid()) {
         driver.close();
     }
-    yarp::os::Network::fini();
     dev_init = false;
 }
 

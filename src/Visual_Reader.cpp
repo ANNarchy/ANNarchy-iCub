@@ -34,7 +34,9 @@
 typedef std::chrono::high_resolution_clock Clock;
 
 // Destructor
-VisualReader::~VisualReader() {}
+VisualReader::~VisualReader() {
+    close();
+}
 
 /*** public methods for the user ***/
 bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter) {
