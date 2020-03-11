@@ -425,7 +425,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('________ Test results: Population_all')
     for key in results_pop_all:
         print('Test:', key, 'results:', round(results_pop_all[key], 4), 's')
-    
+    print('\n')
 
     #########################################################
     # test joint motion with the joint angle as double value for one joint (relative position)
@@ -801,7 +801,7 @@ def vis_move_test(ann_wrapper):
 
     # move the right arm to the start position
     for i in range(ann_wrapper.jointW_get_joint_count("moving")):
-        ann_wrapper.jointW_write_double("moving", pos[True][i], i, "abs", True)
+        ann_wrapper.jointW_write_double_one("moving", pos[True][i], i, "abs", True)
 
     if (params.gazebo):
         hand_loc = [ 0.19, -0.043, 0.67 ]

@@ -147,13 +147,13 @@ def test_joint_positioning(ann_wrapper):
                 print('______ Test position:', key)
                 # move the joints
                 for i in range(positions[key][0].shape[0]):
-                    ann_wrapper.jointW_write_double(name, positions[key][0][i], i, "abs", True)
+                    ann_wrapper.jointW_write_double_one(name, positions[key][0][i], i, "abs", True)
                 time.sleep(1)
 
                 # read the joint positions
                 read_pos_double = np.zeros((positions[key][0].shape[0]))
                 for i in range(read_pos_double.shape[0]):
-                    read_pos_double[i] = round(ann_wrapper.jointR_read_double(name, i), 2)
+                    read_pos_double[i] = round(ann_wrapper.jointR_read_double_one(name, i), 2)
                 read_double[key] = read_pos_double
 
                 # compare the written positions with the returned joint positions
@@ -393,15 +393,15 @@ def test_visual_perception(ann_wrapper):
         sim_ctrl = gzbo_wc.WorldController()
 
         # create a sphere and a box object in the simulator
-        box = sim_ctrl.create_object("box", [0.1, 0.1, 0.1], params.loc_box, [0.0, 0., 0.], [1.0, 0.0, 0.0])
-        sphere = sim_ctrl.create_object("sphere", [0.05], params.loc_sph, [0.0, 0., 0.], [0.0, 0.0, 1.0])
+        box = sim_ctrl.create_object("box", [0.1, 0.1, 0.1], params.loc_box, [0.0, 0., 0.], [255, 0, 0])
+        sphere = sim_ctrl.create_object("sphere", [0.05], params.loc_sph, [0.0, 0., 0.], [0, 0, 255])
     else:
         # instanciate the simulator world controller
         sim_ctrl = iSim_wc.WorldController()
 
         # create a sphere and a box object in the simulator
-        box = sim_ctrl.create_object("sbox", [0.1, 0.1, 0.1], params.loc_box, [1.0, 0.0, 0.0])
-        sphere = sim_ctrl.create_object("ssph", [0.05], params.loc_sph, [0.0, 0.0, 1.0])
+        box = sim_ctrl.create_object("sbox", [0.1, 0.1, 0.1], params.loc_box, [255, 0, 0])
+        sphere = sim_ctrl.create_object("ssph", [0.05], params.loc_sph, [0, 0, 255])
 
     print('____________________________________________________________')
     print('__ Add and init visual reader module __')

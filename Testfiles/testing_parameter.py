@@ -10,12 +10,12 @@ import numpy as np
 #########################################################
 ################### general parameter ###################
 # select the used simulator
-gazebo = False
+gazebo = True
 
 #########################################################
 ################### performance test ####################
 # general
-test_count = 10
+test_count = 5
 position_path = "./Testfiles/test_positions/"
 
 # jreader
