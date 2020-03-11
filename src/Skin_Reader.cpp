@@ -29,6 +29,7 @@
 #include <queue>
 #include <string>
 
+#include "INI_Reader/INIReader.h"
 #include "Skin_Reader.hpp"
 
 // Destructor
@@ -89,6 +90,15 @@ bool SkinReader::Init(char arm, bool norm_data) {
             }
         } else {
             std::cerr << "[Skin Reader] No correct side descriptor: Use R/r for the right arm and L/l for the left arm!" << std::endl;
+            return false;
+        }
+
+        // read configuration data from ini file
+        INIReader reader_gen("data/interface_param.ini");
+        bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
+        std::string port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
+        if (on_Simulator && (port_prefix != "/icubSim")) {
+            std::cerr << "[Skin Reader " << side << "] The port prefix does not match the default simulator prefix!" << std::endl;
             return false;
         }
 

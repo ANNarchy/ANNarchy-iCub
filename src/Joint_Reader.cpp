@@ -68,9 +68,19 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
             return false;
         }
 
+        // read configuration data from ini file
+        INIReader reader_gen("data/interface_param.ini");
+        bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
+        std::string port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
+        if (on_Simulator && (port_prefix != "/icubSim")) {
+            std::cerr << "[Joint Reader " << icub_part << "] The port prefix does not match the default simulator prefix!" << std::endl;
+            return false;
+        }
+
+        // setup iCub joint position control
         yarp::os::Property options;
         options.put("device", "remote_controlboard");
-        options.put("remote", ("/icubSim/" + icub_part).c_str());
+        options.put("remote", (port_prefix + "/" + icub_part).c_str());
         options.put("local", ("/ANNarchy_read/" + icub_part).c_str());
 
         if (!driver.open(options)) {
@@ -79,7 +89,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         }
 
         if (!driver.view(ienc)) {
-            std::cerr << "[Joint Writer " << icub_part << "] Unable to open motor control interfaces!" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Unable to open motor control interfaces!" << std::endl;
             return false;
         }
 

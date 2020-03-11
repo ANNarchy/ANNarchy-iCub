@@ -64,10 +64,19 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
             return false;
         }
 
+        // read configuration data from ini file
+        INIReader reader_gen("data/interface_param.ini");
+        bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
+        std::string port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
+        if (on_Simulator && (port_prefix != "/icubSim")) {
+            std::cerr << "[Joint Writer " << icub_part << "] The port prefix does not match the default simulator prefix!" << std::endl;
+            return false;
+        }
+
         // setup iCub joint position control
         yarp::os::Property options;
         options.put("device", "remote_controlboard");
-        options.put("remote", ("/icubSim/" + icub_part).c_str());
+        options.put("remote", (port_prefix + "/" + icub_part).c_str());
         options.put("local", ("/ANNarchy_write/" + icub_part).c_str());
 
         if (!driver.open(options)) {
@@ -91,7 +100,18 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
 
         // setup ini-Reader for joint limits
         double joint_range;
-        INIReader reader("data/joint_limits.ini");
+        std::string joint_path;
+        if (on_Simulator) {
+            joint_path = reader_gen.Get("motor", "sim_joint_limits_path", "");
+        } else {
+            joint_path = reader_gen.Get("motor", "robot_joint_limits_path", "");
+        }
+
+        if (joint_path == "") {
+            std::cerr << "[Joint Writer " << icub_part << "] Ini-path for joint limits is empty!" << std::endl;
+            return false;
+        }
+        INIReader reader(joint_path);
 
         for (int i = 0; i < joints; i++) {
             // set joint velocity
