@@ -3,7 +3,7 @@ var searchData=
   ['tactile_5farm',['tactile_arm',['../d1/dc5/classSkinReader.html#aa1d04c03fb6deb2963faf0df609f76ae',1,'SkinReader']]],
   ['tactile_5fforearm',['tactile_forearm',['../d1/dc5/classSkinReader.html#abc48f51944939aa8fb52bda7177fa04c',1,'SkinReader']]],
   ['tactile_5fhand',['tactile_hand',['../d1/dc5/classSkinReader.html#ab195dc950db1d41067816ad3bd0a8e95',1,'SkinReader']]],
-  ['tactile_5freader',['tactile_reader',['../da/d00/structiCubANN.html#aa0755849f6f597baced0e4d304d59750',1,'iCubANN']]],
+  ['tactile_5freader',['tactile_reader',['../d5/d9d/classiCubANN.html#aa0755849f6f597baced0e4d304d59750',1,'iCubANN']]],
   ['taxel_5fpos_5fdata',['taxel_pos_data',['../d1/dc5/classSkinReader.html#a793889bb286ef383159add07a5747449',1,'SkinReader']]],
   ['test_5fcnt',['test_cnt',['../dd/d3c/namespaceperformance__test.html#ab6964e4347a2a1899c672c3b3574e3c7',1,'performance_test']]],
   ['test_5fcount',['test_count',['../df/df4/namespacetesting__parameter.html#acf0a051455637285cd673435f270a615',1,'testing_parameter']]],

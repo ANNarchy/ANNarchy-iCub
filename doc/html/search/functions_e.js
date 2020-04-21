@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['test_5fjoint_5fpositioning',['test_joint_positioning',['../d0/dbb/namespaceauto__test.html#ab65085388af6d112a88005c697062efc',1,'auto_test']]],
-  ['test_5ftactile_5freading',['test_tactile_reading',['../d0/dbb/namespaceauto__test.html#aa568d53ee9ce64e91be29359e9d48173',1,'auto_test']]],
-  ['test_5fvisual_5fperception',['test_visual_perception',['../d0/dbb/namespaceauto__test.html#ad50b159526adcd8f806ffecf3b4345de',1,'auto_test']]]
+  ['vis_5fmove_5ftest',['vis_move_test',['../dd/d3c/namespaceperformance__test.html#aa0edac3ee29fe7c03ed193d5d69c1cb1',1,'performance_test']]],
+  ['visualreader',['VisualReader',['../d5/df3/classVisualReader.html#a9b8137c6cfbfd36e4c0316cbde0c8b83',1,'VisualReader']]],
+  ['visualrinit',['VisualRInit',['../d5/d9d/classiCubANN.html#ac603526825149858b955173076858e69',1,'iCubANN']]],
+  ['visualrreadfrombuf',['VisualRReadFromBuf',['../d5/d9d/classiCubANN.html#aa0cb947fce09d1c7f59b6ad00b1f266f',1,'iCubANN']]],
+  ['visualrstart',['VisualRStart',['../d5/d9d/classiCubANN.html#a1fe822d99e3a48b86010b6f148b0a0df',1,'iCubANN']]],
+  ['visualrstop',['VisualRStop',['../d5/d9d/classiCubANN.html#a070360e6f3a046cf9099945e281a5bcd',1,'iCubANN']]]
 ];

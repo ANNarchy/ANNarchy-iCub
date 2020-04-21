@@ -1,26 +1,8 @@
 var searchData=
 [
-  ['jointrclose',['JointRClose',['../da/d00/structiCubANN.html#ae174c068e1587f3a82883c2e9b337f07',1,'iCubANN']]],
-  ['jointreader',['JointReader',['../d1/dc0/classJointReader.html#a87b608749f395f52327d7f81ff16480b',1,'JointReader']]],
-  ['jointrgetjointcount',['JointRGetJointCount',['../da/d00/structiCubANN.html#a4a7e511c7f4e61f0c0a2e9aabd928554',1,'iCubANN']]],
-  ['jointrgetjointsdegres',['JointRGetJointsDegRes',['../da/d00/structiCubANN.html#a73a412ff322fddcd7b6e2778873e25d6',1,'iCubANN']]],
-  ['jointrgetneuronsperjoint',['JointRGetNeuronsPerJoint',['../da/d00/structiCubANN.html#a25dd106370409b9ef6f6f8abb801c763',1,'iCubANN']]],
-  ['jointrinit',['JointRInit',['../da/d00/structiCubANN.html#a567cd7cd034d133e591535c26434cf40',1,'iCubANN']]],
-  ['jointrreaddoubleall',['JointRReadDoubleAll',['../da/d00/structiCubANN.html#a01def5c79813b01405d7ca9dd2a5ecde',1,'iCubANN']]],
-  ['jointrreaddoubleone',['JointRReadDoubleOne',['../da/d00/structiCubANN.html#a449d32f40c8bd1774b46637c23959eca',1,'iCubANN']]],
-  ['jointrreadpopall',['JointRReadPopAll',['../da/d00/structiCubANN.html#ad6ffff4d7c93c2801cd606fb1475dc99',1,'iCubANN']]],
-  ['jointrreadpopone',['JointRReadPopOne',['../da/d00/structiCubANN.html#a4aea3fc2c379bfae6720a0c6b6bea8fd',1,'iCubANN']]],
-  ['jointwclose',['JointWClose',['../da/d00/structiCubANN.html#aac0aa0fbfc91c50e010866b256e11462',1,'iCubANN']]],
-  ['jointwgetjointcount',['JointWGetJointCount',['../da/d00/structiCubANN.html#a811df17547d410a0b651178ac107f1e4',1,'iCubANN']]],
-  ['jointwgetjointsdegres',['JointWGetJointsDegRes',['../da/d00/structiCubANN.html#a65dddf9ee61abe37fd63113a0055f756',1,'iCubANN']]],
-  ['jointwgetneuronsperjoint',['JointWGetNeuronsPerJoint',['../da/d00/structiCubANN.html#ac161efb25435622fed97242702362709',1,'iCubANN']]],
-  ['jointwinit',['JointWInit',['../da/d00/structiCubANN.html#a54c7e1218b7bd69e76da8c517056ed25',1,'iCubANN']]],
-  ['jointwriter',['JointWriter',['../df/d23/classJointWriter.html#a206d13821043ca9e4005922144f4cb0b',1,'JointWriter']]],
-  ['jointwsetjointvelocity',['JointWSetJointVelocity',['../da/d00/structiCubANN.html#a1cdddc238d3d9156d258d61e09ba86bc',1,'iCubANN']]],
-  ['jointwwritedoubleall',['JointWWriteDoubleAll',['../da/d00/structiCubANN.html#afbf948330d224b71c24b945f24b6bd14',1,'iCubANN']]],
-  ['jointwwritedoublemultiple',['JointWWriteDoubleMultiple',['../da/d00/structiCubANN.html#a9d5d6888b0c055f06a4aa279f606b136',1,'iCubANN']]],
-  ['jointwwritedoubleone',['JointWWriteDoubleOne',['../da/d00/structiCubANN.html#ad31bf84281c841b5711a83fc441fac05',1,'iCubANN']]],
-  ['jointwwritepopall',['JointWWritePopAll',['../da/d00/structiCubANN.html#a9b270197678f920b58149250bfd18445',1,'iCubANN']]],
-  ['jointwwritepopmultiple',['JointWWritePopMultiple',['../da/d00/structiCubANN.html#a024f58fa9643a9d7d8ae3eb4e415352b',1,'iCubANN']]],
-  ['jointwwritepopone',['JointWWritePopOne',['../da/d00/structiCubANN.html#a125e36f895d8eea650d84f7e192a59a6',1,'iCubANN']]]
+  ['motor_5finit',['motor_init',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#adcf962edd08c3dfe36e98f050b973eff',1,'iCub_Python_Lib::YARP_motor_control']]],
+  ['move_5feyes',['move_eyes',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a52c4ec76ce9e233322c766b3a79af3ae',1,'iCub_Python_Lib::YARP_motor_control']]],
+  ['move_5fmodel',['move_model',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#a3101eeef65f957aff7f0d4e8be454edd',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]],
+  ['move_5fmodel_5fgroup',['move_model_group',['../d8/d54/classiCub__Python__Lib_1_1iCubSim__model__groups__control_1_1ModelGroup.html#a0eee021788e743cee70c612a2074b354',1,'iCub_Python_Lib::iCubSim_model_groups_control::ModelGroup']]],
+  ['move_5fobject',['move_object',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#a467bcf5a149437a176f4db6791748a1e',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]]
 ];

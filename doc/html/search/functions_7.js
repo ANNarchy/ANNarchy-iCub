@@ -1,10 +1,26 @@
 var searchData=
 [
-  ['ini_5fparse',['ini_parse',['../d0/d1d/ini_8cpp.html#a2fab292681265b7774e2a2885abb758c',1,'ini_parse(const char *filename, ini_handler handler, void *user):&#160;ini.cpp'],['../d3/d50/ini_8h.html#a2fab292681265b7774e2a2885abb758c',1,'ini_parse(const char *filename, ini_handler handler, void *user):&#160;ini.cpp']]],
-  ['ini_5fparse_5ffile',['ini_parse_file',['../d0/d1d/ini_8cpp.html#a876bf8b62ade275320db827b929f9289',1,'ini_parse_file(FILE *file, ini_handler handler, void *user):&#160;ini.cpp'],['../d3/d50/ini_8h.html#a876bf8b62ade275320db827b929f9289',1,'ini_parse_file(FILE *file, ini_handler handler, void *user):&#160;ini.cpp']]],
-  ['ini_5fparse_5fstream',['ini_parse_stream',['../d0/d1d/ini_8cpp.html#ad8b766ac18397b0b262559203ea7f602',1,'ini_parse_stream(ini_reader reader, void *stream, ini_handler handler, void *user):&#160;ini.cpp'],['../d3/d50/ini_8h.html#ad8b766ac18397b0b262559203ea7f602',1,'ini_parse_stream(ini_reader reader, void *stream, ini_handler handler, void *user):&#160;ini.cpp']]],
-  ['ini_5fparse_5fstring',['ini_parse_string',['../d0/d1d/ini_8cpp.html#aeb90a0b5e4226351899d28ead4eed6fa',1,'ini_parse_string(const char *string, ini_handler handler, void *user):&#160;ini.cpp'],['../d3/d50/ini_8h.html#aeb90a0b5e4226351899d28ead4eed6fa',1,'ini_parse_string(const char *string, ini_handler handler, void *user):&#160;ini.cpp']]],
-  ['inireader',['INIReader',['../d5/de4/classINIReader.html#a303dc5352470dba2af23719d40f4298d',1,'INIReader']]],
-  ['init',['Init',['../d1/dc0/classJointReader.html#a2f697daa1167564a7f9bbd53988acc91',1,'JointReader::Init()'],['../df/d23/classJointWriter.html#a678635f040aa6ffc5674a84c830fe5b7',1,'JointWriter::Init()'],['../d1/dc5/classSkinReader.html#aa9435aeff7c6eee44c466c96ecb559ae',1,'SkinReader::Init()'],['../d5/df3/classVisualReader.html#a960b92c0f458b2125854920df48ef58a',1,'VisualReader::Init()']]],
-  ['interruptmodule',['interruptModule',['../d5/df3/classVisualReader.html#a60b13d948711e11fd2b0ca18dbac3eca',1,'VisualReader']]]
+  ['jointrclose',['JointRClose',['../d5/d9d/classiCubANN.html#ae174c068e1587f3a82883c2e9b337f07',1,'iCubANN']]],
+  ['jointreader',['JointReader',['../d1/dc0/classJointReader.html#a87b608749f395f52327d7f81ff16480b',1,'JointReader']]],
+  ['jointrgetjointcount',['JointRGetJointCount',['../d5/d9d/classiCubANN.html#a4a7e511c7f4e61f0c0a2e9aabd928554',1,'iCubANN']]],
+  ['jointrgetjointsdegres',['JointRGetJointsDegRes',['../d5/d9d/classiCubANN.html#a73a412ff322fddcd7b6e2778873e25d6',1,'iCubANN']]],
+  ['jointrgetneuronsperjoint',['JointRGetNeuronsPerJoint',['../d5/d9d/classiCubANN.html#a25dd106370409b9ef6f6f8abb801c763',1,'iCubANN']]],
+  ['jointrinit',['JointRInit',['../d5/d9d/classiCubANN.html#a567cd7cd034d133e591535c26434cf40',1,'iCubANN']]],
+  ['jointrreaddoubleall',['JointRReadDoubleAll',['../d5/d9d/classiCubANN.html#a01def5c79813b01405d7ca9dd2a5ecde',1,'iCubANN']]],
+  ['jointrreaddoubleone',['JointRReadDoubleOne',['../d5/d9d/classiCubANN.html#a449d32f40c8bd1774b46637c23959eca',1,'iCubANN']]],
+  ['jointrreadpopall',['JointRReadPopAll',['../d5/d9d/classiCubANN.html#ad6ffff4d7c93c2801cd606fb1475dc99',1,'iCubANN']]],
+  ['jointrreadpopone',['JointRReadPopOne',['../d5/d9d/classiCubANN.html#a4aea3fc2c379bfae6720a0c6b6bea8fd',1,'iCubANN']]],
+  ['jointwclose',['JointWClose',['../d5/d9d/classiCubANN.html#aac0aa0fbfc91c50e010866b256e11462',1,'iCubANN']]],
+  ['jointwgetjointcount',['JointWGetJointCount',['../d5/d9d/classiCubANN.html#a811df17547d410a0b651178ac107f1e4',1,'iCubANN']]],
+  ['jointwgetjointsdegres',['JointWGetJointsDegRes',['../d5/d9d/classiCubANN.html#a65dddf9ee61abe37fd63113a0055f756',1,'iCubANN']]],
+  ['jointwgetneuronsperjoint',['JointWGetNeuronsPerJoint',['../d5/d9d/classiCubANN.html#ac161efb25435622fed97242702362709',1,'iCubANN']]],
+  ['jointwinit',['JointWInit',['../d5/d9d/classiCubANN.html#a54c7e1218b7bd69e76da8c517056ed25',1,'iCubANN']]],
+  ['jointwriter',['JointWriter',['../df/d23/classJointWriter.html#a206d13821043ca9e4005922144f4cb0b',1,'JointWriter']]],
+  ['jointwsetjointvelocity',['JointWSetJointVelocity',['../d5/d9d/classiCubANN.html#a1cdddc238d3d9156d258d61e09ba86bc',1,'iCubANN']]],
+  ['jointwwritedoubleall',['JointWWriteDoubleAll',['../d5/d9d/classiCubANN.html#afbf948330d224b71c24b945f24b6bd14',1,'iCubANN']]],
+  ['jointwwritedoublemultiple',['JointWWriteDoubleMultiple',['../d5/d9d/classiCubANN.html#a9d5d6888b0c055f06a4aa279f606b136',1,'iCubANN']]],
+  ['jointwwritedoubleone',['JointWWriteDoubleOne',['../d5/d9d/classiCubANN.html#ad31bf84281c841b5711a83fc441fac05',1,'iCubANN']]],
+  ['jointwwritepopall',['JointWWritePopAll',['../d5/d9d/classiCubANN.html#a9b270197678f920b58149250bfd18445',1,'iCubANN']]],
+  ['jointwwritepopmultiple',['JointWWritePopMultiple',['../d5/d9d/classiCubANN.html#a024f58fa9643a9d7d8ae3eb4e415352b',1,'iCubANN']]],
+  ['jointwwritepopone',['JointWWritePopOne',['../d5/d9d/classiCubANN.html#a125e36f895d8eea650d84f7e192a59a6',1,'iCubANN']]]
 ];

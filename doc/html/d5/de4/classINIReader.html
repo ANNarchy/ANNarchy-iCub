@@ -61,8 +61,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="../../d9/d6f/classINIReader-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">INIReader Class Reference</div>  </div>
@@ -70,15 +68,6 @@ $(function() {
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="../../dd/d30/INIReader_8h_source.html">INIReader.h</a>&gt;</code></p>
-<div class="dynheader">
-Collaboration diagram for INIReader:</div>
-<div class="dyncontent">
-<div class="center"><img src="../../dc/d56/classINIReader__coll__graph.png" border="0" usemap="#INIReader_coll__map" alt="Collaboration graph"/></div>
-<map name="INIReader_coll__map" id="INIReader_coll__map">
-<area shape="rect" id="node3" title="STL class. " alt="" coords="39,96,119,123"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="15,5,142,47"/>
-</map>
-<center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -94,20 +83,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0a41e06f215552e5d7217a0abc5c214f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fcbb2ebdfad098e34a14f2144f711f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/de4/classINIReader.html#a6fcbb2ebdfad098e34a14f2144f711f7">GetBoolean</a> (const std::string &amp;section, const std::string &amp;name, bool default_value) const</td></tr>
 <tr class="separator:a6fcbb2ebdfad098e34a14f2144f711f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
-Static Private Member Functions</h2></td></tr>
-<tr class="memitem:a29eb47ac6f75322fb729926cd058fef3"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/de4/classINIReader.html#a29eb47ac6f75322fb729926cd058fef3">MakeKey</a> (const std::string &amp;section, const std::string &amp;name)</td></tr>
-<tr class="separator:a29eb47ac6f75322fb729926cd058fef3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38e5a02b9eab882f23401a4b5a0c42a3"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/de4/classINIReader.html#a38e5a02b9eab882f23401a4b5a0c42a3">ValueHandler</a> (void *user, const char *section, const char *name, const char *value)</td></tr>
-<tr class="separator:a38e5a02b9eab882f23401a4b5a0c42a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
-<tr class="memitem:a964b63d6d630cde92a998cfb4986b223"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/de4/classINIReader.html#a964b63d6d630cde92a998cfb4986b223">_error</a></td></tr>
-<tr class="separator:a964b63d6d630cde92a998cfb4986b223"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae48a98ecb0d35c2ea3066dac63a731bd"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/de4/classINIReader.html#ae48a98ecb0d35c2ea3066dac63a731bd">_values</a></td></tr>
-<tr class="separator:ae48a98ecb0d35c2ea3066dac63a731bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a303dc5352470dba2af23719d40f4298d"></a>
@@ -265,42 +240,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a29eb47ac6f75322fb729926cd058fef3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29eb47ac6f75322fb729926cd058fef3">&#9670;&nbsp;</a></span>MakeKey()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">string INIReader::MakeKey </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>section</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a7527150689e2dbdc7388306c00d5e039"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7527150689e2dbdc7388306c00d5e039">&#9670;&nbsp;</a></span>ParseError()</h2>
 
@@ -314,99 +253,6 @@ Private Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a38e5a02b9eab882f23401a4b5a0c42a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38e5a02b9eab882f23401a4b5a0c42a3">&#9670;&nbsp;</a></span>ValueHandler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int INIReader::ValueHandler </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>user</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>section</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>value</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a964b63d6d630cde92a998cfb4986b223"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a964b63d6d630cde92a998cfb4986b223">&#9670;&nbsp;</a></span>_error</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int INIReader::_error</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae48a98ecb0d35c2ea3066dac63a731bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae48a98ecb0d35c2ea3066dac63a731bd">&#9670;&nbsp;</a></span>_values</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::map&lt;std::string, std::string&gt; INIReader::_values</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>

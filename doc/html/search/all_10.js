@@ -1,22 +1,12 @@
 var searchData=
 [
-  ['parseerror',['ParseError',['../d5/de4/classINIReader.html#a7527150689e2dbdc7388306c00d5e039',1,'INIReader']]],
-  ['parts',['parts',['../df/df4/namespacetesting__parameter.html#ae44da9b9d2b615ded93f7dd9d3b2b888',1,'testing_parameter']]],
-  ['parts_5freader',['parts_reader',['../da/d00/structiCubANN.html#a9f0dfd29e53e799774117b49f1ae2477',1,'iCubANN']]],
-  ['parts_5fwriter',['parts_writer',['../da/d00/structiCubANN.html#a953cc0c98f661a8f8b868a51ada5f969',1,'iCubANN']]],
-  ['path_5fbear',['path_bear',['../d1/da2/namespaceiCub__Python__Lib_1_1iCubSim__model__groups__definition.html#a4b115211956f2d7f04897b7c2b8a5726',1,'iCub_Python_Lib::iCubSim_model_groups_definition']]],
-  ['path_5fcar',['path_car',['../d1/da2/namespaceiCub__Python__Lib_1_1iCubSim__model__groups__definition.html#a5d7896a35744c0e63545a8c3de874411',1,'iCub_Python_Lib::iCubSim_model_groups_definition']]],
-  ['path_5fpen',['path_pen',['../d1/da2/namespaceiCub__Python__Lib_1_1iCubSim__model__groups__definition.html#a2acf3608ff572de64e852279934f3897',1,'iCub_Python_Lib::iCubSim_model_groups_definition']]],
-  ['performance_5ftest',['performance_test',['../dd/d3c/namespaceperformance__test.html',1,'']]],
-  ['performance_5ftest_2epy',['performance_test.py',['../d0/d48/performance__test_8py.html',1,'']]],
-  ['plot_5fimage_5fprocessing_2epy',['plot_image_processing.py',['../d8/dd1/plot__image__processing_8py.html',1,'']]],
-  ['port_5farm',['port_arm',['../d1/dc5/classSkinReader.html#a428cb368d5799f5754a7e48f92871def',1,'SkinReader']]],
-  ['port_5fforearm',['port_forearm',['../d1/dc5/classSkinReader.html#a9b424a5e4060f0cbd93f09a72612e196',1,'SkinReader']]],
-  ['port_5fhand',['port_hand',['../d1/dc5/classSkinReader.html#a305240286a9a4f726c7c988eee3f0b7b',1,'SkinReader']]],
-  ['port_5fleft',['port_left',['../d5/df3/classVisualReader.html#ac5a9d320237df7ca7c4e294bd8c2fc26',1,'VisualReader']]],
-  ['port_5fright',['port_right',['../d5/df3/classVisualReader.html#af04106b7136f6125e02ca4f6eccdd744',1,'VisualReader']]],
-  ['position_5fpath',['position_path',['../df/df4/namespacetesting__parameter.html#a27c41fb1c840ad8a908770fb0ee553be',1,'testing_parameter']]],
-  ['precision',['precision',['../d5/df3/classVisualReader.html#a5e4fbd16693c1fc1e70768465fc35b07',1,'VisualReader']]],
-  ['ptr',['ptr',['../dd/dc7/structini__parse__string__ctx.html#af663d77366545df9b12b166831745c75',1,'ini_parse_string_ctx']]],
-  ['py_5fssize_5ft_5fclean',['PY_SSIZE_T_CLEAN',['../d8/dfa/iCub__Interface_8cpp.html#ac9efdaac9411d0868b715edccca3269d',1,'iCub_Interface.cpp']]]
+  ['taxeldata',['TaxelData',['../d4/dbf/structTaxelData.html',1,'']]],
+  ['test_5fcnt',['test_cnt',['../dd/d3c/namespaceperformance__test.html#ab6964e4347a2a1899c672c3b3574e3c7',1,'performance_test']]],
+  ['test_5fcount',['test_count',['../df/df4/namespacetesting__parameter.html#acf0a051455637285cd673435f270a615',1,'testing_parameter']]],
+  ['test_5fjoint_5fpositioning',['test_joint_positioning',['../d0/dbb/namespaceauto__test.html#ab65085388af6d112a88005c697062efc',1,'auto_test']]],
+  ['test_5ftactile_5freading',['test_tactile_reading',['../d0/dbb/namespaceauto__test.html#aa568d53ee9ce64e91be29359e9d48173',1,'auto_test']]],
+  ['test_5fvisual_5fperception',['test_visual_perception',['../d0/dbb/namespaceauto__test.html#ad50b159526adcd8f806ffecf3b4345de',1,'auto_test']]],
+  ['testing_5fparameter',['testing_parameter',['../df/df4/namespacetesting__parameter.html',1,'']]],
+  ['testing_5fparameter_2epy',['testing_parameter.py',['../d2/dde/testing__parameter_8py.html',1,'']]],
+  ['torso',['torso',['../d2/dd7/namespacejoint__limits.html#ac1a492548c3be21f996cafe36bca2134',1,'joint_limits']]]
 ];

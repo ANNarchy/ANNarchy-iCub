@@ -1,7 +1,19 @@
 var searchData=
 [
-  ['left_5farm',['left_arm',['../d2/dd7/namespacejoint__limits.html#a8a0b55af7ef35f0966f1f39c38874357',1,'joint_limits']]],
-  ['left_5fleg',['left_leg',['../d2/dd7/namespacejoint__limits.html#a01ceae0b57f661e87c0f00b023dc4d5c',1,'joint_limits']]],
-  ['loc_5fbox',['loc_box',['../df/df4/namespacetesting__parameter.html#abfd8ab7f17e3540426d1a80d1cc88fe9',1,'testing_parameter']]],
-  ['loc_5fsph',['loc_sph',['../df/df4/namespacetesting__parameter.html#a533d5f4d59d1ab20975d36a68c12acd7',1,'testing_parameter']]]
+  ['n_5fpop_5fjr',['n_pop_jr',['../df/df4/namespacetesting__parameter.html#a281061793709b824e3ba3e3b237b9ac2',1,'testing_parameter']]],
+  ['n_5fpop_5fjw',['n_pop_jw',['../df/df4/namespacetesting__parameter.html#a4c79e6d8402f24e101be1557c635e4d1',1,'testing_parameter']]],
+  ['n_5fpop_5fvm',['n_pop_vm',['../df/df4/namespacetesting__parameter.html#ae6737547ff495296e5ed221d949748d9',1,'testing_parameter']]],
+  ['network_5fclean',['network_clean',['../d0/d52/namespaceiCub__Python__Lib_1_1YARP__network__control.html#a920ed7da03fe982c81d2aab3b735b6af',1,'iCub_Python_Lib::YARP_network_control']]],
+  ['network_5fclean_5fbinocular',['network_clean_binocular',['../d0/d52/namespaceiCub__Python__Lib_1_1YARP__network__control.html#a3b1583760da48eb6680cb118fcdea4ba',1,'iCub_Python_Lib::YARP_network_control']]],
+  ['network_5fclean_5fmonocular',['network_clean_monocular',['../d0/d52/namespaceiCub__Python__Lib_1_1YARP__network__control.html#ac419ba7d8e9350b366f6c229a339f9b7',1,'iCub_Python_Lib::YARP_network_control']]],
+  ['network_5fclean_5fonly_5fright',['network_clean_only_right',['../d0/d52/namespaceiCub__Python__Lib_1_1YARP__network__control.html#a51c0b5d63ec516815b23298c626f5348',1,'iCub_Python_Lib::YARP_network_control']]],
+  ['network_5finit_5fbinocular',['network_init_binocular',['../d0/d52/namespaceiCub__Python__Lib_1_1YARP__network__control.html#a2bf30ff08a06f9f227ae0d28180dd200',1,'iCub_Python_Lib::YARP_network_control']]],
+  ['network_5finit_5fmonocular',['network_init_monocular',['../d0/d52/namespaceiCub__Python__Lib_1_1YARP__network__control.html#a7ba02f118cde62c3c4d6b14a41672aef',1,'iCub_Python_Lib::YARP_network_control']]],
+  ['network_5finitial',['network_initial',['../d0/d52/namespaceiCub__Python__Lib_1_1YARP__network__control.html#a0e84f74878e2d74ddda0c3c818003d5e',1,'iCub_Python_Lib::YARP_network_control']]],
+  ['network_5finitial_5fonly_5fright',['network_initial_only_right',['../d0/d52/namespaceiCub__Python__Lib_1_1YARP__network__control.html#ad14637cd8f3a548e976fcd0897b178bc',1,'iCub_Python_Lib::YARP_network_control']]],
+  ['neuron_5fres_5fjr',['neuron_res_jr',['../df/df4/namespacetesting__parameter.html#a52255321de7853eb2dd611d716bae6c7',1,'testing_parameter']]],
+  ['neuron_5fres_5fjw',['neuron_res_jw',['../df/df4/namespacetesting__parameter.html#a1905c7ac49ebf5c0061024f6a24a556e',1,'testing_parameter']]],
+  ['normal_5fpdf',['normal_pdf',['../d0/dbb/namespaceauto__test.html#ab091442db5c4df18fd37cec46c5a9643',1,'auto_test.normal_pdf()'],['../dd/d3c/namespaceperformance__test.html#adc3d87231b46a51a8216137121edcd15',1,'performance_test.normal_pdf()'],['../d9/d94/namespacesimple__call__test.html#a340df7855abda6819a3d3f2a2a72e655',1,'simple_call_test.normal_pdf()']]],
+  ['npvec_5f2_5fyarpvec',['npvec_2_yarpvec',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a0000903ac45a4d90e551d4758df994dd',1,'iCub_Python_Lib::YARP_motor_control']]],
+  ['num_5fleft',['num_left',['../dd/dc7/structini__parse__string__ctx.html#aea48cbdd64d060c55b3b68cb01cbe69f',1,'ini_parse_string_ctx']]]
 ];
