@@ -8,7 +8,7 @@ import sys
 
 import iCub_Python_Lib.YARP_motor_control as mot
 
-from parameter_object_images import Transfermat_robot2world, Transfermat_world2robot, orientation_robot_hand, pos_hand_world_coord
+from iCub_Python_Lib.iCub_transformation_matrices import Transfermat_robot2world, Transfermat_world2robot, orientation_robot_hand, pos_hand_world_coord
 
 
 
