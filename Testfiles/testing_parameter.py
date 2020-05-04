@@ -12,6 +12,7 @@ import numpy as np
 # select the used simulator
 gazebo = True
 
+
 #########################################################
 ################### performance test ####################
 # general
@@ -37,6 +38,7 @@ n_pop_vm = 50
 speed_arm_vm = 15
 speed_head_vm = 15
 save_path_vm = "./Testfiles/Vis_movement/"
+
 
 #########################################################
 ####################### auto test #######################

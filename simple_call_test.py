@@ -330,6 +330,7 @@ def call_test_vreader(ann_wrapper):
     print(ann_wrapper.visualR_init('b'))                    # use of default values; reinitialization binocular
     ann_wrapper.rm_visual_reader()
 
+
 #########################################################
 if __name__ == "__main__":
     wrapper = iCub_Interface.iCubANN_wrapper()

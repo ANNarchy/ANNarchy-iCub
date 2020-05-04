@@ -9,14 +9,16 @@ import iCub_Interface  # requires iCub_Interface in the present directory
 import Testfiles.iCub_Python_Lib.iCubSim_world_controller as iSim_wc
 import Testfiles.iCub_Python_Lib.gazebo_world_controller as gzbo_wc
 import Testfiles.testing_parameter as params
-
 from Testfiles.joint_limits import joint_limits as j_lim
 
+
+####################### parameter #######################
 bog2deg = 180.0 / np.pi         # factor for radiant to degree conversion
 eye_distance = 0.07             # distance between left and right eye
 eye_loc = [0.0, 0.9375, 0.055]  # location of the center point between both eyes
 
-#########################################################
+
+#################### auxilary methods ###################
 def normal_pdf(value, mean, sigma):
     """
         Return the function value of a normal distribution for a given value.
@@ -33,7 +35,6 @@ def normal_pdf(value, mean, sigma):
     a = (value - mean) / sigma
 
     return inv_sqrt_2pi * np.exp(-0.5 * a * a)
-
 
 def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0):
     """
@@ -877,6 +878,11 @@ if __name__ == "__main__":
                 speed_test_jreader(wrapper, test_cnt)
                 speed_test_jwriter(wrapper, test_cnt)
                 speed_test_sreader(wrapper, test_cnt)
+                speed_test_vreader(wrapper, test_cnt)
+                vis_move_test(wrapper)
+            elif command == 'noskin':
+                speed_test_jreader(wrapper, test_cnt)
+                speed_test_jwriter(wrapper, test_cnt)
                 speed_test_vreader(wrapper, test_cnt)
                 vis_move_test(wrapper)
             elif command == "jreader":
