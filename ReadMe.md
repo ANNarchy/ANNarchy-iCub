@@ -22,15 +22,16 @@ SkinReader:
 
 ## Folder structure
 - Interface_ANNarchy_iCub -> Main folder containing the whole interface
-    - include -> This folder contains the header files for the interface modules.
-        - INI_Reader -> The INI-Reader is an external module, which is used to handle ini-files.
-    - src -> This folder contains the source files for the interface modules.
     - data -> Folder capsulate the data files used by the interface.
         - sensor_positions -> This folder caontains the files from the iCub simulator installation with the position data for the tactile sensors.
         joint_limits.ini -> In the ini file the joint limitations for the iCub are given. 
                             !!! This should be checked before the usage with the real robot, to avoid damage. !!!
     - doc -> This folder contains the doxygen generated documentation for the interface
     iCubCPP.pyx -> This is the Cython file to wrap the C++ code for the usage in Python.
+    - include -> This folder contains the header files for the interface modules.
+        - INI_Reader -> The INI-Reader is an external module, which is used to handle ini-files.
+    - src -> This folder contains the source files for the interface modules.
+    - Testfiles -> support files for interface testing
 
 
 ## useful links

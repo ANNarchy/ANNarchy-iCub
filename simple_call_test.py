@@ -1,10 +1,32 @@
+"""
+ *  Copyright (C) 2020 Torsten Follak
+ *
+ *  simple_call_test.py is part of the iCub ANNarchy interface
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
+"""
+
+
 import sys
 import time
 
 import matplotlib.pylab as plt
 import numpy as np
 
-import iCub_Interface   # requires iCub_Interface in the present directory; or Python need to know it
+import iCub_Interface   # requires iCub_Interface.so in the present directory
+
+# Test support files
 from Testfiles.joint_limits import joint_limits as j_lim
 
 
@@ -89,7 +111,7 @@ def call_test_jreader(ann_wrapper):
     ann_wrapper.jointR_init("NO_NAME", ann_wrapper.PART_KEY_LEFT_ARM, 0.5, 15)          # not existent name
 
     ann_wrapper.rm_joint_reader("J_Reader2")
-    
+
     print('finish JReader init')
     print('\n')
 
@@ -172,7 +194,7 @@ def call_test_jwriter(ann_wrapper):
     test_pos = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5)
     double_all = np.zeros((6))
     double_all_rel = np.ones((6)) * 5.1
-    pop_multiple = np.zeros((3, 15)) 
+    pop_multiple = np.zeros((3, 15))
     for i in range(3):
         pop_multiple[i] = encode(ann_wrapper.PART_KEY_HEAD, i + 3, 15, 10., 0.5)
     pop_all = np.zeros((6, 15))

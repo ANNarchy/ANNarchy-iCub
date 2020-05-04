@@ -1,9 +1,16 @@
+"""
+Created on Sun Mar 02 18:19:17 2020
+
+@author: tofo
+
+save positions for interface testing
+"""
 
 import numpy as np
 import yarp
 
 
-import lib.motor_control as mot
+import iCub_Python_Lib.YARP_motor_control as mot
 
 
 yarp.Network.init()
@@ -21,12 +28,12 @@ props.put("local","/client/" + part)
 # create remote driver
 driver = yarp.PolyDriver(props)
 
-#query motor control interfaces
+# query motor control interfaces
 iCtrl = driver.viewIControlMode()
 iPos = driver.viewIPositionControl()
 iEnc = driver.viewIEncoders()
 
-#retrieve number of joints
+# retrieve number of joints
 jnts=iPos.getAxes()
 
 for i in range(jnts):

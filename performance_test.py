@@ -1,3 +1,23 @@
+"""
+ *  Copyright (C) 2020 Torsten Follak
+ *
+ *  performance_test.py is part of the iCub ANNarchy interface
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
+"""
+
+
 import os
 import sys
 import time
@@ -6,8 +26,12 @@ import matplotlib.pylab as plt
 import numpy as np
 
 import iCub_Interface  # requires iCub_Interface in the present directory
+
+# Python libraries for simulator control
 import Testfiles.iCub_Python_Lib.iCubSim_world_controller as iSim_wc
 import Testfiles.iCub_Python_Lib.gazebo_world_controller as gzbo_wc
+
+# Test support files
 import Testfiles.testing_parameter as params
 from Testfiles.joint_limits import joint_limits as j_lim
 
@@ -584,7 +608,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('________ Test results: Population_all')
     for key in results_pop_all:
         print('Test:', key, 'results:', round(results_pop_all[key], 4), 's')
-    
+
     #########################################################
 
     print('____________________________________________________________\n')

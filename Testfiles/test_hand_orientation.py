@@ -6,11 +6,9 @@ import cv2
 import os
 import sys
 
-# import lib.auxilaries as aux
-# import lib.image_processing as img
-import lib.motor_control as mot
+import iCub_Python_Lib.YARP_motor_control as mot
 
-from parameter_object_images import Transfermat_robot2world, Transfermat_world2robot, orientation_robot_hand, pos_hand_world_coord, arm_pos_w, finger
+from parameter_object_images import Transfermat_robot2world, Transfermat_world2robot, orientation_robot_hand, pos_hand_world_coord
 
 
 

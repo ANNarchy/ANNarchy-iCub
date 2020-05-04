@@ -1,5 +1,6 @@
 # python related files
 *.pyc
+*/__pycache__/
 
 test_*.py
 
