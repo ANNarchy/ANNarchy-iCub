@@ -55,7 +55,7 @@ def normal_pdf(value, mean, sigma):
     return inv_sqrt_2pi * np.exp(-0.5 * a * a)
 
 
-def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0):
+def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0, relative=False):
     """
         Encode a joint angle as double value in a population code.
 
@@ -73,7 +73,14 @@ def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0):
 
     joint_min = j_lim[part]['joint_' + str(joint) + '_min']
     joint_max = j_lim[part]['joint_' + str(joint) + '_max']
-    joint_range = joint_max - joint_min
+    joint_range = joint_max - joint_min + 1
+
+    if relative:
+        joint_range = joint_range * 2. - 1
+        min_val = -joint_range
+    else:
+        min_val = joint_min
+
     if resolution == 0:
         joint_deg_res = joint_range / pop_size
     else:
@@ -84,12 +91,197 @@ def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0):
     pos_pop = np.zeros((pop_size,))
 
     for j in range(pop_size):
-        neuron_deg[j] = joint_min + j * joint_deg_res
+        neuron_deg[j] = min_val + j * joint_deg_res
         pos_pop[j] = round(normal_pdf(neuron_deg[j], joint_angle, sigma), 3)
 
     pos_pop = pos_pop/np.amax(pos_pop)
 
     return pos_pop
+
+
+def check_position_double_mult(name, start, jnt_count, read_method, position):
+    # read the joint positions
+    read_pos = np.zeros((start + jnt_count), dtype=np.float64)
+    for i in range(start, start + jnt_count):
+        read_pos[i] = round(read_method(name, i), 2)
+
+    # compare the written positions with the returned joint positions
+    test_result = True
+    error_joints = []
+    for i in range(start, start + jnt_count):
+        max_lim = abs(round(position[i], 2))  + 0.3 # + 0.1 * abs(round(position[i], 2)
+        min_lim = abs(round(position[i], 2))  - 0.3 # - 0.1 * abs(round(position[i], 2))
+        if (abs(round(read_pos[i], 2)) > max_lim) or (abs(round(read_pos[i], 2)) < min_lim):
+            test_result = False
+            error_joints.append(i)
+
+    return (test_result, error_joints), read_pos
+
+
+def check_position_double_all(name, read_method, position):
+    # read the joint positions
+    read_pos = read_method(name)
+
+    # compare the written positions with the returned joint positions
+    test_result = True
+    error_joints = []
+    for i in range(len(read_pos)):
+        max_lim = abs(round(position[i], 2)) + 0.3 # + 0.1 * abs(round(position[i], 2))
+        min_lim = abs(round(position[i], 2)) - 0.3 # - 0.1 * abs(round(position[i], 2))
+        if (abs(round(read_pos[i], 2)) > max_lim) or (abs(round(read_pos[i], 2)) < min_lim):
+            test_result = False
+            error_joints.append(i)
+
+    return (test_result, error_joints), read_pos
+
+
+def check_position_pop_mult(name, start, jnt_count, read_method, position):
+    # read the joint positions
+    read_pos = []
+    for i in range(start, start + jnt_count):
+        read_pos.append(np.round(read_method(name, i), decimals=3))
+
+    # compare the written positions with the returned joint positions
+    test_result = True
+    error_joints = []
+    for i in range(len(read_pos)):
+        if not np.allclose(read_pos[i], position[start + i], atol=0.1):
+            test_result = False
+            error_joints.append(i)
+
+    return (test_result, error_joints), read_pos
+
+
+def check_position_pop_all(name, read_method, position):
+    # read the joint positions
+    read_pos = read_method(name)
+
+    # compare the written positions with the returned joint positions
+    test_result = True
+    error_joints = []
+    for i in range(len(read_pos)):
+        if not np.allclose(read_pos[i][0:position[i].shape[0]], position[i], atol=0.1):
+            test_result = False
+            error_joints.append(i)
+
+    return (test_result, error_joints), read_pos
+
+
+def rel_pos_double(ann_wrapper, name, key, target_positions):
+
+    act_pos = np.array(ann_wrapper.jointR_read_double_all(name), dtype=np.float64)
+    rel_pos = target_positions[name][key] - act_pos
+
+    return rel_pos
+
+
+def rel_pos_pop(ann_wrapper, name, key, target_positions):
+
+    act_pos = np.array(ann_wrapper.jointR_read_double_all(name), dtype=np.float64)
+    rel_pos_d = target_positions[name][key] - act_pos
+    print(act_pos)
+    print(rel_pos_d)
+    rel_pos = np.zeros((act_pos.shape[0], params.n_pop_pos))
+
+    for i in range(rel_pos_d.shape[0]):
+        rel_pos[i] = encode(name, i, params.n_pop_pos, rel_pos_d[i], params.sigma_pos, relative=True)
+        print(rel_pos[i][int(params.n_pop_pos/2)])
+        print(np.amax(rel_pos[i]))
+        print(rel_pos[i])
+    return rel_pos
+
+
+def write_joint_each(ann_wrapper, pos_type, positioning, block, part_enc, target_positions, write_method, read_method, check_method, res_path, jnts, rel_method=None, positions_double=None):
+
+    # test the positioning with values for a single joint and motion of all joints
+    print('__ Type of positioning: ' + pos_type)
+    read = {}
+    test_results = {}
+
+    for name in part_enc:
+        print('____ Test part:', name)
+        for key in target_positions[name]:
+            print('______ Test position:', key)
+            if positioning == "abs":
+                target_pos = target_positions[name][key]
+            elif positioning == "rel":
+                target_pos = rel_method(ann_wrapper, name, key, positions_double)
+            else:
+                print("No correct positioning type: valid are \"abs\" and \"rel\"")
+                return
+
+            # move the joints
+            for i in range(jnts[name]):
+                write_method(name, target_pos[i], i, positioning, block)
+            time.sleep(3.)
+
+            test_results[name + '_' + key], read[name + '_' + key] = check_method(name, 0, jnts[name], read_method, target_positions[name][key])
+
+    # save the read joint positions
+    for key in read:
+        np.save(res_path + key + "_" + pos_type + "_" + positioning + ".npy", read[key])
+
+    print("________ Test results: " + pos_type + "_" + positioning)
+    for key in test_results:
+        print('Test:', key, 'results:', test_results[key])
+
+    print('\n')
+
+
+def write_joint_mult(pos_type, positioning, block, part_enc, move_positions, check_positions, write_method, read_method, check_method, res_path, jnt_sel):
+
+    # test the positioning with values for a single joint and motion of all joints
+    print('__ Type of positioning: ' + pos_type)
+    read = {}
+    test_results = {}
+
+    for name in part_enc:
+        print('____ Test part:', name)
+        for key in move_positions[name]:
+            print('______ Test position:', key)
+            # move the joints
+            write_method(name, move_positions[name][key][jnt_sel[name][0]:jnt_sel[name][-1] + 1], jnt_sel[name], positioning, block)
+            time.sleep(2.)
+
+            test_results[name + '_' + key], read[name + '_' + key] = check_method(name, jnt_sel[name][0], jnt_sel[name].shape[0], read_method, check_positions[name][key])
+
+    # save the read joint positions
+    for key in read:
+        np.save(res_path + key + "_" + pos_type + "_" + positioning + ".npy", read[key])
+
+    print("________ Test results: " + pos_type + "_" + positioning)
+    for key in test_results:
+        print('Test:', key, 'results:', test_results[key])
+
+    print('\n')
+
+
+def write_joint_all(pos_type, positioning, block, part_enc, move_positions, check_positions, write_method, read_method, check_method, res_path):
+
+    # test the positioning with values for a single joint and motion of all joints
+    print('__ Type of positioning: ' + pos_type)
+    read = {}
+    test_results = {}
+
+    for name in part_enc:
+        print('____ Test part:', name)
+        for key in move_positions[name]:
+            print('______ Test position:', key)
+            # move the joints
+            write_method(name, move_positions[name][key], positioning, block)
+            time.sleep(2.)
+
+            test_results[name + '_' + key], read[name + '_' + key] = check_method(name, read_method, check_positions[name][key])
+
+    # save the read joint positions
+    for key in read:
+        np.save(res_path + key + "_" + pos_type + "_" + positioning + ".npy", read[key])
+
+    print("________ Test results: " + pos_type + "_" + positioning)
+    for key in test_results:
+        print('Test:', key, 'results:', test_results[key])
+
+    print('\n')
 
 
 #########################################################
@@ -100,11 +292,11 @@ def test_joint_positioning(ann_wrapper):
         params:
             ann_wrapper     -- iCub_ANNarchy Interface
     """
-    n_pop = 100
-    sigma = 1.5
-    neuron_res = 0.0
-    path = './Testfiles/Movement/'
-    position_path = "./Testfiles/test_positions/"
+    n_pop = params.n_pop_pos
+    sigma = params.sigma_pos
+    neuron_res = params.neuron_res_pos
+    path = params.path_pos
+    position_path = params.position_path_pos
 
     if not os.path.isdir(path):
         os.mkdir(path)
@@ -113,27 +305,28 @@ def test_joint_positioning(ann_wrapper):
     print('__ Load test positions __')
 
     # load test positions
-    positions = {}
-    positions['pos_arm_T_r'] = (np.load(position_path + "test_pos_T.npy"), 'right_arm')
-    positions['pos_arm_complex_r'] = (np.load(position_path + "test_hand_complex.npy"), 'right_arm')
-    positions['pos_arm_home_r'] = (np.load(position_path + "test_pos_home.npy"), 'right_arm')
-    positions['pos_arm_T_l'] = (np.load(position_path + "test_pos_T.npy"), 'left_arm')
-    positions['pos_arm_complex_l'] = (np.load(position_path + "test_hand_complex.npy"), 'left_arm')
-    positions['pos_arm_home_l'] = (np.load(position_path + "test_pos_home.npy"), 'left_arm')
-    positions['pos_head'] = (np.load(position_path + "test_pos_head.npy"), 'head')
-    positions['pos_head_complex'] = (np.load(position_path + "test_pos_head_complex.npy"), 'head')
-    positions['pos_head_zero'] = (np.load(position_path + "test_pos_head_zero.npy"), 'head')
+    positions = {'right_arm':{}, 'left_arm':{}, 'head': {}}
+    # positions['right_arm']['pos_arm_T_r']       = np.load(position_path + "test_pos_T.npy")
+    # positions['right_arm']['pos_arm_complex_r'] = np.load(position_path + "test_hand_complex.npy")
+    # positions['right_arm']['pos_arm_home_r']    = np.load(position_path + "test_pos_home.npy")
+    # positions['left_arm']['pos_arm_T_l']        = np.load(position_path + "test_pos_T.npy")
+    # positions['left_arm']['pos_arm_complex_l']  = np.load(position_path + "test_hand_complex.npy")
+    # positions['left_arm']['pos_arm_home_l']     = np.load(position_path + "test_pos_home.npy")
+    # positions['head']['pos_head']               = np.load(position_path + "test_pos_head.npy")
+    # positions['head']['pos_head_complex']       = np.load(position_path + "test_pos_head_complex.npy")
+    positions['head']['pos_head_zero']          = np.load(position_path + "test_pos_head_zero.npy")
 
     # encode positions
     print('__ Encode test positions __')
     part_enc = {'right_arm': {}, 'head': {}, 'left_arm': {}}
-    for key in positions:
-        pos_enc = []
-        for i in range(positions[key][0].shape[0]):
-            positions[key][0][i] = round(positions[key][0][i], 2)
-            pos_enc.append(encode(positions[key][1], i, n_pop, positions[key][0][i], sigma, neuron_res))
-        np.save(path + key + "_encoded.npy", pos_enc)
-        part_enc[positions[key][1]][key] = pos_enc
+    for name in part_enc:
+        for key in positions[name]:
+            pos_enc = []
+            for i in range(positions[name][key].shape[0]):
+                positions[name][key][i] = round(positions[name][key][i], 2)
+                pos_enc.append(encode(name, i, n_pop, positions[name][key][i], sigma, neuron_res))
+            np.save(path + key + "_encoded.npy", pos_enc)
+            part_enc[name][key] = pos_enc
 
     print('____________________________________________________________\n')
     print('__ Add and init joint reader and writer modules __')
@@ -158,120 +351,44 @@ def test_joint_positioning(ann_wrapper):
     print('____ Initialized all joint reader and writer ____')
     print('____________________________________________________________\n')
 
+    jnts = {}
+    jnts['right_arm'] = ann_wrapper.jointW_get_joint_count('right_arm')
+    jnts['left_arm'] = ann_wrapper.jointW_get_joint_count('left_arm')
+    jnts['head'] = ann_wrapper.jointW_get_joint_count('head')
 
-    # test the positioning with values for a single joint and motion of all joints
-    print('__ Type of positioning: Double')
-    read_double = {}
-    test_results = {}
+    jnt_sel = {}
+    jnt_sel['right_arm'] = np.array([2, 3, 4, 5], np.int)
+    jnt_sel['left_arm'] = np.array([3, 4, 5, 6], np.int)
+    jnt_sel['head'] = np.array([0, 1, 2], np.int)
 
-    for name in part_enc:
-        print('____ Test part:', name)
-        for key in positions:
-            if positions[key][1] == name:
-                print('______ Test position:', key)
-                # move the joints
-                for i in range(positions[key][0].shape[0]):
-                    ann_wrapper.jointW_write_double_one(name, positions[key][0][i], i, "abs", True)
-                time.sleep(1)
 
-                # read the joint positions
-                read_pos_double = np.zeros((positions[key][0].shape[0]))
-                for i in range(read_pos_double.shape[0]):
-                    read_pos_double[i] = round(ann_wrapper.jointR_read_double_one(name, i), 2)
-                read_double[key] = read_pos_double
+    # test the positioning with double values for a motion of per single, multiple and all joints
+    print('__ Type of positioning: Double single')
+    # write_joint_each("double_single", "abs", True, part_enc, positions, ann_wrapper.jointW_write_double_one, ann_wrapper.jointR_read_double_one, check_position_double_mult, path, jnts)
+    write_joint_each(ann_wrapper, "double_single", "rel", True, part_enc, positions, ann_wrapper.jointW_write_double_one, ann_wrapper.jointR_read_double_one, check_position_double_mult, path, jnts, rel_pos_double, positions)
 
-                # compare the written positions with the returned joint positions
-                test_result = True
-                error_joints = []
-                for i in range(read_pos_double.shape[0]):
-                    max_lim = abs(round(positions[key][0][i], 2)) + 0.1 * abs(round(positions[key][0][i], 2))
-                    min_lim = abs(round(positions[key][0][i], 2)) - 0.1 * abs(round(positions[key][0][i], 2))
-                    if (abs(round(read_pos_double[i], 2)) > max_lim) or (abs(round(read_pos_double[i], 2)) < min_lim):
-                        test_result = False
-                        error_joints.append(i)
-                test_results[name + '_' + key] = (test_result, error_joints)
-                print(test_result)
+    print('__ Type of positioning: Double multiple')
+    # write_joint_mult("double_mult", "abs", True, part_enc, positions, ann_wrapper.jointW_write_double_multiple, ann_wrapper.jointR_read_double_one, check_position_double_mult, path, jnt_sel)
+    # write_joint_mult("double_mult", "rel", True, part_enc, positions, ann_wrapper.jointW_write_double_one, ann_wrapper.jointR_read_double_one, check_position_double_mult, path, jnt_sel, rel_pos_double)
 
-    # save the read joint positions
-    for key in read_double:
-        np.save(path + key + "_double.npy", read_double[key])
+    print('__ Type of positioning: Double all')
+    # write_joint_all("double_all", "abs", True, part_enc, positions, ann_wrapper.jointW_write_double_all, ann_wrapper.jointR_read_double_all, check_position_double_all, path)
+    # write_joint_all("double_all", "rel", True, part_enc, positions, ann_wrapper.jointW_write_double_all, ann_wrapper.jointR_read_double_all, check_position_double_all, path, rel_pos_double)
 
-    print('________ Test results: Double')
-    for key in test_results:
-        print('Test:', key, 'results:', test_results[key])
 
-    print('\n')
+    # test the positioning with population coding for per single joint, multiple and all joints
+    print('__ Type of positioning: Population single')
+    # write_joint_each("pop_single", "abs", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_one, ann_wrapper.jointR_read_pop_one, check_position_pop_mult, path, jnts)
+    write_joint_each(ann_wrapper, "pop_single", "rel", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_one, ann_wrapper.jointR_read_pop_one, check_position_pop_mult, path, jnts, rel_pos_pop, positions)
 
-    # test the positioning with population coding for a single joint and motion of all joints
-    print('__ Type of positioning: Population_single')
-    read_pop_single = {}
-    test_results = {}
-    for name in part_enc:
-        print('____ Test part:', name)
-        for key in part_enc[name]:
-            print('______ Test position:', key)
-            # move the joints
-            for i in range(positions[key][0].shape[0]):
-                ann_wrapper.jointW_write_pop_one(name, part_enc[name][key][i], i, "abs", True)
-            time.sleep(1)
+    print('__ Type of positioning: Population multiple')
+    # write_joint_mult("pop_mult", "abs", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_multiple, ann_wrapper.jointR_read_pop_one, check_position_pop_mult, path, jnt_sel)
+    # write_joint_mult("pop_mult", "rel", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_multiple, ann_wrapper.jointR_read_pop_one, check_position_pop_mult, path, jnt_sel, rel_pos_pop)
 
-            # read the joint positions
-            read_pos_pop_S = []
-            for i in range(positions[key][0].shape[0]):
-                read_pos_pop_S.append(np.round(ann_wrapper.jointR_read_pop_one(name, i), decimals=3))
-            read_pop_single[key] = read_pos_pop_S
+    print('__ Type of positioning: Population all')
+    # write_joint_all("pop_all", "abs", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_all, ann_wrapper.jointR_read_pop_all, check_position_pop_all, path)
+    # write_joint_all("pop_all", "rel", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_all, ann_wrapper.jointR_read_pop_all, check_position_pop_all, path, rel_pos_pop)
 
-            # compare the written positions with the returned joint positions
-            test_result = True
-            error_joints = []
-            for i in range(len(read_pos_pop_S)):
-                if not np.allclose(read_pos_pop_S[i], part_enc[name][key][i], atol=0.1):
-                    test_result = False
-                    error_joints.append(i)
-            test_results[name + '_' + key] = (test_result, error_joints)
-            print(test_result)
-
-    # save the read joint positions
-    for key in read_pop_single:
-        np.save(path + key + "_pop_single.npy", read_pop_single[key])
-
-    print('________ Test results: Population_single')
-    for key in test_results:
-        print('Test:', key, 'results:', test_results[key], '\n')
-
-    # test the positioning with population coding combined for all joints
-    print('__ Type of positioning: Population_all')
-    read_pop_all = {}
-    test_results = {}
-    for name in part_enc:
-        print('____ Test part:', name)
-        for key in part_enc[name]:
-            print('______ Test position:', key)
-            # move the joints
-            ann_wrapper.jointW_write_pop_all(name, part_enc[name][key], "abs", True)
-            time.sleep(1)
-
-            # read the joint positions
-            read_pos_pop_a = ann_wrapper.jointR_read_pop_all(name)
-            read_pop_all[key] = read_pos_pop_a
-
-            # compare the written positions with the returned joint positions
-            test_result = True
-            error_joints = []
-            for i in range(len(read_pos_pop_a)):
-                if not np.allclose(read_pos_pop_a[i][0:part_enc[name][key][i].shape[0]], part_enc[name][key][i], atol=0.1):
-                    test_result = False
-                    error_joints.append(i)
-            test_results[name + '_' + key] = (test_result, error_joints)
-            print(test_result)
-
-    # save the read joint positions
-    for key in read_pop_all:
-        np.save(path + key + "_pop_all.npy", read_pop_all[key])
-
-    print('________ Test results: Population_all')
-    for key in test_results:
-        print('Test:', key, 'results:', test_results[key])
 
     print('____________________________________________________________\n')
 
@@ -315,7 +432,7 @@ def test_tactile_reading(ann_wrapper):
     loc_sph.append(loc_p5)
 
     # instanciate the simulator world controller
-    sim_ctrl = wc.WorldController()
+    sim_ctrl = iSim_wc.WorldController()
 
     # create a sphere in the simulator
     sphere = sim_ctrl.create_object("ssph", [0.025], loc_p0, [0.0, 0.0, 1.0])

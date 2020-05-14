@@ -44,11 +44,20 @@ save_path_vm = "./Testfiles/Vis_movement/"
 
 #########################################################
 ####################### auto test #######################
-# numver of images for visual reader test
+# positioning
+n_pop_pos = 100
+sigma_pos = 1.5
+neuron_res_pos = 0.0
+path_pos = './Testfiles/Movement/'
+position_path_pos = "./Testfiles/test_positions/"
+
+# number of images for visual reader test
 img_count = 10
+
 # location of the sphere and the box in the simulator
 loc_sph = [0.2, 1.0, 0.7]
 loc_box = [-0.15, 0.8, 0.6]
+
 if(gazebo):
     loc_sph = [loc_sph[2], loc_sph[0], loc_sph[1]]
     loc_box = [loc_box[2], loc_box[0], loc_box[1]]

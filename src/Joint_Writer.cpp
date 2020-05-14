@@ -70,14 +70,14 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         std::string port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         if (on_Simulator && (port_prefix != "/icubSim")) {
             std::cerr << "[Joint Writer " << icub_part << "] The port prefix does not match the default simulator prefix!" << std::endl;
-            return false;
         }
+        std::string client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
         // setup iCub joint position control
         yarp::os::Property options;
         options.put("device", "remote_controlboard");
         options.put("remote", (port_prefix + "/" + icub_part).c_str());
-        options.put("local", ("/ANNarchy_write/" + icub_part).c_str());
+        options.put("local", (client_port_prefix + "/ANNarchy_write/" + icub_part).c_str());
 
         if (!driver.open(options)) {
             std::cerr << "[Joint Writer " << icub_part << "] Unable to open" << options.find("device").asString() << "!" << std::endl;
@@ -132,7 +132,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
             }
 
             // compute population code resolution
-            joint_range = joint_max[i] - joint_min[i];
+            joint_range = joint_max[i] - joint_min[i] + 1;
             if (pop_size > 0) {    // with given population size
                 // absolute joint angles
                 neuron_deg_abs[i].resize(pop_size);
@@ -549,7 +549,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bo
 bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, bool blocking,
                                    std::string mode) {
     /*
-        Write all joints with joint angles encoded in populations
+        Write multiple joints with joint angles encoded in populations
 
         params: std::vector<std::vector<double>>    -- populations encoding every joint angle for writing them to the associated robot part
                 bool blocking                       -- if True, function waits for end of motion

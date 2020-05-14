@@ -96,42 +96,42 @@ bool SkinReader::Init(char arm, bool norm_data) {
         // read configuration data from ini file
         INIReader reader_gen("data/interface_param.ini");
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
-        std::string port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
-        if (on_Simulator && (port_prefix != "/icubSim")) {
+        std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
+        if (on_Simulator && (robot_port_prefix != "/icubSim")) {
             std::cerr << "[Skin Reader " << side << "] The port prefix does not match the default simulator prefix!" << std::endl;
-            return false;
         }
+        std::string client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
         // Open and connect YARP-Port to read upper arm skin sensor data
-        std::string port_name_arm = "/Skin_Reader_" + norm + "/" + side + "_arm:i";
+        std::string port_name_arm = client_port_prefix + "/Skin_Reader_" + norm + "/" + side + "_arm:i";
         if (!port_arm.open(port_name_arm)) {
             std::cerr << "[Skin Reader " << side << "] Could not open skin arm port!" << std::endl;
             return false;
         }
-        if (!yarp::os::Network::connect(("/icubSim/skin/" + side + "_arm_comp").c_str(), port_name_arm.c_str())) {
+        if (!yarp::os::Network::connect((robot_port_prefix + "/skin/" + side + "_arm_comp").c_str(), port_name_arm.c_str())) {
             std::cerr << "[Skin Reader " << side << "] Could not connect skin arm port!" << std::endl;
             return false;
         }
 
         // Open and connect YARP-Port to read forearm skin sensor data
-        std::string port_name_farm = "/Skin_Reader_" + norm + "/" + side + "_forearm:i";
+        std::string port_name_farm = client_port_prefix + "/Skin_Reader_" + norm + "/" + side + "_forearm:i";
         if (!port_forearm.open(port_name_farm)) {
             std::cerr << "[Skin Reader" << side << "] Could not open skin forearm port!" << std::endl;
             return false;
         }
-        if (!yarp::os::Network::connect(("/icubSim/skin/" + side + "_forearm_comp").c_str(), port_name_farm.c_str())) {
+        if (!yarp::os::Network::connect((robot_port_prefix + "/skin/" + side + "_forearm_comp").c_str(), port_name_farm.c_str())) {
             std::cerr << "[Skin Reader " << side << "] Could not connect skin forearm port!" << std::endl;
             return false;
         }
 
         // Open and connect YARP-Port to read hand skin sensor data
-        std::string port_name_hand = "/Skin_Reader_" + norm + "/" + side + "_hand:i";
+        std::string port_name_hand = client_port_prefix + "/Skin_Reader_" + norm + "/" + side + "_hand:i";
         if (!port_hand.open(port_name_hand)) {
             std::cerr << "[Skin Reader " << side << "] Could not open skin hand port!" << std::endl;
             return false;
         }
 
-        if (!yarp::os::Network::connect(("/icubSim/skin/" + side + "_hand_comp").c_str(), port_name_hand.c_str())) {
+        if (!yarp::os::Network::connect((robot_port_prefix + "/skin/" + side + "_hand_comp").c_str(), port_name_hand.c_str())) {
             std::cerr << "[Skin Reader " << side << "] Could not connect skin hand port!" << std::endl;
             return false;
         }

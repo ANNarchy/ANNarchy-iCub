@@ -78,7 +78,7 @@ def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0):
 
     joint_min = j_lim[part]['joint_' + str(joint) + '_min']
     joint_max = j_lim[part]['joint_' + str(joint) + '_max']
-    joint_range = joint_max - joint_min
+    joint_range = joint_max - joint_min + 1
     if resolution == 0:
         joint_deg_res = joint_range / pop_size
     else:

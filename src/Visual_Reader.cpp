@@ -120,40 +120,40 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         // read configuration data from ini file
         INIReader reader_gen("data/interface_param.ini");
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
-        std::string port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
-        if (on_Simulator && (port_prefix != "/icubSim")) {
+        std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
+        if (on_Simulator && (robot_port_prefix != "/icubSim")) {
             std::cerr << "[Visual Reader] The port prefix does not match the default simulator prefix!" << std::endl;
-            return false;
         }
+        std::string client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
         // open and connect YARP port for the chosen eye
         if (eye == 'r' || eye == 'R') {    // right eye chosen
             act_eye = 'R';
-            std::string port_name = "/V_Reader/image/right:i";
+            std::string port_name = client_port_prefix + "/V_Reader/image/right:i";
             port_right.open(port_name);
-            if (!yarp::os::Network::connect(port_prefix + "/cam/right", port_name.c_str())) {
+            if (!yarp::os::Network::connect(robot_port_prefix + "/cam/right", port_name.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to right eye camera port!" << std::endl;
                 return false;
             }
         } else if (eye == 'l' || eye == 'L') {    // left eye chosen
             act_eye = 'L';
-            std::string port_name = "/V_Reader/image/left:i";
+            std::string port_name = client_port_prefix + "/V_Reader/image/left:i";
             port_left.open(port_name);
-            if (!yarp::os::Network::connect(port_prefix + "/cam/left", port_name.c_str())) {
+            if (!yarp::os::Network::connect(robot_port_prefix + "/cam/left", port_name.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to left eye camera port!" << std::endl;
                 return false;
             }
         } else if (eye == 'b' || eye == 'B') {    // both eyes chosen
             act_eye = 'B';
-            std::string port_name_l = "/V_Reader/image/left:i";
+            std::string port_name_l = client_port_prefix + "/V_Reader/image/left:i";
             port_left.open(port_name_l);
-            if (!yarp::os::Network::connect(port_prefix + "/cam/left", port_name_l.c_str())) {
+            if (!yarp::os::Network::connect(robot_port_prefix + "/cam/left", port_name_l.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to left eye camera port!" << std::endl;
                 return false;
             }
-            std::string port_name_r = "/V_Reader/image/right:i";
+            std::string port_name_r = client_port_prefix + "/V_Reader/image/right:i";
             port_right.open(port_name_r);
-            if (!yarp::os::Network::connect(port_prefix + "/cam/right", port_name_r.c_str())) {
+            if (!yarp::os::Network::connect(robot_port_prefix + "/cam/right", port_name_r.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to right eye camera port!" << std::endl;
                 return false;
             }

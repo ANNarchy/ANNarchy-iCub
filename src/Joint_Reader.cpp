@@ -71,17 +71,18 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         // read configuration data from ini file
         INIReader reader_gen("data/interface_param.ini");
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
-        std::string port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
-        if (on_Simulator && (port_prefix != "/icubSim")) {
+        std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
+        if (on_Simulator && (robot_port_prefix != "/icubSim")) {
             std::cerr << "[Joint Reader " << icub_part << "] The port prefix does not match the default simulator prefix!" << std::endl;
             return false;
         }
+        std::string client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
         // setup iCub joint position control
         yarp::os::Property options;
         options.put("device", "remote_controlboard");
-        options.put("remote", (port_prefix + "/" + icub_part).c_str());
-        options.put("local", ("/ANNarchy_read/" + icub_part).c_str());
+        options.put("remote", (robot_port_prefix + "/" + icub_part).c_str());
+        options.put("local", (client_port_prefix + "/ANNarchy_read/" + icub_part).c_str());
 
         if (!driver.open(options)) {
             std::cerr << "[Joint Reader " << icub_part << "] Unable to open " << options.find("device").asString() << "!" << std::endl;
@@ -98,8 +99,20 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         neuron_deg.resize(joints);
         joint_deg_res.resize(joints);
 
+        // setup ini-Reader for joint limits
         double joint_range;
-        INIReader reader("data/joint_limits.ini");
+        std::string joint_path;
+        if (on_Simulator) {
+            joint_path = reader_gen.Get("motor", "sim_joint_limits_path", "");
+        } else {
+            joint_path = reader_gen.Get("motor", "robot_joint_limits_path", "");
+        }
+
+        if (joint_path == "") {
+            std::cerr << "[Joint Reader " << icub_part << "] Ini-path for joint limits is empty!" << std::endl;
+            return false;
+        }
+        INIReader reader(joint_path);
 
         for (int i = 0; i < joints; i++) {
             joint_min.push_back(reader.GetReal(icub_part.c_str(), ("joint_" + std::to_string(i) + "_min").c_str(), 0.0));
@@ -112,7 +125,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
                 return false;
             }
 
-            joint_range = joint_max[i] - joint_min[i];
+            joint_range = joint_max[i] - joint_min[i] + 1;
 
             if (pop_size > 0) {
                 neuron_deg[i].resize(pop_size);
