@@ -38,7 +38,7 @@ iCubANN::~iCubANN() {
 }
 
 /***  Add intstances of the interface modules ***/
-void iCubANN::AddJointReader(std::string name) {
+bool iCubANN::AddJointReader(std::string name) {
     /*
         Add an instance of joint reader
 
@@ -46,13 +46,15 @@ void iCubANN::AddJointReader(std::string name) {
     */
 
     if (parts_reader.count(name) == 0) {
-        parts_reader[name] = std::unique_ptr<JointReader>(new JointReader());
+        parts_reader[name] = std::shared_ptr<JointReader>(new JointReader());
+        return true;
     } else {
         std::cerr << "[Joint Reader] Name \"" + name + "\" is already used." << std::endl;
+        return false;
     }
 }
 
-void iCubANN::AddJointWriter(std::string name) {
+bool iCubANN::AddJointWriter(std::string name) {
     /*
         Add an instance of joint writer
 
@@ -60,13 +62,15 @@ void iCubANN::AddJointWriter(std::string name) {
     */
 
     if (parts_writer.count(name) == 0) {
-        parts_writer[name] = std::unique_ptr<JointWriter>(new JointWriter());
+        parts_writer[name] = std::shared_ptr<JointWriter>(new JointWriter());
+        return true;
     } else {
         std::cerr << "[Joint Writer] Name \"" + name + "\" is already used." << std::endl;
+        return false;
     }
 }
 
-void iCubANN::AddSkinReader(std::string name) {
+bool iCubANN::AddSkinReader(std::string name) {
     /*
         Add an instance of skin reader
 
@@ -74,13 +78,15 @@ void iCubANN::AddSkinReader(std::string name) {
     */
 
     if (tactile_reader.count(name) == 0) {
-        tactile_reader[name] = std::unique_ptr<SkinReader>(new SkinReader());
+        tactile_reader[name] = std::shared_ptr<SkinReader>(new SkinReader());
+        return true;
     } else {
         std::cerr << "[Skin Reader] Name \"" + name + "\" is already used." << std::endl;
+        return false;
     }
 }
 
-void iCubANN::AddVisualReader() {
+bool iCubANN::AddVisualReader() {
     /*
         Add an instance of visual reader
 
@@ -88,54 +94,64 @@ void iCubANN::AddVisualReader() {
     */
 
     if (visual_input == NULL) {
-        visual_input = std::unique_ptr<VisualReader>(new VisualReader());
+        visual_input = std::shared_ptr<VisualReader>(new VisualReader());
+        return true;
     } else {
         std::cerr << "[Visual Reader] Visual Reader is already defined." << std::endl;
+        return false;
     }
 }
 
 /***  Remove intstances of the interface modules ***/
-void iCubANN::RemoveJointReader(std::string name) {
+bool iCubANN::RemoveJointReader(std::string name) {
     /* 
         Remove the instance of the joint reader
     */
     if (parts_reader.count(name) != 0) {
         parts_reader.erase(name);
+        return true;
     } else {
         std::cerr << "[Joint Reader] Name \"" + name + "\" does not exists." << std::endl;
+        return false;
     }
 }
 
-void iCubANN::RemoveJointWriter(std::string name) {
+bool iCubANN::RemoveJointWriter(std::string name) {
     /* 
         Remove the instance of the joint writer
     */
     if (parts_writer.count(name) != 0) {
         parts_writer.erase(name);
+        return true;
     } else {
         std::cerr << "[Joint Writer] Name \"" + name + "\" does not exists." << std::endl;
+        return false;
     }
 }
 
-void iCubANN::RemoveSkinReader(std::string name) {
+bool iCubANN::RemoveSkinReader(std::string name) {
     /* 
         Remove the instance of the skin reader
     */
     if (tactile_reader.count(name) != 0) {
         tactile_reader.erase(name);
+        return true;
     } else {
         std::cerr << "[Skin Reader] Name \"" + name + "\" does not exists." << std::endl;
+        return false;
     }
 }
 
-void iCubANN::RemoveVisualReader() {
+bool iCubANN::RemoveVisualReader() {
     /* 
         Remove the instance of the visual reader
     */
     if (visual_input != NULL) {
         visual_input = NULL;
+        return true;
     } else {
         std::cerr << "[Visual Reader] Visual Reader does not exists." << std::endl;
+        return false;
     }
 }
 

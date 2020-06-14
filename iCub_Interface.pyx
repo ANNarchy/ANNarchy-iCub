@@ -19,16 +19,22 @@
    You should have received a copy of the GNU General Public License
    along with this headers. If not, see <http://www.gnu.org/licenses/>.
  """
+import sys
 
 from libcpp.string cimport string
-from libcpp.vector cimport vector
+# from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
-from libcpp.memory cimport unique_ptr
+from libcpp.memory cimport shared_ptr
 from libcpp.map cimport map as cmap
+# from libc.stdlib cimport malloc, free
 
-from libc.stdlib cimport malloc, free
-import sys
+from cython.operator cimport dereference as deref
+
 from Joint_Reader cimport JointReader
+from Joint_Reader cimport PyJointReader
+
+from Joint_Writer cimport JointWriter
+from Joint_Writer cimport PyJointWriter
 
 cdef extern from "Interface_iCub.hpp":
 
@@ -36,32 +42,36 @@ cdef extern from "Interface_iCub.hpp":
         iCubANN() except +
         ### Manage instances of the reader/writer modules ###
         # add an instance of joint reader
-        void AddJointReader(string)
+        bool_t AddJointReader(string)
         # add an instance of joint writer
-        void AddJointWriter(string)
+        bool_t AddJointWriter(string)
         # add an instance of skin reader
-        void AddSkinReader(string)
+        bool_t AddSkinReader(string)
         # add the instance of visual reader
-        void AddVisualReader()
+        bool_t AddVisualReader()
 
         # remove an instance of joint reader
-        void RemoveJointReader(string)
+        bool_t RemoveJointReader(string)
         # remove an instance of joint writer
-        void RemoveJointWriter(string)
+        bool_t RemoveJointWriter(string)
         # remove an instance of skin reader
-        void RemoveSkinReader(string)
+        bool_t RemoveSkinReader(string)
         # remove the instance of visual reader
-        void RemoveVisualReader()
+        bool_t RemoveVisualReader()
 
-        cmap [string, unique_ptr[JointReader]] parts_reader
+        cmap[string, shared_ptr[JointReader]] parts_reader
+        cmap[string, shared_ptr[JointWriter]] parts_writer
 
     # Instances:
     iCubANN my_interface # defined in Interface_iCub.cpp
 
 
-
-
 cdef class iCubANN_wrapper:
+
+    parts_reader = {}
+    parts_writer = {}
+    tactile_reader = {}
+    visual_input = {}
 
     # part keys for the iCub, which are needed for joint reader/writer initialization
     PART_KEY_HEAD = "head"            # part key for iCub head
@@ -114,10 +124,6 @@ cdef class iCubANN_wrapper:
     def __cinit__(self):
         print("Initialize iCub Interface.")
         #my_interface.init() - we need a special init?
-        self.parts_reader = my_interface.parts_reader
-        # self.parts_writer = my_interface.parts_writer
-        # self.visual_input = my_interface.visual_input
-        # self.tactile_reader = my_interface.tactile_reader
 
     ### Manage instances of the reader/writer modules ###
     # add an instance of joint reader
@@ -134,7 +140,11 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.AddJointReader(s)
+        if my_interface.AddJointReader(s):
+            self.parts_reader[name] = PyJointReader.from_ptr(my_interface.parts_reader[s])
+            return True
+        else:
+            return False
 
     # add an instance of joint writer
     def add_joint_writer(self, name):
@@ -151,7 +161,12 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.AddJointWriter(s)
+        if my_interface.AddJointWriter(s):
+            self.parts_writer[name] = PyJointWriter.from_ptr(my_interface.parts_writer[s])
+            return True
+        else:
+            return False
+
 
     # add an instance of skin reader
     def add_skin_reader(self, name):
@@ -195,7 +210,11 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.RemoveJointReader(s)
+        if my_interface.RemoveJointReader(s):
+            del self.parts_reader[name]
+            return True
+        else:
+            return False
 
     # remove an instance of joint writer
     def rm_joint_writer(self, name):
@@ -212,7 +231,11 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.RemoveJointWriter(s)
+        if my_interface.RemoveJointWriter(s):
+            del self.parts_writer[name]
+            return True
+        else:
+            return False
 
     # remove an instance of skin reader
     def rm_skin_reader(self, name):
@@ -244,3 +267,10 @@ cdef class iCubANN_wrapper:
 
     ### end Manage instances of the reader/writer module
 
+    # # Attribute access
+    # @property
+    # def parts_reader(self):
+    #     return self.my_interface.parts_reader
+    # @parts_reader.__getitem__
+    # def x0(self, string key):
+    #     return self.my_interface.parts_reader[key]

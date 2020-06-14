@@ -44,52 +44,52 @@ class iCubANN {
     // Destructor
     ~iCubANN();
 
-    std::unique_ptr<VisualReader> visual_input; /** \brief associated visual reader (only one possible for left/right eye) */
-    std::map<std::string, std::unique_ptr<JointReader>> parts_reader;  /** \brief associated joint readers (one for every robot part) */
-    std::map<std::string, std::unique_ptr<JointWriter>> parts_writer;  /** \brief associated joint writers (one for every robot part) */
-    std::map<std::string, std::unique_ptr<SkinReader>> tactile_reader; /** \brief associated skin reader */
+    std::shared_ptr<VisualReader> visual_input; /** \brief associated visual reader (only one possible for left/right eye) */
+    std::map<std::string, std::shared_ptr<JointReader>> parts_reader;  /** \brief associated joint readers (one for every robot part) */
+    std::map<std::string, std::shared_ptr<JointWriter>> parts_writer;  /** \brief associated joint writers (one for every robot part) */
+    std::map<std::string, std::shared_ptr<SkinReader>> tactile_reader; /** \brief associated skin reader */
 
     /***  Add intstances of the interface modules ***/
     /**
      * \brief Add an instance of the joint reader module. This has to be initialized with the init-method.
      * \param[in] name name for the added joint reader in the map, can be freely selected
      */
-    void AddJointReader(std::string name);
+    bool AddJointReader(std::string name);
     /**
      * \brief Add an instance of the joint writer module. This has to be initialized with the init-method.
      * \param[in] name name for the added joint writer in the map, can be freely selected
      */
-    void AddJointWriter(std::string name);
+    bool AddJointWriter(std::string name);
     /**
      * \brief Add an instance of the skin reader module. This has to be initialized with the init-method.
      * \param[in] name name for the added skin reader in the map, can be freely selected
      */
-    void AddSkinReader(std::string name);
+    bool AddSkinReader(std::string name);
     /**
      * \brief Add the instance of the visual reader module. This has to be initialized with the init-method.
      */
-    void AddVisualReader();
+    bool AddVisualReader();
 
     /***  Remove intstances of the interface modules ***/
     /**
      * \brief Remove the instance of the joint reader module.
      * \param[in] name name of the joint reader in the map
      */
-    void RemoveJointReader(std::string name);
+    bool RemoveJointReader(std::string name);
     /**
      * \brief Remove the instance of the joint writer module. 
      * \param[in] name name of the joint writer in the map
      */
-    void RemoveJointWriter(std::string name);
+    bool RemoveJointWriter(std::string name);
     /**
      * \brief Remove the instance of the skin reader module. 
      * \param[in] name name of the skin reader in the map
      */
-    void RemoveSkinReader(std::string name);
+    bool RemoveSkinReader(std::string name);
     /**
      * \brief Remove the instance of the visual reader module.
      */
-    void RemoveVisualReader();
+    bool RemoveVisualReader();
 
 //     // Access to joint reader member functions //
 //     /**
