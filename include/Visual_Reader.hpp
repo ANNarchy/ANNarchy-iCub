@@ -32,9 +32,9 @@
  * \brief  Read-out of the camera images from the iCub robot
  */
 class VisualReader : private yarp::os::RFModule {
+ public:
     typedef double precision;
 
- public:
     VisualReader() = default;
     ~VisualReader();
 

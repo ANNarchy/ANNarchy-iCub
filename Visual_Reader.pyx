@@ -20,12 +20,34 @@
    along with this headers. If not, see <http://www.gnu.org/licenses/>.
  """
 
+from libcpp.string cimport string
+from libcpp.vector cimport vector
+from libcpp cimport bool as bool_t
+from libcpp.memory cimport shared_ptr
+from libc.stdlib cimport malloc, free
+from cython.operator cimport dereference as deref
+
+from Visual_Reader cimport VisualReader
+
+import numpy as np
+
+cdef class PyVisualReader:
+
+    def __cinit__(self):
+        print("Initialize iCub Interface: Visual Reader.")
+
+    @staticmethod
+    cdef PyVisualReader from_ptr(shared_ptr[VisualReader] _ptr):
+        # Call to __new__ bypasses __init__ constructor
+        cdef PyVisualReader wrapper = PyVisualReader.__new__(PyVisualReader)
+        wrapper.cpp_visual_reader = _ptr
+        return wrapper
 
     ### Access to visual reader member functions
     # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def visualR_init(self, eye, fov_width=60, fov_height=48, img_width=320, img_height=240, fast_filter=True):
+    def init(self, eye, fov_width=60, fov_height=48, img_width=320, img_height=240, fast_filter=True):
         """
-            Calls bool iCubANN::VisualRInit(char eye, double fov_width, double fov_height, int img_width, int img_height)
+            Calls bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height)
 
             function:
                 Initialize Visual reader with given parameters for image resolution, field of view and eye selection
@@ -44,12 +66,12 @@
         cdef char e = eye.encode('UTF-8')[0]
 
         # call the interface
-        return my_interface.VisualRInit(e, fov_width, fov_height, img_width, img_height, fast_filter)
+        return deref(self.cpp_visual_reader).Init(e, fov_width, fov_height, img_width, img_height, fast_filter)
 
     # return image vector from the image buffer and remove it from the buffer
-    def visualR_read_fromBuf(self):
+    def read_fromBuf(self):
         """
-            Calls std::vector<double> iCubANN::VisualRReadFromBuf()
+            Calls std::vector<double> VisualReader::ReadFromBuf()
 
             function:
                 Return image vector from the image buffer and remove it from the buffer
@@ -59,12 +81,12 @@
         """
 
         # call the interface
-        return np.array(my_interface.VisualRReadFromBuf())
+        return np.array(deref(self.cpp_visual_reader).ReadFromBuf())
 
     # start reading images from the iCub with a YARP-RFModule
-    def visualR_start(self):
+    def start(self):
         """
-            Calls void iCubANN::VisualRStart(int argc, char *argv[])
+            Calls void VisualReader::Start(int argc, char *argv[])
 
             function:
                 Start reading images from the iCub with a YARP-RFModule
@@ -83,21 +105,21 @@
             argv[i] = argv[i].encode('UTF-8')
             c_argv[i] = argv[i]
         # call the interface
-        start = my_interface.VisualRStart(argc, c_argv)
+        start = deref(self.cpp_visual_reader).Start(argc, c_argv)
         # Let him go
         free(c_argv)
         return start
 
     # stop reading images from the iCub, by terminating the RFModule
-    def visualR_stop(self):
+    def stop(self):
         """
-            Calls void iCubANN::VisualRStop()
+            Calls void VisualReader::Stop()
 
             function:
                 Stop reading images from the iCub, by terminating the RFModule
         """
 
         # call the interface
-        my_interface.VisualRStop()
+        deref(self.cpp_visual_reader).Stop()
 
     ### end access to visual reader member functions

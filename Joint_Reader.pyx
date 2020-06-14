@@ -37,12 +37,6 @@ cdef class PyJointReader:
 
     @staticmethod
     cdef PyJointReader from_ptr(shared_ptr[JointReader] _ptr):
-        """Factory function to create WrapperClass objects from
-        given my_c_struct pointer.
-
-        Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
-        when the wrapper object is deallocated."""
         # Call to __new__ bypasses __init__ constructor
         cdef PyJointReader wrapper = PyJointReader.__new__(PyJointReader)
         wrapper.cpp_joint_reader = _ptr

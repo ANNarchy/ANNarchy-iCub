@@ -87,7 +87,7 @@ class SkinReader {
     std::vector<std::vector<double>> GetTaxelPos(std::string skin_part);
 
     /**
-     * \brief The sensor data is read and buffered inside. It can be accessed through #SkinRGetTactileArm, #SkinRGetTactileForearm and #SkinRGetTactileHand.
+     * \brief The sensor data is read and buffered inside. It can be accessed through #GetTactileArm, #GetTactileForearm and #GetTactileHand.
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool ReadTactile();

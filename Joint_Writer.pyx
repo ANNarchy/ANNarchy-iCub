@@ -37,12 +37,6 @@ cdef class PyJointWriter:
 
     @staticmethod
     cdef PyJointWriter from_ptr(shared_ptr[JointWriter] _ptr):
-        """Factory function to create WrapperClass objects from
-        given my_c_struct pointer.
-
-        Setting ``owner`` flag to ``True`` causes
-        the extension type to ``free`` the structure pointed to by ``_ptr``
-        when the wrapper object is deallocated."""
         # Call to __new__ bypasses __init__ constructor
         cdef PyJointWriter wrapper = PyJointWriter.__new__(PyJointWriter)
         wrapper.cpp_joint_writer = _ptr
@@ -181,7 +175,7 @@ cdef class PyJointWriter:
     # write all joints with double values
     def write_double_multiple(self, position, joints, mode, blocking=True):
         """
-            Calls bool WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, bool blocking, std::string mode);
+            Calls bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, bool blocking, std::string mode);
 
             function:
                 Write all joints with double values

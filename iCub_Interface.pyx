@@ -36,6 +36,12 @@ from Joint_Reader cimport PyJointReader
 from Joint_Writer cimport JointWriter
 from Joint_Writer cimport PyJointWriter
 
+from Skin_Reader cimport SkinReader
+from Skin_Reader cimport PySkinReader
+
+from Visual_Reader cimport VisualReader
+from Visual_Reader cimport PyVisualReader
+
 cdef extern from "Interface_iCub.hpp":
 
     cdef cppclass iCubANN:
@@ -61,6 +67,8 @@ cdef extern from "Interface_iCub.hpp":
 
         cmap[string, shared_ptr[JointReader]] parts_reader
         cmap[string, shared_ptr[JointWriter]] parts_writer
+        cmap[string, shared_ptr[SkinReader]] tactile_reader
+        shared_ptr[VisualReader] visual_input
 
     # Instances:
     iCubANN my_interface # defined in Interface_iCub.cpp
@@ -71,7 +79,7 @@ cdef class iCubANN_wrapper:
     parts_reader = {}
     parts_writer = {}
     tactile_reader = {}
-    visual_input = {}
+
 
     # part keys for the iCub, which are needed for joint reader/writer initialization
     PART_KEY_HEAD = "head"            # part key for iCub head
@@ -183,7 +191,11 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.AddSkinReader(s)
+        if my_interface.AddSkinReader(s):
+            self.tactile_reader[name] = PySkinReader.from_ptr(my_interface.tactile_reader[s])
+            return True
+        else:
+            return False
 
     # add an instance of visual reader
     def add_visual_reader(self):
@@ -194,7 +206,11 @@ cdef class iCubANN_wrapper:
                 Add an instance of visual reader
         """
         # call the interface
-        my_interface.AddVisualReader()
+        if my_interface.AddVisualReader():
+            self.visual_input = PyVisualReader.from_ptr(my_interface.visual_input)
+            return True
+        else:
+            return False
 
     # remove an instance of joint reader
     def rm_joint_reader(self, name):
@@ -252,7 +268,11 @@ cdef class iCubANN_wrapper:
         cdef string s = name.encode('UTF-8')
 
         # call the interface
-        my_interface.RemoveSkinReader(s)
+        if my_interface.RemoveSkinReader(s):
+            del self.tactile_reader[name]
+            return True
+        else:
+            return False
 
     # remove the instance of visual reader
     def rm_visual_reader(self):
@@ -263,14 +283,11 @@ cdef class iCubANN_wrapper:
                 Remove the visual reader instance
         """
         # call the interface
-        my_interface.RemoveVisualReader()
+        if my_interface.RemoveVisualReader():
+            del self.visual_input
+            return True
+        else:
+            return False
 
     ### end Manage instances of the reader/writer module
 
-    # # Attribute access
-    # @property
-    # def parts_reader(self):
-    #     return self.my_interface.parts_reader
-    # @parts_reader.__getitem__
-    # def x0(self, string key):
-    #     return self.my_interface.parts_reader[key]
