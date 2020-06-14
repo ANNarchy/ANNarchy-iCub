@@ -19,7 +19,7 @@ gazebo = True
 ################### performance test ####################
 # general
 test_count = 5
-position_path = "./Testfiles/test_positions/"
+position_path = "./supplementary/test_positions/"
 
 # jreader
 n_pop_jr = 100         # population size
@@ -33,13 +33,13 @@ sigma_jw = 1.5         # sigma for population coding gaussian
 neuron_res_jw = 0.0    # population resolution
 
 # vreader
-save_path_vr = "./Testfiles/Vision/"
+save_path_vr = "./results/Vision/"
 
 # vis_move
 n_pop_vm = 50
 speed_arm_vm = 15
 speed_head_vm = 15
-save_path_vm = "./Testfiles/Vis_movement/"
+save_path_vm = "./results/Vis_movement/"
 
 
 #########################################################
@@ -48,8 +48,8 @@ save_path_vm = "./Testfiles/Vis_movement/"
 n_pop_pos = 100
 sigma_pos = 1.5
 neuron_res_pos = 0.0
-path_pos = './Testfiles/Movement/'
-position_path_pos = "./Testfiles/test_positions/"
+path_pos = './results/Movement/'
+position_path_pos = "./supplementary/test_positions/"
 
 # number of images for visual reader test
 img_count = 10

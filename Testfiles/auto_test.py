@@ -24,15 +24,17 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
+sys.path.appen("../build")
+
 import iCub_Interface  # requires iCub_Interface.so in the present directory
 
 # Python libraries for simulator control
-import Testfiles.iCub_Python_Lib.iCubSim_world_controller as iSim_wc
-import Testfiles.iCub_Python_Lib.gazebo_world_controller as gzbo_wc
+import iCub_Python_Lib.iCubSim_world_controller as iSim_wc
+import iCub_Python_Lib.gazebo_world_controller as gzbo_wc
 
 # Test support files
-import Testfiles.testing_parameter as params
-from Testfiles.joint_limits import joint_limits as j_lim
+import supplementary.testing_parameter as params
+from supplementary.joint_limits import joint_limits as j_lim
 
 
 #########################################################
@@ -427,7 +429,7 @@ def test_tactile_reading(ann_wrapper):
     """
     data_count = 5
 
-    path = "./Testfiles/Tactile/"
+    path = "./results/Tactile/"
     if not os.path.isdir(path):
         os.mkdir(path)
 
