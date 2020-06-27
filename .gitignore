@@ -7,13 +7,13 @@ test_*.py
 # results
 *.npy
 
-
 # application
 *.so
-iCub_Interface.cpp
-
+Cython_ext/*.cpp
 
 # VSCode files
 *.clang-format
 *.vscode*
+
+
 

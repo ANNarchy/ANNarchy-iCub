@@ -64,7 +64,7 @@ bool SkinReader::Init(char arm, bool norm_data) {
         }
 
         // Set side and read taxel position files depending on selected arm side
-        std::string data_dir = "./data/sensor_positions/";
+        std::string data_dir = "../data/sensor_positions/";
         if (arm == 'r' || arm == 'R') {
             side = "right";
             bool read_err_arm = !ReadTaxelPos(data_dir + "right_arm_mesh_idx.txt", data_dir + "right_arm_mesh_pos.txt", "arm");

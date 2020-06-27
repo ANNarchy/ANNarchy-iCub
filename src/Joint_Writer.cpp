@@ -65,7 +65,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         }
 
         // read configuration data from ini file
-        INIReader reader_gen("data/interface_param.ini");
+        INIReader reader_gen("../data/interface_param.ini");
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
         std::string port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         if (on_Simulator && (port_prefix != "/icubSim")) {

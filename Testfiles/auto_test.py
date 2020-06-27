@@ -24,8 +24,7 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-sys.path.appen("../build")
-
+sys.path.append("../build/")
 import iCub_Interface  # requires iCub_Interface.so in the present directory
 
 # Python libraries for simulator control
@@ -104,7 +103,7 @@ def check_position_double_mult(name, start, jnt_count, read_method, position):
     # read the joint positions
     read_pos = np.zeros((start + jnt_count), dtype=np.float64)
     for i in range(start, start + jnt_count):
-        read_pos[i] = round(read_method(name, i), 2)
+        read_pos[i] = round(read_method(i), 2)
 
     # compare the written positions with the returned joint positions
     test_result = True
@@ -121,7 +120,7 @@ def check_position_double_mult(name, start, jnt_count, read_method, position):
 
 def check_position_double_all(name, read_method, position):
     # read the joint positions
-    read_pos = read_method(name)
+    read_pos = read_method()
 
     # compare the written positions with the returned joint positions
     test_result = True
@@ -140,7 +139,7 @@ def check_position_pop_mult(name, start, jnt_count, read_method, position):
     # read the joint positions
     read_pos = []
     for i in range(start, start + jnt_count):
-        read_pos.append(np.round(read_method(name, i), decimals=3))
+        read_pos.append(np.round(read_method(i), decimals=3))
 
     # compare the written positions with the returned joint positions
     test_result = True
@@ -155,7 +154,7 @@ def check_position_pop_mult(name, start, jnt_count, read_method, position):
 
 def check_position_pop_all(name, read_method, position):
     # read the joint positions
-    read_pos = read_method(name)
+    read_pos = read_method()
 
     # compare the written positions with the returned joint positions
     test_result = True
@@ -170,7 +169,7 @@ def check_position_pop_all(name, read_method, position):
 
 def rel_pos_double(ann_wrapper, name, key, target_positions):
 
-    act_pos = np.array(ann_wrapper.jointR_read_double_all(name), dtype=np.float64)
+    act_pos = np.array(ann_wrapper.parts_reader[name].read_double_all(), dtype=np.float64)
     rel_pos = target_positions[name][key] - act_pos
 
     return rel_pos
@@ -178,11 +177,8 @@ def rel_pos_double(ann_wrapper, name, key, target_positions):
 
 def rel_pos_pop(ann_wrapper, name, key, target_positions):
 
-    act_pos = np.array(ann_wrapper.jointR_read_double_all(name), dtype=np.float64)
+    act_pos = np.array(ann_wrapper.parts_reader[name].read_double_all(), dtype=np.float64)
     rel_pos_d = target_positions[name][key] - act_pos
-    print(target_positions[name][key])
-    print(act_pos)
-    print(rel_pos_d)
     rel_pos = np.zeros((act_pos.shape[0], params.n_pop_pos))
 
     for i in range(rel_pos_d.shape[0]):
@@ -190,32 +186,30 @@ def rel_pos_pop(ann_wrapper, name, key, target_positions):
     return rel_pos
 
 
-def write_joint_each(ann_wrapper, pos_type, positioning, block, part_enc, target_positions, write_method, read_method, check_method, res_path, jnts, rel_method=None, positions_double=None):
+def write_joint_each(ann_wrapper, pos_type, positioning, block, name, target_positions, write_method, read_method, check_method, res_path, jnts, rel_method=None, positions_double=None):
 
     # test the positioning with values for a single joint and motion of all joints
     read = {}
     test_results = {}
 
-    for name in part_enc:
-        print('____ Test part:', name)
-        for key in target_positions[name]:
-            print('______ Test position:', key)
-            if positioning == "abs":
-                target_pos = target_positions[name][key]
-                check_pos = target_positions
-            elif positioning == "rel":
-                target_pos = rel_method(ann_wrapper, name, key, positions_double)
-                check_pos = positions_double
-            else:
-                print("No correct positioning type: valid are \"abs\" and \"rel\"")
-                return
+    for key in target_positions[name]:
+        print('______ Test position:', key)
+        if positioning == "abs":
+            target_pos = target_positions[name][key]
+            check_pos = target_positions
+        elif positioning == "rel":
+            target_pos = rel_method(ann_wrapper, name, key, positions_double)
+            check_pos = positions_double
+        else:
+            print("No correct positioning type: valid are \"abs\" and \"rel\"")
+            return
 
-            # move the joints
-            for i in range(jnts[name]):
-                write_method(name, target_pos[i], i, positioning, block)
-            time.sleep(3.)
+        # move the joints
+        for i in range(jnts[name]):
+            write_method(target_pos[i], i, positioning, block)
+        time.sleep(3.)
 
-            test_results[name + '_' + key], read[name + '_' + key] = check_method(name, 0, jnts[name], read_method, check_pos[name][key])
+        test_results[name + '_' + key], read[name + '_' + key] = check_method(name, 0, jnts[name], read_method, check_pos[name][key])
 
     # save the read joint positions
     for key in read:
@@ -228,31 +222,30 @@ def write_joint_each(ann_wrapper, pos_type, positioning, block, part_enc, target
     print('\n')
 
     
-def write_joint_mult(ann_wrapper, pos_type, positioning, block, part_enc, target_positions, write_method, read_method, check_method, res_path, jnt_sel, rel_method=None, positions_double=None):
+def write_joint_mult(ann_wrapper, pos_type, positioning, block, name, target_positions, write_method, read_method, check_method, res_path, jnt_sel, rel_method=None, positions_double=None):
 
     # test the positioning with values for a single joint and motion of all joints
     read = {}
     test_results = {}
 
-    for name in part_enc:
-        print('____ Test part:', name)
-        for key in target_positions[name]:
-            print('______ Test position:', key)
-            if positioning == "abs":
-                target_pos = target_positions[name][key]
-                check_pos = target_positions
-            elif positioning == "rel":
-                target_pos = rel_method(ann_wrapper, name, key, positions_double)
-                check_pos = positions_double
-            else:
-                print("No correct positioning type: valid are \"abs\" and \"rel\"")
-                return
+    print('____ Test part:', name)
+    for key in target_positions[name]:
+        print('______ Test position:', key)
+        if positioning == "abs":
+            target_pos = target_positions[name][key]
+            check_pos = target_positions
+        elif positioning == "rel":
+            target_pos = rel_method(ann_wrapper, name, key, positions_double)
+            check_pos = positions_double
+        else:
+            print("No correct positioning type: valid are \"abs\" and \"rel\"")
+            return
 
-            # move the joints
-            write_method(name, target_pos[jnt_sel[name]], jnt_sel[name], positioning, block)
-            time.sleep(2.)
+        # move the joints
+        write_method(target_pos[jnt_sel[name]], jnt_sel[name], positioning, block)
+        time.sleep(2.)
 
-            test_results[name + '_' + key], read[name + '_' + key] = check_method(name, jnt_sel[name][0], jnt_sel[name].shape[0], read_method, check_pos[name][key])
+        test_results[name + '_' + key], read[name + '_' + key] = check_method(name, jnt_sel[name][0], jnt_sel[name].shape[0], read_method, check_pos[name][key])
 
     # save the read joint positions
     for key in read:
@@ -265,32 +258,31 @@ def write_joint_mult(ann_wrapper, pos_type, positioning, block, part_enc, target
     print('\n')
 
 
-def write_joint_all(ann_wrapper, pos_type, positioning, block, part_enc, target_positions, write_method, read_method, check_method, res_path, rel_method=None, positions_double=None):
+def write_joint_all(ann_wrapper, pos_type, positioning, block, name, target_positions, write_method, read_method, check_method, res_path, rel_method=None, positions_double=None):
 
     # test the positioning with values for a single joint and motion of all joints
     print('__ Type of positioning: ' + pos_type)
     read = {}
     test_results = {}
 
-    for name in part_enc:
-        print('____ Test part:', name)
-        for key in target_positions[name]:
-            print('______ Test position:', key)
-            if positioning == "abs":
-                target_pos = target_positions[name][key]
-                check_pos = target_positions
-            elif positioning == "rel":
-                target_pos = rel_method(ann_wrapper, name, key, positions_double)
-                check_pos = positions_double
-            else:
-                print("No correct positioning type: valid are \"abs\" and \"rel\"")
-                return
+    print('____ Test part:', name)
+    for key in target_positions[name]:
+        print('______ Test position:', key)
+        if positioning == "abs":
+            target_pos = target_positions[name][key]
+            check_pos = target_positions
+        elif positioning == "rel":
+            target_pos = rel_method(ann_wrapper, name, key, positions_double)
+            check_pos = positions_double
+        else:
+            print("No correct positioning type: valid are \"abs\" and \"rel\"")
+            return
 
-            # move the joints
-            write_method(name, target_pos, positioning, block)
-            time.sleep(2.)
+        # move the joints
+        write_method(target_pos, positioning, block)
+        time.sleep(2.)
 
-            test_results[name + '_' + key], read[name + '_' + key] = check_method(name, read_method, check_pos[name][key])
+        test_results[name + '_' + key], read[name + '_' + key] = check_method(name, read_method, check_pos[name][key])
 
     # save the read joint positions
     for key in read:
@@ -359,21 +351,21 @@ def test_joint_positioning(ann_wrapper):
     print('____ Added all joint reader and writer ____')
 
     # init joint reader
-    ann_wrapper.jointR_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, sigma, n_pop, neuron_res)
-    ann_wrapper.jointR_init("left_arm", ann_wrapper.PART_KEY_LEFT_ARM, sigma, n_pop, neuron_res)
-    ann_wrapper.jointR_init("head", ann_wrapper.PART_KEY_HEAD, sigma, n_pop, neuron_res)
+    ann_wrapper.parts_reader["right_arm"].init(ann_wrapper.PART_KEY_RIGHT_ARM, sigma, n_pop, neuron_res)
+    ann_wrapper.parts_reader["left_arm"].init(ann_wrapper.PART_KEY_LEFT_ARM, sigma, n_pop, neuron_res)
+    ann_wrapper.parts_reader["head"].init(ann_wrapper.PART_KEY_HEAD, sigma, n_pop, neuron_res)
 
     # init joint writer
-    ann_wrapper.jointW_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, neuron_res, 25.0)
-    ann_wrapper.jointW_init("left_arm", ann_wrapper.PART_KEY_LEFT_ARM, n_pop, neuron_res, 25.0)
-    ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, neuron_res, 25.0)
+    ann_wrapper.parts_writer["right_arm"].init(ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, neuron_res, 25.0)
+    ann_wrapper.parts_writer["left_arm"].init(ann_wrapper.PART_KEY_LEFT_ARM, n_pop, neuron_res, 25.0)
+    ann_wrapper.parts_writer["head"].init(ann_wrapper.PART_KEY_HEAD, n_pop, neuron_res, 25.0)
     print('____ Initialized all joint reader and writer ____')
     print('____________________________________________________________\n')
 
     jnts = {}
-    jnts['right_arm'] = ann_wrapper.jointW_get_joint_count('right_arm')
-    jnts['left_arm'] = ann_wrapper.jointW_get_joint_count('left_arm')
-    jnts['head'] = ann_wrapper.jointW_get_joint_count('head')
+    jnts['right_arm'] = ann_wrapper.parts_writer["right_arm"].get_joint_count()
+    jnts['left_arm'] = ann_wrapper.parts_writer["left_arm"].get_joint_count()
+    jnts['head'] = ann_wrapper.parts_writer["head"].get_joint_count()
 
     jnt_sel = {}
     jnt_sel['right_arm'] = np.array([0, 1, 2, 3, 4], dtype=np.int)
@@ -381,30 +373,34 @@ def test_joint_positioning(ann_wrapper):
     jnt_sel['head'] = np.array([0, 1, 2], dtype=np.int)
 
     # test the positioning with double values for a motion of per single, multiple and all joints
-    print('__ Type of positioning: Double single')
-    # write_joint_each(ann_wrapper, "double_single", "abs", True, part_enc, positions, ann_wrapper.jointW_write_double_one, ann_wrapper.jointR_read_double_one, check_position_double_mult, path, jnts)
-    # write_joint_each(ann_wrapper, "double_single", "rel", True, part_enc, positions, ann_wrapper.jointW_write_double_one, ann_wrapper.jointR_read_double_one, check_position_double_mult, path, jnts, rel_pos_double, positions)
+    for name in part_enc:
+        print('____ Test part:', name)
+        print('__ Type of positioning: Double single')
+        write_joint_each(ann_wrapper, "double_single", "abs", True, name, positions, ann_wrapper.parts_writer[name].write_double_one, ann_wrapper.parts_reader[name].read_double_one, check_position_double_mult, path, jnts)
+        write_joint_each(ann_wrapper, "double_single", "rel", True, name, positions, ann_wrapper.parts_writer[name].write_double_one, ann_wrapper.parts_reader[name].read_double_one, check_position_double_mult, path, jnts, rel_pos_double, positions)
 
-    print('__ Type of positioning: Double multiple')
-    # write_joint_mult(ann_wrapper, "double_mult", "abs", True, part_enc, positions, ann_wrapper.jointW_write_double_multiple, ann_wrapper.jointR_read_double_one, check_position_double_mult, path, jnt_sel)
-    # write_joint_mult(ann_wrapper, "double_mult", "rel", True, part_enc, positions, ann_wrapper.jointW_write_double_multiple, ann_wrapper.jointR_read_double_one, check_position_double_mult, path, jnt_sel, rel_pos_double, positions)
+        print('__ Type of positioning: Double multiple')
+        write_joint_mult(ann_wrapper, "double_mult", "abs", True, name, positions, ann_wrapper.parts_writer[name].write_double_multiple, ann_wrapper.parts_reader[name].read_double_one, check_position_double_mult, path, jnt_sel)
+        write_joint_mult(ann_wrapper, "double_mult", "rel", True, name, positions, ann_wrapper.parts_writer[name].write_double_multiple, ann_wrapper.parts_reader[name].read_double_one, check_position_double_mult, path, jnt_sel, rel_pos_double, positions)
 
-    print('__ Type of positioning: Double all')
-    # write_joint_all(ann_wrapper, "double_all", "abs", True, part_enc, positions, ann_wrapper.jointW_write_double_all, ann_wrapper.jointR_read_double_all, check_position_double_all, path)
-    # write_joint_all(ann_wrapper, "double_all", "rel", True, part_enc, positions, ann_wrapper.jointW_write_double_all, ann_wrapper.jointR_read_double_all, check_position_double_all, path, rel_pos_double, positions)
+        print('__ Type of positioning: Double all')
+        write_joint_all(ann_wrapper, "double_all", "abs", True, name, positions, ann_wrapper.parts_writer[name].write_double_all, ann_wrapper.parts_reader[name].read_double_all, check_position_double_all, path)
+        write_joint_all(ann_wrapper, "double_all", "rel", True, name, positions, ann_wrapper.parts_writer[name].write_double_all, ann_wrapper.parts_reader[name].read_double_all, check_position_double_all, path, rel_pos_double, positions)
 
-    # test the positioning with population coding for per single joint, multiple and all joints
-    print('__ Type of positioning: Population single')
-    write_joint_each(ann_wrapper, "pop_single", "abs", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_one, ann_wrapper.jointR_read_pop_one, check_position_pop_mult, path, jnts)
-    # write_joint_each(ann_wrapper, "pop_single", "rel", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_one, ann_wrapper.jointR_read_pop_one, check_position_pop_mult, path, jnts, rel_pos_pop, positions)
 
-    print('__ Type of positioning: Population multiple')
-    # write_joint_mult(ann_wrapper, "pop_mult", "abs", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_multiple, ann_wrapper.jointR_read_pop_one, check_position_pop_mult, path, jnt_sel)
-    # write_joint_mult(ann_wrapper, "pop_mult", "rel", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_multiple, ann_wrapper.jointR_read_pop_one, check_position_pop_mult, path, jnt_sel, rel_pos_pop, positions)
+        # TODO: relative motion: problems with joint position
+        # test the positioning with population coding for per single joint, multiple and all joints
+        print('__ Type of positioning: Population single')
+        write_joint_each(ann_wrapper, "pop_single", "abs", True, name, part_enc, ann_wrapper.parts_writer[name].write_pop_one, ann_wrapper.parts_reader[name].read_pop_one, check_position_pop_mult, path, jnts)
+        # write_joint_each(ann_wrapper, "pop_single", "rel", True, name, part_enc, ann_wrapper.parts_writer[name].write_pop_one, ann_wrapper.parts_reader[name].read_pop_one, check_position_pop_mult, path, jnts, rel_pos_pop, positions)
 
-    print('__ Type of positioning: Population all')
-    # write_joint_all(ann_wrapper, "pop_all", "abs", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_all, ann_wrapper.jointR_read_pop_all, check_position_pop_all, path)
-    # write_joint_all(ann_wrapper, "pop_all", "rel", True, part_enc, part_enc, ann_wrapper.jointW_write_pop_all, ann_wrapper.jointR_read_pop_all, check_position_pop_all, path, rel_pos_pop, positions)
+        print('__ Type of positioning: Population multiple')
+        # write_joint_mult(ann_wrapper, "pop_mult", "abs", True, name, part_enc, ann_wrapper.parts_writer[name].write_pop_multiple, ann_wrapper.parts_reader[name].read_pop_one, check_position_pop_mult, path, jnt_sel)
+        # write_joint_mult(ann_wrapper, "pop_mult", "rel", True, name, part_enc, ann_wrapper.parts_writer[name].write_pop_multiple, ann_wrapper.parts_reader[name].read_pop_one, check_position_pop_mult, path, jnt_sel, rel_pos_pop, positions)
+
+        print('__ Type of positioning: Population all')
+        write_joint_all(ann_wrapper, "pop_all", "abs", True, name, part_enc, ann_wrapper.parts_writer[name].write_pop_all, ann_wrapper.parts_reader[name].read_pop_all, check_position_pop_all, path)
+        # write_joint_all(ann_wrapper, "pop_all", "rel", True, name, part_enc, ann_wrapper.parts_writer[name].write_pop_all, ann_wrapper.parts_reader[name].read_pop_all, check_position_pop_all, path, rel_pos_pop, positions)
 
 
     print('____________________________________________________________\n')
@@ -412,8 +408,8 @@ def test_joint_positioning(ann_wrapper):
     # close joint reader and writer instances
     print('__ Close joint reader and writer modules __')
     for part in part_enc:
-        ann_wrapper.jointR_close(part)
-        ann_wrapper.jointW_close(part)
+        ann_wrapper.parts_reader[part].close()
+        ann_wrapper.parts_writer[part].close()
 
     print('____ Closed joint reader and writer modules ____')
     print('____________________________________________________________\n')
@@ -462,8 +458,8 @@ def test_tactile_reading(ann_wrapper):
     ann_wrapper.add_skin_reader("S_Reader1")
 
     # init skin reader
-    print("Init:", ann_wrapper.skinR_init("S_Reader", "r", True))
-    print("Init:", ann_wrapper.skinR_init("S_Reader1", "r", False))
+    print("Init:", ann_wrapper.tactile_reader["S_Reader"].init("r", True))
+    print("Init:", ann_wrapper.tactile_reader["S_Reader1"].init("r", False))
 
     print('____ Initialized skin reader ____')
     print('____________________________________________________________\n')
@@ -484,13 +480,13 @@ def test_tactile_reading(ann_wrapper):
                 time.sleep(0.1)
 
                 # read the tactile information from the sensors
-                ann_wrapper.skinR_read_tactile("S_Reader")
-                ann_wrapper.skinR_read_tactile("S_Reader1")
+                ann_wrapper.tactile_reader["S_Reader"].read_tactile()
+                ann_wrapper.tactile_reader["S_Reader1"].read_tactile()
 
                 # return the read data from the interface
-                data_arm_norm.append(np.array(ann_wrapper.skinR_get_tactile_arm("S_Reader")))
-                data_farm_norm.append(np.array(ann_wrapper.skinR_get_tactile_forearm("S_Reader")))
-                data_hand_norm.append(np.array(ann_wrapper.skinR_get_tactile_hand("S_Reader")))
+                data_arm_norm.append(np.array(ann_wrapper.tactile_reader["S_Reader"].get_tactile_arm()))
+                data_farm_norm.append(np.array(ann_wrapper.tactile_reader["S_Reader"].get_tactile_forearm()))
+                data_hand_norm.append(np.array(ann_wrapper.tactile_reader["S_Reader"].get_tactile_hand()))
 
                 time.sleep(0.1)
                 if np.equal(pos, loc_p1).all():
@@ -498,9 +494,9 @@ def test_tactile_reading(ann_wrapper):
                     sim_ctrl.move_object(sphere, pos)
 
     # return the read data from the interface
-    data_arm_raw = np.array(ann_wrapper.skinR_get_tactile_arm("S_Reader1"))
-    data_farm_raw = np.array(ann_wrapper.skinR_get_tactile_forearm("S_Reader1"))
-    data_hand_raw = np.array(ann_wrapper.skinR_get_tactile_hand("S_Reader1"))
+    data_arm_raw = np.array(ann_wrapper.tactile_reader["S_Reader1"].get_tactile_arm())
+    data_farm_raw = np.array(ann_wrapper.tactile_reader["S_Reader1"].get_tactile_forearm())
+    data_hand_raw = np.array(ann_wrapper.tactile_reader["S_Reader1"].get_tactile_hand())
 
     print("Finished tactile sensing process")
 
@@ -521,8 +517,8 @@ def test_tactile_reading(ann_wrapper):
     print('__ Close skin reader module __')
 
     # close skin reader
-    ann_wrapper.skinR_close("S_Reader")
-    ann_wrapper.skinR_close("S_Reader1")
+    ann_wrapper.tactile_reader["S_Reader"].close()
+    ann_wrapper.tactile_reader["S_Reader1"].close()
 
     # remove all objects from the simulator and delete the world controller
     sim_ctrl.del_all()
@@ -542,7 +538,7 @@ def test_visual_perception(ann_wrapper):
     img_w = 320
     img_h = 240
 
-    path = "./Testfiles/Vision/"
+    path = "./Vision/"
     if not os.path.isdir(path):
         os.mkdir(path)
 
@@ -568,14 +564,14 @@ def test_visual_perception(ann_wrapper):
     ann_wrapper.add_visual_reader()
 
     # init visual reader
-    ann_wrapper.visualR_init('r', fov_w, fov_h, img_w, img_h)
+    ann_wrapper.visual_input.init('r', fov_w, fov_h, img_w, img_h)
 
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
     # start the RFModule to obtain the images from the iCub
     read_imgs = []
-    ann_wrapper.visualR_start()
+    ann_wrapper.visual_input.start()
     time.sleep(0.15)
     if(params.gazebo):
         # move the sphere object
@@ -592,7 +588,7 @@ def test_visual_perception(ann_wrapper):
     t_start = time.time()
     while len(read_imgs) < params.img_count or t > 10.0:
         t = time.time() - t_start
-        read_img = ann_wrapper.visualR_read_fromBuf()
+        read_img = ann_wrapper.visual_input.read_fromBuf()
         if read_img.shape[0] > 0:
             print('Obtained new image.')
             read_img = read_img.reshape(img_h, img_w).T
@@ -605,7 +601,7 @@ def test_visual_perception(ann_wrapper):
 
     print('____________________________________________________________')
     print('__ Stop and close visual reader module __')
-    ann_wrapper.visualR_stop()
+    ann_wrapper.visual_input.stop()
 
     # remove all objects in the simulator and remove the world controller
     sim_ctrl.del_all()
@@ -629,9 +625,9 @@ if __name__ == "__main__":
             elif command == "vision":
                 test_visual_perception(wrapper)
             else:
-                print('No valid test command!')
+                print('No valid test command! Possible are: all; positioning; tactile; vision')
     else:
-        print('No valid test command!')
+        print('No valid test command! Possible are: all; positioning; tactile; vision')
 
     del wrapper
     print('Finished automated tests.')

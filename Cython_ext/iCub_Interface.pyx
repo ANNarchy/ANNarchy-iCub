@@ -76,6 +76,8 @@ cdef extern from "Interface_iCub.hpp":
 
 cdef class iCubANN_wrapper:
 
+    cdef dict __dict__
+
     parts_reader = {}
     parts_writer = {}
     tactile_reader = {}

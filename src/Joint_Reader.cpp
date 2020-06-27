@@ -17,6 +17,8 @@
  *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Joint_Reader.hpp"
+
 #include <yarp/dev/all.h>
 #include <yarp/os/all.h>
 #include <yarp/sig/all.h>
@@ -27,12 +29,9 @@
 #include <vector>
 
 #include "INI_Reader/INIReader.h"
-#include "Joint_Reader.hpp"
 
 // Destructor
-JointReader::~JointReader() {
-    Close();
-}
+JointReader::~JointReader() { Close(); }
 
 /*** public methods for the user ***/
 bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_per_neuron) {
@@ -69,7 +68,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         }
 
         // read configuration data from ini file
-        INIReader reader_gen("data/interface_param.ini");
+        INIReader reader_gen("../data/interface_param.ini");
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         if (on_Simulator && (robot_port_prefix != "/icubSim")) {
@@ -214,8 +213,8 @@ std::vector<double> JointReader::ReadDoubleAll() {
     std::vector<double> angles;
     if (CheckInit()) {
         angles.resize(joints);
-        if (!ienc->getEncoders(angles.data())) {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angles from iCub!" << std::endl;
+        while (!ienc->getEncoders(angles.data())) {
+            yarp::os::Time::delay(0.01);
         }
     }
     return angles;
@@ -233,8 +232,8 @@ double JointReader::ReadDoubleOne(int joint) {
     double angle = 0.0;
     if (CheckInit()) {
         if (joint < joints || joint > 0) {
-            if (!ienc->getEncoder(joint, &angle)) {
-                std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
+            while (!ienc->getEncoder(joint, &angle)) {
+                yarp::os::Time::delay(0.01);
             }
         } else {
             std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
@@ -255,12 +254,11 @@ std::vector<std::vector<double>> JointReader::ReadPopAll() {
     if (CheckInit()) {
         std::vector<double> angles;
         angles.resize(joints);
-        if (ienc->getEncoders(angles.data())) {
-            for (int i = 0; i < joints; i++) {
-                angle_pops[i] = Encode(angles[i], i);
-            }
-        } else {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
+        while (!ienc->getEncoders(angles.data())) {
+            yarp::os::Time::delay(0.01);
+        }
+        for (int i = 0; i < joints; i++) {
+            angle_pops[i] = Encode(angles[i], i);
         }
     }
     return angle_pops;
@@ -279,11 +277,10 @@ std::vector<double> JointReader::ReadPopOne(int joint) {
     if (CheckInit()) {
         if (joint < joints || joint > 0) {
             double angle;
-            if (ienc->getEncoder(joint, &angle)) {
-                angle_pop = Encode(angle, joint);
-            } else {
-                std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint angle from iCub!" << std::endl;
+            while (!ienc->getEncoder(joint, &angle)) {
+                yarp::os::Time::delay(0.01);
             }
+            angle_pop = Encode(angle, joint);
         } else {
             std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
         }

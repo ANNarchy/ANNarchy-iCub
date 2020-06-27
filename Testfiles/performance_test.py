@@ -25,15 +25,16 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
+sys.path.append("../build/")
 import iCub_Interface  # requires iCub_Interface in the present directory
 
 # Python libraries for simulator control
-import Testfiles.iCub_Python_Lib.iCubSim_world_controller as iSim_wc
-import Testfiles.iCub_Python_Lib.gazebo_world_controller as gzbo_wc
+import iCub_Python_Lib.iCubSim_world_controller as iSim_wc
+import iCub_Python_Lib.gazebo_world_controller as gzbo_wc
 
 # Test support files
-import Testfiles.testing_parameter as params
-from Testfiles.joint_limits import joint_limits as j_lim
+import supplementary.testing_parameter as params
+from supplementary.joint_limits import joint_limits as j_lim
 
 
 ####################### parameter #######################
@@ -122,8 +123,8 @@ def speed_test_jreader(ann_wrapper, test_count):
     print('____ Added all joint reader ____')
 
     # init joint reader
-    ann_wrapper.jointR_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, sigma, n_pop, neuron_res)
-    ann_wrapper.jointR_init("head", ann_wrapper.PART_KEY_HEAD, sigma, n_pop, neuron_res)
+    ann_wrapper.parts_reader["right_arm"].init(ann_wrapper.PART_KEY_RIGHT_ARM, sigma, n_pop, neuron_res)
+    ann_wrapper.parts_reader["head"].init(ann_wrapper.PART_KEY_HEAD, sigma, n_pop, neuron_res)
 
     print('____ Initialized all joint reader and writer ____')
     print('____________________________________________________________\n')
@@ -133,12 +134,13 @@ def speed_test_jreader(ann_wrapper, test_count):
     results_double_one = {}
     for name in parts:
         print('____ Test part:', name)
-        joints = ann_wrapper.jointR_get_joint_count(name)
+        joints = ann_wrapper.parts_reader[name].get_joint_count()
+        print(joints)
         read_pos_double = np.zeros((joints))
         time_start_double = time.time()
         for i in range(test_count):
-            for i in range(joints):
-                read_pos_double[i] = ann_wrapper.jointR_read_double_one(name, i)
+            for j in range(joints):
+                read_pos_double[i] = ann_wrapper.parts_reader[name].read_double_one(j)
         time_stop_double = time.time()
         results_double_one[name] = (time_stop_double - time_start_double) / test_count
 
@@ -153,17 +155,17 @@ def speed_test_jreader(ann_wrapper, test_count):
     results_double_all = {}
     for name in parts:
         print('____ Test part:', name)
-        joints = ann_wrapper.jointR_get_joint_count(name)
+        joints = ann_wrapper.parts_reader[name].get_joint_count()
         time_start_double_all = time.time()
         for i in range(test_count):
-            read_pos_double_all = ann_wrapper.jointR_read_double_all(name)
+            read_pos_double_all = ann_wrapper.parts_reader[name].read_double_all()
         time_stop_double_all = time.time()
         results_double_all[name] = (time_stop_double_all - time_start_double_all) / test_count
 
     # show the test results
     print('________ Test results: Double_all')
     for part in results_double_all:
-        print("Time pop_all", part , ":", round(results_double_all[part], 4), 's')
+        print("Time Double_all", part , ":", round(results_double_all[part], 4), 's')
     print('\n')
 
     # test speed for reading joint angles as population code, coding a single joint
@@ -171,12 +173,12 @@ def speed_test_jreader(ann_wrapper, test_count):
     results_pop_single = {}
     for name in parts:
         print('____ Test part:', name)
-        joints = ann_wrapper.jointR_get_joint_count(name)
+        joints = ann_wrapper.parts_reader[name].get_joint_count()
         read_pos_pop_single = np.zeros((joints, n_pop))
         time_start_pop_single = time.time()
         for i in range(test_count):
-            for i in range(joints):
-                read_pos_pop_single[i] = ann_wrapper.jointR_read_pop_one(name, i)
+            for j in range(joints):
+                read_pos_pop_single[i] = ann_wrapper.parts_reader[name].read_pop_one(j)
         time_stop_pop_single = time.time()
         results_pop_single[name] = (time_stop_pop_single - time_start_pop_single) / test_count
 
@@ -191,10 +193,10 @@ def speed_test_jreader(ann_wrapper, test_count):
     results_pop_all = {}
     for name in parts:
         print('____ Test part:', name)
-        joints = ann_wrapper.jointR_get_joint_count(name)
+        joints = ann_wrapper.parts_reader[name].get_joint_count()
         time_start_pop_all = time.time()
         for i in range(test_count):
-            read_pos_pop_all = ann_wrapper.jointR_read_pop_all(name)
+            read_pos_pop_all = ann_wrapper.parts_reader[name].read_pop_all()
         time_stop_pop_all = time.time()
         results_pop_all[name] = (time_stop_pop_all - time_start_pop_all) / test_count
 
@@ -209,7 +211,7 @@ def speed_test_jreader(ann_wrapper, test_count):
     # close joint reader
     print('__ Close joint reader modules __')
     for part in parts:
-        ann_wrapper.jointR_close(part)
+        ann_wrapper.parts_reader[part].close()
 
     print('____ Closed joint reader modules ____')
     print('____________________________________________________________\n')
@@ -289,8 +291,8 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('____ Added all joint writer ____')
 
     # init joint writer instances
-    ann_wrapper.jointW_init("right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, neuron_res, 100.0)
-    ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, neuron_res, 100.0)
+    ann_wrapper.parts_writer["right_arm"].init(ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, neuron_res, 100.0)
+    ann_wrapper.parts_writer["head"].init(ann_wrapper.PART_KEY_HEAD, n_pop, neuron_res, 100.0)
     print('____ Initialized all joint writer ____')
     print('____________________________________________________________\n')
 
@@ -299,7 +301,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('__ Type of positioning: Double_one')
     results_double_one = {}
     for name in part_enc:
-        joints = ann_wrapper.jointW_get_joint_count(name)
+        joints = ann_wrapper.parts_writer[name].get_joint_count()
         print('____ Test part:', name)
         for key in positions:
             if positions[key][1] == name:
@@ -307,13 +309,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_one[name + '_' + key] = 0
                 for i in range(test_count):
                     time_start = time.time()
-                    for i in range(joints):
-                        ann_wrapper.jointW_write_double_one(name, positions[key][0][i], i, "abs", True)
+                    for j in range(joints):
+                        ann_wrapper.parts_writer[name].write_double_one(positions[key][0][j], j, "abs", True)
                     time_stop = time.time()
                     results_double_one[name + '_' + key] += time_stop -time_start
 
-                    for i in range(joints):
-                        ann_wrapper.jointW_write_double_one(name, zero_pos[name][i], i, "abs", True)
+                    for j in range(joints):
+                        ann_wrapper.parts_writer[name].write_double_one(zero_pos[name][j], j, "abs", True)
                     time.sleep(0.5)
                 results_double_one[name + '_' + key] /= test_count
 
@@ -327,7 +329,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('__ Type of positioning: Double_multiple')
     results_double_multiple = {}
     for name in part_enc:
-        joints = ann_wrapper.jointW_get_joint_count(name)
+        joints = ann_wrapper.parts_writer[name].get_joint_count()
         print('____ Test part:', name)
         for key in positions:
             if positions[key][1] == name:
@@ -335,11 +337,11 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_multiple[name + '_' + key] = 0
                 for i in range(test_count):
                     time_start = time.time()
-                    ann_wrapper.jointW_write_double_multiple(name, positions[key][0][3:6], range(3, 6), "abs", True)
+                    ann_wrapper.parts_writer[name].write_double_multiple(positions[key][0][3:6], range(3, 6), "abs", True)
                     time_stop = time.time()
                     results_double_multiple[name + '_' + key] += time_stop -time_start
 
-                    ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                    ann_wrapper.parts_writer[name].write_double_all(zero_pos[name], "abs", True)
                     time.sleep(0.5)
                 results_double_multiple[name + '_' + key] /= test_count
 
@@ -353,7 +355,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('__ Type of positioning: Double_all')
     results_double_all = {}
     for name in part_enc:
-        joints = ann_wrapper.jointW_get_joint_count(name)
+        joints = ann_wrapper.parts_writer[name].get_joint_count()
         print('____ Test part:', name)
         for key in positions:
             if positions[key][1] == name:
@@ -361,11 +363,11 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_all[name + '_' + key] = 0
                 for i in range(test_count):
                     time_start = time.time()
-                    ann_wrapper.jointW_write_double_all(name, positions[key][0], "abs", True)
+                    ann_wrapper.parts_writer[name].write_double_all(positions[key][0], "abs", True)
                     time_stop = time.time()
                     results_double_all[name + '_' + key] += time_stop -time_start
 
-                    ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                    ann_wrapper.parts_writer[name].write_double_all(zero_pos[name], "abs", True)
                     time.sleep(0.5)
                 results_double_all[name + '_' + key] /= test_count
 
@@ -380,19 +382,19 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('__ Type of positioning: Population_one')
     results_pop_one = {}
     for name in part_enc:
-        joints = ann_wrapper.jointW_get_joint_count(name)
+        joints = ann_wrapper.parts_writer[name].get_joint_count()
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
             results_pop_one[name + '_' + key] = 0
             for i in range(test_count):
                 time_start = time.time()
-                for i in range(joints):
-                    ann_wrapper.jointW_write_pop_one(name, part_enc[name][key][i], i, "abs", True)
+                for j in range(joints):
+                    ann_wrapper.parts_writer[name].write_pop_one(part_enc[name][key][j], j, "abs", True)
                 time_stop = time.time()
                 results_pop_one[name + '_' + key] += time_stop -time_start
 
-                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                ann_wrapper.parts_writer[name].write_double_all(zero_pos[name], "abs", True)
                 time.sleep(0.5)
             results_pop_one[name + '_' + key] /= test_count
 
@@ -406,19 +408,18 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('__ Type of positioning: Population_multiple')
     results_pop_multiple = {}
     for name in part_enc:
-        joints = ann_wrapper.jointW_get_joint_count(name)
+        joints = ann_wrapper.parts_writer[name].get_joint_count()
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
             results_pop_multiple[name + '_' + key] = 0
             for i in range(test_count):
                 time_start = time.time()
-                for i in range(joints):
-                    ann_wrapper.jointW_write_pop_multiple(name, part_enc[name][key][3:6], range(3, 6), "abs", True)
+                ann_wrapper.parts_writer[name].write_pop_multiple(part_enc[name][key][3:6], range(3, 6), "abs", True)
                 time_stop = time.time()
                 results_pop_multiple[name + '_' + key] += time_stop -time_start
 
-                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                ann_wrapper.parts_writer[name].write_double_all(zero_pos[name], "abs", True)
                 time.sleep(0.5)
             results_pop_multiple[name + '_' + key] /= test_count
 
@@ -438,11 +439,11 @@ def speed_test_jwriter(ann_wrapper, test_count):
             results_pop_all[name + '_' + key] = 0
             for i in range(test_count):
                 time_start = time.time()
-                ann_wrapper.jointW_write_pop_all(name, part_enc[name][key], "abs", True)
+                ann_wrapper.parts_writer[name].write_pop_all(part_enc[name][key], "abs", True)
                 time_stop = time.time()
                 results_pop_all[name + '_' + key] += time_stop -time_start
 
-                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                ann_wrapper.parts_writer[name].write_double_all(zero_pos[name], "abs", True)
                 time.sleep(0.5)
             results_pop_all[name + '_' + key] /= test_count
 
@@ -457,7 +458,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('__ Type of positioning: Double_one')
     results_double_one = {}
     for name in part_enc:
-        joints = ann_wrapper.jointW_get_joint_count(name)
+        joints = ann_wrapper.parts_writer[name].get_joint_count()
         print('____ Test part:', name)
         for key in positions:
             if positions[key][1] == name:
@@ -465,13 +466,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_one[name + '_' + key] = 0
                 for i in range(test_count):
                     time_start = time.time()
-                    for i in range(joints):
-                        ann_wrapper.jointW_write_double_one(name, deltas[key][0][i], i, "rel", True)
+                    for j in range(joints):
+                        ann_wrapper.parts_writer[name].write_double_one(deltas[key][0][j], j, "rel", True)
                     time_stop = time.time()
                     results_double_one[name + '_' + key] += time_stop -time_start
 
-                    for i in range(joints):
-                        ann_wrapper.jointW_write_double_one(name, zero_pos[name][i], i, "abs", True)
+                    for j in range(joints):
+                        ann_wrapper.parts_writer[name].write_double_one(zero_pos[name][j], j, "abs", True)
                     time.sleep(0.5)
                 results_double_one[name + '_' + key] /= test_count
 
@@ -485,7 +486,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('__ Type of positioning: Double_multiple')
     results_double_multiple = {}
     for name in part_enc:
-        joints = ann_wrapper.jointW_get_joint_count(name)
+        joints = ann_wrapper.parts_writer[name].get_joint_count()
         print('____ Test part:', name)
         for key in positions:
             if positions[key][1] == name:
@@ -493,11 +494,11 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_multiple[name + '_' + key] = 0
                 for i in range(test_count):
                     time_start = time.time()
-                    ann_wrapper.jointW_write_double_multiple(name, deltas[key][0][3:6], range(3, 6), "rel", True)
+                    ann_wrapper.parts_writer[name].write_double_multiple(deltas[key][0][3:6], range(3, 6), "rel", True)
                     time_stop = time.time()
                     results_double_multiple[name + '_' + key] += time_stop -time_start
 
-                    ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                    ann_wrapper.parts_writer[name].write_double_all(zero_pos[name], "abs", True)
                     time.sleep(0.5)
                 results_double_multiple[name + '_' + key] /= test_count
 
@@ -511,7 +512,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('__ Type of positioning: Double_all')
     results_double_all = {}
     for name in part_enc:
-        joints = ann_wrapper.jointW_get_joint_count(name)
+        joints = ann_wrapper.parts_writer[name].get_joint_count()
         print('____ Test part:', name)
         for key in positions:
             if positions[key][1] == name:
@@ -519,11 +520,11 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_all[name + '_' + key] = 0
                 for i in range(test_count):
                     time_start = time.time()
-                    ann_wrapper.jointW_write_double_all(name, deltas[key][0], "rel", True)
+                    ann_wrapper.parts_writer[name].write_double_all(deltas[key][0], "rel", True)
                     time_stop = time.time()
                     results_double_all[name + '_' + key] += time_stop -time_start
 
-                    ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                    ann_wrapper.parts_writer[name].write_double_all(zero_pos[name], "abs", True)
                     time.sleep(0.5)
                 results_double_all[name + '_' + key] /= test_count
 
@@ -538,7 +539,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('__ Type of positioning: Population_one')
     results_pop_one = {}
     for name in part_enc:
-        joints = ann_wrapper.jointW_get_joint_count(name)
+        joints = ann_wrapper.parts_writer[name].get_joint_count()
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
@@ -546,11 +547,11 @@ def speed_test_jwriter(ann_wrapper, test_count):
             for i in range(test_count):
                 time_start = time.time()
                 for i in range(joints):
-                    ann_wrapper.jointW_write_pop_one(name, part_enc_delta[name][key][i], i, "rel", True)
+                    ann_wrapper.parts_writer[name].write_pop_one(part_enc_delta[name][key][i], i, "rel", True)
                 time_stop = time.time()
                 results_pop_one[name + '_' + key] += time_stop -time_start
 
-                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                ann_wrapper.parts_writer[name].write_double_all(zero_pos[name], "abs", True)
                 time.sleep(0.5)
             results_pop_one[name + '_' + key] /= test_count
 
@@ -564,19 +565,18 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('__ Type of positioning: Population_multiple')
     results_pop_multiple = {}
     for name in part_enc:
-        joints = ann_wrapper.jointW_get_joint_count(name)
+        joints = ann_wrapper.parts_writer[name].get_joint_count()
         print('____ Test part:', name)
         for key in part_enc[name]:
             print('______ Test position:', key)
             results_pop_multiple[name + '_' + key] = 0
             for i in range(test_count):
                 time_start = time.time()
-                for i in range(joints):
-                    ann_wrapper.jointW_write_pop_multiple(name, part_enc_delta[name][key][3:6], range(3, 6), "rel", True)
+                ann_wrapper.parts_writer[name].write_pop_multiple(part_enc_delta[name][key][3:6], range(3, 6), "rel", True)
                 time_stop = time.time()
                 results_pop_multiple[name + '_' + key] += time_stop -time_start
 
-                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                ann_wrapper.parts_writer[name].write_double_all(zero_pos[name], "abs", True)
                 time.sleep(0.5)
             results_pop_multiple[name + '_' + key] /= test_count
 
@@ -596,11 +596,11 @@ def speed_test_jwriter(ann_wrapper, test_count):
             results_pop_all[name + '_' + key] = 0
             for i in range(test_count):
                 time_start = time.time()
-                ann_wrapper.jointW_write_pop_all(name, part_enc_delta[name][key], "rel", True)
+                ann_wrapper.parts_writer[name].write_pop_all(part_enc_delta[name][key], "rel", True)
                 time_stop = time.time()
                 results_pop_all[name + '_' + key] += time_stop -time_start
 
-                ann_wrapper.jointW_write_double_all(name, zero_pos[name], "abs", True)
+                ann_wrapper.parts_writer[name].write_double_all(zero_pos[name], "abs", True)
                 time.sleep(0.5)
             results_pop_all[name + '_' + key] /= test_count
 
@@ -616,7 +616,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
 
     # close joint writer instances
     for part in part_enc:
-        ann_wrapper.jointW_close(part)
+        ann_wrapper.parts_writer[part].close()
 
     print('____ Closed joint writer modules ____')
     print('____________________________________________________________\n')
@@ -639,8 +639,8 @@ def speed_test_sreader(ann_wrapper, test_count):
     ann_wrapper.add_skin_reader("S_Reader1")
 
     # init skin reader
-    print("Init:", ann_wrapper.skinR_init("S_Reader", "r", True)) # normalized
-    print("Init:", ann_wrapper.skinR_init("S_Reader1", "r", False)) # non-normalized
+    print("Init:", ann_wrapper.tactile_reader["S_Reader"].init("r", True)) # normalized
+    print("Init:", ann_wrapper.tactile_reader["S_Reader1"].init("r", False)) # non-normalized
 
     print('____ Initialized skin reader ____')
     print('____________________________________________________________\n')
@@ -649,30 +649,30 @@ def speed_test_sreader(ann_wrapper, test_count):
     print('____ Test speed performance with normalization ____')
     t_start_norm = time.time()
     for i in range(test_count):
-        ann_wrapper.skinR_read_tactile("S_Reader")
+        ann_wrapper.tactile_reader["S_Reader"].read_tactile()
     t_stop_norm = time.time()
 
-    data_arm_norm = np.array(ann_wrapper.skinR_get_tactile_arm("S_Reader"))
-    data_farm_norm = np.array(ann_wrapper.skinR_get_tactile_forearm("S_Reader"))
-    data_hand_norm = np.array(ann_wrapper.skinR_get_tactile_hand("S_Reader"))
+    data_arm_norm = np.array(ann_wrapper.tactile_reader["S_Reader"].get_tactile_arm())
+    data_farm_norm = np.array(ann_wrapper.tactile_reader["S_Reader"].get_tactile_forearm())
+    data_hand_norm = np.array(ann_wrapper.tactile_reader["S_Reader"].get_tactile_hand())
 
 
     print('____ Test speed performance without normalization ____')
     t_start_non_norm = time.time()
     for i in range(test_count):
-        ann_wrapper.skinR_read_tactile("S_Reader1")
+        ann_wrapper.tactile_reader["S_Reader"].read_tactile()
     t_stop_non_norm = time.time()
 
-    data_arm_non_norm = np.array(ann_wrapper.skinR_get_tactile_arm("S_Reader1"))
-    data_farm_non_norm = np.array(ann_wrapper.skinR_get_tactile_forearm("S_Reader1"))
-    data_hand_non_norm = np.array(ann_wrapper.skinR_get_tactile_hand("S_Reader1"))
+    data_arm_non_norm = np.array(ann_wrapper.tactile_reader["S_Reader1"].get_tactile_arm())
+    data_farm_non_norm = np.array(ann_wrapper.tactile_reader["S_Reader1"].get_tactile_forearm())
+    data_hand_non_norm = np.array(ann_wrapper.tactile_reader["S_Reader1"].get_tactile_hand())
 
     print('____________________________________________________________')
     print('__ Close skin reader module __')
 
     # close skin reader
-    print(ann_wrapper.skinR_close("S_Reader"))
-    print(ann_wrapper.skinR_close("S_Reader1"))
+    print(ann_wrapper.tactile_reader["S_Reader"].close())
+    print(ann_wrapper.tactile_reader["S_Reader1"].close())
 
 
     print('____________________________________________________________')
@@ -709,22 +709,22 @@ def speed_test_vreader(ann_wrapper, test_count):
     ann_wrapper.add_visual_reader()
 
     # init visual reader
-    print(ann_wrapper.visualR_init('r'))                    # use of default values
+    print(ann_wrapper.visual_input.init('r'))                    # use of default values
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
     print('____ Test speed performance with full resolution ____')
     t_start_full = time.time()
-    ann_wrapper.visualR_start()
+    ann_wrapper.visual_input.start()
     while len(imgs_full) < test_count:
-        img_full = ann_wrapper.visualR_read_fromBuf()
+        img_full = ann_wrapper.visual_input.read_fromBuf()
         if img_full.shape[0] != 0:
             imgs_full.append(img_full)
     t_stop_full = time.time()
 
     print('____________________________________________________________')
     print('__ Stop and close visual reader module __')
-    ann_wrapper.visualR_stop()
+    ann_wrapper.visual_input.stop()
     ann_wrapper.rm_visual_reader()
 
     # store obtained images
@@ -736,22 +736,22 @@ def speed_test_vreader(ann_wrapper, test_count):
 
     print('____________________________________________________________')
     print('__ Reinit visual reader module with quarter resolution __')
-    print(ann_wrapper.visualR_init('r', 60, 48, 80, 60))    # lower resolution
+    print(ann_wrapper.visual_input.init('r', 60, 48, 80, 60))    # lower resolution
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
     print('____ Test speed performance with quarter resolution ____')
     t_start_quart = time.time()
-    ann_wrapper.visualR_start()
+    ann_wrapper.visual_input.start()
     while len(imgs_quarter) < test_count:
-        img_quarter = ann_wrapper.visualR_read_fromBuf()
+        img_quarter = ann_wrapper.visual_input.read_fromBuf()
         if img_quarter.shape[0] != 0:
             imgs_quarter.append(img_quarter)
     t_stop_quart = time.time()
 
     print('____________________________________________________________')
     print('__ Stop and close visual reader module __')
-    ann_wrapper.visualR_stop()
+    ann_wrapper.visual_input.stop()
     ann_wrapper.rm_visual_reader()
 
     # store obtained images
@@ -763,22 +763,22 @@ def speed_test_vreader(ann_wrapper, test_count):
 
     print('____________________________________________________________')
     print('__ Reinit visual reader module with half visual field and quarter resolution __')
-    print(ann_wrapper.visualR_init('r', 30, 24, 80, 60))    # lower resolution and smaller visual field
+    print(ann_wrapper.visual_input.init('r', 30, 24, 80, 60))    # lower resolution and smaller visual field
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
     print('____ Test speed performance with quarter resolution and reduced visual field ____')
     t_start_field = time.time()
-    ann_wrapper.visualR_start()
+    ann_wrapper.visual_input.start()
     while len(imgs_field) < test_count:
-        img_field = ann_wrapper.visualR_read_fromBuf()
+        img_field = ann_wrapper.visual_input.read_fromBuf()
         if img_field.shape[0] != 0:
             imgs_field.append(img_field)
     t_stop_field = time.time()
 
     print('____________________________________________________________')
     print('__ Stop and close visual reader module __')
-    ann_wrapper.visualR_stop()
+    ann_wrapper.visual_input.stop()
 
     np.save(path + 'field_size.npy', img_field)
 
@@ -820,13 +820,13 @@ def vis_move_test(ann_wrapper):
     ann_wrapper.add_joint_writer("head")
 
     # init visual reader and joint writer instances
-    ann_wrapper.visualR_init('r', 60, 48, 80, 60)
-    ann_wrapper.jointW_init("moving", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, speed_arm)
-    ann_wrapper.jointW_init("head", ann_wrapper.PART_KEY_HEAD, n_pop, speed_head)
+    ann_wrapper.visual_input.init('r', 60, 48, 80, 60)
+    ann_wrapper.parts_writer["moving"].init(ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, speed_arm)
+    ann_wrapper.parts_writer["head"].init(ann_wrapper.PART_KEY_HEAD, n_pop, speed_head)
 
     # move the right arm to the start position
-    for i in range(ann_wrapper.jointW_get_joint_count("moving")):
-        ann_wrapper.jointW_write_double_one("moving", pos[True][i], i, "abs", True)
+    for i in range(ann_wrapper.parts_writer["moving"].get_joint_count()):
+        ann_wrapper.parts_writer["moving"].write_double_one(pos[True][i], i, "abs", True)
 
     if (params.gazebo):
         hand_loc = [ 0.19, -0.043, 0.67 ]
@@ -846,7 +846,7 @@ def vis_move_test(ann_wrapper):
 
     alpha = bog2deg * np.arctan(dy/dz)
     beta =  - bog2deg * np.arctan(dx/dz)
-    target_pos = np.zeros(ann_wrapper.jointW_get_joint_count("head"))
+    target_pos = np.zeros(ann_wrapper.parts_writer["head"].get_joint_count())
 
     target_pos[0] = 3.0/4.0 * alpha
     target_pos[3] = 1.0/ 4.0 * alpha - 3
@@ -854,41 +854,41 @@ def vis_move_test(ann_wrapper):
     target_pos[4] = 1.0/2.0 * beta - 10
 
     # move the head and eyes to look at the iCub right hand
-    for i in range(ann_wrapper.jointW_get_joint_count("head")):
-        ann_wrapper.jointW_write_double_all("head", target_pos, "abs", True)
+    for i in range(ann_wrapper.parts_writer["head"].get_joint_count()):
+        ann_wrapper.parts_writer["head"].write_double_all(target_pos, "abs", True)
     time.sleep(2)
 
     # start the the visual reader module to obtain images from the iCub
-    ann_wrapper.visualR_start()
+    ann_wrapper.visual_input.start()
 
     # move the arm, while recording the images
-    for i in range(ann_wrapper.jointW_get_joint_count("moving")):
-        ann_wrapper.jointW_write_double_all("moving", pos[False], "abs", True)
+    for i in range(ann_wrapper.parts_writer["moving"].get_joint_count()):
+        ann_wrapper.parts_writer["moving"].write_double_all(pos[False], "abs", True)
     imgs = []
     t_start = time.time()
     pos_choice = True
     while len(imgs) < 100:
-        imgs.append(np.array(ann_wrapper.visualR_read_fromBuf()))
+        imgs.append(np.array(ann_wrapper.visual_input.read_fromBuf()))
         dt = time.time() - t_start
         if dt > 0.5:
-            for i in range(ann_wrapper.jointW_get_joint_count("moving")):
-                ann_wrapper.jointW_write_double_all("moving", pos[pos_choice], "abs", False)
+            for i in range(ann_wrapper.parts_writer["moving"].get_joint_count()):
+                ann_wrapper.parts_writer["moving"].write_double_all(pos[pos_choice], "abs", False)
                 pos_choice = not pos_choice
                 t_start = time.time()
 
     # stop the visual reader
-    ann_wrapper.visualR_stop()
+    ann_wrapper.visual_input.stop()
 
     # save the recorded images
     np.save(path + 'visual_percept_' + str(speed_arm) + '.npy', imgs)
 
     # return the arm and the head to a defined position
-    ann_wrapper.jointW_write_double_all("moving", zero_pos["right_arm"], "abs", True)
-    ann_wrapper.jointW_write_double_all("head", zero_pos["head"], "abs", True)
+    ann_wrapper.parts_writer["moving"].write_double_all(zero_pos["right_arm"], "abs", True)
+    ann_wrapper.parts_writer["head"].write_double_all(zero_pos["head"], "abs", True)
 
     # close the joint writer modules
-    ann_wrapper.jointW_close("moving")
-    ann_wrapper.jointW_close("head")
+    ann_wrapper.parts_writer["moving"].close()
+    ann_wrapper.parts_writer["head"].close()
 
 
 #########################################################
@@ -920,9 +920,9 @@ if __name__ == "__main__":
             elif command == "vis_move":
                 vis_move_test(wrapper)
             else:
-                print('No valid test command!')
+                print('No valid test command! Possible are: all; noskin; jreader; jwriter; sreader; vreader; vis_move')
     else:
-        print('No valid test command!')
+        print('No valid test command! Possible are: all; noskin; jreader; jwriter; sreader; vreader; vis_move')
 
     del wrapper
     print('finish')
