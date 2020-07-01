@@ -16,6 +16,7 @@ var searchData=
   ['icubsim_5fworld_5fcontroller_2epy',['iCubSim_world_controller.py',['../d9/d88/iCubSim__world__controller_8py.html',1,'']]],
   ['idx',['idx',['../d4/dbf/structTaxelData.html#ae84a877a528c5e095f5579484514e92a',1,'TaxelData']]],
   ['img_5fcount',['img_count',['../df/d34/namespacesupplementary_1_1testing__parameter.html#a5e39e063a5b9cb3e8a1bfac6b890813c',1,'supplementary::testing_parameter']]],
+  ['include_5fdir',['include_dir',['../dd/dc4/namespacesetup.html#a4db17754c5de2edee8a0e2c5585ccabf',1,'setup']]],
   ['ini_2ecpp',['ini.cpp',['../d0/d1d/ini_8cpp.html',1,'']]],
   ['ini_2eh',['ini.h',['../d3/d50/ini_8h.html',1,'']]],
   ['ini_5fallow_5fbom',['INI_ALLOW_BOM',['../d3/d50/ini_8h.html#ac7397d484a14bb9007527edd0b66e38c',1,'ini.h']]],

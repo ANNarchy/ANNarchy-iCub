@@ -87,6 +87,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a6687abb22ef823266dde7f81d2356cc7"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a6687abb22ef823266dde7f81d2356cc7">get_joint_position</a> (iEnc, jnts)</td></tr>
 <tr class="memdesc:a6687abb22ef823266dde7f81d2356cc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the joints positions ######################  <a href="#a6687abb22ef823266dde7f81d2356cc7">More...</a><br /></td></tr>
 <tr class="separator:a6687abb22ef823266dde7f81d2356cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb4600faf7993ea4d0a2690da5b05d2f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#abb4600faf7993ea4d0a2690da5b05d2f">create_motor_dict</a> (parts_used)</td></tr>
+<tr class="memdesc:abb4600faf7993ea4d0a2690da5b05d2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">map motor control to dictionary ###################  <a href="#abb4600faf7993ea4d0a2690da5b05d2f">More...</a><br /></td></tr>
+<tr class="separator:abb4600faf7993ea4d0a2690da5b05d2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a562b75c445fa4860441f0124167860b2"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a562b75c445fa4860441f0124167860b2">set_pos_vector</a> (pos_vec, val_j0, val_j1, val_j2, val_j3, val_j4, val_j5)</td></tr>
 <tr class="memdesc:a562b75c445fa4860441f0124167860b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">set YARP position vector with given values #############  <a href="#a562b75c445fa4860441f0124167860b2">More...</a><br /></td></tr>
 <tr class="separator:a562b75c445fa4860441f0124167860b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,6 +110,26 @@ Functions</h2></td></tr>
 
 library for functions related to the motor control
 </pre> </div><h2 class="groupheader">Function Documentation</h2>
+<a id="abb4600faf7993ea4d0a2690da5b05d2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb4600faf7993ea4d0a2690da5b05d2f">&#9670;&nbsp;</a></span>create_motor_dict()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def iCub_Python_Lib.YARP_motor_control.create_motor_dict </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>parts_used</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>map motor control to dictionary ################### </p>
+
+</div>
+</div>
 <a id="a6687abb22ef823266dde7f81d2356cc7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6687abb22ef823266dde7f81d2356cc7">&#9670;&nbsp;</a></span>get_joint_position()</h2>
 
@@ -136,10 +159,10 @@ library for functions related to the motor control
 <p>get the joints positions ###################### </p>
 <pre class="fragment">    get position of controlled joints
 
-    params: iEnc    -- Encoder for the controlled joints
-            jnts    -- number of joints
+    params: iEnc        -- Encoder for the controlled joints
+            jnts        -- number of joints
 
-    return: encs    -- YARP-Vector containing the joint positions
+    return: yarp_angles -- YARP-Vector containing the joint positions
 </pre> 
 <p class="reference">Referenced by <a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#aeb2011a79e6d28602d3c4d3514016366">iCub_Python_Lib.YARP_motor_control.goto_position_block()</a>, and <a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a42ffce67339192674497dd49af9ec2b3">iCub_Python_Lib.YARP_motor_control.goto_zero_head_pos()</a>.</p>
 
@@ -283,6 +306,8 @@ library for functions related to the motor control
             jnts    -- number of controlled joints
             driver  -- device driver; need to be returned, otherwise joint controlboard is closed
 </pre> 
+<p class="reference">Referenced by <a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#abb4600faf7993ea4d0a2690da5b05d2f">iCub_Python_Lib.YARP_motor_control.create_motor_dict()</a>.</p>
+
 </div>
 </div>
 <a id="a2ad75ba049fffa24a2ad0b802eac92ef"></a>
