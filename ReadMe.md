@@ -27,7 +27,7 @@ SkinReader:
         - sensor_positions -> This folder caontains the files from the iCub simulator installation with the position data for the tactile sensors.
         - interface_param.ini -> ini-file with several parameters for the interface
         - joint_limits_sim.ini -> In the ini file the simulated robot joint limitations of the iCub are given.
-        - joint_limits_real.ini -> In the ini file the real robot joint limitations of the iCub are given.  \n
+        - joint_limits_real.ini -> In the ini file the real robot joint limitations of the iCub are given.<br>
                             !!! This should be checked before the usage with the real robot, to avoid damage. !!!
     - doc -> This folder contains the doxygen generated documentation for the interface
     - include -> This folder contains the C++ header files for the interface modules.
@@ -61,22 +61,22 @@ For use in Python the build folder should be added to the Pythonpath-variable, t
 ```
 
 ## useful links
-Wiki for the iCub robot:  \n
+Wiki for the iCub robot:<br>
 http://wiki.icub.org/wiki/Manual
 
-YARP website:\n
+YARP website:<br>
 http://www.yarp.it/index.html
 
-git repository with scripts to control the iCub simulator:  \n
+git repository with scripts to control the iCub simulator:<br>
 https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git
 
 
 ## Authors
-Torsten Follak (torsten.follak@informatik.tu-chemnitz.de)  \n
-Helge Ülo Dinkelbach  \n
+Torsten Follak (torsten.follak@informatik.tu-chemnitz.de)<br>
+Helge Ülo Dinkelbach<br>
 
 
 ## Dependencies
-Python  >= 3.5  \n
-YARP    >= 3.2  \n
-OpenCV  >= 3.4  \n
+Python  >= 3.5<br>
+YARP    >= 3.2<br>
+OpenCV  >= 3.4<br>
