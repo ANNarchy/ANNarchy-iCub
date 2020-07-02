@@ -288,7 +288,13 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: e.g. part string not correct or ini file not in given path <br />
+</li>
+<li>YARP-Server not running </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>

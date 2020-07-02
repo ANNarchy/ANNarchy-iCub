@@ -230,7 +230,12 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: e.g. eye character not valid</li>
+<li>YARP-Server not running </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -250,7 +255,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image) </p>
-<dl class="section return"><dt>Returns</dt><dd>image (1D-vector) from the image buffer </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>image as 1D-vector from the image buffer </dd></dl>
 
 </div>
 </div>
@@ -288,7 +293,11 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>missing initialization </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>

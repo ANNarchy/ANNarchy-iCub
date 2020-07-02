@@ -204,6 +204,8 @@ bool VisualReader::Start(int argc, char *argv[]) {
             return false;
         }
         return true;
+    } else {
+        return false;
     }
 }
 

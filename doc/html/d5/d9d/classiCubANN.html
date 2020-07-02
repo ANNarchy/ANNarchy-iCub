@@ -89,7 +89,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad4c0bbd3adb6f1a7ab2f056cbd7cd975"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d9d/classiCubANN.html#ad4c0bbd3adb6f1a7ab2f056cbd7cd975">~iCubANN</a> ()</td></tr>
 <tr class="separator:ad4c0bbd3adb6f1a7ab2f056cbd7cd975"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d8a7ead6fa7e5a8cf3a2c4c33258984"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d9d/classiCubANN.html#a6d8a7ead6fa7e5a8cf3a2c4c33258984">AddJointReader</a> (std::string name)</td></tr>
-<tr class="memdesc:a6d8a7ead6fa7e5a8cf3a2c4c33258984"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated skin reader  <a href="#a6d8a7ead6fa7e5a8cf3a2c4c33258984">More...</a><br /></td></tr>
+<tr class="memdesc:a6d8a7ead6fa7e5a8cf3a2c4c33258984"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add an instance of the joint reader module. This has to be initialized with the init-method.  <a href="#a6d8a7ead6fa7e5a8cf3a2c4c33258984">More...</a><br /></td></tr>
 <tr class="separator:a6d8a7ead6fa7e5a8cf3a2c4c33258984"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0b1a40d74d75170dd100e4c38fd556a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d9d/classiCubANN.html#aa0b1a40d74d75170dd100e4c38fd556a">AddJointWriter</a> (std::string name)</td></tr>
 <tr class="memdesc:aa0b1a40d74d75170dd100e4c38fd556a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add an instance of the joint writer module. This has to be initialized with the init-method.  <a href="#aa0b1a40d74d75170dd100e4c38fd556a">More...</a><br /></td></tr>
@@ -116,15 +116,16 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ab30f1de41d779518330636c942644f90"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="../../d5/df3/classVisualReader.html">VisualReader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d9d/classiCubANN.html#ab30f1de41d779518330636c942644f90">visual_input</a></td></tr>
+<tr class="memdesc:ab30f1de41d779518330636c942644f90"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated visual reader (only one possible for left/right eye)  <a href="#ab30f1de41d779518330636c942644f90">More...</a><br /></td></tr>
 <tr class="separator:ab30f1de41d779518330636c942644f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f413d96c631bbcb172aa8847f29a2f6"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::shared_ptr&lt; <a class="el" href="../../d1/dc0/classJointReader.html">JointReader</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d9d/classiCubANN.html#a3f413d96c631bbcb172aa8847f29a2f6">parts_reader</a></td></tr>
-<tr class="memdesc:a3f413d96c631bbcb172aa8847f29a2f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated visual reader (only one possible for left/right eye)  <a href="#a3f413d96c631bbcb172aa8847f29a2f6">More...</a><br /></td></tr>
+<tr class="memdesc:a3f413d96c631bbcb172aa8847f29a2f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated joint readers (one for every robot part)  <a href="#a3f413d96c631bbcb172aa8847f29a2f6">More...</a><br /></td></tr>
 <tr class="separator:a3f413d96c631bbcb172aa8847f29a2f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1646b6d329d17110c8f1f77352a3f007"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::shared_ptr&lt; <a class="el" href="../../df/d23/classJointWriter.html">JointWriter</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d9d/classiCubANN.html#a1646b6d329d17110c8f1f77352a3f007">parts_writer</a></td></tr>
-<tr class="memdesc:a1646b6d329d17110c8f1f77352a3f007"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated joint readers (one for every robot part)  <a href="#a1646b6d329d17110c8f1f77352a3f007">More...</a><br /></td></tr>
+<tr class="memdesc:a1646b6d329d17110c8f1f77352a3f007"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated joint writers (one for every robot part)  <a href="#a1646b6d329d17110c8f1f77352a3f007">More...</a><br /></td></tr>
 <tr class="separator:a1646b6d329d17110c8f1f77352a3f007"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d76f46b2c644290d7b894df7ee47070"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::shared_ptr&lt; <a class="el" href="../../d1/dc5/classSkinReader.html">SkinReader</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d9d/classiCubANN.html#a3d76f46b2c644290d7b894df7ee47070">tactile_reader</a></td></tr>
-<tr class="memdesc:a3d76f46b2c644290d7b894df7ee47070"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated joint writers (one for every robot part)  <a href="#a3d76f46b2c644290d7b894df7ee47070">More...</a><br /></td></tr>
+<tr class="memdesc:a3d76f46b2c644290d7b894df7ee47070"><td class="mdescLeft">&#160;</td><td class="mdescRight">associated skin reader  <a href="#a3d76f46b2c644290d7b894df7ee47070">More...</a><br /></td></tr>
 <tr class="separator:a3d76f46b2c644290d7b894df7ee47070"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -189,14 +190,18 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>associated skin reader </p>
-<p>Add an instance of the joint reader module. This has to be initialized with the init-method. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Add an instance of the joint reader module. This has to be initialized with the init-method. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>name for the added joint reader in the map, can be freely selected </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>Name already used </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -223,7 +228,11 @@ Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>Name already used </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -250,7 +259,11 @@ Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>Name already used </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -270,7 +283,11 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Add the instance of the visual reader module. This has to be initialized with the init-method. </p>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>Name already used </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -388,7 +405,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>associated visual reader (only one possible for left/right eye) </p>
+<p>associated joint readers (one for every robot part) </p>
 
 <p class="reference">Referenced by <a class="el" href="../../d5/d9d/classiCubANN.html#a6d8a7ead6fa7e5a8cf3a2c4c33258984">AddJointReader()</a>, <a class="el" href="../../d5/d9d/classiCubANN.html#ae4ab1334733f141982e42d72454dd71a">RemoveJointReader()</a>, and <a class="el" href="../../d5/d9d/classiCubANN.html#ad4c0bbd3adb6f1a7ab2f056cbd7cd975">~iCubANN()</a>.</p>
 
@@ -406,7 +423,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>associated joint readers (one for every robot part) </p>
+<p>associated joint writers (one for every robot part) </p>
 
 <p class="reference">Referenced by <a class="el" href="../../d5/d9d/classiCubANN.html#aa0b1a40d74d75170dd100e4c38fd556a">AddJointWriter()</a>, <a class="el" href="../../d5/d9d/classiCubANN.html#a760933d7406f9a35ab73c0d0c0dc6cc0">RemoveJointWriter()</a>, and <a class="el" href="../../d5/d9d/classiCubANN.html#ad4c0bbd3adb6f1a7ab2f056cbd7cd975">~iCubANN()</a>.</p>
 
@@ -424,7 +441,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>associated joint writers (one for every robot part) </p>
+<p>associated skin reader </p>
 
 <p class="reference">Referenced by <a class="el" href="../../d5/d9d/classiCubANN.html#a590c53e8757043f66538bf94dd39ac35">AddSkinReader()</a>, <a class="el" href="../../d5/d9d/classiCubANN.html#ae75c249f4ccf3ece15aa5a2f322b17c3">RemoveSkinReader()</a>, and <a class="el" href="../../d5/d9d/classiCubANN.html#ad4c0bbd3adb6f1a7ab2f056cbd7cd975">~iCubANN()</a>.</p>
 
@@ -441,6 +458,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>associated visual reader (only one possible for left/right eye) </p>
 
 <p class="reference">Referenced by <a class="el" href="../../d5/d9d/classiCubANN.html#a766573339bf0096e6eb250ce1e5e7657">AddVisualReader()</a>, and <a class="el" href="../../d5/d9d/classiCubANN.html#ae0acb7c52f2d269d611fee8097d604b5">RemoveVisualReader()</a>.</p>
 

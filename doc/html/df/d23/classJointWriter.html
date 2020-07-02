@@ -297,7 +297,12 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: e.g. part string not correct or ini file not in given path</li>
+<li>YARP-Server not running </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -335,7 +340,12 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if set was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if set was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: e.g. joint index not valid for robot part</li>
+<li>missing initialization </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -380,7 +390,12 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: position array size does not fit joint count; positioning mode not valid</li>
+<li>missing initialization </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -432,7 +447,12 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: position array size does not fit joint count; positioning mode not valid</li>
+<li>missing initialization </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -484,7 +504,12 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: position out of joint limits; joint out of range; positioning mode not valid</li>
+<li>missing initialization </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -529,7 +554,13 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: joints out of range; positioning mode not valid; position_pops size does not fit joint count</li>
+<li>position decoding returned NaN</li>
+<li>missing initialization </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -581,7 +612,12 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). Typical errors:<ul>
+<li>arguments not valid: joints out of range; positioning mode not valid; position_pops size does not fit joint selection</li>
+<li>position decoding returned NaN</li>
+<li>missing initialization </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -633,7 +669,13 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: joint out of range; positioning mode not valid</li>
+<li>position decoding returned NaN</li>
+<li>missing initialization </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>

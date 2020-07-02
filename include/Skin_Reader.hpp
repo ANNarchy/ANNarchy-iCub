@@ -53,7 +53,10 @@ class SkinReader {
      * \param[in] arm character to choose the arm side (r/R for right; l/L for left)
      * \param[in] norm_data if True, data is normalized from 0..255 to 0..1.0
      * \param[in] ini_path Path to the "interface_param.ini"-file.
-     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: e.g. arm character not correct; ini file not in given path
+     *              - YARP-Server not running
      */
     bool Init(char arm, bool norm_data, std::string ini_path = "../data/");
 
@@ -89,7 +92,10 @@ class SkinReader {
 
     /**
      * \brief The sensor data is read and buffered inside. It can be accessed through #GetTactileArm, #GetTactileForearm and #GetTactileHand.
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - missing initialization
+     *              - error in reading from iCub
      */
     bool ReadTactile();
 

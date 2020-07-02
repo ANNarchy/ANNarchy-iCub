@@ -44,7 +44,10 @@ class JointWriter {
      * \param[in] deg_per_neuron (default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
      * \param[in] speed Velocity to set for the joint motions.
      * \param[in] ini_path Path to the "interface_param.ini"-file.
-     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: e.g. part string not correct or ini file not in given path
+     *              - YARP-Server not running
      */
     bool Init(std::string part, int pop_size, double deg_per_neuron = 0.0, double speed = 10.0, std::string ini_path = "../data/");
 
@@ -75,7 +78,10 @@ class JointWriter {
      * \brief Return the size of the populations encoding the joint angles
      * \param[in] speed Name of the selected joint writer
      * \param[in] joint (default -1) joint number of the robot part, default -1 for all joints
-     * \return True, if set was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if set was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: e.g. joint index not valid for robot part
+     *              - missing initialization
      */
     bool SetJointVelocity(double speed, int joint);
 
@@ -84,7 +90,10 @@ class JointWriter {
      * \param[in] position Joint angles to write to the robot joints
      * \param[in] blocking if True, function waits for end of motion
      * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: position array size does not fit joint count; positioning mode not valid
+     *              - missing initialization
      */
     bool WriteDoubleAll(std::vector<double> position, bool blocking, std::string mode);
 
@@ -94,7 +103,10 @@ class JointWriter {
      * \param[in] joint_selection Joint indizes of the joints, which should be moved (head: 3, 4, 5 -> all eye movements)
      * \param[in] blocking if True, function waits for end of motion
      * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: position array size does not fit joint count; positioning mode not valid
+     *              - missing initialization
      */
     bool WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, bool blocking, std::string mode);
 
@@ -104,7 +116,10 @@ class JointWriter {
      * \param[in] joint Joint number of the robot part
      * \param[in] blocking if True, function waits for end of motion
      * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: position out of joint limits; joint out of range; positioning mode not valid
+     *              - missing initialization
      */
     bool WriteDoubleOne(double position, int joint, bool blocking, std::string mode);
 
@@ -113,7 +128,11 @@ class JointWriter {
      * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part
      * \param[in] blocking if True, function waits for end of motion
      * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: joints out of range; positioning mode not valid; position_pops size does not fit joint count
+     *              - position decoding returned NaN
+     *              - missing initialization
      */
     bool WritePopAll(std::vector<std::vector<double>> position_pops, bool blocking, std::string mode);
 
@@ -124,6 +143,10 @@ class JointWriter {
      * \param[in] blocking if True, function waits for end of motion
      * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     *          Typical errors:
+     *              - arguments not valid: joints out of range; positioning mode not valid; position_pops size does not fit joint selection
+     *              - position decoding returned NaN
+     *              - missing initialization
      */
     bool WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, bool blocking,
                           std::string mode);
@@ -134,7 +157,11 @@ class JointWriter {
      * \param[in] joint Joint number of the robot part
      * \param[in] blocking if True, function waits for end of motion
      * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: joint out of range; positioning mode not valid
+     *              - position decoding returned NaN
+     *              - missing initialization
      */
     bool WritePopOne(std::vector<double> position_pop, int joint, bool blocking, std::string mode);
 

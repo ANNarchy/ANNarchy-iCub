@@ -48,13 +48,16 @@ class VisualReader : private yarp::os::RFModule {
      * \param[in] img_width output image width in pixel (input width: 320px)
      * \param[in] img_height output image height in pixel (input height: 240px)
      * \param[in] fast_filter flag to select the filter for image upscaling; True for a faster filter
-     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: e.g. eye character not valid
+     *              - YARP-Server not running
      */
     bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter);
 
     /**
      * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
-     * \return image (1D-vector) from the image buffer
+     * \return image as 1D-vector from the image buffer
      */
     std::vector<precision> ReadFromBuf();
 
@@ -62,7 +65,9 @@ class VisualReader : private yarp::os::RFModule {
      * \brief Start reading images from the iCub with YARP-RFModule.
      * \param[in] argc main function inputs from program call; can be used to configure RFModule; not implemented yet
      * \param[in] argv main function inputs from program call; can be used to configure RFModule; not implemented yet
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - missing initialization
      */
     bool Start(int argc, char *argv[]);
 

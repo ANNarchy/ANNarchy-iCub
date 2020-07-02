@@ -44,7 +44,10 @@ class JointReader {
      * \param[in] pop_n Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
      * \param[in] deg_per_neuron (default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
      * \param[in] ini_path Path to the "interface_param.ini"-file.
-     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: e.g. part string not correct or ini file not in given path \n
+     *              - YARP-Server not running
      */
     bool Init(std::string part, double sigma, int pop_n, double deg_per_neuron = 0., std::string ini_path = "../data/");
 

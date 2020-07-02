@@ -295,7 +295,12 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: e.g. arm character not correct; ini file not in given path</li>
+<li>YARP-Server not running </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -315,7 +320,12 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The sensor data is read and buffered inside. It can be accessed through <a class="el" href="../../d1/dc5/classSkinReader.html#ac1950a90f8b7dfe386c01e742c3ea581" title="Return tactile data for upper arm skin. ">GetTactileArm</a>, <a class="el" href="../../d1/dc5/classSkinReader.html#a680d4c4a71573380a1558c5564161935" title="Return tactile data for forearm skin. ">GetTactileForearm</a> and <a class="el" href="../../d1/dc5/classSkinReader.html#a394716bf310a40055127108bd439f33d" title="Return tactile data for hand skin. ">GetTactileHand</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>missing initialization</li>
+<li>error in reading from iCub </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>

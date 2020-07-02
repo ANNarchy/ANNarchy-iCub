@@ -63,14 +63,27 @@ $(function() {
 <div class="title">ANNarchy iCub Interface Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator). It is written in C++ with a Cython wrapping to Python.</p>
+<div class="textblock"><p>This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.</p>
 <h2>Interface description</h2>
 <p>Possible actions are the reading and writing of joint angles, get the current state or move the robot joints. Further, the camera images and the tactile sensors data can be received.</p>
 <p>The interface has a modular structure with one main class and several subclasses. The main class is the "iCubANN" class, handling the subclass instances. The subclasses representing the different modules are <a class="el" href="d1/dc0/classJointReader.html" title="Read-out of the joint angles of the iCub robot. ">JointReader</a>, <a class="el" href="df/d23/classJointWriter.html" title="Write the joint angles to the iCub robots joints to move them. ">JointWriter</a>, <a class="el" href="d5/df3/classVisualReader.html" title="Read-out of the camera images from the iCub robot. ">VisualReader</a> and <a class="el" href="d1/dc5/classSkinReader.html" title="Read-out of the skin sensor data from the iCubs artificial skin. ">SkinReader</a> with the following functionalities:</p>
-<p><a class="el" href="d1/dc0/classJointReader.html" title="Read-out of the joint angles of the iCub robot. ">JointReader</a>: This module handles the joint reading. The iCub robot is divided in multiple robot parts, which are the head, right arm, left arm, torso right leg and left leg. For each of this part a seperate joint reader instance is needed. Therefore, one has to add as many instances as needed to the parts_writer map of the <a class="el" href="d5/d9d/classiCubANN.html" title="Interfaces the different modules (Reader/Writer) and handles the use of multiple module instances...">iCubANN</a> class with the "AddJointReader" method. Before the first usage of a joint reader instance, it has to be initialized with some specifications like the robot part. Then the joint angles can be received in two ways. As a double value or in a population code for one, multiple or all joint/s of the associated iCub part.</p>
-<p><a class="el" href="df/d23/classJointWriter.html" title="Write the joint angles to the iCub robots joints to move them. ">JointWriter</a>: The joint writer has a similar structure to the joint reader. Like there for each iCub part a separate instance has to be added to the parts_reader map of the iCub_ANN class. They must also be initialized before usage. For the writing of the joint angles the same ways are possible like for the reading. The joint angle can be written as double value or as population code for one, multiple or all joint/s of the associated part.</p>
-<p><a class="el" href="d5/df3/classVisualReader.html" title="Read-out of the camera images from the iCub robot. ">VisualReader</a>: This module handles the receiving of the camera images. At this time only one visual reader instance is possible due to YARP limitations for the used YARP RFModule (run only one Module). This reader can be initilized for the right ('r') or left ('l') eye, limiting the visual data to be monocular. The grayscaled image is returned as an 1D-vector with a normalization from 0.0 (black) to 1.0 (white). In the binocular mode ('b') the images of both cameras images are received and seperately added as 1D-vectors to the image buffer.</p>
-<p><a class="el" href="d1/dc5/classSkinReader.html" title="Read-out of the skin sensor data from the iCubs artificial skin. ">SkinReader</a>: This module handles the tactile data from the iCub's artificial skin. The robot is at several parts equipped with skin modules, reacting to pressure. The sensor data for the arms can be read out with this module. The skin of the iCub arm is seperated in three modules, being the arm, forearm and hand. The tactile data is returned as a vector with doubles in a range of 0.0 to 1.0. Where 0. is no pressure and 1.0 is the maximum sensor response.</p>
+<ol type="1">
+<li><em><a class="el" href="d1/dc0/classJointReader.html" title="Read-out of the joint angles of the iCub robot. ">JointReader</a>:</em><br />
+ This module handles the joint reading. The iCub robot is divided in multiple robot parts, which are the head, right arm, left arm, torso right leg and left leg.<br />
+ For each part a seperate joint reader instance is needed. Therefore, one has to add as many instances as needed to the parts_writer map of the <a class="el" href="d5/d9d/classiCubANN.html" title="Interfaces the different modules (Reader/Writer) and handles the use of multiple module instances...">iCubANN</a> class with the "AddJointReader" method.<br />
+ Before the first usage of a joint reader instance, it has to be initialized with some specifications like the robot part. Then the joint angles can be received in two ways. As a double value or in a population code for one, multiple or all joint/s of the associated iCub part.</li>
+<li><em><a class="el" href="df/d23/classJointWriter.html" title="Write the joint angles to the iCub robots joints to move them. ">JointWriter</a>:</em><br />
+ The joint writer has a similar structure to the joint reader. Like there for each iCub part a separate instance has to be added to the parts_reader map of the iCub_ANN class. They also has to be initialized before usage.<br />
+ For the writing of the joint angles the same ways are possible like for the reading. The joint angle can be written as double value or as population code for one, multiple or all joint/s of the associated part.</li>
+<li><em><a class="el" href="d5/df3/classVisualReader.html" title="Read-out of the camera images from the iCub robot. ">VisualReader</a>:</em><br />
+ This module handles the receiving of the camera images. At this time only one visual reader instance is possible due to YARP limitations for the used YARP RFModule (run only one Module).<br />
+ This reader can be initilized for the right ('r') or left ('l') eye, limiting the visual data to be monocular. The grayscaled image is returned as an 1D-vector with a normalization from 0.0 (black) to 1.0 (white).<br />
+ In the binocular mode ('b') the images of both cameras images are received and seperately added as 1D-vectors to the image buffer.</li>
+<li><em><a class="el" href="d1/dc5/classSkinReader.html" title="Read-out of the skin sensor data from the iCubs artificial skin. ">SkinReader</a>:</em><br />
+ This module handles the tactile data from the iCub's artificial skin. The robot is at several parts equipped with skin modules, reacting to pressure.<br />
+ The sensor data for the arms can be read out with this module. The skin of the iCub arm is seperated in three modules, being the arm, forearm and hand.<br />
+ The tactile data is returned as a vector with doubles in a range of 0.0 to 1.0. Where 0. is no pressure and 1.0 is the maximum sensor response.</li>
+</ol>
 <h2>Folder structure</h2>
 <ul>
 <li>Interface_ANNarchy_iCub -&gt; Main folder containing the whole interface<ul>
@@ -79,7 +92,7 @@ $(function() {
 <li>sensor_positions -&gt; This folder caontains the files from the iCub simulator installation with the position data for the tactile sensors.</li>
 <li>interface_param.ini -&gt; ini-file with several parameters for the interface</li>
 <li>joint_limits_sim.ini -&gt; In the ini file the simulated robot joint limitations of the iCub are given.</li>
-<li>joint_limits_real.ini -&gt; In the ini file the real robot joint limitations of the iCub are given. <br />
+<li>joint_limits_real.ini -&gt; In the ini file the real robot joint limitations of the iCub are given.<br />
  !!! This should be checked before the usage with the real robot, to avoid damage. !!!</li>
 </ul>
 </li>
@@ -98,20 +111,20 @@ $(function() {
 <p>For use in Python the build folder should be added to the Pythonpath-variable, therefore add the following line to the .bashrc in the home-directory: </p><div class="fragment"><div class="line">export PYTHONPATH=${PYTHONPATH}:/path/to/repo/Interface_ANNarchy_iCub/build</div></div><!-- fragment --><h2>Generic Python Example</h2>
 <div class="fragment"><div class="line">import iCub_Interface</div><div class="line"></div><div class="line">iCub = iCub_Interface.iCubANN_wrapper()</div><div class="line">...</div><div class="line">iCub.add_...</div><div class="line">iCub.parts_reader[jreader_name].method_name(...)</div><div class="line">iCub.parts_writer[jwriter_name].method_name(...)</div><div class="line">iCub.tactile_reader[treader_name].method_name(...)</div><div class="line">iCub.visual_input.method_name(...)</div><div class="line">...</div><div class="line">del iCub</div></div><!-- fragment --><h2>useful links</h2>
 <p>Wiki for the iCub robot:<br />
-<a href="http://wiki.icub.org/wiki/Manual">http://wiki.icub.org/wiki/Manual</a></p>
+ <a href="http://wiki.icub.org/wiki/Manual">http://wiki.icub.org/wiki/Manual</a></p>
 <p>YARP website:<br />
-<a href="http://www.yarp.it/index.html">http://www.yarp.it/index.html</a></p>
+ <a href="http://www.yarp.it/index.html">http://www.yarp.it/index.html</a></p>
 <p>git repository with scripts to control the iCub simulator:<br />
-<a href="https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git">https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git</a></p>
+ <a href="https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git">https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git</a></p>
 <h2>Authors</h2>
 <p>Torsten Follak (<a href="#" onclick="location.href='mai'+'lto:'+'tor'+'st'+'en.'+'fo'+'lla'+'k@'+'inf'+'or'+'mat'+'ik'+'.tu'+'-c'+'hem'+'ni'+'tz.'+'de'; return false;">torst<span style="display: none;">.nosp@m.</span>en.f<span style="display: none;">.nosp@m.</span>ollak<span style="display: none;">.nosp@m.</span>@inf<span style="display: none;">.nosp@m.</span>ormat<span style="display: none;">.nosp@m.</span>ik.t<span style="display: none;">.nosp@m.</span>u-che<span style="display: none;">.nosp@m.</span>mnit<span style="display: none;">.nosp@m.</span>z.de</a>)<br />
-Helge Ülo Dinkelbach<br />
+ Helge Ülo Dinkelbach<br />
 </p>
 <h2>Dependencies</h2>
 <p>Python &gt;= 3.5<br />
-YARP &gt;= 3.2<br />
-OpenCV &gt;= 3.4<br />
-</p>
+ YARP &gt;= 3.2<br />
+ OpenCV &gt;= 3.4<br />
+ </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

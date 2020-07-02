@@ -44,33 +44,45 @@ class iCubANN {
     // Destructor
     ~iCubANN();
 
-    std::shared_ptr<VisualReader> visual_input; /** \brief associated visual reader (only one possible for left/right eye) */
-    std::map<std::string, std::shared_ptr<JointReader>> parts_reader;  /** \brief associated joint readers (one for every robot part) */
-    std::map<std::string, std::shared_ptr<JointWriter>> parts_writer;  /** \brief associated joint writers (one for every robot part) */
-    std::map<std::string, std::shared_ptr<SkinReader>> tactile_reader; /** \brief associated skin reader */
+    /** \brief associated visual reader (only one possible for left/right eye) */
+    std::shared_ptr<VisualReader> visual_input;
+    /** \brief associated joint readers (one for every robot part) */
+    std::map<std::string, std::shared_ptr<JointReader>> parts_reader;
+    /** \brief associated joint writers (one for every robot part) */
+    std::map<std::string, std::shared_ptr<JointWriter>> parts_writer;
+    /** \brief associated skin reader */
+    std::map<std::string, std::shared_ptr<SkinReader>> tactile_reader;
 
     /***  Add intstances of the interface modules ***/
     /**
      * \brief Add an instance of the joint reader module. This has to be initialized with the init-method.
      * \param[in] name name for the added joint reader in the map, can be freely selected
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - Name already used
      */
     bool AddJointReader(std::string name);
     /**
      * \brief Add an instance of the joint writer module. This has to be initialized with the init-method.
      * \param[in] name name for the added joint writer in the map, can be freely selected
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - Name already used
      */
     bool AddJointWriter(std::string name);
     /**
      * \brief Add an instance of the skin reader module. This has to be initialized with the init-method.
      * \param[in] name name for the added skin reader in the map, can be freely selected
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - Name already used
      */
     bool AddSkinReader(std::string name);
     /**
      * \brief Add the instance of the visual reader module. This has to be initialized with the init-method.
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - Name already used
      */
     bool AddVisualReader();
 
