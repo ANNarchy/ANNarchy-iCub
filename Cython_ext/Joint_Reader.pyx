@@ -44,7 +44,7 @@ cdef class PyJointReader:
 
     ### Access to joint reader member functions
     # Initialize the joint reader with given parameters
-    def init(self, part, sigma, n_pop, degr_per_neuron=0.0):
+    def init(self, part, sigma, n_pop, degr_per_neuron=0.0, ini_path = "../data/"):
         """
             Calls bool JointReader::Init(string part, double sigma, int pop_n, double deg_per_neuron)
 
@@ -59,14 +59,16 @@ cdef class PyJointReader:
                                             only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles
                                             if set: population size depends on joint working range
+                ini_path                -- Path to the "interface_param.ini"-file
 
             return:
                 bool                    -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
         cdef string key = part.encode('UTF-8')
+        cdef string path = ini_path.encode('UTF-8')
 
-        return deref(self.cpp_joint_reader).Init(key, sigma, n_pop, degr_per_neuron)
+        return deref(self.cpp_joint_reader).Init(key, sigma, n_pop, degr_per_neuron, path)
 
     # close joint reader with cleanup
     def close(self):

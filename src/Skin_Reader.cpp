@@ -36,12 +36,13 @@
 SkinReader::~SkinReader() { Close(); }
 
 /*** public methods for the user ***/
-bool SkinReader::Init(char arm, bool norm_data) {
+bool SkinReader::Init(char arm, bool norm_data, std::string ini_path) {
     /*
         Init skin reader with given parameters
 
         params: char arm        -- character to choose the arm side (r/R for right; l/L for left)
                 bool norm_data  -- true for normalized tactile data (iCub data: [0..255]; normalized [0..1.0])
+                ini_path                -- Path to the "interface_param.ini"-file
 
         return: bool            -- return True, if successful
     */
@@ -63,8 +64,11 @@ bool SkinReader::Init(char arm, bool norm_data) {
             norm = "raw";
         }
 
+        // Open ini file
+        INIReader reader_gen(ini_path + "interface_param.ini");
+
         // Set side and read taxel position files depending on selected arm side
-        std::string data_dir = "../data/sensor_positions/";
+        std::string data_dir = reader_gen.Get("skin", "sensor_position_dir", "../data/sensor_positions/");
         if (arm == 'r' || arm == 'R') {
             side = "right";
             bool read_err_arm = !ReadTaxelPos(data_dir + "right_arm_mesh_idx.txt", data_dir + "right_arm_mesh_pos.txt", "arm");
@@ -93,8 +97,7 @@ bool SkinReader::Init(char arm, bool norm_data) {
             return false;
         }
 
-        // read configuration data from ini file
-        INIReader reader_gen("data/interface_param.ini");
+        // Read configuration data from ini file
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         if (on_Simulator && (robot_port_prefix != "/icubSim")) {
@@ -164,7 +167,7 @@ bool SkinReader::Init(char arm, bool norm_data) {
 }
 
 void SkinReader::Close() {
-    /* 
+    /*
         Close and clean skin reader
     */
 
@@ -313,7 +316,7 @@ bool SkinReader::ReadTactile() {
 /*** auxilary functions ***/
 bool SkinReader::CheckInit() {
     /*
-        Check if init function was called 
+        Check if init function was called
     */
 
     if (!dev_init) {
@@ -326,8 +329,8 @@ bool SkinReader::ReadTaxelPos(std::string filename_idx, std::string filename_pos
     /*
         Read information about taxel position from config files
 
-        params: std::string filename_idx    -- filename, containing the path, of the file with the taxel index data 
-                std::string filename_pos    -- filename, containing the path, of the file with the taxel position data 
+        params: std::string filename_idx    -- filename, containing the path, of the file with the taxel index data
+                std::string filename_pos    -- filename, containing the path, of the file with the taxel position data
                 std::string part            -- skin part to load the data for (e.g. forearm)
 
         return: bool                        -- return True, if successful

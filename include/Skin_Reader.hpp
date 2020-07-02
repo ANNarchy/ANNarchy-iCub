@@ -30,7 +30,7 @@
 #include <opencv2/opencv.hpp>
 
 /**
- * \brief  Struct for the skin taxel positiiion data per iCub part 
+ * \brief  Struct for the skin taxel positiiion data per iCub part
  */
 struct TaxelData {
     std::vector<int> idx;                    // index array
@@ -52,9 +52,10 @@ class SkinReader {
      * \brief Initialize skin reader with given parameters.
      * \param[in] arm character to choose the arm side (r/R for right; l/L for left)
      * \param[in] norm_data if True, data is normalized from 0..255 to 0..1.0
+     * \param[in] ini_path Path to the "interface_param.ini"-file.
      * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool Init(char arm, bool norm_data);
+    bool Init(char arm, bool norm_data, std::string ini_path = "../data/");
 
     /**
      * \brief  Close and clean skin reader

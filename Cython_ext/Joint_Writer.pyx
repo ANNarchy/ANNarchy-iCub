@@ -45,7 +45,7 @@ cdef class PyJointWriter:
 
     ### Access to joint writer member functions
     # initialize the joint writer with given parameters
-    def init(self, part, n_pop, degr_per_neuron=0.0, speed=10.0):
+    def init(self, part, n_pop, degr_per_neuron=0.0, speed=10.0, ini_path = "../data/"):
         """
             Calls bool JointWriter::Init(std::string std::string part, int pop_size, double deg_per_neuron, double speed)
 
@@ -60,15 +60,17 @@ cdef class PyJointWriter:
                 double deg_per_neuron   -- degree per neuron in the populationencoding the joints angles;
                                             if set: population size depends on joint working range
                 double speed            -- velocity for the joint movements
+                ini_path                -- Path to the "interface_param.ini"-file
 
             return:
                 bool                    -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
         cdef string key = part.encode('UTF-8')
+        cdef string path = ini_path.encode('UTF-8')
 
         # call the interface
-        return deref(self.cpp_joint_writer).Init(key, n_pop, degr_per_neuron, speed)
+        return deref(self.cpp_joint_writer).Init(key, n_pop, degr_per_neuron, speed, path)
 
     # close joint reader with cleanup
     def close(self):

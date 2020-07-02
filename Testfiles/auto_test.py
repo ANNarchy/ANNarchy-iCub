@@ -221,7 +221,7 @@ def write_joint_each(ann_wrapper, pos_type, positioning, block, name, target_pos
 
     print('\n')
 
-    
+
 def write_joint_mult(ann_wrapper, pos_type, positioning, block, name, target_positions, write_method, read_method, check_method, res_path, jnt_sel, rel_method=None, positions_double=None):
 
     # test the positioning with values for a single joint and motion of all joints

@@ -30,9 +30,9 @@ cdef extern from "Joint_Reader.hpp":
 
     cdef cppclass JointReader:
         JointReader() except +
-        
+
         # Initialize the joint reader with given parameters
-        bool_t Init(string, double, int, double)
+        bool_t Init(string, double, int, double, string)
 
         # Close joint reader with cleanup
         void Close()

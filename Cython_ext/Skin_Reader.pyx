@@ -44,7 +44,7 @@ cdef class PySkinReader:
 
     ### Access to skin reader member functions
     # init skin reader with given parameters
-    def init(self, arm, norm=True):
+    def init(self, arm, norm=True, ini_path = "../data/"):
         """
             Calls bool SkinReader::Init(char arm, bool norm_data)
 
@@ -52,17 +52,19 @@ cdef class PySkinReader:
                 Initialize skin reader with given parameters
 
             params:
-                char arm        -- string representing the robot part, has to match iCub part naming
+                char arm        -- character to choose the arm side (r/R for right; l/L for left)
                 bool norm_data  -- if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1])
+                ini_path        -- Path to the "interface_param.ini"-file
 
             return:
                 bool            -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
         cdef char a = arm.encode('UTF-8')[0]
+        cdef string path = ini_path.encode('UTF-8')
 
         # call the interface
-        return deref(self.cpp_skin_reader).Init(a, norm)
+        return deref(self.cpp_skin_reader).Init(a, norm, path)
 
     # close and clean skin reader
     def close(self):

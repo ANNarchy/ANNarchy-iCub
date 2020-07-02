@@ -104,7 +104,7 @@ bool iCubANN::AddVisualReader() {
 
 /***  Remove intstances of the interface modules ***/
 bool iCubANN::RemoveJointReader(std::string name) {
-    /* 
+    /*
         Remove the instance of the joint reader
     */
     if (parts_reader.count(name) != 0) {
@@ -117,7 +117,7 @@ bool iCubANN::RemoveJointReader(std::string name) {
 }
 
 bool iCubANN::RemoveJointWriter(std::string name) {
-    /* 
+    /*
         Remove the instance of the joint writer
     */
     if (parts_writer.count(name) != 0) {
@@ -130,7 +130,7 @@ bool iCubANN::RemoveJointWriter(std::string name) {
 }
 
 bool iCubANN::RemoveSkinReader(std::string name) {
-    /* 
+    /*
         Remove the instance of the skin reader
     */
     if (tactile_reader.count(name) != 0) {
@@ -143,7 +143,7 @@ bool iCubANN::RemoveSkinReader(std::string name) {
 }
 
 bool iCubANN::RemoveVisualReader() {
-    /* 
+    /*
         Remove the instance of the visual reader
     */
     if (visual_input != NULL) {

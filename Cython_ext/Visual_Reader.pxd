@@ -30,7 +30,7 @@ cdef extern from "Visual_Reader.hpp":
         ctypedef double precision
 
         VisualReader() except +
-        
+
         # Init Visual reader with given parameters for image resolution, field of view and eye selection.
         bool_t Init(char, double, double, int, int, bool_t)
 

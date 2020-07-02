@@ -8,7 +8,7 @@
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  The iCub ANNarchy interface is distributed in the hope that it will be useful, 
+ *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -53,20 +53,24 @@ class iCubANN {
     /**
      * \brief Add an instance of the joint reader module. This has to be initialized with the init-method.
      * \param[in] name name for the added joint reader in the map, can be freely selected
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool AddJointReader(std::string name);
     /**
      * \brief Add an instance of the joint writer module. This has to be initialized with the init-method.
      * \param[in] name name for the added joint writer in the map, can be freely selected
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool AddJointWriter(std::string name);
     /**
      * \brief Add an instance of the skin reader module. This has to be initialized with the init-method.
      * \param[in] name name for the added skin reader in the map, can be freely selected
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool AddSkinReader(std::string name);
     /**
      * \brief Add the instance of the visual reader module. This has to be initialized with the init-method.
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool AddVisualReader();
 
@@ -74,20 +78,24 @@ class iCubANN {
     /**
      * \brief Remove the instance of the joint reader module.
      * \param[in] name name of the joint reader in the map
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool RemoveJointReader(std::string name);
     /**
-     * \brief Remove the instance of the joint writer module. 
+     * \brief Remove the instance of the joint writer module.
      * \param[in] name name of the joint writer in the map
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool RemoveJointWriter(std::string name);
     /**
-     * \brief Remove the instance of the skin reader module. 
+     * \brief Remove the instance of the skin reader module.
      * \param[in] name name of the skin reader in the map
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool RemoveSkinReader(std::string name);
     /**
      * \brief Remove the instance of the visual reader module.
+     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool RemoveVisualReader();
 };

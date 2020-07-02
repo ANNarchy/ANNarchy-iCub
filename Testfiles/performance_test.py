@@ -298,7 +298,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
 
     #########################################################
     # test joint motion with the joint angle as double value for one joint (absolute position)
-    print('__ Type of positioning: Double_one')
+    print('__ Type of positioning: Double_one (absolute)')
     results_double_one = {}
     for name in part_enc:
         joints = ann_wrapper.parts_writer[name].get_joint_count()
@@ -320,13 +320,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_one[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Double_one')
+    print('________ Test results: Double_one (absolute)')
     for key in results_double_one:
         print('Test:', key, 'results:', round(results_double_one[key], 4), 's')
     print('\n')
 
     # test joint motion with the joint angles as double values for multiple joints (absolute position)
-    print('__ Type of positioning: Double_multiple')
+    print('__ Type of positioning: Double_multiple (absolute)')
     results_double_multiple = {}
     for name in part_enc:
         joints = ann_wrapper.parts_writer[name].get_joint_count()
@@ -346,13 +346,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_multiple[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Double_multiple')
+    print('________ Test results: Double_multiple (absolute)')
     for key in results_double_one:
         print('Test:', key, 'results:', round(results_double_multiple[key], 4), 's')
     print('\n')
 
     # test joint motion with the joint angles as double values for all joints (absolute position)
-    print('__ Type of positioning: Double_all')
+    print('__ Type of positioning: Double_all (absolute)')
     results_double_all = {}
     for name in part_enc:
         joints = ann_wrapper.parts_writer[name].get_joint_count()
@@ -372,14 +372,14 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_all[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Double_all')
+    print('________ Test results: Double_all (absolute)')
     for key in results_double_all:
         print('Test:', key, 'results:', round(results_double_all[key], 4), 's')
     print('\n')
 
     #########################################################
     # test joint motion with joint angles encoded in population code, coding single joint (absolute position)
-    print('__ Type of positioning: Population_one')
+    print('__ Type of positioning: Population_one (absolute)')
     results_pop_one = {}
     for name in part_enc:
         joints = ann_wrapper.parts_writer[name].get_joint_count()
@@ -399,13 +399,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
             results_pop_one[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Population_one')
+    print('________ Test results: Population_one (absolute)')
     for key in results_pop_one:
         print('Test:', key, 'results:', round(results_pop_one[key], 4), 's')
     print('\n')
 
     # test joint motion with joint angles encoded in population code, coding multiple joints combined (absolute position)
-    print('__ Type of positioning: Population_multiple')
+    print('__ Type of positioning: Population_multiple (absolute)')
     results_pop_multiple = {}
     for name in part_enc:
         joints = ann_wrapper.parts_writer[name].get_joint_count()
@@ -424,13 +424,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
             results_pop_multiple[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Population_multiple')
+    print('________ Test results: Population_multiple (absolute)')
     for key in results_pop_multiple:
         print('Test:', key, 'results:', round(results_pop_multiple[key], 4), 's')
     print('\n')
 
     # test joint motion with joint angles encoded in population code, coding all joints combined (absolute position)
-    print('__ Type of positioning: Population_all')
+    print('__ Type of positioning: Population_all (absolute)')
     results_pop_all = {}
     for name in part_enc:
         print('____ Test part:', name)
@@ -448,14 +448,14 @@ def speed_test_jwriter(ann_wrapper, test_count):
             results_pop_all[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Population_all')
+    print('________ Test results: Population_all (absolute)')
     for key in results_pop_all:
         print('Test:', key, 'results:', round(results_pop_all[key], 4), 's')
     print('\n')
 
     #########################################################
     # test joint motion with the joint angle as double value for one joint (relative position)
-    print('__ Type of positioning: Double_one')
+    print('__ Type of positioning: Double_one (relative)')
     results_double_one = {}
     for name in part_enc:
         joints = ann_wrapper.parts_writer[name].get_joint_count()
@@ -477,13 +477,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_one[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Double_one')
+    print('________ Test results: Double_one (relative)')
     for key in results_double_one:
         print('Test:', key, 'results:', round(results_double_one[key], 4), 's')
     print('\n')
 
     # test joint motion with the joint angles as double values for multiple joints (relative position)
-    print('__ Type of positioning: Double_multiple')
+    print('__ Type of positioning: Double_multiple (relative)')
     results_double_multiple = {}
     for name in part_enc:
         joints = ann_wrapper.parts_writer[name].get_joint_count()
@@ -503,13 +503,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_multiple[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Double_multiple')
+    print('________ Test results: Double_multiple (relative)')
     for key in results_double_one:
         print('Test:', key, 'results:', round(results_double_multiple[key], 4), 's')
     print('\n')
 
     # test joint motion with the joint angles as double values for all joints (relative position)
-    print('__ Type of positioning: Double_all')
+    print('__ Type of positioning: Double_all (relative)')
     results_double_all = {}
     for name in part_enc:
         joints = ann_wrapper.parts_writer[name].get_joint_count()
@@ -529,14 +529,14 @@ def speed_test_jwriter(ann_wrapper, test_count):
                 results_double_all[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Double_all')
+    print('________ Test results: Double_all (relative)')
     for key in results_double_all:
         print('Test:', key, 'results:', round(results_double_all[key], 4), 's')
     print('\n')
 
     #########################################################
     # test joint motion with joint angles encoded in population code, coding single joint (relative position)
-    print('__ Type of positioning: Population_one')
+    print('__ Type of positioning: Population_one (relative)')
     results_pop_one = {}
     for name in part_enc:
         joints = ann_wrapper.parts_writer[name].get_joint_count()
@@ -556,13 +556,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
             results_pop_one[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Population_one')
+    print('________ Test results: Population_one (relative)')
     for key in results_pop_one:
         print('Test:', key, 'results:', round(results_pop_one[key], 4), 's')
     print('\n')
 
     # test joint motion with joint angles encoded in population code, coding multiple joints combined (relative position)
-    print('__ Type of positioning: Population_multiple')
+    print('__ Type of positioning: Population_multiple (relative)')
     results_pop_multiple = {}
     for name in part_enc:
         joints = ann_wrapper.parts_writer[name].get_joint_count()
@@ -581,13 +581,13 @@ def speed_test_jwriter(ann_wrapper, test_count):
             results_pop_multiple[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Population_multiple')
+    print('________ Test results: Population_multiple (relative)')
     for key in results_pop_multiple:
         print('Test:', key, 'results:', round(results_pop_multiple[key], 4), 's')
     print('\n')
 
     # test joint motion with joint angles encoded in population code, coding all joints combined (relative position)
-    print('__ Type of positioning: Population_all')
+    print('__ Type of positioning: Population_all (relative)')
     results_pop_all = {}
     for name in part_enc:
         print('____ Test part:', name)
@@ -605,7 +605,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
             results_pop_all[name + '_' + key] /= test_count
 
     # show test results
-    print('________ Test results: Population_all')
+    print('________ Test results: Population_all (relative)')
     for key in results_pop_all:
         print('Test:', key, 'results:', round(results_pop_all[key], 4), 's')
 

@@ -43,9 +43,9 @@ class VisualReader : private yarp::os::RFModule {
     /**
      * \brief Init Visual reader with given parameters for image resolution, field of view and eye selection.
      * \param[in] eye character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer)
-     * \param[in] fov_width output field of view width in degree [0, 60] (input fov width: 60°) 
-     * \param[in] fov_height output field of view height in degree [0, 48] (input fov height: 48°) 
-     * \param[in] img_width output image width in pixel (input width: 320px) 
+     * \param[in] fov_width output field of view width in degree [0, 60] (input fov width: 60°)
+     * \param[in] fov_height output field of view height in degree [0, 48] (input fov height: 48°)
+     * \param[in] img_width output image width in pixel (input width: 320px)
      * \param[in] img_height output image height in pixel (input height: 240px)
      * \param[in] fast_filter flag to select the filter for image upscaling; True for a faster filter
      * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).

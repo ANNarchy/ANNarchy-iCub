@@ -32,7 +32,7 @@
 JointWriter::~JointWriter() { Close(); }
 
 /*** public methods for the user ***/
-bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, double speed) {
+bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, double speed, std::string ini_path) {
     /*
         Initialize the joint writer with given parameters
 
@@ -40,6 +40,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
                 int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
                 double speed            -- velocity for the joint motions
+                ini_path                -- Path to the "interface_param.ini"-file
 
         return: bool                    -- return True, if successful
     */
@@ -65,7 +66,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         }
 
         // read configuration data from ini file
-        INIReader reader_gen("../data/interface_param.ini");
+        INIReader reader_gen(ini_path + "interface_param.ini");
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
         std::string port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         if (on_Simulator && (port_prefix != "/icubSim")) {
@@ -203,7 +204,7 @@ int JointWriter::GetJointCount() {
 std::vector<double> JointWriter::GetJointsDegRes() {
     /*
         Get the resolution in degree of the populations, encoding the joint angles
-        
+
         return: std::vector<double>        -- return vector, containing the resolution for every joints population codimg in degree
     */
 
@@ -214,7 +215,7 @@ std::vector<double> JointWriter::GetJointsDegRes() {
 std::vector<int> JointWriter::GetNeuronsPerJoint() {
     /*
         Get the size of the populations, encoding the joint angles
-        
+
         return: std::vector<int>        -- return vector, containing the population size for every joint
     */
 
@@ -404,7 +405,7 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
 bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std::string mode) {
     /*
         Write one joint with double value
-        
+
         params: double position     -- joint angle to write to the robot joint
                 int joint           -- joint number of the robot part
                 bool blocking       -- if True, function waits for end of motion
@@ -715,7 +716,7 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
 
 /*** auxilary methods ***/
 bool JointWriter::CheckInit() {
-    /* 
+    /*
         Helper function to check if init function was called
     */
 
@@ -726,8 +727,8 @@ bool JointWriter::CheckInit() {
 }
 
 bool JointWriter::CheckPartKey(std::string key) {
-    /* 
-        Check if iCub part key is valid 
+    /*
+        Check if iCub part key is valid
     */
 
     bool inside = false;

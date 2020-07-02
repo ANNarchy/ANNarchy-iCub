@@ -34,12 +34,12 @@
 JointReader::~JointReader() { Close(); }
 
 /*** public methods for the user ***/
-bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_per_neuron) {
+bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_per_neuron, std::string ini_path) {
     /*
         Initialize the joint reader with given parameters
 
         params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-                sigma                   -- sigma for the joints angles populations coding 
+                sigma                   -- sigma for the joints angles populations coding
                 int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
 
@@ -68,7 +68,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         }
 
         // read configuration data from ini file
-        INIReader reader_gen("../data/interface_param.ini");
+        INIReader reader_gen(ini_path + "interface_param.ini");
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         if (on_Simulator && (robot_port_prefix != "/icubSim")) {
@@ -167,7 +167,7 @@ void JointReader::Close() {
 }
 
 int JointReader::GetJointCount() {
-    /*    
+    /*
         Return number of controlled joints
 
         return: int       -- return number of controlled joints
@@ -179,7 +179,7 @@ int JointReader::GetJointCount() {
 std::vector<double> JointReader::GetJointsDegRes() {
     /*
         Get the resolution in degree of the populations encoding the joint angles
-        
+
         return: std::vector<double>        -- return vector, containing the resolution for every joint population in degree
     */
 
@@ -245,7 +245,7 @@ double JointReader::ReadDoubleOne(int joint) {
 std::vector<std::vector<double>> JointReader::ReadPopAll() {
     /*
         Read all joints and return the joint angles encoded in vectors
-        
+
         return: std::vector<std::vector<double>>    -- vector of population vectors encoding every joint angle from associated robot part
     */
 

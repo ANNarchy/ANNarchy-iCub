@@ -32,7 +32,7 @@ cdef extern from "Joint_Writer.hpp":
         JointWriter() except +
 
         # Initialize the joint writer with given parameters
-        bool_t Init(string, int, double, double)
+        bool_t Init(string, int, double, double, string)
 
         # Close joint writer with cleanup
         void Close()

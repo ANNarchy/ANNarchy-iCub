@@ -43,9 +43,10 @@ class JointWriter {
      * \param[in] pop_size Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
      * \param[in] deg_per_neuron (default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
      * \param[in] speed Velocity to set for the joint motions.
+     * \param[in] ini_path Path to the "interface_param.ini"-file.
      * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
-    bool Init(std::string part, int pop_size, double deg_per_neuron = 0.0, double speed = 10.0);
+    bool Init(std::string part, int pop_size, double deg_per_neuron = 0.0, double speed = 10.0, std::string ini_path = "../data/");
 
     /**
      * \brief  Close joint writer with cleanup
@@ -60,7 +61,7 @@ class JointWriter {
 
     /**
      * \brief  Return the resolution in degree of the populations encoding the joint angles.
-     * \return Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0. 
+     * \return Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0.
      */
     std::vector<double> GetJointsDegRes();
 
@@ -109,7 +110,7 @@ class JointWriter {
 
     /**
      * \brief Write all joints with joint angles encoded in populations
-     * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part 
+     * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part
      * \param[in] blocking if True, function waits for end of motion
      * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
@@ -118,7 +119,7 @@ class JointWriter {
 
     /**
      * \brief Write all joints with joint angles encoded in populations
-     * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part 
+     * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part
      * \param[in] joint_selection Joint indizes of the joints, which should be moved (head: 3, 4, 5 -> all eye movements)
      * \param[in] blocking if True, function waits for end of motion
      * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
@@ -129,8 +130,8 @@ class JointWriter {
 
     /**
      * \brief Write one joint with the joint angle encoded in a population.
-     * \param[in] position_pop Population encoded joint angle for writing to the robot joint 
-     * \param[in] joint Joint number of the robot part 
+     * \param[in] position_pop Population encoded joint angle for writing to the robot joint
+     * \param[in] joint Joint number of the robot part
      * \param[in] blocking if True, function waits for end of motion
      * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).

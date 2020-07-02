@@ -84,11 +84,9 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         }
 
         if (typeid(precision) == typeid(double)) {
-            // tmpMat1.create(out_height, out_width, CV_64FC1);
             new_type = CV_64FC1;
             std::cout << "[Visual Reader] Double precision is selected." << std::endl;
         } else if (typeid(precision) == typeid(float)) {
-            // tmpMat1.create(out_height, out_width, CV_32FC1);
             new_type = CV_32FC1;
             std::cout << "[Visual Reader] Single precision is selected." << std::endl;
         } else {
@@ -389,8 +387,6 @@ bool VisualReader::close() {
         port_right.close();
     }
 
-    // close YARP Network
-    yarp::os::Network::fini();
     dev_init = false;
     return true;
 }
