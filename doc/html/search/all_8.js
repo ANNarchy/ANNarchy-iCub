@@ -40,7 +40,7 @@ var searchData=
   ['inireader',['INIReader',['../d5/de4/classINIReader.html',1,'INIReader'],['../d5/de4/classINIReader.html#a303dc5352470dba2af23719d40f4298d',1,'INIReader::INIReader()']]],
   ['inireader_2ecpp',['INIReader.cpp',['../d2/d0a/INIReader_8cpp.html',1,'']]],
   ['inireader_2eh',['INIReader.h',['../dd/d30/INIReader_8h.html',1,'']]],
-  ['init',['Init',['../d1/dc0/classJointReader.html#a2f697daa1167564a7f9bbd53988acc91',1,'JointReader::Init()'],['../df/d23/classJointWriter.html#a678635f040aa6ffc5674a84c830fe5b7',1,'JointWriter::Init()'],['../d1/dc5/classSkinReader.html#aa9435aeff7c6eee44c466c96ecb559ae',1,'SkinReader::Init()'],['../d5/df3/classVisualReader.html#a960b92c0f458b2125854920df48ef58a',1,'VisualReader::Init()']]],
+  ['init',['Init',['../d1/dc0/classJointReader.html#ad7c62fb59b5fef0decf675d8b3745b44',1,'JointReader::Init()'],['../df/d23/classJointWriter.html#a62f41389d3c75318023d4909795c908c',1,'JointWriter::Init()'],['../d1/dc5/classSkinReader.html#a88658a25d43e2bab97f95a4021a2d920',1,'SkinReader::Init()'],['../d5/df3/classVisualReader.html#a960b92c0f458b2125854920df48ef58a',1,'VisualReader::Init()']]],
   ['init_5fhand_5fpos_5frobot_5frf',['init_hand_pos_robot_rf',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#a6943abe1a0b841f94dd89b720099a871',1,'iCub_Python_Lib::iCub_transformation_matrices']]],
   ['interface_5ficub_2ecpp',['Interface_iCub.cpp',['../dc/d14/Interface__iCub_8cpp.html',1,'']]],
   ['interface_5ficub_2ehpp',['Interface_iCub.hpp',['../d7/d55/Interface__iCub_8hpp.html',1,'']]],

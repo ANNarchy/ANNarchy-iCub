@@ -78,9 +78,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a487f5c104331ce15c487bb8ebbc81046"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91625eb163703b38d66013b31c934bea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc5/classSkinReader.html#a91625eb163703b38d66013b31c934bea">~SkinReader</a> ()</td></tr>
 <tr class="separator:a91625eb163703b38d66013b31c934bea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9435aeff7c6eee44c466c96ecb559ae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc5/classSkinReader.html#aa9435aeff7c6eee44c466c96ecb559ae">Init</a> (char arm, bool norm_data)</td></tr>
-<tr class="memdesc:aa9435aeff7c6eee44c466c96ecb559ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize skin reader with given parameters.  <a href="#aa9435aeff7c6eee44c466c96ecb559ae">More...</a><br /></td></tr>
-<tr class="separator:aa9435aeff7c6eee44c466c96ecb559ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88658a25d43e2bab97f95a4021a2d920"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc5/classSkinReader.html#a88658a25d43e2bab97f95a4021a2d920">Init</a> (char arm, bool norm_data, std::string ini_path=&quot;../data/&quot;)</td></tr>
+<tr class="memdesc:a88658a25d43e2bab97f95a4021a2d920"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize skin reader with given parameters.  <a href="#a88658a25d43e2bab97f95a4021a2d920">More...</a><br /></td></tr>
+<tr class="separator:a88658a25d43e2bab97f95a4021a2d920"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96dd06173e329f2438721ed702b356db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc5/classSkinReader.html#a96dd06173e329f2438721ed702b356db">Close</a> ()</td></tr>
 <tr class="memdesc:a96dd06173e329f2438721ed702b356db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close and clean skin reader.  <a href="#a96dd06173e329f2438721ed702b356db">More...</a><br /></td></tr>
 <tr class="separator:a96dd06173e329f2438721ed702b356db"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -254,8 +254,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa9435aeff7c6eee44c466c96ecb559ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9435aeff7c6eee44c466c96ecb559ae">&#9670;&nbsp;</a></span>Init()</h2>
+<a id="a88658a25d43e2bab97f95a4021a2d920"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88658a25d43e2bab97f95a4021a2d920">&#9670;&nbsp;</a></span>Init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -270,7 +270,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>norm_data</em>&#160;</td>
+          <td class="paramname"><em>norm_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>ini_path</em> = <code>&quot;../data/&quot;</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -285,6 +291,7 @@ Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">arm</td><td>character to choose the arm side (r/R for right; l/L for left) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">norm_data</td><td>if True, data is normalized from 0..255 to 0..1.0 </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ini_path</td><td>Path to the "interface_param.ini"-file. </td></tr>
   </table>
   </dd>
 </dl>

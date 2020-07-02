@@ -78,9 +78,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a87b608749f395f52327d7f81ff16480b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78ff28faeb88eb858b3b4ed3dcb32d42"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc0/classJointReader.html#a78ff28faeb88eb858b3b4ed3dcb32d42">~JointReader</a> ()</td></tr>
 <tr class="separator:a78ff28faeb88eb858b3b4ed3dcb32d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f697daa1167564a7f9bbd53988acc91"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc0/classJointReader.html#a2f697daa1167564a7f9bbd53988acc91">Init</a> (std::string part, double sigma, int pop_n, double deg_per_neuron=0.)</td></tr>
-<tr class="memdesc:a2f697daa1167564a7f9bbd53988acc91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the joint reader with given parameters.  <a href="#a2f697daa1167564a7f9bbd53988acc91">More...</a><br /></td></tr>
-<tr class="separator:a2f697daa1167564a7f9bbd53988acc91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7c62fb59b5fef0decf675d8b3745b44"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc0/classJointReader.html#ad7c62fb59b5fef0decf675d8b3745b44">Init</a> (std::string part, double sigma, int pop_n, double deg_per_neuron=0., std::string ini_path=&quot;../data/&quot;)</td></tr>
+<tr class="memdesc:ad7c62fb59b5fef0decf675d8b3745b44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the joint reader with given parameters.  <a href="#ad7c62fb59b5fef0decf675d8b3745b44">More...</a><br /></td></tr>
+<tr class="separator:ad7c62fb59b5fef0decf675d8b3745b44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a630ce1a9ad4634a39dea88980e7b8440"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc0/classJointReader.html#a630ce1a9ad4634a39dea88980e7b8440">Close</a> ()</td></tr>
 <tr class="memdesc:a630ce1a9ad4634a39dea88980e7b8440"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close joint reader with cleanup.  <a href="#a630ce1a9ad4634a39dea88980e7b8440">More...</a><br /></td></tr>
 <tr class="separator:a630ce1a9ad4634a39dea88980e7b8440"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -233,8 +233,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2f697daa1167564a7f9bbd53988acc91"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f697daa1167564a7f9bbd53988acc91">&#9670;&nbsp;</a></span>Init()</h2>
+<a id="ad7c62fb59b5fef0decf675d8b3745b44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7c62fb59b5fef0decf675d8b3745b44">&#9670;&nbsp;</a></span>Init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -261,7 +261,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>deg_per_neuron</em> = <code>0.</code>&#160;</td>
+          <td class="paramname"><em>deg_per_neuron</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>ini_path</em> = <code>&quot;../data/&quot;</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -278,6 +284,7 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">sigma</td><td>Standard deviation for the joints angles populations coding. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pop_n</td><td>Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">deg_per_neuron</td><td>(default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ini_path</td><td>Path to the "interface_param.ini"-file. </td></tr>
   </table>
   </dd>
 </dl>

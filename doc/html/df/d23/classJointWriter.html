@@ -78,9 +78,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a206d13821043ca9e4005922144f4cb0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0fb1b676fee108d05fad445f30b541e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#ad0fb1b676fee108d05fad445f30b541e">~JointWriter</a> ()</td></tr>
 <tr class="separator:ad0fb1b676fee108d05fad445f30b541e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a678635f040aa6ffc5674a84c830fe5b7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#a678635f040aa6ffc5674a84c830fe5b7">Init</a> (std::string part, int pop_size, double deg_per_neuron=0.0, double speed=10.0)</td></tr>
-<tr class="memdesc:a678635f040aa6ffc5674a84c830fe5b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the joint writer with given parameters.  <a href="#a678635f040aa6ffc5674a84c830fe5b7">More...</a><br /></td></tr>
-<tr class="separator:a678635f040aa6ffc5674a84c830fe5b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62f41389d3c75318023d4909795c908c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#a62f41389d3c75318023d4909795c908c">Init</a> (std::string part, int pop_size, double deg_per_neuron=0.0, double speed=10.0, std::string ini_path=&quot;../data/&quot;)</td></tr>
+<tr class="memdesc:a62f41389d3c75318023d4909795c908c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the joint writer with given parameters.  <a href="#a62f41389d3c75318023d4909795c908c">More...</a><br /></td></tr>
+<tr class="separator:a62f41389d3c75318023d4909795c908c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaffac87ae3bb0b441b67ce08bb92c3c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#aaffac87ae3bb0b441b67ce08bb92c3c0">Close</a> ()</td></tr>
 <tr class="memdesc:aaffac87ae3bb0b441b67ce08bb92c3c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close joint writer with cleanup.  <a href="#aaffac87ae3bb0b441b67ce08bb92c3c0">More...</a><br /></td></tr>
 <tr class="separator:aaffac87ae3bb0b441b67ce08bb92c3c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -242,8 +242,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a678635f040aa6ffc5674a84c830fe5b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a678635f040aa6ffc5674a84c830fe5b7">&#9670;&nbsp;</a></span>Init()</h2>
+<a id="a62f41389d3c75318023d4909795c908c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62f41389d3c75318023d4909795c908c">&#9670;&nbsp;</a></span>Init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -270,7 +270,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>speed</em> = <code>10.0</code>&#160;</td>
+          <td class="paramname"><em>speed</em> = <code>10.0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>ini_path</em> = <code>&quot;../data/&quot;</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -287,6 +293,7 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">pop_size</td><td>Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">deg_per_neuron</td><td>(default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">speed</td><td>Velocity to set for the joint motions. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ini_path</td><td>Path to the "interface_param.ini"-file. </td></tr>
   </table>
   </dd>
 </dl>
