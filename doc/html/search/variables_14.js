@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['velocity_5fmax',['velocity_max',['../df/d23/classJointWriter.html#afab3ad934fcbb27d914928fc7c455bef',1,'JointWriter']]],
-  ['visual_5finput',['visual_input',['../d5/d9d/classiCubANN.html#ade945649fd5d174f389d503a0813acae',1,'iCubANN']]]
+  ['zip_5fsafe_600',['zip_safe',['../d3/d29/namespaceinstall.html#a433aec11c5137312d43b048a415f8808',1,'install.zip_safe()'],['../dd/dc4/namespacesetup.html#a13510753661cb74083a0c664db11dde9',1,'setup.zip_safe()']]]
 ];

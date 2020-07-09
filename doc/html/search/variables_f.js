@@ -1,15 +1,12 @@
 var searchData=
 [
-  ['tactile_5freader',['tactile_reader',['../d5/d9d/classiCubANN.html#a3d76f46b2c644290d7b894df7ee47070',1,'iCubANN']]],
-  ['test_5fcnt',['test_cnt',['../dd/d3c/namespaceperformance__test.html#ab6964e4347a2a1899c672c3b3574e3c7',1,'performance_test']]],
-  ['test_5fcount',['test_count',['../df/d34/namespacesupplementary_1_1testing__parameter.html#a567328dae38771d742b4f0ef3808936c',1,'supplementary::testing_parameter']]],
-  ['torso',['torso',['../dc/d5a/namespacesupplementary_1_1joint__limits.html#aa74be50064486cb703c7c2f250375b77',1,'supplementary::joint_limits']]],
-  ['transfermat_5fgazebo2icubsim',['Transfermat_gazebo2iCubSim',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#a2014a45fbf24d7972ffb62086bc0cbc3',1,'iCub_Python_Lib::iCub_transformation_matrices']]],
-  ['transfermat_5fgazebo2robot',['Transfermat_gazebo2robot',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#a670f777eeb9db1bc174bac97ca9a7ffa',1,'iCub_Python_Lib::iCub_transformation_matrices']]],
-  ['transfermat_5ficubsim2gazebo',['Transfermat_iCubSim2gazebo',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#ae5b59fd4818d32ebd529239597352384',1,'iCub_Python_Lib::iCub_transformation_matrices']]],
-  ['transfermat_5ficubsim2robot',['Transfermat_iCubSim2robot',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#abdf8ba466eb58f10273ca159514061ab',1,'iCub_Python_Lib::iCub_transformation_matrices']]],
-  ['transfermat_5frobot2gazebo',['Transfermat_robot2gazebo',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#aef9538340536f9850419f20824fae642',1,'iCub_Python_Lib::iCub_transformation_matrices']]],
-  ['transfermat_5frobot2icubsim',['Transfermat_robot2iCubSim',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#a531bd45d427c205c4cd8233e018113c7',1,'iCub_Python_Lib::iCub_transformation_matrices']]],
-  ['transfermat_5frobot2world',['Transfermat_robot2world',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#a4f394e9c41c38fd3df3af5d53449a684',1,'iCub_Python_Lib::iCub_transformation_matrices']]],
-  ['transfermat_5fworld2robot',['Transfermat_world2robot',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#a7a8d39a9e3cec20514b6874acae2fbb6',1,'iCub_Python_Lib::iCub_transformation_matrices']]]
+  ['save_5fpath_5fvm_574',['save_path_vm',['../df/d34/namespacesupplementary_1_1testing__parameter.html#ae3f51cead70e2e7d570bd72fe1b56189',1,'supplementary::testing_parameter']]],
+  ['save_5fpath_5fvr_575',['save_path_vr',['../df/d34/namespacesupplementary_1_1testing__parameter.html#a61d01023a45092475c20cd0d4e750b29',1,'supplementary::testing_parameter']]],
+  ['sigma_5fjr_576',['sigma_jr',['../df/d34/namespacesupplementary_1_1testing__parameter.html#aab632a415802b611435b10a4af6edc51',1,'supplementary::testing_parameter']]],
+  ['sigma_5fjw_577',['sigma_jw',['../df/d34/namespacesupplementary_1_1testing__parameter.html#a6d477e34309a88dc37d3f1a2f33ecfd8',1,'supplementary::testing_parameter']]],
+  ['sigma_5fpos_578',['sigma_pos',['../df/d34/namespacesupplementary_1_1testing__parameter.html#ae633634224ecc2c41f2fcf41757f2476',1,'supplementary::testing_parameter']]],
+  ['sources_579',['sources',['../d3/d29/namespaceinstall.html#aff2cae0dbbc498b2338b144d2de4e4b6',1,'install.sources()'],['../dd/dc4/namespacesetup.html#aa6e22655fb1a2eb038d36c5b7cef3723',1,'setup.sources()']]],
+  ['sources1_580',['sources1',['../d3/d29/namespaceinstall.html#a5a4995dcaa78258968270414bd8d206e',1,'install.sources1()'],['../dd/dc4/namespacesetup.html#a075263c2cd9eab7a6090eef910fe0f1f',1,'setup.sources1()']]],
+  ['speed_5farm_5fvm_581',['speed_arm_vm',['../df/d34/namespacesupplementary_1_1testing__parameter.html#affe29e15ec924f2368e48dcca59e6fad',1,'supplementary::testing_parameter']]],
+  ['speed_5fhead_5fvm_582',['speed_head_vm',['../df/d34/namespacesupplementary_1_1testing__parameter.html#abfc0b27df913ebb9bbf7302e67af3de2',1,'supplementary::testing_parameter']]]
 ];

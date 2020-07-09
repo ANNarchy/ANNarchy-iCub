@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['wrapper',['wrapper',['../d0/dbb/namespaceauto__test.html#ab7059cc2cc1485810c05098e03bcb878',1,'auto_test.wrapper()'],['../dd/d3c/namespaceperformance__test.html#a742d6bbd571aa74421a75988a16bf87f',1,'performance_test.wrapper()'],['../d9/d94/namespacesimple__call__test.html#a652ce85576b84e9431174ef3d8324021',1,'simple_call_test.wrapper()']]]
+  ['version_595',['version',['../dd/dc4/namespacesetup.html#a2aa722b36a933088812b50ea79b97a5c',1,'setup']]],
+  ['visual_5finput_596',['visual_input',['../d5/d9d/classiCubANN.html#ab30f1de41d779518330636c942644f90',1,'iCubANN']]]
 ];
