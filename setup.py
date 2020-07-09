@@ -38,10 +38,9 @@ else:
         sys.exit("Did not find OpenCV include path! Please set cv_include manually!")
 
 libs = ["opencv_core", "opencv_imgproc",
-        "python" + py_version,
         "YARP_dev", "YARP_init", "YARP_math", "YARP_name", "YARP_os", "YARP_run", "YARP_sig"]
 
-lib_dirs=["/usr/lib", "/usr/local/lib", "`" + sys.exec_prefix + "/bin/python' + py_version +'-config --includes`", yarp_prefix + "/lib"]
+lib_dirs=["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib"]
 
 include_dir = ["./include", yarp_prefix + "/include", cv_include]
 
