@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019 Torsten Follak
+ *  Copyright (C) 2019-2020 Torsten Follak
  *
  *  Visual_Reader.hpp is part of the iCub ANNarchy interface
  *

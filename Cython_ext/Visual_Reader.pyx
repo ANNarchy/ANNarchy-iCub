@@ -2,7 +2,7 @@
 # cython: language_level = 3
 
 """
-   Copyright (C) 2020 Torsten Follak; Helge Ülo Dinkelbach
+   Copyright (C) 2019-2020 Torsten Follak; Helge Ülo Dinkelbach
 
    Visual_Reader.pyx is part of the iCub ANNarchy interface
 
@@ -38,6 +38,7 @@ cdef class PyVisualReader:
 
     @staticmethod
     cdef PyVisualReader from_ptr(shared_ptr[VisualReader] _ptr):
+        # adapted from https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
         # Call to __new__ bypasses __init__ constructor
         cdef PyVisualReader wrapper = PyVisualReader.__new__(PyVisualReader)
         wrapper.cpp_visual_reader = _ptr

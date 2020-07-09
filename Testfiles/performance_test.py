@@ -1,5 +1,5 @@
 """
- *  Copyright (C) 2020 Torsten Follak
+ *  Copyright (C) 2019-2020 Torsten Follak
  *
  *  performance_test.py is part of the iCub ANNarchy interface
  *

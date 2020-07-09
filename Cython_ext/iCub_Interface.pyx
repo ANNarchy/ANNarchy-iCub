@@ -19,7 +19,7 @@
    You should have received a copy of the GNU General Public License
    along with this headers. If not, see <http://www.gnu.org/licenses/>.
  """
-import sys
+
 
 from libcpp.string cimport string
 # from libcpp.vector cimport vector
@@ -91,7 +91,6 @@ cdef class iCubANN_wrapper:
     PART_KEY_RIGHT_LEG = "right_leg"  # part key for iCub right leg
     PART_KEY_LEFT_LEG = "left_leg"    # part key for iCub left leg
 
-    # TODO: comments which movements
     # numbers for head joints
     JOINT_NUM_NECK_PITCH = 0
     JOINT_NUM_NECK_ROLL = 1

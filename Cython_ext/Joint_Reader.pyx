@@ -2,7 +2,7 @@
 # cython: language_level = 3
 
 """
-   Copyright (C) 2020 Torsten Follak Helge Ülo Dinkelbach
+   Copyright (C) 2019-2020 Torsten Follak Helge Ülo Dinkelbach
 
    Joint_Reader.pyx is part of the iCub ANNarchy interface
 
@@ -37,6 +37,7 @@ cdef class PyJointReader:
 
     @staticmethod
     cdef PyJointReader from_ptr(shared_ptr[JointReader] _ptr):
+        # adapted from https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
         # Call to __new__ bypasses __init__ constructor
         cdef PyJointReader wrapper = PyJointReader.__new__(PyJointReader)
         wrapper.cpp_joint_reader = _ptr

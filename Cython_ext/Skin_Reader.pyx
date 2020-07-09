@@ -3,7 +3,7 @@
 # cython: language_level = 3
 
 """
-   Copyright (C) 2020 Torsten Follak; Helge Ülo Dinkelbach
+   Copyright (C) 2019-2020 Torsten Follak; Helge Ülo Dinkelbach
 
    Skin_Reader.pyx is part of the iCub ANNarchy interface
 
@@ -37,6 +37,7 @@ cdef class PySkinReader:
 
     @staticmethod
     cdef PySkinReader from_ptr(shared_ptr[SkinReader] _ptr):
+        # adapted from https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
         # Call to __new__ bypasses __init__ constructor
         cdef PySkinReader wrapper = PySkinReader.__new__(PySkinReader)
         wrapper.cpp_skin_reader = _ptr
