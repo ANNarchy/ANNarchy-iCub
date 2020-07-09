@@ -8,6 +8,9 @@ test_*.py
 *.npy
 
 # application
+/build
+/dist
+*.egg-info/
 *.so
 Cython_ext/*.cpp
 
