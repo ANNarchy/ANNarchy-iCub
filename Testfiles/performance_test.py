@@ -34,69 +34,12 @@ import iCub_Python_Lib.gazebo_world_controller as gzbo_wc
 
 # Test support files
 import supplementary.testing_parameter as params
-from supplementary.joint_limits import joint_limits as j_lim
-
+from supplementary.auxilary_methods import encode
 
 ####################### parameter #######################
 bog2deg = 180.0 / np.pi         # factor for radiant to degree conversion
 eye_distance = 0.07             # distance between left and right eye
 eye_loc = [0.0, 0.9375, 0.055]  # location of the center point between both eyes
-
-
-#################### auxilary methods ###################
-def normal_pdf(value, mean, sigma):
-    """
-        Return the function value of a normal distribution for a given value.
-
-        params:
-            value           -- value to calculate normal distribution at
-            mean            -- mean of the normal distribution
-            sigma           -- sigma of the normal distribution
-
-        return:
-                            -- function value for the normal distribution
-    """
-    inv_sqrt_2pi = 1.0 / (sigma * np.sqrt(2 * np.pi))
-    a = (value - mean) / sigma
-
-    return inv_sqrt_2pi * np.exp(-0.5 * a * a)
-
-def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0):
-    """
-        Encode a joint angle as double value in a population code.
-
-        params:
-            part            -- robot part
-            joint           -- joint number
-            pop_size        -- size of the population
-            joint_angle     -- joint angle read from the robot
-            sigma           -- sigma for population coding gaussian
-            resolution      -- if non-zero fixed resolution for all joints instead of fixed population size
-
-        return:
-                                -- population encoded joint angle
-    """
-
-    joint_min = j_lim[part]['joint_' + str(joint) + '_min']
-    joint_max = j_lim[part]['joint_' + str(joint) + '_max']
-    joint_range = joint_max - joint_min + 1
-    if resolution == 0:
-        joint_deg_res = joint_range / pop_size
-    else:
-        joint_deg_res = resolution
-        pop_size = int(np.floor(joint_range / resolution))
-
-    neuron_deg = np.zeros((pop_size,))
-    pos_pop = np.zeros((pop_size,))
-
-    for j in range(pop_size):
-        neuron_deg[j] = joint_min + j * joint_deg_res
-        pos_pop[j] = round(normal_pdf(neuron_deg[j], joint_angle, sigma), 3)
-
-    pos_pop = pos_pop/np.amax(pos_pop)
-
-    return pos_pop
-
 
 #########################################################
 def speed_test_jreader(ann_wrapper, test_count):
@@ -136,18 +79,19 @@ def speed_test_jreader(ann_wrapper, test_count):
         print('____ Test part:', name)
         joints = ann_wrapper.parts_reader[name].get_joint_count()
         print(joints)
-        read_pos_double = np.zeros((joints))
+        read_pos_double = np.zeros((test_count, joints))
         time_start_double = time.time()
         for i in range(test_count):
             for j in range(joints):
-                read_pos_double[i] = ann_wrapper.parts_reader[name].read_double_one(j)
+                read_pos_double[i, j] = ann_wrapper.parts_reader[name].read_double_one(j)
         time_stop_double = time.time()
-        results_double_one[name] = (time_stop_double - time_start_double) / test_count
+        print(np.round(read_pos_double, 2))
+        results_double_one[name] = (time_stop_double - time_start_double) / (test_count*joints)
 
     # show the test results
     print('________ Test results: Double_one')
     for part in results_double_one:
-        print("Time double ", part, ":", round(results_double_one[part], 4), 's')
+        print("Time double ", part, ":", round(results_double_one[part] * 1000., 4), 'ms')
     print('\n')
 
     # test speed for reading joint angles as population code, coding all joints combined
@@ -156,16 +100,18 @@ def speed_test_jreader(ann_wrapper, test_count):
     for name in parts:
         print('____ Test part:', name)
         joints = ann_wrapper.parts_reader[name].get_joint_count()
+        read_pos_double_all = np.zeros((test_count, joints))
         time_start_double_all = time.time()
         for i in range(test_count):
-            read_pos_double_all = ann_wrapper.parts_reader[name].read_double_all()
+            read_pos_double_all[i] = ann_wrapper.parts_reader[name].read_double_all()
         time_stop_double_all = time.time()
+        print(np.round(read_pos_double_all, 2))
         results_double_all[name] = (time_stop_double_all - time_start_double_all) / test_count
 
     # show the test results
     print('________ Test results: Double_all')
     for part in results_double_all:
-        print("Time Double_all", part , ":", round(results_double_all[part], 4), 's')
+        print("Time Double_all", part , ":", round(results_double_all[part] * 1000., 4), 'ms')
     print('\n')
 
     # test speed for reading joint angles as population code, coding a single joint
@@ -262,7 +208,7 @@ def speed_test_jwriter(ann_wrapper, test_count):
     deltas['pos_head_complex'] = (positions['pos_head_complex'][0] - zero_pos['head'], 'head')
     deltas['pos_head_zero'] = (positions['pos_head_zero'][0] - zero_pos['head'], 'head')
 
-    # encode positions
+    # encode absolute positions
     print('__ Encode test positions __')
     part_enc = {'right_arm': {}, 'head': {}}
     for key in positions:
@@ -272,14 +218,14 @@ def speed_test_jwriter(ann_wrapper, test_count):
             pos_enc.append(encode(positions[key][1], i, n_pop, positions[key][0][i], sigma, neuron_res))
         part_enc[positions[key][1]][key] = pos_enc
 
-    # encode deltas
+    # encode relative positions
     print('__ Encode test positions __')
     part_enc_delta = {'right_arm': {}, 'head': {}}
     for key in deltas:
         pos_enc = []
         for i in range(deltas[key][0].shape[0]):
             deltas[key][0][i] = round(deltas[key][0][i], 2)
-            pos_enc.append(encode(deltas[key][1], i, n_pop, deltas[key][0][i], sigma, neuron_res))
+            pos_enc.append(encode(deltas[key][1], i, n_pop, deltas[key][0][i], sigma, neuron_res, relative=True))
         part_enc_delta[deltas[key][1]][key] = pos_enc
 
     print('____________________________________________________________\n')

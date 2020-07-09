@@ -28,60 +28,7 @@ sys.path.append("../build/")
 import iCub_Interface   # requires iCub_Interface.so in the present directory
 
 # Test support files
-from supplementary.joint_limits import joint_limits as j_lim
-
-
-#########################################################
-def normal_pdf(value, mean, sigma):
-    """
-        Return the function value of a normal distribution for a given value.
-
-        params:
-            value           -- value to calculate normal distribution at
-            mean            -- mean of the normal distribution
-            sigma           -- sigma of the normal distribution
-
-        return:
-                            -- function value for the normal distribution
-    """
-    inv_sqrt_2pi = 1.0 / (sigma * np.sqrt(2 * np.pi))
-    a = (value - mean) / sigma
-
-    return inv_sqrt_2pi * np.exp(-0.5 * a * a)
-
-
-def encode(part, joint, pop_size, joint_angle, sigma):
-    """
-        Encode a joint angle as double value in a population code.
-
-        params:
-            part            -- robot part
-            joint           -- joint number
-            pop_size        -- size of the population
-            joint_angle     -- joint angle read from the robot
-            sigma           -- sigma for population coding gaussian
-            resolution      -- if non-zero fixed resolution for all joints instead of fixed population size
-
-        return:
-                                -- population encoded joint angle
-    """
-    neuron_deg = np.zeros((pop_size,))
-    pos_pop = np.zeros((pop_size,))
-
-    joint_min = j_lim[part]['joint_' + str(joint) + '_min']
-    joint_max = j_lim[part]['joint_' + str(joint) + '_max']
-    joint_range = joint_max - joint_min + 1
-
-    joint_deg_res = joint_range / pop_size
-
-    for j in range(pop_size):
-        neuron_deg[j] = joint_min + j * joint_deg_res
-
-    for i in range(pop_size):
-        pos_pop[i] = normal_pdf(neuron_deg[i], joint_angle, sigma)
-
-    return pos_pop
-
+from supplementary.auxilary_methods import encode
 
 #########################################################
 def call_test_jreader(ann_wrapper):
@@ -195,15 +142,23 @@ def call_test_jwriter(ann_wrapper):
     print('\n')
 
     # define test positions
-    test_pos = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5)
     double_all = np.zeros(6)
     double_all_rel = np.ones(6) * 5.1
+    test_pos = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5)
+    test_pos_rel = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5, relative=True)
     pop_multiple = np.zeros((3, 15))
+    pop_multiple_rel = np.zeros((3, 15))
+    pop_all = np.zeros((6, 15))
+    pop_all_rel = np.zeros((6, 15))
+
     for i in range(3):
         pop_multiple[i] = encode(ann_wrapper.PART_KEY_HEAD, i + 3, 15, 10., 0.5)
-    pop_all = np.zeros((6, 15))
+        pop_multiple_rel[i] = encode(ann_wrapper.PART_KEY_HEAD, i + 3, 15, 10., 0.5, relative=True)
+
+
     for i in range(6):
         pop_all[i] = encode(ann_wrapper.PART_KEY_HEAD, i, 15, 5., 0.5)
+        pop_all_rel[i] = encode(ann_wrapper.PART_KEY_HEAD, i, 15, 5., 0.5, relative=True)
 
     print("write absolute values")
     # test writing absolute joint angles
@@ -237,13 +192,13 @@ def call_test_jwriter(ann_wrapper):
     print(ann_wrapper.parts_writer["J_Writer"].write_double_all(double_all_rel, "rel", True))
     time.sleep(2.5)
     print('write pop_one')
-    print(ann_wrapper.parts_writer["J_Writer"].write_pop_one(test_pos, 4, "rel", True))
+    print(ann_wrapper.parts_writer["J_Writer"].write_pop_one(test_pos_rel, 4, "rel", True))
     time.sleep(2.5)
     print('write pop_multiple')
-    print(ann_wrapper.parts_writer["J_Writer"].write_pop_multiple(pop_multiple, [3, 4, 5], "rel", True))
+    print(ann_wrapper.parts_writer["J_Writer"].write_pop_multiple(pop_multiple_rel, [3, 4, 5], "rel", True))
     time.sleep(2.5)
     print('write pop_all')
-    print(ann_wrapper.parts_writer["J_Writer"].write_pop_all(pop_all, "rel", True))
+    print(ann_wrapper.parts_writer["J_Writer"].write_pop_all(pop_all_rel, "rel", True))
 
     print('reset head position')
     print(ann_wrapper.parts_writer["J_Writer"].write_double_all(double_all, "abs", True))
