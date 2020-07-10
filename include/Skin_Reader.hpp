@@ -27,8 +27,6 @@
 #include <string>
 #include <vector>
 
-#include <opencv2/opencv.hpp>
-
 /**
  * \brief  Struct for the skin taxel positiiion data per iCub part
  */

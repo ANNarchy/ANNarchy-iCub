@@ -1,3 +1,4 @@
+## iCub ANNarchy Interface
 This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.
 
 
@@ -44,27 +45,42 @@ The main class is the "iCubANN" class, handling the subclass instances. The subc
 
 
 ## Preparation
-To use the interface in Python the source code has to be compiled. For this process is the Makefile in the main folder. The resulting .so files are saved in the build folder. For compilation simply opend a terminal in the main interface directory ("Interface_ANNarchy_iCub"). Then execute the "make" command in the terminal. Then the build process is started and will take a few minutes.
+To use the interface in Python the source code has to be compiled. For compilation execute the make.py script. This generates the nessecary Makefile and starts the build process. In case of missing/false include directories the make_config file has to be modified.
+The resulting .so files are saved in the build folder. 
 
-For use in Python the build folder should be added to the Pythonpath-variable, therefore add the following line to the .bashrc in the home-directory:
+For use in Python the build folder could be added to the Pythonpath-variable, therefore add the following line to the .bashrc in the home-directory:
 ```
-    export PYTHONPATH=${PYTHONPATH}:/path/to/repo/Interface_ANNarchy_iCub/build
+export PYTHONPATH=${PYTHONPATH}:/path/to/repo/Interface_ANNarchy_iCub/build
+```
+
+Otherwise the library path has to be added to the import path inside your user python script module above `import iCub_Interface`. This is done with the sys module:
+```Python
+import sys
+sys.path.append("path/to/so/files")
+import iCub_Interface
+...
 ```
 
 ## Generic Python Example
 
 ```Python
-    import iCub_Interface
+import iCub_Interface
 
-    iCub = iCub_Interface.iCubANN_wrapper()
-    ...
-    iCub.add_...
-    iCub.parts_reader[jreader_name].method_name(...)
-    iCub.parts_writer[jwriter_name].method_name(...)
-    iCub.tactile_reader[treader_name].method_name(...)
-    iCub.visual_input.method_name(...)
-    ...
-    del iCub
+iCub = iCub_Interface.iCubANN_wrapper()
+...
+# add nessacary instances
+iCub.add_joint_reader(jreader_name)
+iCub.add_joint_writer(jwriter_name)
+iCub.add_skin_reader(sreader_name)
+iCub.add_visual_reader()
+
+# use interface modules
+iCub.parts_reader[jreader_name].method_name(...)
+iCub.parts_writer[jwriter_name].method_name(...)
+iCub.tactile_reader[sreader_name].method_name(...)
+iCub.visual_input.method_name(...)
+...
+del iCub
 ```
 
 ## useful links
