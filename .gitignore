@@ -8,6 +8,7 @@ test_*.py
 *.npy
 
 # application
+Makefile
 /build
 /dist
 *.egg-info/
