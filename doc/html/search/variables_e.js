@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['right_5farm_572',['right_arm',['../dc/d5a/namespacesupplementary_1_1joint__limits.html#a2c28aa975ebecdf926cdd7aa96797e38',1,'supplementary::joint_limits']]],
-  ['right_5fleg_573',['right_leg',['../dc/d5a/namespacesupplementary_1_1joint__limits.html#af87ba0c90b31c4afb90754a4a3c3731d',1,'supplementary::joint_limits']]]
+  ['orientation_5frobot_5fhand',['orientation_robot_hand',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#a4cdb710326050677fd6685418c94779d',1,'iCub_Python_Lib::iCub_transformation_matrices']]]
 ];

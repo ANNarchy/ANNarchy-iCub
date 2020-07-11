@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['_7eicubann_302',['~iCubANN',['../d5/d9d/classiCubANN.html#ad4c0bbd3adb6f1a7ab2f056cbd7cd975',1,'iCubANN']]],
-  ['_7ejointreader_303',['~JointReader',['../d1/dc0/classJointReader.html#a78ff28faeb88eb858b3b4ed3dcb32d42',1,'JointReader']]],
-  ['_7ejointwriter_304',['~JointWriter',['../df/d23/classJointWriter.html#ad0fb1b676fee108d05fad445f30b541e',1,'JointWriter']]],
-  ['_7eskinreader_305',['~SkinReader',['../d1/dc5/classSkinReader.html#a91625eb163703b38d66013b31c934bea',1,'SkinReader']]],
-  ['_7evisualreader_306',['~VisualReader',['../d5/df3/classVisualReader.html#a481bbf0a59f5a641a680cd882a789fb4',1,'VisualReader']]]
+  ['yarp_5fdata',['yarp_data',['../d3/d00/namespacemake.html#a15f6cf044647e5c4d4a026d5c2c1fd35',1,'make.yarp_data()'],['../dd/dc4/namespacesetup.html#a9ee0eb03e7f58d117719dca780a693eb',1,'setup.yarp_data()']]],
+  ['yarp_5fimage_5fprocessing_2epy',['YARP_image_processing.py',['../d7/d01/YARP__image__processing_8py.html',1,'']]],
+  ['yarp_5fmotor_5fcontrol_2epy',['YARP_motor_control.py',['../de/da7/YARP__motor__control_8py.html',1,'']]],
+  ['yarp_5fnetwork_5fcontrol_2epy',['YARP_network_control.py',['../d9/dda/YARP__network__control_8py.html',1,'']]],
+  ['yarp_5fprefix',['yarp_prefix',['../d3/d00/namespacemake.html#aee70455d207672afb80642075513bcd9',1,'make.yarp_prefix()'],['../d6/d19/namespacemake__config.html#aa72f0e0da05e626e1996c9520374df78',1,'make_config.yarp_prefix()'],['../dd/dc4/namespacesetup.html#a5d55e1988acca9f7aa7ff70b42bd19d0',1,'setup.yarp_prefix()']]],
+  ['yarpvec_5f2_5fnpvec',['yarpvec_2_npvec',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#afeaa19a07701f3672d5f0175691a5920',1,'iCub_Python_Lib::YARP_motor_control']]]
 ];

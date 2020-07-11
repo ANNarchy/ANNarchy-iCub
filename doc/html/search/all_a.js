@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['left_5farm_133',['left_arm',['../dc/d5a/namespacesupplementary_1_1joint__limits.html#a848ad238cd79add6abc6c7d928546c83',1,'supplementary::joint_limits']]],
-  ['left_5fleg_134',['left_leg',['../dc/d5a/namespacesupplementary_1_1joint__limits.html#ab7a81ed3cff8651afd315ba69fca15dd',1,'supplementary::joint_limits']]],
-  ['lib_5fdirs_135',['lib_dirs',['../d3/d29/namespaceinstall.html#a70744acc3c28b76dfacde471c7bbddde',1,'install.lib_dirs()'],['../dd/dc4/namespacesetup.html#a8c296d7b2a95bc529afe419b20127e7e',1,'setup.lib_dirs()']]],
-  ['libs_136',['libs',['../d3/d29/namespaceinstall.html#a643fdf3ccb48790da70b4010f134471a',1,'install.libs()'],['../dd/dc4/namespacesetup.html#a7f6f13240cca22a0b50447d2de556b05',1,'setup.libs()']]],
-  ['license_137',['license',['../dd/dc4/namespacesetup.html#a8ed6f50a28bd6a8794f8e1153baa6de9',1,'setup']]],
-  ['loc_5fbox_138',['loc_box',['../df/d34/namespacesupplementary_1_1testing__parameter.html#a90df8c6855c8c1fd5bfe2b793ceb0d9c',1,'supplementary::testing_parameter']]],
-  ['loc_5fsph_139',['loc_sph',['../df/d34/namespacesupplementary_1_1testing__parameter.html#a5c5a68fd6748686221faa2bde6c14704',1,'supplementary::testing_parameter']]]
+  ['joint_5flimits',['joint_limits',['../dc/d5a/namespacesupplementary_1_1joint__limits.html#a95b1550994c9c6fdb226134e11df796f',1,'supplementary::joint_limits']]],
+  ['joint_5flimits_2epy',['joint_limits.py',['../da/d2b/joint__limits_8py.html',1,'']]],
+  ['joint_5freader_2ehpp',['Joint_Reader.hpp',['../da/d11/Joint__Reader_8hpp.html',1,'']]],
+  ['joint_5freader_2epyx',['Joint_Reader.pyx',['../dc/d35/Joint__Reader_8pyx.html',1,'']]],
+  ['joint_5fwriter_2ehpp',['Joint_Writer.hpp',['../d9/d8a/Joint__Writer_8hpp.html',1,'']]],
+  ['joint_5fwriter_2epyx',['Joint_Writer.pyx',['../dc/d2b/Joint__Writer_8pyx.html',1,'']]],
+  ['jointreader',['JointReader',['../d1/dc0/classJointReader.html',1,'JointReader'],['../d1/dc0/classJointReader.html#a87b608749f395f52327d7f81ff16480b',1,'JointReader::JointReader()']]],
+  ['jointwriter',['JointWriter',['../df/d23/classJointWriter.html',1,'JointWriter'],['../df/d23/classJointWriter.html#a206d13821043ca9e4005922144f4cb0b',1,'JointWriter::JointWriter()']]]
 ];
