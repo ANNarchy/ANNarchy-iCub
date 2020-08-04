@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['parts',['parts',['../df/d34/namespacesupplementary_1_1testing__parameter.html#a3e0ce5e4a3ad3814f0213942f07f098a',1,'supplementary::testing_parameter']]],
+  ['parts',['parts',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#af730ce29b6a441bf4104fe385def6414',1,'iCub_Python_Lib.YARP_motor_control.parts()'],['../df/d34/namespacesupplementary_1_1testing__parameter.html#a3e0ce5e4a3ad3814f0213942f07f098a',1,'supplementary.testing_parameter.parts()']]],
   ['parts_5freader',['parts_reader',['../d5/d9d/classiCubANN.html#a3f413d96c631bbcb172aa8847f29a2f6',1,'iCubANN']]],
   ['parts_5fwriter',['parts_writer',['../d5/d9d/classiCubANN.html#a1646b6d329d17110c8f1f77352a3f007',1,'iCubANN']]],
   ['path_5fbear',['path_bear',['../d1/da2/namespaceiCub__Python__Lib_1_1iCubSim__model__groups__definition.html#a4b115211956f2d7f04897b7c2b8a5726',1,'iCub_Python_Lib::iCubSim_model_groups_definition']]],

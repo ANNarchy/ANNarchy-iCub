@@ -2,7 +2,7 @@ var searchData=
 [
   ['get',['Get',['../d5/de4/classINIReader.html#a444ab67be741a41dcd26759d744b20db',1,'INIReader']]],
   ['get_5fhand_5flocation',['get_hand_location',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#acfd1b300bc4ae86e928fc2b7ff33fae9',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]],
-  ['get_5fjoint_5fposition',['get_joint_position',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a6687abb22ef823266dde7f81d2356cc7',1,'iCub_Python_Lib::YARP_motor_control']]],
+  ['get_5fjoint_5fposition',['get_joint_position',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a88ad68d783ff19e67f647985530adbd1',1,'iCub_Python_Lib::YARP_motor_control']]],
   ['get_5flist',['get_list',['../d8/dfc/classiCub__Python__Lib_1_1gazebo__world__controller_1_1WorldController.html#a79a3fbc148265a457b665ee52cac84b6',1,'iCub_Python_Lib::gazebo_world_controller::WorldController']]],
   ['get_5fmodel_5flocation',['get_model_location',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#a840d24ab5f98a5954b648e177680f3c5',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]],
   ['get_5fmodel_5forientation',['get_model_orientation',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#a1563794ff76aaa00efb51b291e9ae6ef',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]],
