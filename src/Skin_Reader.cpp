@@ -76,7 +76,8 @@ bool SkinReader::Init(char arm, bool norm_data, std::string ini_path) {
             bool read_err_hand = !ReadTaxelPos(data_dir + "right_hand_V2_1_idx.txt", data_dir + "right_hand_V2_1_pos.txt", "hand");
             if (read_err_arm || read_err_farm || read_err_hand) {
                 std::cerr << "[Skin Reader] Error while reading taxel positions! Check the existence of the .ini files in the "
-                             "sensor_positions folder." << std::endl;
+                             "sensor_positions folder."
+                          << std::endl;
                 return false;
             }
         } else if (arm == 'l' || arm == 'L') {
@@ -87,7 +88,8 @@ bool SkinReader::Init(char arm, bool norm_data, std::string ini_path) {
 
             if (read_err_arm || read_err_farm || read_err_hand) {
                 std::cerr << "[Skin Reader] Error while reading taxel positions! Check the existence of the .ini files in the "
-                             "sensor_positions folder." << std::endl;
+                             "sensor_positions folder."
+                          << std::endl;
                 return false;
             }
         } else {

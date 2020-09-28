@@ -16,6 +16,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
  */
+
+#include "Visual_Reader.hpp"
+
 #include <yarp/cv/Cv.h>
 #include <yarp/dev/all.h>
 #include <yarp/os/all.h>
@@ -23,14 +26,12 @@
 
 #include <chrono>
 #include <iostream>
+#include <opencv2/opencv.hpp>
 #include <queue>
 #include <string>
 #include <typeinfo>
 
-#include <opencv2/opencv.hpp>
-
 #include "INI_Reader/INIReader.h"
-#include "Visual_Reader.hpp"
 
 typedef std::chrono::high_resolution_clock Clock;
 

@@ -70,15 +70,16 @@ cdef class PyVisualReader:
         return deref(self.cpp_visual_reader).Init(e, fov_width, fov_height, img_width, img_height, fast_filter)
 
     # return image vector from the image buffer and remove it from the buffer
-    def read_fromBuf(self):
+    def read_from_buffer(self):
         """
-            Calls std::vector<double> VisualReader::ReadFromBuf()
+            Calls std::vector<precision> VisualReader::ReadFromBuf()
 
             function:
-                Return image vector from the image buffer and remove it from the buffer
+                Return image vector from the image buffer and remove it from the buffer. 
+                The return type depends on the selected precision (float/double).
 
             return:
-                std::vector<double>     -- image (1D-vector) from the image buffer
+                std::vector<precision>     -- image (1D-vector) from the image buffer
         """
 
         # call the interface

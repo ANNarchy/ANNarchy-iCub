@@ -17,10 +17,10 @@
  *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Interface_iCub.hpp"
+
 #include <string>
 #include <vector>
-
-#include "Interface_iCub.hpp"
 
 #include "Joint_Reader.hpp"
 #include "Joint_Writer.hpp"

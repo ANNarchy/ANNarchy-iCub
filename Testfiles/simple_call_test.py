@@ -291,7 +291,7 @@ def call_test_vreader(ann_wrapper):
     # record images from the iCub cameras
     ann_wrapper.visual_input.start()
     time.sleep(1.5)
-    test_img = ann_wrapper.visual_input.read_fromBuf()
+    test_img = ann_wrapper.visual_input.read_from_buffer()
     print(test_img.shape)
     if test_img.shape[0] > 0:
         test_img = test_img.reshape(120, 160)
@@ -340,9 +340,9 @@ if __name__ == "__main__":
             elif command == "vreader":
                 call_test_vreader(wrapper)
             else:
-                print('No valid test command!')
+                print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader')
     else:
-        print('No valid test command!')
+        print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader')
 
     del wrapper
     print('finished call tests')
