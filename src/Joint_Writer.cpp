@@ -17,16 +17,18 @@
  *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Joint_Writer.hpp"
+
 #include <yarp/dev/all.h>
 #include <yarp/os/all.h>
 #include <yarp/sig/all.h>
 
 #include <algorithm>
+#include <boost/algorithm/string.hpp>
 #include <iostream>
 #include <string>
 
 #include "INI_Reader/INIReader.h"
-#include "Joint_Writer.hpp"
 
 // Destructor
 JointWriter::~JointWriter() { Close(); }
@@ -85,8 +87,9 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
             return false;
         }
 
-        if (!driver.view(ipos) || !driver.view(ienc)) {
+        if (!driver.view(ipos) || !driver.view(ienc) || !driver.view(ivel) || !driver.view(icont)) {
             std::cerr << "[Joint Writer " << icub_part << "] Unable to open motor control interfaces!" << std::endl;
+            driver.close();
             return false;
         }
 
@@ -98,6 +101,9 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         neuron_deg_rel.resize(joints);
         joint_deg_res_abs.resize(joints);
         joint_deg_res_rel.resize(joints);
+        joint_control_mode.resize(joints);
+
+        SetJointControlMode("position", -1);
 
         // setup ini-Reader for joint limits
         double joint_range;
@@ -259,6 +265,45 @@ bool JointWriter::SetJointVelocity(double speed, int joint) {
     return true;
 }
 
+bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
+    if (joint >= joints || joint < -1) {
+        std::cerr << "[Joint Writer " << icub_part << "] Selected joint out of range!" << std::endl;
+        return false;
+    }
+    if (joint < 0) {
+        for (int i = 0; i < joints; i++) {
+            // set control modes
+            boost::algorithm::to_lower(control_mode);
+            if (control_mode == "position") {
+                icont->setControlMode(joint, VOCAB_CM_POSITION);
+                joint_control_mode[i] = static_cast<int32_t>(VOCAB_CM_POSITION);
+            } else if (control_mode == "velocity") {
+                icont->setControlMode(joint, VOCAB_CM_VELOCITY);
+                ivel->stop(i);
+                joint_control_mode[i] = static_cast<int32_t>(VOCAB_CM_VELOCITY);
+            } else {
+                std::cerr << "[Joint Writer " << icub_part << "] Given Control mode is not valid!" << std::endl;
+                return false;
+            }
+        }
+    } else {
+        // set control modes
+        boost::algorithm::to_lower(control_mode);
+        if (control_mode == "position") {
+            icont->setControlMode(joint, VOCAB_CM_POSITION);
+            joint_control_mode[joint] = static_cast<int32_t>(VOCAB_CM_POSITION);
+        } else if (control_mode == "velocity") {
+            icont->setControlMode(joint, VOCAB_CM_VELOCITY);
+            ivel->stop(joint);
+            joint_control_mode[joint] = static_cast<int32_t>(VOCAB_CM_VELOCITY);
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] Given Control mode is not valid!" << std::endl;
+            return false;
+        }
+    }
+    return true;
+}
+
 bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, std::string mode) {
     /*
         Write all joints with double values
@@ -406,10 +451,10 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
     /*
         Write one joint with double value
 
-        params: double position     -- joint angle to write to the robot joint
+        params: double position     -- joint angle or velocity to write to the robot joint
                 int joint           -- joint number of the robot part
                 bool blocking       -- if True, function waits for end of motion
-                string mode         -- motion mode: absolute or relative
+                string mode         -- motion mode: absolute, relative or velocity
 
         return: bool                -- return True, if successful
     */
@@ -425,23 +470,42 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
         // execute motion dependent on selected mode
         bool start = false;
         if (mode == "abs") {
-            // clamp to joint limits
-            position = std::clamp(position, joint_min[joint], joint_max[joint]);
-            // start motion
-            start = ipos->positionMove(joint, position);
+            if (joint_control_mode[joint] == VOCAB_CM_POSITION) {
+                // clamp to joint limits
+                position = std::clamp(position, joint_min[joint], joint_max[joint]);
+                // start motion
+                start = ipos->positionMove(joint, position);
+            } else {
+                std::cerr << "[Joint Writer " << icub_part
+                          << "] Motion mode does not fit with control mode! Use 'position' control mode for 'abs' motion mode" << std::endl;
+            }
         } else if (mode == "rel") {
-            // clamp to joint limits
-            ienc->getEncoder(joint, &act_pos);
-            double new_pos = act_pos + position;
+            if (joint_control_mode[joint] == VOCAB_CM_POSITION) {
+                // clamp to joint limits
+                ienc->getEncoder(joint, &act_pos);
+                double new_pos = act_pos + position;
 
-            if (new_pos > joint_max[joint]) {
-                position = joint_max[joint] - act_pos;
+                if (new_pos > joint_max[joint]) {
+                    position = joint_max[joint] - act_pos;
+                } else if (new_pos < joint_min[joint]) {
+                    position = joint_min[joint] - act_pos;
+                }
+                // start motion
+                start = ipos->relativeMove(joint, position);
+            } else {
+                std::cerr << "[Joint Writer " << icub_part
+                          << "] Motion mode does not fit with control mode! Use 'position' control mode for 'rel' motion mode" << std::endl;
             }
-            if (new_pos < joint_min[joint]) {
-                position = joint_min[joint] - act_pos;
+        } else if (mode == "vel") {
+            if (joint_control_mode[joint] == VOCAB_CM_VELOCITY) {
+                // clamp to joint limits
+                position = std::clamp(position, -50., 50.);
+                // start motion
+                start = ivel->velocityMove(joint, position);
+            } else {
+                std::cerr << "[Joint Writer " << icub_part
+                          << "] Motion mode does not fit with control mode! Use 'velocity' control mode for 'vel' motion mode" << std::endl;
             }
-            // start motion
-            start = ipos->relativeMove(joint, position);
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
                       << std::endl;

@@ -49,6 +49,8 @@ cdef extern from "Joint_Writer.hpp":
         # Return the size of the populations encoding the joint angles
         bool_t SetJointVelocity(double, int)
 
+        # Return the size of the populations encoding the joint angles
+        bool_t SetJointControlMode(string, int)
 
         # Write all joints with double values.
         bool_t WriteDoubleAll(vector[double], bool_t, string)

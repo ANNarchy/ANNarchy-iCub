@@ -150,6 +150,25 @@ cdef class PyJointWriter:
         # call the interface
         return deref(self.cpp_joint_writer).SetJointVelocity(speed, joint)
 
+    def set_joint_controlmode(self, control_mode, joint=(-1)):
+        """
+            Calls bool JointWriter::SetJointControlMode(string control_mode, int joint)
+
+            function:
+                Set iCub joint velocity
+
+            params:
+                string control_mode -- control mode: velocity/position
+                int joint           -- joint number of the robot part, default -1 for all joints
+
+            return:
+                bool                -- return True, if successful
+        """
+        cdef string s1 = control_mode.encode('UTF-8')
+
+        # call the interface
+        return deref(self.cpp_joint_writer).SetJointControlMode(s1, joint)
+
     # write all joints with double values
     def write_double_all(self, position, mode, blocking=True):
         """
@@ -161,7 +180,9 @@ cdef class PyJointWriter:
             params:
                 std::vector<double> position    -- joint angles to write to the robot joints
                 bool blocking                   -- if True, function waits for end of motion; default True
-                std::string mode                -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+                std::string mode                -- string to select the motion mode: 
+                                                    - 'abs' for absolute joint angle positions
+                                                    - 'rel' for relative joint angles
 
             return:
                 bool                            -- return True, if successful
@@ -187,8 +208,9 @@ cdef class PyJointWriter:
                 std::vector<double> position    -- joint angles to write to the robot joints
                 std::vector<int> joints         -- Joint indizes of the jointwhich should be moved (head: [3, 4, 5] -> all eye movements)
                 bool blocking                   -- if True, function waits for end of motion; default True
-                std::string mode                -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
-
+                std::string mode                -- string to select the motion mode: 
+                                                    - 'abs' for absolute joint angle positions
+                                                    - 'rel' for relative joint angles
             return:
                 bool                            -- return True, if successful
         """
@@ -213,7 +235,10 @@ cdef class PyJointWriter:
                 double position     -- joint angle to write to the robot joint
                 int joint           -- joint number of the robot part
                 bool blocking       -- if True, function waits for end of motion; default True
-                std::string mode    -- string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+                std::string mode    -- string to select the motion mode: 
+                                        - 'abs' for absolute joint angle position
+                                        - 'rel' for relative joint angle
+                                        - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
 
             return:
                 bool                -- return True, if successful

@@ -86,6 +86,17 @@ class JointWriter {
     bool SetJointVelocity(double speed, int joint);
 
     /**
+     * \brief Return the size of the populations encoding the joint angles
+     * \param[in] control_mode Joint control mode eg. Position, Velocity
+     * \param[in] joint (default -1) joint number of the robot part, default -1 for all joints
+     * \return True, if set was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: e.g. joint index not valid for robot part
+     *              - missing initialization
+     */
+    bool SetJointControlMode(std::string control_mode, int joint);
+
+    /**
      * \brief Write all joints with double values.
      * \param[in] position Joint angles to write to the robot joints
      * \param[in] blocking if True, function waits for end of motion
@@ -167,9 +178,10 @@ class JointWriter {
 
  private:
     /** configuration variables **/
-    bool dev_init = false;        // variable for initialization check
-    double velocity_max = 100;    // maximum joint velocity
-    std::string icub_part;        // string describing the part of the iCub
+    bool dev_init = false;                  // variable for initialization check
+    double velocity_max = 100;              // maximum joint velocity
+    std::string icub_part;                  // string describing the part of the iCub
+    std::vector<int32_t> joint_control_mode;    // string describing the active control mode
 
     std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
 
@@ -185,9 +197,11 @@ class JointWriter {
 
     /*** yarp data structures ***/
     yarp::sig::Vector joint_angles;       // yarp vector for reading all joint angles
-    yarp::dev::PolyDriver driver;         // yarp driver needed for reading joint encoders
+    yarp::dev::PolyDriver driver;         // yarp driver, used to get control interfaces
+    yarp::dev::IVelocityControl *ivel;    // iCub velocity control interface
     yarp::dev::IPositionControl *ipos;    // iCub position control interface
-    yarp::dev::IEncoders *ienc;           // iCub position control interface
+    yarp::dev::IEncoders *ienc;           // iCub joint encoder interface
+    yarp::dev::IControlMode *icont;       // iCub joint control mode interface
 
     /*** auxilary methods ***/
     // check if init function was called
