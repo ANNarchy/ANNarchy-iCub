@@ -96,6 +96,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a83cd717afc5c4f0eec45f7b5b8f24456"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#a83cd717afc5c4f0eec45f7b5b8f24456">SetJointVelocity</a> (double speed, int joint)</td></tr>
 <tr class="memdesc:a83cd717afc5c4f0eec45f7b5b8f24456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of the populations encoding the joint angles.  <a href="#a83cd717afc5c4f0eec45f7b5b8f24456">More...</a><br /></td></tr>
 <tr class="separator:a83cd717afc5c4f0eec45f7b5b8f24456"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd17873a8db00f9b58b0d295f93a5a78"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#abd17873a8db00f9b58b0d295f93a5a78">SetJointControlMode</a> (std::string control_mode, int joint)</td></tr>
+<tr class="memdesc:abd17873a8db00f9b58b0d295f93a5a78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of the populations encoding the joint angles.  <a href="#abd17873a8db00f9b58b0d295f93a5a78">More...</a><br /></td></tr>
+<tr class="separator:abd17873a8db00f9b58b0d295f93a5a78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b21bf4504ade96db501c8fc46c15a24"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#a0b21bf4504ade96db501c8fc46c15a24">WriteDoubleAll</a> (std::vector&lt; double &gt; position, bool blocking, std::string mode)</td></tr>
 <tr class="memdesc:a0b21bf4504ade96db501c8fc46c15a24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write all joints with double values.  <a href="#a0b21bf4504ade96db501c8fc46c15a24">More...</a><br /></td></tr>
 <tr class="separator:a0b21bf4504ade96db501c8fc46c15a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -303,6 +306,51 @@ Public Member Functions</h2></td></tr>
 <li>YARP-Server not running </li>
 </ul>
 </dd></dl>
+
+</div>
+</div>
+<a id="abd17873a8db00f9b58b0d295f93a5a78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd17873a8db00f9b58b0d295f93a5a78">&#9670;&nbsp;</a></span>SetJointControlMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool JointWriter::SetJointControlMode </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>control_mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>joint</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the size of the populations encoding the joint angles. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">control_mode</td><td>Joint control mode eg. Position, Velocity </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">joint</td><td>(default -1) joint number of the robot part, default -1 for all joints </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True, if set was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).<br />
+ Typical errors:<ul>
+<li>arguments not valid: e.g. joint index not valid for robot part</li>
+<li>missing initialization </li>
+</ul>
+</dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="../../df/d23/classJointWriter.html#a62f41389d3c75318023d4909795c908c">Init()</a>.</p>
 
 </div>
 </div>

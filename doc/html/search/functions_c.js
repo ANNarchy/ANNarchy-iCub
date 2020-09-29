@@ -7,6 +7,7 @@ var searchData=
   ['set_5fpos_5fvector_5fsame',['set_pos_vector_same',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#afa9de0ce0539a3015bd5654ee3b9f175',1,'iCub_Python_Lib::YARP_motor_control']]],
   ['set_5fpose',['set_pose',['../d8/dfc/classiCub__Python__Lib_1_1gazebo__world__controller_1_1WorldController.html#a03fb3105938166f07e2e0f986e2eb251',1,'iCub_Python_Lib::gazebo_world_controller::WorldController']]],
   ['set_5fscreen_5flocation',['set_screen_location',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#af6045342d8517785defe5243c34b8c70',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]],
+  ['setjointcontrolmode',['SetJointControlMode',['../df/d23/classJointWriter.html#abd17873a8db00f9b58b0d295f93a5a78',1,'JointWriter']]],
   ['setjointvelocity',['SetJointVelocity',['../df/d23/classJointWriter.html#a83cd717afc5c4f0eec45f7b5b8f24456',1,'JointWriter']]],
   ['show_5f4darray_5fmatplot',['show_4Darray_matplot',['../d8/d15/namespaceiCub__Python__Lib_1_1plot__image__processing.html#af8f88c3f2dd28effd19cbf47401826ee',1,'iCub_Python_Lib::plot_image_processing']]],
   ['show_5fimage',['show_image',['../d5/d58/namespaceiCub__Python__Lib_1_1YARP__image__processing.html#ace545bccac33d3b7f0a4c0469d18fddc',1,'iCub_Python_Lib::YARP_image_processing']]],

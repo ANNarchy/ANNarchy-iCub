@@ -1,6 +1,7 @@
 var searchData=
 [
   ['icubann',['iCubANN',['../d5/d9d/classiCubANN.html#a7a30827b0ce855086817e9559393ae58',1,'iCubANN']]],
+  ['imgsinbuffer',['ImgsInBuffer',['../d5/df3/classVisualReader.html#aebc3d265079f58988a8fa5d36412122d',1,'VisualReader']]],
   ['ini_5fparse',['ini_parse',['../d0/d1d/ini_8cpp.html#a2fab292681265b7774e2a2885abb758c',1,'ini_parse(const char *filename, ini_handler handler, void *user):&#160;ini.cpp'],['../d3/d50/ini_8h.html#a2fab292681265b7774e2a2885abb758c',1,'ini_parse(const char *filename, ini_handler handler, void *user):&#160;ini.cpp']]],
   ['ini_5fparse_5ffile',['ini_parse_file',['../d0/d1d/ini_8cpp.html#a876bf8b62ade275320db827b929f9289',1,'ini_parse_file(FILE *file, ini_handler handler, void *user):&#160;ini.cpp'],['../d3/d50/ini_8h.html#a876bf8b62ade275320db827b929f9289',1,'ini_parse_file(FILE *file, ini_handler handler, void *user):&#160;ini.cpp']]],
   ['ini_5fparse_5fstream',['ini_parse_stream',['../d0/d1d/ini_8cpp.html#ad8b766ac18397b0b262559203ea7f602',1,'ini_parse_stream(ini_reader reader, void *stream, ini_handler handler, void *user):&#160;ini.cpp'],['../d3/d50/ini_8h.html#ad8b766ac18397b0b262559203ea7f602',1,'ini_parse_stream(ini_reader reader, void *stream, ini_handler handler, void *user):&#160;ini.cpp']]],
