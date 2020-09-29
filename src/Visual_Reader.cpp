@@ -222,6 +222,8 @@ void VisualReader::Stop() {
     }
 }
 
+int VisualReader::ImgsInBuffer() { return img_buffer->size(); }
+
 /*** methods for the YARP-RFModule ***/
 bool VisualReader::configure(yarp::os::ResourceFinder &rf) {
     /*

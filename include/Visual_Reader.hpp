@@ -23,10 +23,9 @@
 #include <yarp/sig/all.h>
 
 #include <deque>
+#include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
-
-#include <opencv2/opencv.hpp>
 
 /**
  * \brief  Read-out of the camera images from the iCub robot
@@ -75,6 +74,8 @@ class VisualReader : private yarp::os::RFModule {
      * \brief Stop reading images from the iCub, by terminating the RFModule.
      */
     void Stop();
+
+    int ImgsInBuffer();
 
  private:
     /** configuration variables **/

@@ -124,4 +124,15 @@ cdef class PyVisualReader:
         # call the interface
         deref(self.cpp_visual_reader).Stop()
 
+    def imgs_in_buffer(self):
+        """
+            Calls void VisualReader::Stop()
+
+            function:
+                Stop reading images from the iCub, by terminating the RFModule
+        """
+
+        # call the interface
+        return deref(self.cpp_visual_reader).ImgsInBuffer()
+
     ### end access to visual reader member functions

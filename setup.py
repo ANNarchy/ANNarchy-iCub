@@ -93,9 +93,9 @@ setup(
     name="iCub_Interface",
     ext_modules=cythonize(extensions),
     description="This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.",
-    version="0.1",
+    version="0.2",
     author="Torsten Follak",
-    keywords=["version", "0.1"],
+    keywords=["version", "0.2"],
     author_email="torsten.follak@informatik.tu-chemnitz.de",
     license="GNU General Public License V3",
     zip_safe=False

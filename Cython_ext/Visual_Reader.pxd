@@ -43,6 +43,7 @@ cdef extern from "Visual_Reader.hpp":
         # Stop reading images from the iCub, by terminating the RFModule.
         void Stop()
 
+        int ImgsInBuffer()
 
 cdef class PyVisualReader:
     cdef shared_ptr[VisualReader] cpp_visual_reader
