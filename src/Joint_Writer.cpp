@@ -94,6 +94,19 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         }
 
         ipos->getAxes(&joints);
+        yarp::sig::Vector tmp;    
+        tmp.resize(joints);
+
+        int i;
+        for (i = 0; i < nj; i++) {
+            tmp[i] = 50.0;
+        }
+        ipos->setRefAccelerations(tmp.data());
+
+        for (i = 0; i < nj; i++) {
+            tmp[i] = 10.0;
+            ipos->setRefSpeed(i, tmp[i]);
+        }
 
         // resize vector for saving joint parameter
         joint_angles.resize(joints);
