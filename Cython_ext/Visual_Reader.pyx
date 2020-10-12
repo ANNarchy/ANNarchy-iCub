@@ -46,9 +46,9 @@ cdef class PyVisualReader:
 
     ### Access to visual reader member functions
     # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def init(self, eye, fov_width=60, fov_height=48, img_width=320, img_height=240, fast_filter=True):
+    def init(self, eye, fov_width=60, fov_height=48, img_width=320, img_height=240, max_buffer_size=10, fast_filter=True):
         """
-            Calls bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height)
+            Calls bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int max_buffer_size, int img_height)
 
             function:
                 Initialize Visual reader with given parameters for image resolution, field of view and eye selection
@@ -67,7 +67,7 @@ cdef class PyVisualReader:
         cdef char e = eye.encode('UTF-8')[0]
 
         # call the interface
-        return deref(self.cpp_visual_reader).Init(e, fov_width, fov_height, img_width, img_height, fast_filter)
+        return deref(self.cpp_visual_reader).Init(e, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter)
 
     # return image vector from the image buffer and remove it from the buffer
     def read_from_buffer(self):

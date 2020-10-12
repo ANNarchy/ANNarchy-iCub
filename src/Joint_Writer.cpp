@@ -98,12 +98,12 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         tmp.resize(joints);
 
         int i;
-        for (i = 0; i < nj; i++) {
+        for (i = 0; i < joints; i++) {
             tmp[i] = 50.0;
         }
         ipos->setRefAccelerations(tmp.data());
 
-        for (i = 0; i < nj; i++) {
+        for (i = 0; i < joints; i++) {
             tmp[i] = 10.0;
             ipos->setRefSpeed(i, tmp[i]);
         }
@@ -288,10 +288,10 @@ bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
             // set control modes
             boost::algorithm::to_lower(control_mode);
             if (control_mode == "position") {
-                icont->setControlMode(joint, VOCAB_CM_POSITION);
+                icont->setControlMode(i, VOCAB_CM_POSITION);
                 joint_control_mode[i] = static_cast<int32_t>(VOCAB_CM_POSITION);
             } else if (control_mode == "velocity") {
-                icont->setControlMode(joint, VOCAB_CM_VELOCITY);
+                icont->setControlMode(i, VOCAB_CM_VELOCITY);
                 ivel->stop(i);
                 joint_control_mode[i] = static_cast<int32_t>(VOCAB_CM_VELOCITY);
             } else {

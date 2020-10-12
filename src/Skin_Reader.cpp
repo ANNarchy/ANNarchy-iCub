@@ -172,15 +172,15 @@ void SkinReader::Close() {
     */
 
     if (!port_hand.isClosed()) {
-        yarp::os::Network::disconnect(("/icubSim/skin/" << side << "_hand_comp").c_str(), ("/Skin_Reader/" << side << "_hand:i").c_str());
+        yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_hand_comp").c_str(), ("/Skin_Reader/" + side + "_hand:i").c_str());
         port_hand.close();
     }
     if (!port_forearm.isClosed()) {
-        yarp::os::Network::disconnect(("/icubSim/skin/" << side << "_forearm_comp").c_str(), ("/Skin_Reader/" << side << "_forearm:i").c_str());
+        yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_forearm_comp").c_str(), ("/Skin_Reader/" + side + "_forearm:i").c_str());
         port_forearm.close();
     }
     if (!port_arm.isClosed()) {
-        yarp::os::Network::disconnect(("/icubSim/skin/" << side << "_arm_comp").c_str(), ("/Skin_Reader/" << side << "_arm:i").c_str());
+        yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_arm_comp").c_str(), ("/Skin_Reader/" + side + "_arm:i").c_str());
         port_arm.close();
     }
 

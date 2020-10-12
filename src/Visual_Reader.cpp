@@ -39,7 +39,8 @@ typedef std::chrono::high_resolution_clock Clock;
 VisualReader::~VisualReader() { close(); }
 
 /*** public methods for the user ***/
-bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter) {
+bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size,
+                        bool fast_filter) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view and eye selection
 
@@ -48,6 +49,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
                 double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width       -- output image width in pixel (input width: 320px)
                 int img_height      -- output image height in pixel (input height: 240px)
+                int max_buffer_size -- maximum buffer length
                 bool fast_filter    -- flag to select the filter for image upscaling; True for a faster filter
 
         return: bool                -- return True, if successful
@@ -57,6 +59,8 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         // set ouput image size
         out_width = img_width;
         out_height = img_height;
+
+        buffer_len = max_buffer_size;
 
         // compute output field of view borders in input image
         if (fov_width <= icub_fov_x) {
@@ -178,9 +182,9 @@ std::vector<double> VisualReader::ReadFromBuf() {
     std::vector<double> img;
     if (CheckInit()) {
         // if image buffer is not empty return the image and delete it from the buffer
-        if (!img_buffer->empty()) {
-            img = img_buffer->front();
-            img_buffer->pop_front();
+        if (!img_buffer.empty()) {
+            img = img_buffer.front();
+            img_buffer.pop_front();
         }
         //  else {
         //     printf("[Visual Reader] The image buffer is empty! \n");
@@ -222,7 +226,7 @@ void VisualReader::Stop() {
     }
 }
 
-int VisualReader::ImgsInBuffer() { return img_buffer->size(); }
+int VisualReader::ImgsInBuffer() { return img_buffer.size(); }
 
 /*** methods for the YARP-RFModule ***/
 bool VisualReader::configure(yarp::os::ResourceFinder &rf) {
@@ -302,9 +306,14 @@ bool VisualReader::updateModule() {
         std::vector<precision> img_vec_norm_r = Mat2Vec(tmpMat1_r);
         std::vector<precision> img_vec_norm_l = Mat2Vec(tmpMat1_l);
 
+        if (img_buffer.size() >= buffer_len) {
+            img_buffer.pop_front();
+            img_buffer.pop_front();
+        }
+
         // store image in the buffer
-        img_buffer->push_back(img_vec_norm_r);
-        img_buffer->push_back(img_vec_norm_l);
+        img_buffer.push_back(img_vec_norm_r);
+        img_buffer.push_back(img_vec_norm_l);
 
     } else {
         // read image from the iCub and get CV-Matrix
@@ -346,7 +355,10 @@ bool VisualReader::updateModule() {
         std::vector<precision> img_vec_norm = Mat2Vec(tmpMat1);
 
         // store image in the buffer
-        img_buffer->push_back(img_vec_norm);
+        if (img_buffer.size() >= buffer_len) {
+            img_buffer.pop_front();
+        }
+        img_buffer.push_back(img_vec_norm);
     }
 
     // auto t2_load = Clock::now();

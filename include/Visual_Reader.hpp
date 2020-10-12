@@ -46,13 +46,14 @@ class VisualReader : private yarp::os::RFModule {
      * \param[in] fov_height output field of view height in degree [0, 48] (input fov height: 48°)
      * \param[in] img_width output image width in pixel (input width: 320px)
      * \param[in] img_height output image height in pixel (input height: 240px)
+     * \param[in] max_buffer_size maximum buffer length
      * \param[in] fast_filter flag to select the filter for image upscaling; True for a faster filter
      * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: e.g. eye character not valid
      *              - YARP-Server not running
      */
-    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter);
+    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter);
 
     /**
      * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
@@ -79,8 +80,8 @@ class VisualReader : private yarp::os::RFModule {
 
  private:
     /** configuration variables **/
-    bool dev_init = false;               // variable for initialization check
-    static const int buffer_len = 30;    // length of the image buffer
+    bool dev_init = false;    // variable for initialization check
+    int buffer_len = 30;      // length of the image buffer
 
     char act_eye;           // selected iCub eye to read images from
     int filter_ds;          // filter for the upscaling of the image
@@ -106,7 +107,7 @@ class VisualReader : private yarp::os::RFModule {
     double res_scale_y;    // scaling factor in y direction to scale ROV to ouput image height
 
     /** image data structures **/
-    std::deque<std::vector<precision>> img_buffer[buffer_len];    // buffer to store the preprocessed iCub images
+    std::deque<std::vector<precision>> img_buffer;    // buffer to store the preprocessed iCub images
 
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_right;    // port for the iCub right eye image
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;     // port for the iCub left eye image
