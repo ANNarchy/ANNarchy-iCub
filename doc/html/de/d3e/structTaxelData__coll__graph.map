@@ -1,2 +1,5 @@
 <map id="TaxelData" name="TaxelData">
+<area shape="rect" id="node1" title="Struct for the skin taxel positiiion data per iCub part." alt="" coords="140,109,227,136"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,180,47"/>
+<area shape="rect" id="node3" title=" " alt="" coords="205,13,343,39"/>
 </map>
