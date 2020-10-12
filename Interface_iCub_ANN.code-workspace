@@ -75,10 +75,14 @@
 		"terminal.integrated.shell.windows": "cmd.exe",
 		"C_Cpp.workspaceParsingPriority": "medium",
 		"C_Cpp.default.includePath": [
-			"./include"
+			"./include", "/usr/include/opencv4"
 		],
         "editor.detectIndentation": false,
         "editor.tabCompletion": "on",
+        "files.exclude": {
+            "**/doc": true
+        },
+        "editor.formatOnPaste": true,
 
 	}
 }
