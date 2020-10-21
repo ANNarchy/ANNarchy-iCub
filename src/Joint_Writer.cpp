@@ -838,3 +838,10 @@ double JointWriter::Decode(std::vector<double> position_pop, int joint, std::vec
 
     return joint_angle;
 }
+
+bool JointWriter::MotionDone() {
+    bool test;
+    ipos->checkMotionDone(&test);
+    return test;
+
+}

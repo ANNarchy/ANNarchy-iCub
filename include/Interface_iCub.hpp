@@ -37,6 +37,7 @@
 class iCubANN {
  private:
     yarp::os::Network Yarp;
+    std::vector<double> timemarker;
 
  public:
     // Constructor
@@ -110,6 +111,12 @@ class iCubANN {
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool RemoveVisualReader();
+
+    std::vector<std::vector<double>> WriteActionSyncOne(std::string jwriter_name, std::string jreader_name, double angle, int joint);
+    std::vector<std::vector<std::vector<double>>> WriteActionSyncMult(std::string jwriter_name, std::string jreader_name,
+                                                                           std::vector<double> angles, std::vector<int> joint_select);
+    std::vector<std::vector<std::vector<double>>> WriteActionSyncAll(std::string jwriter_name, std::string jreader_name,
+                                                                           std::vector<double> angles);
 };
 
 extern iCubANN my_interface;

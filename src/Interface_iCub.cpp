@@ -88,9 +88,7 @@ bool iCubANN::AddSkinReader(std::string name) {
 
 bool iCubANN::AddVisualReader() {
     /*
-        Add an instance of visual reader
-
-        params: std::string name        -- name for the added visual reader in the map, can be freely selected
+        Add the instance of visual reader
     */
 
     if (visual_input == NULL) {
@@ -153,4 +151,42 @@ bool iCubANN::RemoveVisualReader() {
         std::cerr << "[Visual Reader] Visual Reader does not exists." << std::endl;
         return false;
     }
+}
+
+std::vector<std::vector<double>> iCubANN::WriteActionSyncOne(std::string jwriter_name, std::string jreader_name, double angle, int joint) {
+
+    std::vector<std::vector<double>> sensor_values;
+    sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleOneTime(joint));
+    bool in_motion = parts_writer[jwriter_name]->WriteDoubleOne(angle, joint, false, "abs");
+    while (in_motion) {
+        sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleOneTime(joint));
+        in_motion = !parts_writer[jwriter_name]->MotionDone();
+    }
+    return sensor_values;
+}
+
+std::vector < std::vector<std::vector<double>>> iCubANN::WriteActionSyncMult(std::string jwriter_name, std::string jreader_name, std::vector<double> angles,
+                                                                         std::vector<int> joint_selection) {
+
+    std::vector<std::vector<std::vector<double>>> sensor_values;
+    sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleMultipleTime(joint_selection));
+    bool in_motion = parts_writer[jwriter_name]->WriteDoubleMultiple(angles, joint_selection, false, "abs");
+    while (in_motion) {
+        sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleMultipleTime(joint_selection));
+        in_motion = !parts_writer[jwriter_name]->MotionDone();
+    }
+    return sensor_values;
+}
+
+std::vector<std::vector<std::vector<double>>> iCubANN::WriteActionSyncAll(std::string jwriter_name, std::string jreader_name,
+                                                                       std::vector<double> angles) {
+
+    std::vector<std::vector<std::vector<double>>> sensor_values;
+    sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleAllTime());
+    bool in_motion = parts_writer[jwriter_name]->WriteDoubleAll(angles, false, "abs");
+    while (in_motion) {
+        sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleAllTime());
+        in_motion = !parts_writer[jwriter_name]->MotionDone();
+    }
+    return sensor_values;
 }

@@ -17,16 +17,18 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this headers. If not, see <http://www.gnu.org/licenses/>.
+   along with this headers. If not, see [http://www.gnu.org/licenses/].
  """
 
 
 from libcpp.string cimport string
-# from libcpp.vector cimport vector
+from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
 from libcpp.map cimport map as cmap
 # from libc.stdlib cimport malloc, free
+
+cimport numpy as np
 
 from cython.operator cimport dereference as deref
 
@@ -64,6 +66,10 @@ cdef extern from "Interface_iCub.hpp":
         bool_t RemoveSkinReader(string)
         # remove the instance of visual reader
         bool_t RemoveVisualReader()
+
+        vector[vector[double]] WriteActionSyncOne(string, string, double, int)
+        vector[vector[vector[double]]] WriteActionSyncMult(string, string, vector[double], vector[int])
+        vector[vector[vector[double]]] WriteActionSyncAll(string, string, vector[double])
 
         cmap[string, shared_ptr[JointReader]] parts_reader
         cmap[string, shared_ptr[JointWriter]] parts_writer
@@ -292,3 +298,17 @@ cdef class iCubANN_wrapper:
 
     ### end Manage instances of the reader/writer module
 
+    def write_action_sync_one(self, jwriter_name, jreader_name, angle, joint):
+        cdef string s1 = jwriter_name.encode('UTF-8')
+        cdef string s2 = jreader_name.encode('UTF-8')
+        return my_interface.WriteActionSyncOne(s1, s2, angle, joint)
+
+    def write_action_sync_mult(self, jwriter_name, jreader_name, angles, joints):
+        cdef string s1 = jwriter_name.encode('UTF-8')
+        cdef string s2 = jreader_name.encode('UTF-8')
+        return my_interface.WriteActionSyncMult(s1, s2, angles, joints)
+
+    def write_action_sync_all(self, jwriter_name, jreader_name, angles):
+        cdef string s1 = jwriter_name.encode('UTF-8')
+        cdef string s2 = jreader_name.encode('UTF-8')
+        return my_interface.WriteActionSyncAll(s1, s2, angles)

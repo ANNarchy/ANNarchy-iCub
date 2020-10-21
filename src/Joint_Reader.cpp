@@ -220,6 +220,75 @@ std::vector<double> JointReader::ReadDoubleAll() {
     return angles;
 }
 
+std::vector<std::vector<double>> JointReader::ReadDoubleAllTime() {
+    /*
+        Read all joints and return joint angles directly as double value
+
+        return: std::vector<double>     -- joint angles read from the robot
+    */
+    std::vector<std::vector<double>> angle_stamped;
+    std::vector<double> time;
+    std::vector<double> angles;
+    if (CheckInit()) {
+        angles.resize(joints);
+        while (!ienc->getEncoders(angles.data())) {
+            yarp::os::Time::delay(0.01);
+        }
+        time.push_back(yarp::os::Time::now());
+        angle_stamped.push_back(time);
+        angle_stamped.push_back(angles);
+    }
+    return angle_stamped;
+}
+
+std::vector<double> JointReader::ReadDoubleMultiple(std::vector<int> joint_select) {
+    /*
+        Read all joints and return joint angles directly as double value
+
+        return: std::vector<double>     -- joint angles read from the robot
+    */
+
+    std::vector<double> angles;
+    std::vector<double> angle_select;
+
+    if (CheckInit()) {
+        angles.resize(joints);
+        while (!ienc->getEncoders(angles.data())) {
+            yarp::os::Time::delay(0.01);
+        }
+        for (int i = 0; i < joint_select.size(); i++) {
+            angle_select.push_back(angles[joint_select[i]]);
+        }
+    }
+    return angle_select;
+}
+
+std::vector<std::vector<double>> JointReader::ReadDoubleMultipleTime(std::vector<int> joint_select) {
+    /*
+        Read all joints and return joint angles directly as double value
+
+        return: std::vector<double>     -- joint angles read from the robot
+    */
+    std::vector<std::vector<double>> angle_stamped;
+    std::vector<double> time;
+    std::vector<double> angles;
+    std::vector<double> angle_select;
+
+    if (CheckInit()) {
+        angles.resize(joints);
+        while (!ienc->getEncoders(angles.data())) {
+            yarp::os::Time::delay(0.01);
+        }
+        time.push_back(yarp::os::Time::now());
+        for (int i = 0; i < joint_select.size(); i++) {
+            angle_select.push_back(angles[joint_select[i]]);
+        }
+        angle_stamped.push_back(time);
+        angle_stamped.push_back(angle_select);
+    }
+    return angle_stamped;
+}
+
 double JointReader::ReadDoubleOne(int joint) {
     /*
         Read one joint and return joint angle directly as double value
@@ -240,6 +309,32 @@ double JointReader::ReadDoubleOne(int joint) {
         }
     }
     return angle;
+}
+
+std::vector<double> JointReader::ReadDoubleOneTime(int joint) {
+    /*
+        Read one joint and return joint angle directly as double value
+
+        params: int joint       -- joint number of the robot part
+
+        return: double          -- joint angle read from the robot
+    */
+
+    double angle = 0.0;
+    std::vector<double> angle_stamped;
+
+    if (CheckInit()) {
+        if (joint < joints || joint > 0) {
+            while (!ienc->getEncoder(joint, &angle)) {
+                yarp::os::Time::delay(0.01);
+            }
+            angle_stamped.push_back(yarp::os::Time::now());
+            angle_stamped.push_back(angle);
+        } else {
+            std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
+        }
+    }
+    return angle_stamped;
 }
 
 std::vector<std::vector<double>> JointReader::ReadPopAll() {
