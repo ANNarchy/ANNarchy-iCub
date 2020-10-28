@@ -67,9 +67,9 @@ cdef extern from "Interface_iCub.hpp":
         # remove the instance of visual reader
         bool_t RemoveVisualReader()
 
-        vector[vector[double]] WriteActionSyncOne(string, string, double, int)
-        vector[vector[vector[double]]] WriteActionSyncMult(string, string, vector[double], vector[int])
-        vector[vector[vector[double]]] WriteActionSyncAll(string, string, vector[double])
+        vector[vector[double]] WriteActionSyncOne(string, string, double, int, double)
+        vector[vector[double]] WriteActionSyncMult(string, string, vector[double], vector[int], double)
+        vector[vector[double]] WriteActionSyncAll(string, string, vector[double], double)
 
         cmap[string, shared_ptr[JointReader]] parts_reader
         cmap[string, shared_ptr[JointWriter]] parts_writer
@@ -298,17 +298,17 @@ cdef class iCubANN_wrapper:
 
     ### end Manage instances of the reader/writer module
 
-    def write_action_sync_one(self, jwriter_name, jreader_name, angle, joint):
+    def write_action_sync_one(self, jwriter_name, jreader_name, angle, joint, dt):
         cdef string s1 = jwriter_name.encode('UTF-8')
         cdef string s2 = jreader_name.encode('UTF-8')
-        return my_interface.WriteActionSyncOne(s1, s2, angle, joint)
+        return np.array(my_interface.WriteActionSyncOne(s1, s2, angle, joint, dt))
 
-    def write_action_sync_mult(self, jwriter_name, jreader_name, angles, joints):
+    def write_action_sync_mult(self, jwriter_name, jreader_name, angles, joints, dt):
         cdef string s1 = jwriter_name.encode('UTF-8')
         cdef string s2 = jreader_name.encode('UTF-8')
-        return my_interface.WriteActionSyncMult(s1, s2, angles, joints)
+        return np.array(my_interface.WriteActionSyncMult(s1, s2, angles, joints, dt))
 
-    def write_action_sync_all(self, jwriter_name, jreader_name, angles):
+    def write_action_sync_all(self, jwriter_name, jreader_name, angles, dt):
         cdef string s1 = jwriter_name.encode('UTF-8')
         cdef string s2 = jreader_name.encode('UTF-8')
-        return my_interface.WriteActionSyncAll(s1, s2, angles)
+        return np.array(my_interface.WriteActionSyncAll(s1, s2, angles, dt))

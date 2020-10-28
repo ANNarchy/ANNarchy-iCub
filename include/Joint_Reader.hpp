@@ -79,10 +79,10 @@ class JointReader {
      * \return Joint angles, read from the robot in degree.
      */
     std::vector<double> ReadDoubleAll();
-    std::vector<std::vector<double>> ReadDoubleAllTime();
+    std::vector<double> ReadDoubleAllTime();
 
     std::vector<double> ReadDoubleMultiple(std::vector<int> joint_select);
-    std::vector<std::vector<double>> ReadDoubleMultipleTime(std::vector<int> joint_select);
+    std::vector<double> ReadDoubleMultipleTime(std::vector<int> joint_select);
 
     /**
      * \brief Read one joint and return joint angle directly in degree as double value

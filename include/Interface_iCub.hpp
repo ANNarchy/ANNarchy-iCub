@@ -112,11 +112,9 @@ class iCubANN {
      */
     bool RemoveVisualReader();
 
-    std::vector<std::vector<double>> WriteActionSyncOne(std::string jwriter_name, std::string jreader_name, double angle, int joint);
-    std::vector<std::vector<std::vector<double>>> WriteActionSyncMult(std::string jwriter_name, std::string jreader_name,
-                                                                           std::vector<double> angles, std::vector<int> joint_select);
-    std::vector<std::vector<std::vector<double>>> WriteActionSyncAll(std::string jwriter_name, std::string jreader_name,
-                                                                           std::vector<double> angles);
+    std::vector<std::vector<double>> WriteActionSyncOne(std::string jwriter_name, std::string jreader_name, double angle, int joint, double dt);
+    std::vector<std::vector<double>> WriteActionSyncMult(std::string jwriter_name, std::string jreader_name, std::vector<double> angles, std::vector<int> joint_select, double dt);
+    std::vector<std::vector<double>> WriteActionSyncAll(std::string jwriter_name, std::string jreader_name, std::vector<double> angles, double dt);
 };
 
 extern iCubANN my_interface;

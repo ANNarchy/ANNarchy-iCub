@@ -153,39 +153,99 @@ bool iCubANN::RemoveVisualReader() {
     }
 }
 
-std::vector<std::vector<double>> iCubANN::WriteActionSyncOne(std::string jwriter_name, std::string jreader_name, double angle, int joint) {
-
+std::vector<std::vector<double>> iCubANN::WriteActionSyncOne(std::string jwriter_name, std::string jreader_name, double angle, int joint,
+                                                             double dt) {
+    double window = dt / 10.;
     std::vector<std::vector<double>> sensor_values;
+    std::vector<double> sensor_tmp, sensor_tmp1;
     sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleOneTime(joint));
+    double t_start = sensor_values[0][0];
+    sensor_values[0][0] = 0.;
+    double t_old = 0;
     bool in_motion = parts_writer[jwriter_name]->WriteDoubleOne(angle, joint, false, "abs");
     while (in_motion) {
-        sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleOneTime(joint));
+        sensor_tmp = parts_reader[jreader_name]->ReadDoubleOneTime(joint);
+        if ((sensor_tmp[0] - t_start) > (t_old + dt - window)) {
+            if ((sensor_tmp[0] - t_start) < (t_old + dt + window)) {
+                t_old = sensor_tmp[0] = t_old + dt;
+                sensor_values.push_back(sensor_tmp);
+            } else {
+                while ((sensor_tmp[0] - t_start) > (t_old + 2 * dt - window)) {
+                    sensor_tmp1 = sensor_values.back();
+                    t_old = sensor_tmp1[0] = t_old + dt;
+                    sensor_values.push_back(sensor_tmp1);
+                }
+                if ((sensor_tmp[0] - t_start) < (t_old + dt + window) && (sensor_tmp[0] - t_start) > (t_old + dt - window)) {
+                    t_old = sensor_tmp[0] = t_old + dt;
+                    sensor_values.push_back(sensor_tmp);
+                }
+            }
+        }
         in_motion = !parts_writer[jwriter_name]->MotionDone();
     }
     return sensor_values;
 }
 
-std::vector < std::vector<std::vector<double>>> iCubANN::WriteActionSyncMult(std::string jwriter_name, std::string jreader_name, std::vector<double> angles,
-                                                                         std::vector<int> joint_selection) {
-
-    std::vector<std::vector<std::vector<double>>> sensor_values;
+std::vector<std::vector<double>> iCubANN::WriteActionSyncMult(std::string jwriter_name, std::string jreader_name,
+                                                              std::vector<double> angles, std::vector<int> joint_selection, double dt) {
+    double window = dt / 10.;
+    std::vector<std::vector<double>> sensor_values;
+    std::vector<double> sensor_tmp, sensor_tmp1;
     sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleMultipleTime(joint_selection));
+    double t_start = sensor_values[0][0];
+    double t_old = sensor_values[0][0] = 0;
     bool in_motion = parts_writer[jwriter_name]->WriteDoubleMultiple(angles, joint_selection, false, "abs");
     while (in_motion) {
-        sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleMultipleTime(joint_selection));
+        sensor_tmp = parts_reader[jreader_name]->ReadDoubleMultipleTime(joint_selection);
+        if ((sensor_tmp[0] - t_start) > (t_old + dt)) {
+            if ((sensor_tmp[0] - t_start) < (t_old + dt + window)) {
+                t_old = sensor_tmp[0] = t_old + dt;
+                sensor_values.push_back(sensor_tmp);
+            } else {
+                while ((sensor_tmp[0] - t_start) > (t_old + 2 * dt - window)) {
+                    sensor_tmp1 = sensor_values.back();
+                    t_old = sensor_tmp1[0] = t_old + dt;
+                    sensor_values.push_back(sensor_tmp1);
+                }
+                if ((sensor_tmp[0] - t_start) < (t_old + dt + window) && (sensor_tmp[0] - t_start) > (t_old + dt - window)) {
+                    t_old = sensor_tmp[0] = t_old + dt;
+                    sensor_values.push_back(sensor_tmp);
+                }
+            }
+        }
+
         in_motion = !parts_writer[jwriter_name]->MotionDone();
     }
     return sensor_values;
 }
 
-std::vector<std::vector<std::vector<double>>> iCubANN::WriteActionSyncAll(std::string jwriter_name, std::string jreader_name,
-                                                                       std::vector<double> angles) {
-
-    std::vector<std::vector<std::vector<double>>> sensor_values;
+std::vector<std::vector<double>> iCubANN::WriteActionSyncAll(std::string jwriter_name, std::string jreader_name, std::vector<double> angles,
+                                                             double dt) {
+    double window = dt / 10.;
+    std::vector<std::vector<double>> sensor_values;
+    std::vector<double> sensor_tmp, sensor_tmp1;
     sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleAllTime());
+    double t_start = sensor_values[0][0];
+    double t_old = sensor_values[0][0] = 0;
     bool in_motion = parts_writer[jwriter_name]->WriteDoubleAll(angles, false, "abs");
     while (in_motion) {
-        sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleAllTime());
+        sensor_tmp = parts_reader[jreader_name]->ReadDoubleAllTime();
+        if ((sensor_tmp[0] - t_start) > (t_old + dt)) {
+            if ((sensor_tmp[0] - t_start) < (t_old + dt + window)) {
+                t_old = sensor_tmp[0] = t_old + dt;
+                sensor_values.push_back(sensor_tmp);
+            } else {
+                while ((sensor_tmp[0] - t_start) > (t_old + 2 * dt - window)) {
+                    sensor_tmp1 = sensor_values.back();
+                    t_old = sensor_tmp1[0] = t_old + dt;
+                    sensor_values.push_back(sensor_tmp1);
+                }
+                if ((sensor_tmp[0] - t_start) < (t_old + dt + window) && (sensor_tmp[0] - t_start) > (t_old + dt - window)) {
+                    t_old = sensor_tmp[0] = t_old + dt;
+                    sensor_values.push_back(sensor_tmp);
+                }
+            }
+        }
         in_motion = !parts_writer[jwriter_name]->MotionDone();
     }
     return sensor_values;
