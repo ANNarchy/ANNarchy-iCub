@@ -54,11 +54,11 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         }
         icub_part = part;
         if (pop_size < 0) {
-            std::cerr << "[Joint Reader " << icub_part << "] Population size must be positive!" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Population size have to be positive!" << std::endl;
             return false;
         }
         if (sigma < 0) {
-            std::cerr << "[Joint Reader " << icub_part << "] Sigma must be positive!" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Sigma have to be positive!" << std::endl;
             return false;
         }
         sigma_pop = sigma;
@@ -115,6 +115,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         INIReader reader(joint_path);
 
         for (int i = 0; i < joints; i++) {
+            // read joint limits
             joint_min.push_back(reader.GetReal(icub_part.c_str(), ("joint_" + std::to_string(i) + "_min").c_str(), 0.0));
             joint_max.push_back(reader.GetReal(icub_part.c_str(), ("joint_" + std::to_string(i) + "_max").c_str(), 0.0));
 
@@ -125,16 +126,18 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
                 return false;
             }
 
+            // compute population code resolution
             joint_range = joint_max[i] - joint_min[i] + 1;
 
-            if (pop_size > 0) {
+            if (pop_size > 0) {    // with given population size
                 neuron_deg[i].resize(pop_size);
                 joint_deg_res[i] = joint_range / pop_size;
 
                 for (int j = 0; j < neuron_deg[i].size(); j++) {
                     neuron_deg[i][j] = joint_min[i] + j * joint_deg_res[i];
                 }
-            } else if (deg_per_neuron > 0.0) {
+
+            } else if (deg_per_neuron > 0.0) {    // with given neuron resolution
                 int joint_res = std::floor(joint_range / deg_per_neuron);
                 neuron_deg[i].resize(joint_res);
                 joint_deg_res[i] = deg_per_neuron;
@@ -234,7 +237,7 @@ std::vector<double> JointReader::ReadDoubleAllTime() {
         while (!ienc->getEncoders(angles.data())) {
             yarp::os::Time::delay(0.001);
         }
-        angle_stamped.push_back(yarp::os::Time::now()*1000.);
+        angle_stamped.push_back(yarp::os::Time::now() * 1000.);
         angle_stamped.insert(angle_stamped.end(), angles.begin(), angles.end());
     }
     return angle_stamped;
@@ -279,7 +282,7 @@ std::vector<double> JointReader::ReadDoubleMultipleTime(std::vector<int> joint_s
             while (!ienc->getEncoders(angles.data())) {
                 yarp::os::Time::delay(0.001);
             }
-            angle_stamped.push_back(yarp::os::Time::now()*1000.);
+            angle_stamped.push_back(yarp::os::Time::now() * 1000.);
             for (int i = 0; i < joint_select.size(); i++) {
                 angle_select.push_back(angles[joint_select[i]]);
             }
@@ -328,7 +331,7 @@ std::vector<double> JointReader::ReadDoubleOneTime(int joint) {
             while (!ienc->getEncoder(joint, &angle)) {
                 yarp::os::Time::delay(0.001);
             }
-            angle_stamped.push_back(yarp::os::Time::now()*1000.);
+            angle_stamped.push_back(yarp::os::Time::now() * 1000.);
             angle_stamped.push_back(angle);
         } else {
             std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;

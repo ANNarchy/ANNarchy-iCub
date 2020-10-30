@@ -57,7 +57,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         // Check validity of the population size
         icub_part = part;
         if (pop_size < 0) {
-            std::cerr << "[Joint Writer " << icub_part << "] Population size must be positive!" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Population size have to be positive!" << std::endl;
             return false;
         }
 
@@ -76,7 +76,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         }
         std::string client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
-        // setup iCub joint position control
+        // setup iCub joint position and velocity control
         yarp::os::Property options;
         options.put("device", "remote_controlboard");
         options.put("remote", (port_prefix + "/" + icub_part).c_str());
@@ -94,7 +94,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         }
 
         ipos->getAxes(&joints);
-        yarp::sig::Vector tmp;    
+        yarp::sig::Vector tmp;
         tmp.resize(joints);
 
         int i;
@@ -116,6 +116,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         joint_deg_res_rel.resize(joints);
         joint_control_mode.resize(joints);
 
+        // set default control mode -> position
         SetJointControlMode("position", -1);
 
         // setup ini-Reader for joint limits
@@ -843,5 +844,4 @@ bool JointWriter::MotionDone() {
     bool test;
     ipos->checkMotionDone(&test);
     return test;
-
 }
