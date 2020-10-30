@@ -45,14 +45,14 @@ class iCubANN {
     // Destructor
     ~iCubANN();
 
-    /** \brief associated visual reader (only one possible for left/right eye) */
+    /** \brief associated visual reader (only one possible for left/right eye or both eyes) */
     std::shared_ptr<VisualReader> visual_input;
     /** \brief associated joint readers (one for every robot part) */
-    std::map<std::string, std::shared_ptr<JointReader>> parts_reader;
+    std::unordered_map<std::string, std::shared_ptr<JointReader>> parts_reader;
     /** \brief associated joint writers (one for every robot part) */
-    std::map<std::string, std::shared_ptr<JointWriter>> parts_writer;
+    std::unordered_map<std::string, std::shared_ptr<JointWriter>> parts_writer;
     /** \brief associated skin reader */
-    std::map<std::string, std::shared_ptr<SkinReader>> tactile_reader;
+    std::unordered_map<std::string, std::shared_ptr<SkinReader>> tactile_reader;
 
     /***  Add intstances of the interface modules ***/
     /**

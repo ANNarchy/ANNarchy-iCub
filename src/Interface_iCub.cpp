@@ -105,7 +105,7 @@ bool iCubANN::RemoveJointReader(std::string name) {
     /*
         Remove the instance of the joint reader
     */
-    if (parts_reader.count(name) != 0) {
+    if (parts_reader.count(name)) {
         parts_reader.erase(name);
         return true;
     } else {
@@ -118,7 +118,7 @@ bool iCubANN::RemoveJointWriter(std::string name) {
     /*
         Remove the instance of the joint writer
     */
-    if (parts_writer.count(name) != 0) {
+    if (parts_writer.count(name)) {
         parts_writer.erase(name);
         return true;
     } else {
@@ -131,7 +131,7 @@ bool iCubANN::RemoveSkinReader(std::string name) {
     /*
         Remove the instance of the skin reader
     */
-    if (tactile_reader.count(name) != 0) {
+    if (tactile_reader.count(name)) {
         tactile_reader.erase(name);
         return true;
     } else {
@@ -155,98 +155,231 @@ bool iCubANN::RemoveVisualReader() {
 
 std::vector<std::vector<double>> iCubANN::WriteActionSyncOne(std::string jwriter_name, std::string jreader_name, double angle, int joint,
                                                              double dt) {
-    double window = dt / 10.;
     std::vector<std::vector<double>> sensor_values;
-    std::vector<double> sensor_tmp, sensor_tmp1;
-    sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleOneTime(joint));
-    double t_start = sensor_values[0][0];
-    sensor_values[0][0] = 0.;
-    double t_old = 0;
-    bool in_motion = parts_writer[jwriter_name]->WriteDoubleOne(angle, joint, false, "abs");
-    while (in_motion) {
-        sensor_tmp = parts_reader[jreader_name]->ReadDoubleOneTime(joint);
-        if ((sensor_tmp[0] - t_start) > (t_old + dt - window)) {
-            if ((sensor_tmp[0] - t_start) < (t_old + dt + window)) {
-                t_old = sensor_tmp[0] = t_old + dt;
-                sensor_values.push_back(sensor_tmp);
-            } else {
-                while ((sensor_tmp[0] - t_start) > (t_old + 2 * dt - window)) {
-                    sensor_tmp1 = sensor_values.back();
-                    t_old = sensor_tmp1[0] = t_old + dt;
-                    sensor_values.push_back(sensor_tmp1);
-                }
-                if ((sensor_tmp[0] - t_start) < (t_old + dt + window) && (sensor_tmp[0] - t_start) > (t_old + dt - window)) {
-                    t_old = sensor_tmp[0] = t_old + dt;
+
+    // check name exists
+    if (parts_writer.count(jwriter_name) && parts_reader.count(jreader_name)) {
+        std::vector<std::vector<double>> sensor_values_tmp;
+
+        // read sensor values at motion start
+        sensor_values_tmp.push_back(parts_reader[jreader_name]->ReadDoubleOneTime(joint));
+        // start joint motion
+        bool in_motion = parts_writer[jwriter_name]->WriteDoubleOne(angle, joint, false, "abs");
+        if (!in_motion) {
+            std::cout << "[Action Sync] Did not start the motion. The position is already reached or an error occured!" << std::endl;
+        }
+        while (in_motion) {
+            // read sensor values, while in motion
+            sensor_values_tmp.push_back(parts_reader[jreader_name]->ReadDoubleOneTime(joint));
+            // check if motion is finished
+            in_motion = !parts_writer[jwriter_name]->MotionDone();
+        }
+
+        // offline binning sensor values to timegrid
+        std::vector<double> sensor_tmp, sensor_tmp1, filled_steps;
+        sensor_values.push_back(sensor_values_tmp.front());
+        double t_start = sensor_values[0][0];
+        int fill_count = 0;
+        double window = dt / 2.;
+        double t_old = 0.;
+        sensor_values[0][0] = t_old;
+        double t_k, t_k1;
+        for (int k = 1; k < sensor_values_tmp.size(); k++) {
+            sensor_tmp = sensor_values_tmp[k];
+            t_k = sensor_tmp[0] - t_start;
+            t_k1 = sensor_values.back()[0];
+
+            // replace last value, if new value fits better
+            if (std::abs(t_k - t_old) < std::abs(t_k1 - t_old)) {
+                sensor_values[k] = sensor_values_tmp[k - 1];
+
+                // check if value should be pushed to timed vector
+            } else if (t_k > (t_old + dt - window)) {
+                if (t_k < (t_old + dt + window)) {
+                    sensor_tmp[0] = t_old + dt;
+                    t_old = t_old + dt;
                     sensor_values.push_back(sensor_tmp);
+                } else {
+                    // fill with last values, while time distance is too high
+                    while (t_k > (t_old + 2 * dt - window)) {
+                        sensor_tmp1 = sensor_values.back();
+                        sensor_tmp1[0] = t_old + dt;
+                        t_old = t_old + dt;
+                        sensor_values.push_back(sensor_tmp1);
+                        fill_count++;
+                        filled_steps.push_back(t_old);
+                    }
+                    // value is near to new time -> fill value in
+                    if (t_k < (t_old + dt + window) && (sensor_tmp[0] - t_start) > (t_old + dt - window)) {
+                        sensor_tmp[0] = t_old + dt;
+                        t_old = t_old + dt;
+                        sensor_values.push_back(sensor_tmp);
+                    }
                 }
             }
         }
-        in_motion = !parts_writer[jwriter_name]->MotionDone();
+        std::cout << "Fill count: " << fill_count << "Steps: " << filled_steps << std::endl;
+        if (fill_count > sensor_values.size() / 2) {
+            std::cerr << "[Action Sync] Warning! Half of the values are filled, due to slow sensor rate. Please increase the dt value!"
+                      << std::endl;
+        }
+        return sensor_values;
+    } else {
+        std::cerr << "[Action Sync] At least one of the names does not exists." << std::endl;
+        return sensor_values;
     }
-    return sensor_values;
 }
 
 std::vector<std::vector<double>> iCubANN::WriteActionSyncMult(std::string jwriter_name, std::string jreader_name,
                                                               std::vector<double> angles, std::vector<int> joint_selection, double dt) {
-    double window = dt / 10.;
     std::vector<std::vector<double>> sensor_values;
-    std::vector<double> sensor_tmp, sensor_tmp1;
-    sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleMultipleTime(joint_selection));
-    double t_start = sensor_values[0][0];
-    double t_old = sensor_values[0][0] = 0;
-    bool in_motion = parts_writer[jwriter_name]->WriteDoubleMultiple(angles, joint_selection, false, "abs");
-    while (in_motion) {
-        sensor_tmp = parts_reader[jreader_name]->ReadDoubleMultipleTime(joint_selection);
-        if ((sensor_tmp[0] - t_start) > (t_old + dt)) {
-            if ((sensor_tmp[0] - t_start) < (t_old + dt + window)) {
-                t_old = sensor_tmp[0] = t_old + dt;
-                sensor_values.push_back(sensor_tmp);
-            } else {
-                while ((sensor_tmp[0] - t_start) > (t_old + 2 * dt - window)) {
-                    sensor_tmp1 = sensor_values.back();
-                    t_old = sensor_tmp1[0] = t_old + dt;
-                    sensor_values.push_back(sensor_tmp1);
-                }
-                if ((sensor_tmp[0] - t_start) < (t_old + dt + window) && (sensor_tmp[0] - t_start) > (t_old + dt - window)) {
-                    t_old = sensor_tmp[0] = t_old + dt;
+
+    // check name exists
+    if (parts_writer.count(jwriter_name) && parts_reader.count(jreader_name)) {
+        std::vector<std::vector<double>> sensor_values_tmp;
+
+        // read sensor values at motion start
+        sensor_values_tmp.push_back(parts_reader[jreader_name]->ReadDoubleMultipleTime(joint_selection));
+        // start joint motion
+        bool in_motion = parts_writer[jwriter_name]->WriteDoubleMultiple(angles, joint_selection, false, "abs");
+        if (!in_motion) {
+            std::cout << "[Action Sync] Did not start the motion. The position is already reached or an error occured!" << std::endl;
+        }
+        while (in_motion) {
+            // read sensor values, while in motion
+            sensor_values_tmp.push_back(parts_reader[jreader_name]->ReadDoubleMultipleTime(joint_selection));
+            // check if motion is finished
+            in_motion = !parts_writer[jwriter_name]->MotionDone();
+        }
+
+        // offline binning sensor values to timegrid
+        std::vector<double> sensor_tmp, sensor_tmp1, filled_steps;
+        sensor_values.push_back(sensor_values_tmp.front());
+        double t_start = sensor_values[0][0];
+        int fill_count = 0;
+        double window = dt / 2.;
+        double t_old = 0.;
+        sensor_values[0][0] = t_old;
+        double t_k, t_k1;
+        for (int k = 1; k < sensor_values_tmp.size(); k++) {
+            sensor_tmp = sensor_values_tmp[k];
+            t_k = sensor_tmp[0] - t_start;
+            t_k1 = sensor_values.back()[0];
+
+            // replace last value, if new value fits better
+            if (std::abs(t_k - t_old) < std::abs(t_k1 - t_old)) {
+                sensor_values[k] = sensor_values_tmp[k - 1];
+
+                // check if value should be pushed to timed vector
+            } else if (t_k > (t_old + dt - window)) {
+                if (t_k < (t_old + dt + window)) {
+                    sensor_tmp[0] = t_old + dt;
+                    t_old = t_old + dt;
                     sensor_values.push_back(sensor_tmp);
+                } else {
+                    // fill with last values, while time distance is too high
+                    while (t_k > (t_old + 2 * dt - window)) {
+                        sensor_tmp1 = sensor_values.back();
+                        sensor_tmp1[0] = t_old + dt;
+                        t_old = t_old + dt;
+                        sensor_values.push_back(sensor_tmp1);
+                        fill_count++;
+                        filled_steps.push_back(t_old);
+                    }
+                    // value is near to new time -> fill value in
+                    if (t_k < (t_old + dt + window) && (sensor_tmp[0] - t_start) > (t_old + dt - window)) {
+                        sensor_tmp[0] = t_old + dt;
+                        t_old = t_old + dt;
+                        sensor_values.push_back(sensor_tmp);
+                    }
                 }
             }
         }
-
-        in_motion = !parts_writer[jwriter_name]->MotionDone();
+        std::cout << "Fill count: " << fill_count << "Steps: " << filled_steps << std::endl;
+        if (fill_count > sensor_values.size() / 2) {
+            std::cerr << "[Action Sync] Warning! Half of the values are filled, due to slow sensor rate. Please increase the dt value!"
+                      << std::endl;
+        }
+        return sensor_values;
+    } else {
+        std::cerr << "[Joint Reader/Writer] At least one of the names does not exists." << std::endl;
+        return sensor_values;
     }
-    return sensor_values;
 }
 
 std::vector<std::vector<double>> iCubANN::WriteActionSyncAll(std::string jwriter_name, std::string jreader_name, std::vector<double> angles,
                                                              double dt) {
-    double window = dt / 10.;
     std::vector<std::vector<double>> sensor_values;
-    std::vector<double> sensor_tmp, sensor_tmp1;
-    sensor_values.push_back(parts_reader[jreader_name]->ReadDoubleAllTime());
-    double t_start = sensor_values[0][0];
-    double t_old = sensor_values[0][0] = 0;
-    bool in_motion = parts_writer[jwriter_name]->WriteDoubleAll(angles, false, "abs");
-    while (in_motion) {
-        sensor_tmp = parts_reader[jreader_name]->ReadDoubleAllTime();
-        if ((sensor_tmp[0] - t_start) > (t_old + dt)) {
-            if ((sensor_tmp[0] - t_start) < (t_old + dt + window)) {
-                t_old = sensor_tmp[0] = t_old + dt;
-                sensor_values.push_back(sensor_tmp);
-            } else {
-                while ((sensor_tmp[0] - t_start) > (t_old + 2 * dt - window)) {
-                    sensor_tmp1 = sensor_values.back();
-                    t_old = sensor_tmp1[0] = t_old + dt;
-                    sensor_values.push_back(sensor_tmp1);
-                }
-                if ((sensor_tmp[0] - t_start) < (t_old + dt + window) && (sensor_tmp[0] - t_start) > (t_old + dt - window)) {
-                    t_old = sensor_tmp[0] = t_old + dt;
+
+    // check name exists
+    if (parts_writer.count(jwriter_name) && parts_reader.count(jreader_name)) {
+        std::vector<std::vector<double>> sensor_values_tmp;
+
+        // read sensor values at motion start
+        sensor_values_tmp.push_back(parts_reader[jreader_name]->ReadDoubleAllTime());
+        // start joint motion
+        bool in_motion = parts_writer[jwriter_name]->WriteDoubleAll(angles, false, "abs");
+        if (!in_motion){
+            std::cout << "Did not start the motion. The position is already reached or an error occured!" << std::endl;
+        }
+        while (in_motion) {
+            // read sensor values, while in motion
+            sensor_values_tmp.push_back(parts_reader[jreader_name]->ReadDoubleAllTime());
+            // check if motion is finished
+            in_motion = !parts_writer[jwriter_name]->MotionDone();
+        }
+
+        // offline binning sensor values to timegrid
+        std::vector<double> sensor_tmp, sensor_tmp1, filled_steps;
+        sensor_values.push_back(sensor_values_tmp.front());
+        double t_start = sensor_values[0][0];
+        int fill_count = 0;
+        double window = dt / 2.;
+        double t_old = 0.;
+        sensor_values[0][0] = t_old;
+        double t_k, t_k1;
+        for (int k = 1; k < sensor_values_tmp.size(); k++) {
+            sensor_tmp = sensor_values_tmp[k];
+            t_k = sensor_tmp[0] - t_start;
+            t_k1 = sensor_values.back()[0];
+
+            // replace last value, if new value fits better
+            if (std::abs(t_k - t_old) < std::abs(t_k1 - t_old)) {
+                sensor_values[k] = sensor_values_tmp[k - 1];
+
+                // check if value should be pushed to timed vector
+            } else if (t_k > (t_old + dt - window)) {
+                if (t_k < (t_old + dt + window)) {
+                    sensor_tmp[0] = t_old + dt;
+                    t_old = t_old + dt;
                     sensor_values.push_back(sensor_tmp);
+                } else {
+                    // fill with last values, while time distance is too high
+                    while (t_k > (t_old + 2 * dt - window)) {
+                        sensor_tmp1 = sensor_values.back();
+                        sensor_tmp1[0] = t_old + dt;
+                        t_old = t_old + dt;
+                        sensor_values.push_back(sensor_tmp1);
+                        fill_count++;
+                        filled_steps.push_back(t_old);
+                    }
+                    // value is near to new time -> fill value in
+                    if (t_k < (t_old + dt + window) && (sensor_tmp[0] - t_start) > (t_old + dt - window)) {
+                        sensor_tmp[0] = t_old + dt;
+                        t_old = t_old + dt;
+                        sensor_values.push_back(sensor_tmp);
+                    }
                 }
             }
         }
-        in_motion = !parts_writer[jwriter_name]->MotionDone();
+        std::cout << "Fill count: " << fill_count << "Steps: " << filled_steps << std::endl;
+        if (fill_count > sensor_values.size() / 2) {
+            std::cerr << "[Action Sync] Warning! Half of the values are filled, due to slow sensor rate. Please increase the dt value!"
+                      << std::endl;
+        }
+        return sensor_values;
+    } else {
+        std::cerr << "[Joint Reader/Writer] At least one of the names does not exists." << std::endl;
+        return sensor_values;
     }
-    return sensor_values;
 }

@@ -29,6 +29,7 @@ from libcpp.map cimport map as cmap
 # from libc.stdlib cimport malloc, free
 
 cimport numpy as np
+import numpy as np
 
 from cython.operator cimport dereference as deref
 
