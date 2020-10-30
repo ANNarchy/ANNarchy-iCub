@@ -319,7 +319,7 @@ std::vector<std::vector<double>> iCubANN::WriteActionSyncAll(std::string jwriter
         sensor_values_tmp.push_back(parts_reader[jreader_name]->ReadDoubleAllTime());
         // start joint motion
         bool in_motion = parts_writer[jwriter_name]->WriteDoubleAll(angles, false, "abs");
-        if (!in_motion){
+        if (!in_motion) {
             std::cout << "Did not start the motion. The position is already reached or an error occured!" << std::endl;
         }
         while (in_motion) {
