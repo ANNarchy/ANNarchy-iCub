@@ -25,8 +25,7 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
-from libcpp.map cimport map as cmap
-# from libc.stdlib cimport malloc, free
+from libcpp.unordered_map cimport unordered_map as cmap
 
 cimport numpy as np
 import numpy as np
@@ -44,6 +43,9 @@ from Skin_Reader cimport PySkinReader
 
 from Visual_Reader cimport VisualReader
 from Visual_Reader cimport PyVisualReader
+
+import xml.etree.ElementTree as ET
+import os
 
 cdef extern from "Interface_iCub.hpp":
 
@@ -88,6 +90,7 @@ cdef class iCubANN_wrapper:
     parts_reader = {}
     parts_writer = {}
     tactile_reader = {}
+    visual_input = None
 
 
     # part keys for the iCub, which are needed for joint reader/writer initialization
@@ -140,6 +143,19 @@ cdef class iCubANN_wrapper:
     def __cinit__(self):
         print("Initialize iCub Interface.")
         #my_interface.init() - we need a special init?
+
+    def clear(self):
+        print("Clear iCub interface")
+        for key, reader in self.parts_reader.items():
+            reader.close()
+        for key, writer in self.parts_writer.items():
+            writer.close()
+        for key, tactile in self.tactile_reader.items():
+            tactile.close()
+
+        self.parts_reader.clear()
+        self.parts_writer.clear()
+        self.tactile_reader.clear()
 
     ### Manage instances of the reader/writer modules ###
     # add an instance of joint reader
@@ -313,3 +329,152 @@ cdef class iCubANN_wrapper:
         cdef string s1 = jwriter_name.encode('UTF-8')
         cdef string s2 = jreader_name.encode('UTF-8')
         return np.array(my_interface.WriteActionSyncAll(s1, s2, angles, dt))
+
+    def init_robot_from_file(self, xml_file):
+        if os.path.isfile(xml_file):
+            tree = ET.parse(xml_file)
+            robot = tree.getroot()
+
+            if not robot == None:
+                # init joint reader
+                for jread in robot.iter('JReader'):
+                    no_error_jread = True
+                    if(self.add_joint_reader(jread.attrib['name'])):
+                        if(jread.find('part') == None):
+                            print("Element part is missing")
+                            no_error_jread = False
+                        else:
+                            part = jread.find('part').text
+                        if(jread.find('sigma') == None):
+                            print("Element sigma is missing")
+                            no_error_jread = False
+                        else:
+                            sigma = float(jread.find('sigma').text)
+                        if(jread.find('popsize') == None):
+                            print("Element popsize is missing")
+                            no_error_jread = False
+                        else:
+                            popsize = int(jread.find('popsize').text)
+                        if(jread.find('ini_path') == None):
+                            print("Element ini_path is missing")
+                            no_error_jread = False
+                        else:
+                            ini_path = jread.find('ini_path').text
+                        if(jread.find('deg_per_neuron') == None):
+                            if(no_error_jread):
+                                self.parts_reader[jread.attrib['name']].init(part, sigma, popsize, ini_path=ini_path)
+                            else:
+                                print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
+                        else:
+                            deg_per_neuron = float(jread.find('deg_per_neuron').text)
+                            if(no_error_jread):
+                                self.parts_reader[jread.attrib['name']].init(part, sigma, popsize, deg_per_neuron=deg_per_neuron, ini_path=ini_path)
+                            else:
+                                print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
+
+                # init joint writer
+                for jwrite in robot.iter('JWriter'):
+                    if(self.add_joint_writer(jwrite.attrib['name'])):
+                        no_error_jwrite = True
+                        if(jwrite.find('part') == None):
+                            print("Element part is missing")
+                            no_error_jwrite = False
+                        else:
+                            part = jwrite.find('part').text
+                        if(jwrite.find('popsize') == None):
+                            print("Element popsize is missing")
+                            no_error_jwrite = False
+                        else:
+                            popsize = int(jwrite.find('popsize').text)
+                        if(jwrite.find('speed') == None):
+                            print("Element speed is missing")
+                            no_error_jwrite = False
+                        else:
+                            speed = float(jwrite.find('speed').text)
+                        if(jwrite.find('ini_path') == None):
+                            print("Element ini_path is missing")
+                            no_error_jwrite = False
+                        else:
+                            ini_path = jwrite.find('ini_path').text
+                        if(jwrite.find('deg_per_neuron') == None):
+                            if(no_error_jwrite):
+                                self.parts_writer[jwrite.attrib['name']].init(part, popsize, speed=speed,ini_path=ini_path)
+                            else:
+                                print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
+                        else:
+                            deg_per_neuron = float(jwrite.find('deg_per_neuron').text)
+                            if(no_error_jwrite):
+                                self.parts_writer[jwrite.attrib['name']].init(part, popsize, speed=speed, deg_per_neuron=deg_per_neuron, ini_path=ini_path)
+                            else:
+                                print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
+
+                # init visual reader
+                for vread in robot.iter('VisReader'):
+                    if(self.add_visual_reader()):
+                        no_error_vread = True
+                        if(vread.find('eye') == None):
+                            print("Element eye is missing")
+                            no_error_vread = False
+                        else:
+                            eye = vread.find('eye').text
+                        if(vread.find('fov_width') == None or vread.find('fov_height')):
+                            print("Element fov_width or fov_height is missing")
+                            no_error_vread = False
+                        else:
+                            fov_width = float(vread.find('fov_width').text)
+                            fov_height = float(vread.find('fov_height').text)
+                        if(vread.find('img_width') == None or vread.find('img_height')):
+                            print("Element img_width or img_height is missing")
+                            no_error_vread = False
+                        else:
+                            img_width = float(vread.find('img_width').text)
+                            img_height = float(vread.find('img_height').text)
+                        if(vread.find('max_buffer_size') == None):
+                            print("Element max_buffer_size is missing")
+                            no_error_vread = False
+                        else:
+                            max_buffer_size = int(vread.find('max_buffer_size').text)
+                        if(vread.find('fast_filter') == None):
+                            print("Element fast_filter is missing")
+                            no_error_vread = False
+                        else:
+                            fast_filter = bool(vread.find('fast_filter').text)
+                        if(vread.find('ini_path') == None):
+                            print("Element ini_path is missing")
+                            no_error_vread = False
+                        else:
+                            ini_path = vread.find('ini_path').text
+                        if(no_error_vread):
+                            self.visual_input.init(eye, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter)
+                        else:
+                            print("Skipped Visual Reader init due to missing elemnt")
+                # init tactiel reader
+                for sread in robot.iter('TacReader'):
+                    if(self.add_skin_reader(sread.attrib['name'])):
+                        no_error_sread = True
+                        if(sread.find('arm') == None):
+                            print("Element arm is missing")
+                            no_error_sread = False
+                        else:
+                            arm = sread.find('arm').text
+                        if(sread.find('normalize') == None):
+                            print("Element norm is missing")
+                            no_error_sread = False
+                        else:
+                            norm = bool(sread.find('normalize').text)
+                        if(sread.find('ini_path') == None):
+                            print("Element ini_path is missing")
+                            no_error_sread = False
+                        else:
+                            ini_path = sread.find('ini_path').text
+                        if(no_error_sread):
+                            self.tactile_reader[sread.attrib['name']].init(arm, norm, ini_path)
+                        else:
+                            print("Skipped Skin Reader '" + sread.attrib['name'] + "' init due to missing elemnt")
+                return True
+            else:
+                print("Failed to read XML-file")
+                return False
+        else:
+            print("Not a valid XML-Filepath given!")
+            return False

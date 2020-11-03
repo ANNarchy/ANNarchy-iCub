@@ -53,7 +53,7 @@ class VisualReader : private yarp::os::RFModule {
      *              - arguments not valid: e.g. eye character not valid
      *              - YARP-Server not running
      */
-    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter);
+    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter, std::string ini_path);
 
     /**
      * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
@@ -109,9 +109,6 @@ class VisualReader : private yarp::os::RFModule {
     /** image data structures **/
     std::deque<std::vector<precision>> img_buffer;    // buffer to store the preprocessed iCub images
 
-    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_right;    // port for the iCub right eye image
-    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;     // port for the iCub left eye image
-
     yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb;
     yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb_r, *iEyeRgb_l;
 
@@ -119,16 +116,22 @@ class VisualReader : private yarp::os::RFModule {
     cv::Mat tmpMat_r, tmpMat_l, monoMat_r, monoMat_l, ROV_r, ROV_l, tmpMat1_r, tmpMat1_l;
     int new_type;
 
+    /** yarp ports **/
+    std::string client_port_prefix; // client portame prefix
+    std::string robot_port_prefix;  // robot portname prefix
+    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_right;    // port for the iCub right eye image
+    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;     // port for the iCub left eye image
+
     /*** methods for the YARP-RFModule ***/
     // configure RFModule
     bool configure(yarp::os::ResourceFinder &rf) override;
-    // RFModule update function, is called when the module is running, load images from the iCub
+    // RFModule update function, called when the module is running -> load images from the iCub
     bool updateModule() override;
-    // called when the RFModule ist interrupted
+    // called when the RFModule is interrupted
     bool interruptModule() override;
     // get calling period of updateModule
     double getPeriod() override;
-    // called when the module ist terminated
+    // called when the module is terminated
     bool close() override;
 
     /*** auxilary methods ***/

@@ -20,6 +20,7 @@
    along with this headers. If not, see <http://www.gnu.org/licenses/>.
  """
 
+from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
@@ -32,7 +33,7 @@ cdef extern from "Visual_Reader.hpp":
         VisualReader() except +
 
         # Init Visual reader with given parameters for image resolution, field of view and eye selection.
-        bool_t Init(char, double, double, int, int, int, bool_t)
+        bool_t Init(char, double, double, int, int, int, bool_t, string)
 
         # Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
         vector[precision] ReadFromBuf()

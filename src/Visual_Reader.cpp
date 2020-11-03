@@ -36,11 +36,11 @@
 typedef std::chrono::high_resolution_clock Clock;
 
 // Destructor
-VisualReader::~VisualReader() { close(); }
+VisualReader::~VisualReader() {}
 
 /*** public methods for the user ***/
-bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size,
-                        bool fast_filter) {
+bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter,
+                        std::string ini_path) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view and eye selection
 
@@ -121,13 +121,13 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         }
 
         // read configuration data from ini file
-        INIReader reader_gen("../data/interface_param.ini");
+        INIReader reader_gen(ini_path + "interface_param.ini");
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
-        std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
+        robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         if (on_Simulator && (robot_port_prefix != "/icubSim")) {
             std::cerr << "[Visual Reader] The port prefix does not match the default simulator prefix!" << std::endl;
         }
-        std::string client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
+        client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
         // open and connect YARP port for the chosen eye
         if (eye == 'r' || eye == 'R') {    // right eye chosen
@@ -391,16 +391,15 @@ bool VisualReader::close() {
 
         return: bool      -- return True, if successful
     */
-
     // disconnect and close left eye port
     if (!port_left.isClosed()) {
-        yarp::os::Network::disconnect("/icubSim/cam/left", "/V_Reader/image/left:i");
+        yarp::os::Network::disconnect(robot_port_prefix + "/cam/left", client_port_prefix + "/V_Reader/image/left:i");
         port_left.close();
     }
 
     // disconnect and close right eye port
     if (!port_right.isClosed()) {
-        yarp::os::Network::disconnect("/icubSim/cam/right", "/V_Reader/image/right:i");
+        yarp::os::Network::disconnect(robot_port_prefix + "/cam/right", client_port_prefix + "/V_Reader/image/right:i");
         port_right.close();
     }
 
