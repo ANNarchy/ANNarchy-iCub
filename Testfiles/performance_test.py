@@ -663,7 +663,7 @@ def speed_test_vreader(ann_wrapper, test_count):
     t_start_full = time.time()
     ann_wrapper.visual_input.start()
     while len(imgs_full) < test_count:
-        img_full = ann_wrapper.visual_input.read_fromBuf()
+        img_full = ann_wrapper.visual_input.read_from_buffer()
         if img_full.shape[0] != 0:
             imgs_full.append(img_full)
     t_stop_full = time.time()
@@ -690,7 +690,7 @@ def speed_test_vreader(ann_wrapper, test_count):
     t_start_quart = time.time()
     ann_wrapper.visual_input.start()
     while len(imgs_quarter) < test_count:
-        img_quarter = ann_wrapper.visual_input.read_fromBuf()
+        img_quarter = ann_wrapper.visual_input.read_from_buffer()
         if img_quarter.shape[0] != 0:
             imgs_quarter.append(img_quarter)
     t_stop_quart = time.time()
@@ -717,7 +717,7 @@ def speed_test_vreader(ann_wrapper, test_count):
     t_start_field = time.time()
     ann_wrapper.visual_input.start()
     while len(imgs_field) < test_count:
-        img_field = ann_wrapper.visual_input.read_fromBuf()
+        img_field = ann_wrapper.visual_input.read_from_buffer()
         if img_field.shape[0] != 0:
             imgs_field.append(img_field)
     t_stop_field = time.time()
@@ -814,7 +814,7 @@ def vis_move_test(ann_wrapper):
     t_start = time.time()
     pos_choice = True
     while len(imgs) < 100:
-        imgs.append(np.array(ann_wrapper.visual_input.read_fromBuf()))
+        imgs.append(np.array(ann_wrapper.visual_input.read_from_buffer()))
         dt = time.time() - t_start
         if dt > 0.5:
             for i in range(ann_wrapper.parts_writer["moving"].get_joint_count()):
