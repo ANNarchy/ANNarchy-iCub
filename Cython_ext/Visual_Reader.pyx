@@ -84,7 +84,7 @@ cdef class PyVisualReader:
         """
 
         # call the interface
-        return np.array(deref(self.cpp_visual_reader).ReadFromBuf())
+        return np.array(deref(self.cpp_visual_reader).ReadFromBuf(), dtype=np.float32)
 
     # start reading images from the iCub with a YARP-RFModule
     def start(self):
@@ -127,10 +127,10 @@ cdef class PyVisualReader:
 
     def imgs_in_buffer(self):
         """
-            Calls void VisualReader::Stop()
+            Calls void VisualReader::ImgsInBuffer()
 
             function:
-                Stop reading images from the iCub, by terminating the RFModule
+                Return number of images in the image buffer
         """
 
         # call the interface

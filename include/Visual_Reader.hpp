@@ -32,7 +32,7 @@
  */
 class VisualReader : private yarp::os::RFModule {
  public:
-    typedef double precision;
+    typedef float precision;
 
     VisualReader() = default;
     ~VisualReader();

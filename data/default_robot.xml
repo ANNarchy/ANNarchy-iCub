@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<robot>
+    <JReader name="JR_head">
+        <part>head</part>
+        <sigma>1.5</sigma>
+        <popsize>10</popsize>
+        <ini_path>../data/</ini_path>
+        <?deg_per_neuron as alternative to popsize?>
+    </JReader>
+    <JReader name="JR_right_arm">
+        <part>right_arm</part>
+        <sigma>1.5</sigma>
+        <popsize>10</popsize>
+        <ini_path>../data/</ini_path>
+        <?deg_per_neuron as alternative to popsize?>
+    </JReader>
+    <JWriter name="JW_head">
+        <part>head</part>
+        <popsize>10</popsize>
+        <speed>10</speed>
+        <ini_path>../data/</ini_path>
+        <?deg_per_neuron as alternative to popsize?>
+    </JWriter>
+    <JWriter name="JW_right_arm">
+        <part>right_arm</part>
+        <popsize>10</popsize>
+        <speed>10</speed>
+        <ini_path>../data/</ini_path>
+        <?deg_per_neuron as alternative to popsize?>
+    </JWriter>
+    <VisReader>
+        <eye>b</eye>
+        <fov_width>60</fov_width>
+        <fov_height>48</fov_height>
+        <img_width>320</img_width>
+        <img_height>240</img_height>
+        <max_buffer_size>6</max_buffer_size>
+        <fast_filter>1</fast_filter>
+        <ini_path>../data/</ini_path>
+    </VisReader>
+    <TacReader name="TR_right_arm">
+        <arm>R</arm>
+        <normalize>1</normalize>
+        <ini_path>../data/</ini_path>
+    </TacReader>
+</robot>
+

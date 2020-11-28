@@ -173,13 +173,13 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
     }
 }
 
-std::vector<double> VisualReader::ReadFromBuf() {
+std::vector<VisualReader::precision> VisualReader::ReadFromBuf() {
     /*
         Read image vector from the image buffer and remove from the buffer. Call twice in binocular mode (first right eye image second left eye image).
 
-        return: std::vector<double>     -- image (1D-vector) from the image buffer
+        return: std::vector<precision>     -- image (1D-vector) from the image buffer
     */
-    std::vector<double> img;
+    std::vector<precision> img;
     if (CheckInit()) {
         // if image buffer is not empty return the image and delete it from the buffer
         if (!img_buffer.empty()) {
