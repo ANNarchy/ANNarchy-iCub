@@ -330,13 +330,16 @@ cdef class iCubANN_wrapper:
         cdef string s2 = jreader_name.encode('UTF-8')
         return np.array(my_interface.WriteActionSyncAll(s1, s2, angles, dt))
 
+    # initialize interface for a robot configuration defined in a XML-file
     def init_robot_from_file(self, xml_file):
+        name_dict = {}
         if os.path.isfile(xml_file):
             tree = ET.parse(xml_file)
             robot = tree.getroot()
 
             if not robot == None:
                 # init joint reader
+                name_JReader = {}
                 for jread in robot.iter('JReader'):
                     no_error_jread = True
                     if(self.add_joint_reader(jread.attrib['name'])):
@@ -363,6 +366,7 @@ cdef class iCubANN_wrapper:
                         if(jread.find('deg_per_neuron') == None):
                             if(no_error_jread):
                                 self.parts_reader[jread.attrib['name']].init(part, sigma, popsize, ini_path=ini_path)
+                                name_JReader[part] = jread.attrib['name']
                             else:
                                 print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
                         else:
@@ -373,6 +377,7 @@ cdef class iCubANN_wrapper:
                                 print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
 
                 # init joint writer
+                name_JWriter = {}
                 for jwrite in robot.iter('JWriter'):
                     if(self.add_joint_writer(jwrite.attrib['name'])):
                         no_error_jwrite = True
@@ -399,6 +404,7 @@ cdef class iCubANN_wrapper:
                         if(jwrite.find('deg_per_neuron') == None):
                             if(no_error_jwrite):
                                 self.parts_writer[jwrite.attrib['name']].init(part, popsize, speed=speed,ini_path=ini_path)
+                                name_JWriter[part] = jwrite.attrib['name']
                             else:
                                 print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
                         else:
@@ -447,8 +453,10 @@ cdef class iCubANN_wrapper:
                         if(no_error_vread):
                             self.visual_input.init(eye, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter)
                         else:
-                            print("Skipped Visual Reader init due to missing elemnt")
+                            print("Skipped Visual Reader init due to missing element")
+
                 # init tactiel reader
+                name_SReader = {}
                 for sread in robot.iter('TacReader'):
                     if(self.add_skin_reader(sread.attrib['name'])):
                         no_error_sread = True
@@ -469,12 +477,18 @@ cdef class iCubANN_wrapper:
                             ini_path = sread.find('ini_path').text
                         if(no_error_sread):
                             self.tactile_reader[sread.attrib['name']].init(arm, norm, ini_path)
+                            name_SReader[part] = sread.attrib['name']
                         else:
-                            print("Skipped Skin Reader '" + sread.attrib['name'] + "' init due to missing elemnt")
-                return True
+                            print("Skipped Skin Reader '" + sread.attrib['name'] + "' init due to missing element")
+
+                name_dict['JointReader'] = name_JReader
+                name_dict['JointWriter'] = name_JWriter
+                name_dict['SkinReader'] = name_SReader
+
+                return True, name_dict
             else:
                 print("Failed to read XML-file")
-                return False
+                return False, name_dict
         else:
             print("Not a valid XML-Filepath given!")
-            return False
+            return False, name_dict
