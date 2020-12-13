@@ -228,6 +228,100 @@ void VisualReader::Stop() {
 
 int VisualReader::ImgsInBuffer() { return img_buffer.size(); }
 
+std::vector<std::vector<VisualReader::precision>> VisualReader::ReadRobotEyes() {
+    std::vector<std::vector<VisualReader::precision>> imgs;
+    if (act_eye == 'B') {
+        // read image from the iCub and get CV-Matrix
+        iEyeRgb_r = port_left.read();
+        iEyeRgb_l = port_right.read();
+
+        if (iEyeRgb_r == nullptr || iEyeRgb_l == nullptr) {
+            return imgs;
+        }
+        cv::Mat RgbMat_r = yarp::cv::toCvMat(*iEyeRgb_r);
+        cv::Mat RgbMat_l = yarp::cv::toCvMat(*iEyeRgb_l);
+
+        // convert rgb image to grayscale image
+        cv::cvtColor(RgbMat_r, tmpMat_r, cv::COLOR_RGB2GRAY);
+        cv::cvtColor(RgbMat_l, tmpMat_l, cv::COLOR_RGB2GRAY);
+
+        // extracting the output part of the field of view
+        if (!cut_img) {
+            ROV_r = tmpMat_r;
+            ROV_l = tmpMat_l;
+        } else {
+            ROV_r = tmpMat_r(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+            ROV_l = tmpMat_l(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+        }
+
+        // resize ROV to given output resolution
+        if (res_scale_x == 1 && res_scale_x == 1) {
+            monoMat_r = ROV_r;
+            monoMat_l = ROV_l;
+
+        } else if (res_scale_x < 1 || res_scale_x < 1) {
+            cv::resize(ROV_r, monoMat_r, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
+            cv::resize(ROV_l, monoMat_l, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
+
+        } else {
+            cv::resize(ROV_r, monoMat_r, cv::Size(), res_scale_x, res_scale_y, filter_ds);
+            cv::resize(ROV_l, monoMat_l, cv::Size(), res_scale_x, res_scale_y, filter_ds);
+        }
+
+        // normalize the image from 0..255 to 0..1.0
+        monoMat_r.convertTo(tmpMat1_r, new_type, norm_fact);
+        monoMat_l.convertTo(tmpMat1_l, new_type, norm_fact);
+
+        // flat the image matrix to 1D-vector
+        std::vector<precision> img_vec_norm_r = Mat2Vec(tmpMat1_r);
+        std::vector<precision> img_vec_norm_l = Mat2Vec(tmpMat1_l);
+
+        // store image in the buffer
+        imgs.push_back(img_vec_norm_r);
+        imgs.push_back(img_vec_norm_l);
+    } else {
+        // read image from the iCub and get CV-Matrix
+        if (act_eye == 'L') {
+            iEyeRgb = port_left.read();
+        }
+        if (act_eye == 'R') {
+            iEyeRgb = port_right.read();
+        }
+
+        if (iEyeRgb == nullptr) {
+            return imgs;
+        }
+        cv::Mat RgbMat = yarp::cv::toCvMat(*iEyeRgb);
+
+        // convert rgb image to grayscale image
+        cv::cvtColor(RgbMat, tmpMat, cv::COLOR_RGB2GRAY);
+
+        // extracting the output part of the field of view
+        if (!cut_img) {
+            ROV = tmpMat;
+        } else {
+            ROV = tmpMat(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+        }
+
+        // resize ROV to given output resolution
+        if (res_scale_x == 1 && res_scale_x == 1) {
+            monoMat = ROV;
+        } else if (res_scale_x < 1 || res_scale_x < 1) {
+            cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
+        } else {
+            cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, filter_ds);
+        }
+
+        // normalize the image from 0..255 to 0..1.0
+        monoMat.convertTo(tmpMat1, new_type, norm_fact);
+
+        // flat the image matrix to 1D-vector
+        std::vector<precision> img_vec_norm = Mat2Vec(tmpMat1);
+
+        imgs.push_back(img_vec_norm);
+    }
+}
+
 /*** methods for the YARP-RFModule ***/
 bool VisualReader::configure(yarp::os::ResourceFinder &rf) {
     /*

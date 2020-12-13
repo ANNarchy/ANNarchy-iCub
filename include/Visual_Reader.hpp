@@ -78,6 +78,8 @@ class VisualReader : private yarp::os::RFModule {
 
     int ImgsInBuffer();
 
+    std::vector<std::vector<precision>> ReadRobotEyes();
+
  private:
     /** configuration variables **/
     bool dev_init = false;    // variable for initialization check

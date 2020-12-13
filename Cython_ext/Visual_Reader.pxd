@@ -2,7 +2,7 @@
 # cython: language_level = 3
 
 """
-   Copyright (C) 2019-2020 Torsten Follak Helge Ülo Dinkelbach
+   Copyright (C) 2019-2020 Torsten Fietzek; Helge Ülo Dinkelbach
 
    Visual_Reader.pyx is part of the iCub ANNarchy interface
 
@@ -45,6 +45,8 @@ cdef extern from "Visual_Reader.hpp":
         void Stop()
 
         int ImgsInBuffer()
+
+        vector[vector[precision]] ReadRobotEyes()
 
 cdef class PyVisualReader:
     cdef shared_ptr[VisualReader] cpp_visual_reader

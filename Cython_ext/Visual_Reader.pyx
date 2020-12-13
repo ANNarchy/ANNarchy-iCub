@@ -2,7 +2,7 @@
 # cython: language_level = 3
 
 """
-   Copyright (C) 2019-2020 Torsten Follak; Helge Ülo Dinkelbach
+   Copyright (C) 2019-2020 Torsten Fietzek; Helge Ülo Dinkelbach
 
    Visual_Reader.pyx is part of the iCub ANNarchy interface
 
@@ -76,7 +76,7 @@ cdef class PyVisualReader:
             Calls std::vector<precision> VisualReader::ReadFromBuf()
 
             function:
-                Return image vector from the image buffer and remove it from the buffer. 
+                Return image vector from the image buffer and remove it from the buffer.
                 The return type depends on the selected precision (float/double).
 
             return:
@@ -136,4 +136,19 @@ cdef class PyVisualReader:
         # call the interface
         return deref(self.cpp_visual_reader).ImgsInBuffer()
 
+    # return image vector from the image buffer and remove it from the buffer
+    def read_robot_eyes(self):
+        """
+            Calls std::vector<std::vector<precision>> VisualReader::ReadRobotEyes()
+
+            function:
+                Return image_s from the iCub camera_s.
+                The return type depends on the selected precision (float/double).
+
+            return:
+                std::vector<std::vector<precision>>     -- image (1D-vector) from the camera image
+        """
+
+        # call the interface
+        return np.array(deref(self.cpp_visual_reader).ReadRobotEyes(), dtype=np.float32)
     ### end access to visual reader member functions
