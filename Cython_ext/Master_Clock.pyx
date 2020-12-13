@@ -2,7 +2,7 @@
 """
 ######  Dec   CEST 2020
 
-@author: Torsten Fietzek
+@author: Torsten Fietzek; Helge Ülo Dinkelbach
 
 
 """

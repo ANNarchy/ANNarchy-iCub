@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019-2020 Torsten Follak
+ *  Copyright (C) 2019-2020 Torsten Fietzek
  *
  *  Joint_Reader.hpp is part of the iCub ANNarchy interface
  *
