@@ -72,7 +72,8 @@
             "valarray": "cpp",
             "random": "cpp",
             "variant": "cpp",
-            "bit": "cpp"
+            "bit": "cpp",
+            "*.ipp": "cpp"
         },
 		"terminal.integrated.shell.windows": "cmd.exe",
 		"C_Cpp.workspaceParsingPriority": "medium",
@@ -85,6 +86,7 @@
             "**/doc": true
         },
         "editor.formatOnPaste": true,
+        "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
 
 	}
 }
