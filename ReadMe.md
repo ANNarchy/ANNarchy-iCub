@@ -95,7 +95,7 @@ https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git
 
 
 ## Authors
-Torsten Follak (<torsten.follak@informatik.tu-chemnitz.de>)<br>
+Torsten Fietzek (<torsten.fietzek@informatik.tu-chemnitz.de>)<br>
 Helge Ülo Dinkelbach<br>
 
 
