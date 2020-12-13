@@ -86,6 +86,13 @@ extensions = [
         library_dirs=lib_dirs,
         language="c++",
         extra_compile_args=["-g", "-fPIC", "-std=c++17", "--shared"]
+        ),
+    Extension("MasterClock", ["Cython_ext/Master_Clock.pyx"],
+        include_dirs=include_dir,
+        libraries=libs,
+        library_dirs=lib_dirs,
+        language="c++",
+        extra_compile_args=["-g", "-fPIC", "-std=c++17", "--shared"]
         )
 ]
 

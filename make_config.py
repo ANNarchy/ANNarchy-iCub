@@ -1,7 +1,7 @@
 """
 Created on Thu Jul 9 20:26:04 CEST 2020
 
-@author: tofo
+@author: Torsten Fietzek
 
 config file for the package compilation process
 """

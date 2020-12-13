@@ -1,5 +1,5 @@
 all:
-	cython ./Cython_ext/iCub_Interface.pyx ./Cython_ext/Joint_Reader.pyx ./Cython_ext/Joint_Writer.pyx ./Cython_ext/Skin_Reader.pyx ./Cython_ext/Visual_Reader.pyx --cplus
+	cython ./Cython_ext/iCub_Interface.pyx ./Cython_ext/Joint_Reader.pyx ./Cython_ext/Joint_Writer.pyx ./Cython_ext/Skin_Reader.pyx ./Cython_ext/Visual_Reader.pyx ./Cython_ext/Master_Clock.pyx --cplus
 
     # Build JointReader
 	g++ -g -fPIC --shared VERBOSE -std=c++17 include/INI_Reader/*.cpp src/* ./Cython_ext/Joint_Reader.cpp -o ./build/Joint_Reader.so \
@@ -26,3 +26,6 @@ all:
 	-Iinclude PYTHON_INCLUDE OPENCV_INCLUDE -L/usr/lib -L/usr/local/lib YARP_LIB \
 	-lopencv_core -lopencv_imgproc -lYARP_dev -lYARP_init -lYARP_math -lYARP_name -lYARP_os -lYARP_run -lYARP_sig 
 
+    # Build MasterClock
+	g++ -g -fPIC --shared -std=c++17 ./Cython_ext/Master_Clock.cpp -o ./build/Master_Clock.so \
+	-Iinclude `/usr/bin/python3.8-config --includes` -L/usr/lib -L/usr/local/lib
