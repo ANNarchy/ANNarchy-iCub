@@ -4,24 +4,40 @@
 
 @author: Torsten Fietzek; Helge Ülo Dinkelbach
 
+   Master_Clock.pyx is part of the iCub ANNarchy interface
 
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   The iCub ANNarchy interface is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this headers. If not, see <http://www.gnu.org/licenses/>.
 """
-import multiprocessing as mp
+# import threading as mp
+import threading as mp
 import time
 
 class MasterClock(object):
     def __init__(self):
         self.instances = []
-        mp.set_start_method('spawn')
+        # mp.set_start_method('fork')
 
     def add(self, instance):
         self.instances.append(instance)
     def update(self, T):
         start = time.time()
         processes = []
+        i = 0
         for inst in self.instances:
-            processes.append(mp.Process(target=inst.update, args=(T)))
+            processes.append(mp.Thread(name="instance_"+str(i), target=inst.update, args=(T,)))
             processes[-1].start()
+            i += 1
         
         for proc in processes:
             proc.join()
@@ -33,7 +49,7 @@ class ClockInterface(object):
         pass
 
     def update(self, T):
-        print("For each class the 'update' method has to be implemented!")
+        print("For each Sync-class the 'update' method has to be implemented!")
         raise NotImplementedError
     
 

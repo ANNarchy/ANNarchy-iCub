@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<?robot configuration like real iCub in the lab?>
 <robot>
     <JReader name="JR_head">
         <part>head</part>

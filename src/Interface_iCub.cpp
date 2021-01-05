@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019-2020 Torsten Fietzek; Helge Ülo Dinkelbach
+ *  Copyright (C) 2019-2021 Torsten Fietzek; Helge Ülo Dinkelbach
  *
  *  Interface_iCub.cpp is part of the iCub ANNarchy interface
  *

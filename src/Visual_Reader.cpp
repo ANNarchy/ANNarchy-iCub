@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2019 Torsten Fietzek
+ *  Copyright (C) 2019-2021 Torsten Fietzek
  *
  *  VisualReader.cpp is part of the iCub ANNarchy interface
  *

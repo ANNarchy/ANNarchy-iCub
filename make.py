@@ -5,8 +5,8 @@ Created on Thu Jul 9 20:26:04 CEST 2020
 
 produces Makefile from Makefile.template
 """
-import sys
 import os
+import sys
 
 from make_config import *
 
@@ -79,4 +79,3 @@ if __name__ == "__main__":
         print("Please check include directories for YARP, OpenCV and Python!")
     else:
         print("Compilation failed!")
-    

@@ -1,7 +1,7 @@
 """
 Created on Sun Mar 01 18:19:17 2020
 
-@author: tofo
+@author: Torsten Fietzek
 
 parameterfile for testing the interface
 """
@@ -12,19 +12,19 @@ import numpy as np
 #########################################################
 ################### general parameter ###################
 # select the used simulator
-gazebo = True
+gazebo = True           # True for gazebo; False for iCubSim
 
 
 #########################################################
 ################### performance test ####################
 # general
 test_count = 5
-position_path = "./supplementary/test_positions/"
+position_path = "./supplementary/test_positions/"   # path to test positions
 
 # jreader
-n_pop_jr = 100         # population size
-sigma_jr = 1.5         # sigma for population coding gaussian
-neuron_res_jr = 0.0    # population resolution
+n_pop_jr = 100                  # population size
+sigma_jr = 1.5                  # sigma for population coding gaussian
+neuron_res_jr = 0.0             # population resolution
 parts = ["right_arm", "head"]   # tested iCub parts
 
 # jwriter

@@ -1,5 +1,5 @@
 """
- *  Copyright (C) 2019-2020 Torsten Follak
+ *  Copyright (C) 2019-2021 Torsten Fietzek
  *
  *  simple_call_test.py is part of the iCub ANNarchy interface
  *
