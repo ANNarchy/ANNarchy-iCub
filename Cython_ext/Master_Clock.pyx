@@ -19,7 +19,7 @@
    You should have received a copy of the GNU General Public License
    along with this headers. If not, see <http://www.gnu.org/licenses/>.
 """
-# import threading as mp
+
 import threading as mp
 import time
 
@@ -30,15 +30,14 @@ class MasterClock(object):
 
     def add(self, instance):
         self.instances.append(instance)
+
     def update(self, T):
         start = time.time()
         processes = []
-        i = 0
-        for inst in self.instances:
+        for i, inst in enumerate(self.instances):
             processes.append(mp.Thread(name="instance_"+str(i), target=inst.update, args=(T,)))
             processes[-1].start()
-            i += 1
-        
+
         for proc in processes:
             proc.join()
 
@@ -51,7 +50,6 @@ class ClockInterface(object):
     def update(self, T):
         print("For each Sync-class the 'update' method has to be implemented!")
         raise NotImplementedError
-    
 
 
 if __name__ == '__main__':

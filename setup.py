@@ -1,7 +1,10 @@
-from setuptools import Extension, setup
-from Cython.Build import cythonize
-import sys
+
+
 import os
+import sys
+
+from Cython.Build import cythonize
+from setuptools import Extension, setup
 
 # Python Version info
 py_major = sys.version_info[0]
