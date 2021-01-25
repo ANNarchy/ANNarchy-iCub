@@ -81,6 +81,8 @@ Functions</h2></td></tr>
 <tr class="separator:afeaa48ef8dee99e93b97ba521396b048"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d78422c32c50e2e63a3f6e7dd8a7396"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a0d78422c32c50e2e63a3f6e7dd8a7396">motor_init_cartesian</a> (part, ctrl_prior=&quot;position&quot;, robot_prefix=&quot;icubSim&quot;, client_prefix=&quot;client&quot;)</td></tr>
 <tr class="separator:a0d78422c32c50e2e63a3f6e7dd8a7396"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72984c0cd15e57aad938d89fc6cecb08"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a72984c0cd15e57aad938d89fc6cecb08">gazectrl_init</a> (client_prefix=&quot;client&quot;)</td></tr>
+<tr class="separator:a72984c0cd15e57aad938d89fc6cecb08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42ffce67339192674497dd49af9ec2b3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a42ffce67339192674497dd49af9ec2b3">goto_zero_head_pos</a> (iPos_head, iEnc_head, jnts_head)</td></tr>
 <tr class="memdesc:a42ffce67339192674497dd49af9ec2b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">go to head zero position ######################  <a href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a42ffce67339192674497dd49af9ec2b3">More...</a><br /></td></tr>
 <tr class="separator:a42ffce67339192674497dd49af9ec2b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -96,6 +98,10 @@ Functions</h2></td></tr>
 <tr class="memitem:abb4600faf7993ea4d0a2690da5b05d2f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#abb4600faf7993ea4d0a2690da5b05d2f">create_motor_dict</a> (parts_used)</td></tr>
 <tr class="memdesc:abb4600faf7993ea4d0a2690da5b05d2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">map motor control to dictionary ###################  <a href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#abb4600faf7993ea4d0a2690da5b05d2f">More...</a><br /></td></tr>
 <tr class="separator:abb4600faf7993ea4d0a2690da5b05d2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c5f7be174fb598465a9d5eb7097d26f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a9c5f7be174fb598465a9d5eb7097d26f">gz_block_head</a> (iGaze)</td></tr>
+<tr class="separator:a9c5f7be174fb598465a9d5eb7097d26f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a105822fc1004038c6730551af6bd0046"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a105822fc1004038c6730551af6bd0046">look_at_3Dpoint</a> (iGaze, point_rrf)</td></tr>
+<tr class="separator:a105822fc1004038c6730551af6bd0046"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a562b75c445fa4860441f0124167860b2"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a562b75c445fa4860441f0124167860b2">set_pos_vector</a> (pos_vec, val_j0, val_j1, val_j2, val_j3, val_j4, val_j5)</td></tr>
 <tr class="memdesc:a562b75c445fa4860441f0124167860b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">set YARP position vector with given values #############  <a href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a562b75c445fa4860441f0124167860b2">More...</a><br /></td></tr>
 <tr class="separator:a562b75c445fa4860441f0124167860b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,9 +123,9 @@ Variables</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><pre class="fragment">Created on Thu Apr 13 15:16:32 2018
 
-@author: tofo
+@author: Torsten Fietzek
 
-library for functions related to the motor control
+library containing functions related to the iCub motor control
 </pre> </div><h2 class="groupheader">Function Documentation</h2>
 <a id="abb4600faf7993ea4d0a2690da5b05d2f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abb4600faf7993ea4d0a2690da5b05d2f">&#9670;&nbsp;</a></span>create_motor_dict()</h2>
@@ -146,6 +152,34 @@ library for functions related to the motor control
     return: joint_mapping   -- mapping of the part joint numbers to a sequence containing all joints
             ctrl_interfaces -- dictionary for all control interfaces
             motor_driver    -- list with all created device drivers
+</pre> 
+</div>
+</div>
+<a id="a72984c0cd15e57aad938d89fc6cecb08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72984c0cd15e57aad938d89fc6cecb08">&#9670;&nbsp;</a></span>gazectrl_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def iCub_Python_Lib.YARP_motor_control.gazectrl_init </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>client_prefix</em> = <code>&quot;client&quot;</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">    initialize gaze controller device
+    -&gt; position needs to be given in robot reference frame
+
+    params: robot_prefix    -- robot name; normally "iCubSim" for simulation and "icub" for real robot
+            client_prefix   -- client name; normally no need to change; only if multiple user work in the same YARP-network
+
+    return: igaze   -- gaze controller interface
+            driver  -- device driver; need to be returned, otherwise joint controlboard is closed
+
+            Returns None for all if an error occured
 </pre> 
 </div>
 </div>
@@ -284,6 +318,63 @@ library for functions related to the motor control
 </pre> 
 </div>
 </div>
+<a id="a9c5f7be174fb598465a9d5eb7097d26f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c5f7be174fb598465a9d5eb7097d26f">&#9670;&nbsp;</a></span>gz_block_head()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def iCub_Python_Lib.YARP_motor_control.gz_block_head </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>iGaze</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">    block neck motion for gaze control
+
+    params: igaze   -- gaze controller interface
+
+    return: True/False dependent on success/failure
+</pre> 
+</div>
+</div>
+<a id="a105822fc1004038c6730551af6bd0046"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a105822fc1004038c6730551af6bd0046">&#9670;&nbsp;</a></span>look_at_3Dpoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def iCub_Python_Lib.YARP_motor_control.look_at_3Dpoint </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>iGaze</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>point_rrf</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">    look at a given fixation point
+
+    params: iGaze       -- gaze controller interface
+            point_rrf   -- point coordinates in robot reference frame (list/numpy array)
+
+    return: True/False dependent on success/failure
+</pre> 
+</div>
+</div>
 <a id="afeaa48ef8dee99e93b97ba521396b048"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afeaa48ef8dee99e93b97ba521396b048">&#9670;&nbsp;</a></span>motor_init()</h2>
 
@@ -378,7 +469,8 @@ library for functions related to the motor control
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">    initialize motor control for the given part
+<pre class="fragment">    initialize cartesian controller for the given part
+    -&gt; position needs to be given in robot reference frame
 
     params: part            -- part of the iCub to be controlled (string: left_arm, right_arm, right_leg, left_leg)
             ctrl_prior      -- control priority; either position or orientation of the end-effector (hand or foot)
@@ -461,6 +553,8 @@ library for functions related to the motor control
 
     return: yarp_vec    -- YARP vector, result of conversion
 </pre> 
+<p class="reference">Referenced by <a class="el" href="../../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a105822fc1004038c6730551af6bd0046">iCub_Python_Lib.YARP_motor_control.look_at_3Dpoint()</a>.</p>
+
 </div>
 </div>
 <a id="a562b75c445fa4860441f0124167860b2"></a>
