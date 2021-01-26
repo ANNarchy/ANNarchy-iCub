@@ -44,8 +44,10 @@ cdef extern from "Visual_Reader.hpp":
         # Stop reading images from the iCub, by terminating the RFModule.
         void Stop()
 
+        # Return the image count in the image buffer.
         int ImgsInBuffer()
 
+        # Read a set of images from the robot cameras.
         vector[vector[precision]] ReadRobotEyes()
 
 cdef class PyVisualReader:

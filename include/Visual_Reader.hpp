@@ -82,6 +82,10 @@ class VisualReader : private yarp::os::RFModule {
      */
     int ImgsInBuffer();
 
+    /**
+     * \brief Read a set of images from the robot cameras.
+     * \return camera images.
+     */
     std::vector<std::vector<precision>> ReadRobotEyes();
 
  private:
