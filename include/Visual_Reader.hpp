@@ -76,6 +76,10 @@ class VisualReader : private yarp::os::RFModule {
      */
     void Stop();
 
+    /**
+     * \brief Return the image count in the image buffer.
+     * \return Number of images in the buffer.
+     */
     int ImgsInBuffer();
 
     std::vector<std::vector<precision>> ReadRobotEyes();

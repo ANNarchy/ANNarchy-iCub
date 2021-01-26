@@ -81,6 +81,11 @@ class JointReader {
     std::vector<double> ReadDoubleAll();
     std::vector<double> ReadDoubleAllTime();
 
+    /**
+     * \brief Read multiple joints and return joint angles directly in degree as double values
+     * \param[in] joint_select Joint number selection of the robot part
+     * \return Joint angles, read from the robot in degree.
+     */
     std::vector<double> ReadDoubleMultiple(std::vector<int> joint_select);
     std::vector<double> ReadDoubleMultipleTime(std::vector<int> joint_select);
 

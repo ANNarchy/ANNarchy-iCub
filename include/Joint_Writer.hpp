@@ -74,6 +74,10 @@ class JointWriter {
      */
     std::vector<int> GetNeuronsPerJoint();
 
+    /**
+     * \brief Check if a joint of the robot part is in motion
+     * \return True, if joint is in motion. False if no joint is in motion.
+     */
     bool MotionDone();
 
     /**
