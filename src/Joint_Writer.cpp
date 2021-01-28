@@ -47,7 +47,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         return: bool                    -- return True, if successful
     */
 
-    if (!dev_init) {
+    if (!getDevInit()) {
         // Check validity of the iCub part key
         if (!CheckPartKey(part)) {
             std::cerr << "[Joint Writer] " << part << " is an invalid iCub part key!" << std::endl;
@@ -56,6 +56,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
 
         // Check validity of the population size
         icub_part = part;
+        setType("Joint Writer", icub_part);
         if (pop_size < 0) {
             std::cerr << "[Joint Writer " << icub_part << "] Population size have to be positive!" << std::endl;
             return false;
@@ -193,7 +194,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
                 return false;
             }
         }
-        dev_init = true;
+        setDevInit(true);
         return true;
     } else {
         std::cerr << "[Joint Writer " << icub_part << "] Initialization aready done!" << std::endl;
@@ -208,7 +209,7 @@ void JointWriter::Close() {
     if (driver.isValid()) {
         driver.close();
     }
-    dev_init = false;
+    setDevInit(false);
 }
 
 int JointWriter::GetJointCount() {
@@ -793,17 +794,6 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
 }
 
 /*** auxilary methods ***/
-bool JointWriter::CheckInit() {
-    /*
-        Helper function to check if init function was called
-    */
-
-    if (!dev_init) {
-        std::cerr << "[Joint Writer] Error: Device is not initialized!" << std::endl;
-    }
-    return dev_init;
-}
-
 bool JointWriter::CheckPartKey(std::string key) {
     /*
         Check if iCub part key is valid

@@ -50,6 +50,9 @@ cdef extern from "Visual_Reader.hpp":
         # Read a set of images from the robot cameras.
         vector[vector[precision]] ReadRobotEyes()
 
+        # Close Visual Reader module.
+        void Close()
+
 cdef class PyVisualReader:
     cdef shared_ptr[VisualReader] cpp_visual_reader
 

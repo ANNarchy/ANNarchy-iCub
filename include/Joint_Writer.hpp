@@ -25,10 +25,12 @@
 #include <string>
 #include <vector>
 
+#include "Module_Base_Class.hpp"
+
 /**
  * \brief Write the joint angles to the iCub robots joints to move them.
  */
-class JointWriter {
+class JointWriter : public Mod_BaseClass {
  public:
     // Constructor
     JointWriter() = default;
@@ -54,7 +56,7 @@ class JointWriter {
     /**
      * \brief  Close joint writer with cleanup
      */
-    void Close();
+    void Close() override;
 
     /**
      * \brief  Return number of controlled joints
@@ -184,7 +186,6 @@ class JointWriter {
 
  private:
     /** configuration variables **/
-    bool dev_init = false;                      // variable for initialization check
     double velocity_max = 100;                  // maximum joint velocity
     std::string icub_part;                      // string describing the part of the iCub
     std::vector<int32_t> joint_control_mode;    // string describing the active control mode
@@ -210,8 +211,6 @@ class JointWriter {
     yarp::dev::IControlMode *icont;       // iCub joint control mode interface
 
     /*** auxilary methods ***/
-    // check if init function was called
-    bool CheckInit();
     // check if iCub part key is valid
     bool CheckPartKey(std::string key);
     // decode the population coded joint angle to double value

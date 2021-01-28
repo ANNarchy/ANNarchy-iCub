@@ -25,10 +25,12 @@
 #include <string>
 #include <vector>
 
+#include "Module_Base_Class.hpp"
+
 /**
  * \brief  Read-out of the joint angles of the iCub robot
  */
-class JointReader {
+class JointReader : public Mod_BaseClass {
  public:
     // Constructor
     JointReader() = default;
@@ -54,7 +56,7 @@ class JointReader {
     /**
      * \brief  Close joint reader with cleanup
      */
-    void Close();
+    void Close() override;
 
     /**
      * \brief  Return number of controlled joints
@@ -112,7 +114,6 @@ class JointReader {
 
  private:
     /*** configuration variables ***/
-    bool dev_init = false;    // variable for initialization check
     std::string icub_part;    // string describing the part of the iCub
 
     std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
@@ -132,8 +133,6 @@ class JointReader {
     yarp::dev::IEncoders *ienc;        // iCub joint encoder interface
 
     /*** auxilary functions ***/
-    // check if init function was called
-    bool CheckInit();
     // check if iCub part key is valid
     bool CheckPartKey(std::string key);
     // encode joint position into a vector

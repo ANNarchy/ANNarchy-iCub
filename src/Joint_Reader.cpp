@@ -47,12 +47,13 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         return: bool                    -- return True, if successful
     */
 
-    if (!dev_init) {
+    if (!getDevInit()) {
         if (!CheckPartKey(part)) {
             std::cerr << "[Joint Reader] " << part << " is an invalid iCub part key!" << std::endl;
             return false;
         }
         icub_part = part;
+        setType("Joint Reader", icub_part);
         if (pop_size < 0) {
             std::cerr << "[Joint Reader " << icub_part << "] Population size have to be positive!" << std::endl;
             return false;
@@ -152,7 +153,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
             }
         }
 
-        dev_init = true;
+        setDevInit(true);
         return true;
     } else {
         std::cerr << "[Joint Reader " << icub_part << "] Initialization aready done!" << std::endl;
@@ -167,7 +168,7 @@ void JointReader::Close() {
     if (driver.isValid()) {
         driver.close();
     }
-    dev_init = false;
+    setDevInit(false);
 }
 
 int JointReader::GetJointCount() {
@@ -176,8 +177,10 @@ int JointReader::GetJointCount() {
 
         return: int       -- return number of controlled joints
     */
-
-    return joints;
+    if (CheckInit())
+        return joints;
+    else
+        return 0;
 }
 
 std::vector<double> JointReader::GetJointsDegRes() {
@@ -387,16 +390,6 @@ std::vector<double> JointReader::ReadPopOne(int joint) {
 }
 
 /*** auxilary functions ***/
-bool JointReader::CheckInit() {
-    /*
-        Check if the init function was called
-    */
-    if (!dev_init) {
-        std::cerr << "[Joint Reader] Error: Device is not initialized!" << std::endl;
-    }
-    return dev_init;
-}
-
 bool JointReader::CheckPartKey(std::string key) {
     /*
         Check if iCub part key is valid

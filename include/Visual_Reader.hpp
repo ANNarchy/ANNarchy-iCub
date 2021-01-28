@@ -27,10 +27,12 @@
 #include <string>
 #include <vector>
 
+#include "Module_Base_Class.hpp"
+
 /**
  * \brief  Read-out of the camera images from the iCub robot
  */
-class VisualReader : private yarp::os::RFModule {
+class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
  public:
     typedef float precision;
 
@@ -53,7 +55,8 @@ class VisualReader : private yarp::os::RFModule {
      *              - arguments not valid: e.g. eye character not valid
      *              - YARP-Server not running
      */
-    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter, std::string ini_path);
+    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter,
+              std::string ini_path);
 
     /**
      * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
@@ -88,10 +91,14 @@ class VisualReader : private yarp::os::RFModule {
      */
     std::vector<std::vector<precision>> ReadRobotEyes();
 
+    /**
+     * \brief Close Visual Reader module.
+     */
+    void Close() override;
+
  private:
     /** configuration variables **/
-    bool dev_init = false;    // variable for initialization check
-    int buffer_len = 30;      // length of the image buffer
+    int buffer_len = 30;    // length of the image buffer
 
     char act_eye;           // selected iCub eye to read images from
     int filter_ds;          // filter for the upscaling of the image
@@ -127,8 +134,8 @@ class VisualReader : private yarp::os::RFModule {
     int new_type;
 
     /** yarp ports **/
-    std::string client_port_prefix; // client portame prefix
-    std::string robot_port_prefix;  // robot portname prefix
+    std::string client_port_prefix;                                                // client portame prefix
+    std::string robot_port_prefix;                                                 // robot portname prefix
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_right;    // port for the iCub right eye image
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;     // port for the iCub left eye image
 
@@ -145,8 +152,6 @@ class VisualReader : private yarp::os::RFModule {
     bool close() override;
 
     /*** auxilary methods ***/
-    // check if init function was called
-    bool CheckInit();
     // convert field of view horizontal degree position to horizontal pixel position
     double FovX2PixelX(double fx);
     // convert field of view vertical degree position to vertical pixel position

@@ -32,11 +32,12 @@
 #include <typeinfo>
 
 #include "INI_Reader/INIReader.h"
+#include "Module_Base_Class.hpp"
 
 typedef std::chrono::high_resolution_clock Clock;
 
 // Destructor
-VisualReader::~VisualReader() {}
+VisualReader::~VisualReader() {Close();}
 
 /*** public methods for the user ***/
 bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter,
@@ -55,7 +56,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         return: bool                -- return True, if successful
     */
 
-    if (!dev_init) {
+    if (!getDevInit()) {
         // set ouput image size
         out_width = img_width;
         out_height = img_height;
@@ -165,7 +166,9 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
             return false;
         }
 
-        dev_init = true;
+        setType("Visual Reader", std::string(1, eye));
+
+        setDevInit(true);
         return true;
     } else {
         std::cerr << "[Visual Reader] Initialization already done!" << std::endl;
@@ -222,7 +225,6 @@ void VisualReader::Stop() {
     if (CheckInit()) {
         // stop and close RFModule
         stopModule(true);
-        close();
     }
 }
 
@@ -319,6 +321,19 @@ std::vector<std::vector<VisualReader::precision>> VisualReader::ReadRobotEyes() 
         std::vector<precision> img_vec_norm = Mat2Vec(tmpMat1);
 
         imgs.push_back(img_vec_norm);
+    }
+    return imgs;
+}
+
+void VisualReader::Close() {
+    /*
+        Stop reading images from the iCub, by terminating the RFModule and close the module
+    */
+
+    if (CheckInit()) {
+        // stop and close RFModule
+        stopModule(true);
+        close();
     }
 }
 
@@ -497,22 +512,11 @@ bool VisualReader::close() {
         port_right.close();
     }
 
-    dev_init = false;
+    setDevInit(false);
     return true;
 }
 
 /*** auxilary methods ***/
-bool VisualReader::CheckInit() {
-    /*
-        Check, if the init function was called
-    */
-
-    if (!dev_init) {
-        std::cerr << "[Visual Reader] Error: Device is not initialized!" << std::endl;
-    }
-    return dev_init;
-}
-
 double VisualReader::FovX2PixelX(double fx) {
     /*
         Convert field of view horizontal degree position to horizontal pixel position

@@ -3,51 +3,37 @@
 import os
 import sys
 
-from Cython.Build import cythonize
 from setuptools import Extension, setup
+from Cython.Build import cythonize
+
+from make_config import yarp_prefix, cv_include
+from make import set_opencv_prefix, set_yarp_prefix
 
 # Python Version info
 py_major = sys.version_info[0]
 py_minor = sys.version_info[1]
 py_version = str(py_major) + "." + str(py_minor)
 
-
-# Yarp install direction
-if "ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX" in os.environ:
-    yarp_prefix = os.environ["ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX"]
-elif "YARP_DATA_DIRS" in os.environ:
-    yarp_data = os.environ['YARP_DATA_DIRS'].split(':')[0].split('/')
-    if yarp_data[-1] == "iCub" or yarp_data[-1] == "yarp":
-        yarp_prefix = "/".join(yarp_data[:-3])
-    else:
-        yarp_prefix = "/".join(yarp_data[:-2])
+if yarp_prefix == "default":
+    yarp_prefix = set_yarp_prefix()
 else:
-    yarp_prefix = "/usr/local"
+    if not os.path.isdir(yarp_prefix + "/include/yarp"):
+        sys.exit("Did not find YARP in given path! Please correct yarp_prefix in make_config.py!")
 
-
-# OpenCV direction
-cv_include = None
-
-if os.path.isdir("/usr/include/opencv2"):
-    cv_include = "/usr/include/"
-elif os.path.isdir("/usr/include/opencv4"):
-    cv_include = "/usr/include/opencv4"
-elif os.path.isdir("/usr/local/include/opencv2"):
-    cv_include = "/usr/local/include"
-elif os.path.isdir("/usr/local/include/opencv4"):
-    cv_include = "/usr/local/include/opencv4"
+if cv_include == "default":
+    cv_include = set_opencv_prefix()
 else:
-    if cv_include == None:
-        sys.exit("Did not find OpenCV include path! Please set cv_include manually!")
+    if not os.path.isdir(cv_include + "/opencv2"):
+        sys.exit("Did not find OpenCV in given path! Please correct cv_include in make_config.py!")
+
+include_dir = ["./include", yarp_prefix + "/include", cv_include]
 
 libs = ["opencv_core", "opencv_imgproc",
         "YARP_dev", "YARP_init", "YARP_math", "YARP_name", "YARP_os", "YARP_run", "YARP_sig"]
 
 lib_dirs=["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib"]
 
-include_dir = ["./include", yarp_prefix + "/include", cv_include]
-
-sources = ["include/INI_Reader/INIReader.cpp", "include/INI_Reader/ini.cpp"]
+sources = ["include/INI_Reader/INIReader.cpp", "include/INI_Reader/ini.cpp", "src/Module_Base_Class.cpp"]
 sources1 = ["src/Joint_Reader.cpp", "src/Joint_Writer.cpp", "src/Skin_Reader.cpp", "src/Visual_Reader.cpp"]
 
 extensions = [
@@ -101,12 +87,12 @@ extensions = [
 
 setup(
     name="iCub_Interface",
-    ext_modules=cythonize(extensions),
+    ext_modules=cythonize(extensions, show_all_warnings=True),
     description="This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.",
-    version="0.2",
-    author="Torsten Follak",
+    version="0.3",
+    author="Torsten Fietzek",
     keywords=["version", "0.2"],
-    author_email="torsten.follak@informatik.tu-chemnitz.de",
+    author_email="torsten.fietzek@informatik.tu-chemnitz.de",
     license="GNU General Public License V3",
     zip_safe=False
 )

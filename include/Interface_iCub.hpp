@@ -28,6 +28,7 @@
 
 #include "Joint_Reader.hpp"
 #include "Joint_Writer.hpp"
+#include "Module_Base_Class.hpp"
 #include "Skin_Reader.hpp"
 #include "Visual_Reader.hpp"
 
@@ -47,22 +48,12 @@ class iCubANN {
 
     /** \brief associated visual reader (only one possible for left/right eye or both eyes) */
     std::shared_ptr<VisualReader> visual_input;
-    /** \brief associated joint readers (one for every robot part) */
-    std::unordered_map<std::string, std::shared_ptr<JointReader>> parts_reader;
     /** \brief associated joint writers (one for every robot part) */
     std::unordered_map<std::string, std::shared_ptr<JointWriter>> parts_writer;
     /** \brief associated skin reader */
     std::unordered_map<std::string, std::shared_ptr<SkinReader>> tactile_reader;
 
     /***  Add intstances of the interface modules ***/
-    /**
-     * \brief Add an instance of the joint reader module. This has to be initialized with the init-method.
-     * \param[in] name name for the added joint reader in the map, can be freely selected
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
-     *          Typical errors:
-     *              - Name already used
-     */
-    bool AddJointReader(std::string name);
     /**
      * \brief Add an instance of the joint writer module. This has to be initialized with the init-method.
      * \param[in] name name for the added joint writer in the map, can be freely selected
@@ -89,12 +80,6 @@ class iCubANN {
 
     /***  Remove intstances of the interface modules ***/
     /**
-     * \brief Remove the instance of the joint reader module.
-     * \param[in] name name of the joint reader in the map
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
-     */
-    bool RemoveJointReader(std::string name);
-    /**
      * \brief Remove the instance of the joint writer module.
      * \param[in] name name of the joint writer in the map
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
@@ -111,10 +96,6 @@ class iCubANN {
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      */
     bool RemoveVisualReader();
-
-    std::vector<std::vector<double>> WriteActionSyncOne(std::string jwriter_name, std::string jreader_name, double angle, int joint, double dt);
-    std::vector<std::vector<double>> WriteActionSyncMult(std::string jwriter_name, std::string jreader_name, std::vector<double> angles, std::vector<int> joint_select, double dt);
-    std::vector<std::vector<double>> WriteActionSyncAll(std::string jwriter_name, std::string jreader_name, std::vector<double> angles, double dt);
 };
 
 extern iCubANN my_interface;

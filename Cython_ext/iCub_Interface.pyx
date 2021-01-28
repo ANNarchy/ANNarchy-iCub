@@ -52,8 +52,6 @@ cdef extern from "Interface_iCub.hpp":
     cdef cppclass iCubANN:
         iCubANN() except +
         ### Manage instances of the reader/writer modules ###
-        # add an instance of joint reader
-        bool_t AddJointReader(string)
         # add an instance of joint writer
         bool_t AddJointWriter(string)
         # add an instance of skin reader
@@ -61,8 +59,6 @@ cdef extern from "Interface_iCub.hpp":
         # add the instance of visual reader
         bool_t AddVisualReader()
 
-        # remove an instance of joint reader
-        bool_t RemoveJointReader(string)
         # remove an instance of joint writer
         bool_t RemoveJointWriter(string)
         # remove an instance of skin reader
@@ -70,11 +66,6 @@ cdef extern from "Interface_iCub.hpp":
         # remove the instance of visual reader
         bool_t RemoveVisualReader()
 
-        vector[vector[double]] WriteActionSyncOne(string, string, double, int, double)
-        vector[vector[double]] WriteActionSyncMult(string, string, vector[double], vector[int], double)
-        vector[vector[double]] WriteActionSyncAll(string, string, vector[double], double)
-
-        cmap[string, shared_ptr[JointReader]] parts_reader
         cmap[string, shared_ptr[JointWriter]] parts_writer
         cmap[string, shared_ptr[SkinReader]] tactile_reader
         shared_ptr[VisualReader] visual_input
@@ -158,26 +149,6 @@ cdef class iCubANN_wrapper:
         self.tactile_reader.clear()
 
     ### Manage instances of the reader/writer modules ###
-    # add an instance of joint reader
-    def add_joint_reader(self, name):
-        """
-            Calls iCubANN::AddJointReader(std::string name)
-
-            function:
-                Add an instance of joint reader with a given name
-
-            params: std::string name        -- name for the added joint reader in the map, can be freely selected
-        """
-        # we need to transform py-string to c++ compatible string
-        cdef string s = name.encode('UTF-8')
-
-        # call the interface
-        if my_interface.AddJointReader(s):
-            self.parts_reader[name] = PyJointReader.from_ptr(my_interface.parts_reader[s])
-            return True
-        else:
-            return False
-
     # add an instance of joint writer
     def add_joint_writer(self, name):
         """
@@ -236,25 +207,6 @@ cdef class iCubANN_wrapper:
         else:
             return False
 
-    # remove an instance of joint reader
-    def rm_joint_reader(self, name):
-        """
-            Calls iCubANN::RemoveJointReader(std::string name)
-
-            function:
-                Remove the instance of joint reader with the given name
-
-            params: std::string name        -- name of the joint reader in the map, which should be remove
-        """
-        # we need to transform py-string to c++ compatible string
-        cdef string s = name.encode('UTF-8')
-
-        # call the interface
-        if my_interface.RemoveJointReader(s):
-            del self.parts_reader[name]
-            return True
-        else:
-            return False
 
     # remove an instance of joint writer
     def rm_joint_writer(self, name):
@@ -314,21 +266,6 @@ cdef class iCubANN_wrapper:
             return False
 
     ### end Manage instances of the reader/writer module
-
-    def write_action_sync_one(self, jwriter_name, jreader_name, angle, joint, dt):
-        cdef string s1 = jwriter_name.encode('UTF-8')
-        cdef string s2 = jreader_name.encode('UTF-8')
-        return np.array(my_interface.WriteActionSyncOne(s1, s2, angle, joint, dt))
-
-    def write_action_sync_mult(self, jwriter_name, jreader_name, angles, joints, dt):
-        cdef string s1 = jwriter_name.encode('UTF-8')
-        cdef string s2 = jreader_name.encode('UTF-8')
-        return np.array(my_interface.WriteActionSyncMult(s1, s2, angles, joints, dt))
-
-    def write_action_sync_all(self, jwriter_name, jreader_name, angles, dt):
-        cdef string s1 = jwriter_name.encode('UTF-8')
-        cdef string s2 = jreader_name.encode('UTF-8')
-        return np.array(my_interface.WriteActionSyncAll(s1, s2, angles, dt))
 
     # initialize interface for a robot configuration defined in a XML-file
     def init_robot_from_file(self, xml_file):
@@ -481,7 +418,6 @@ cdef class iCubANN_wrapper:
                         else:
                             print("Skipped Skin Reader '" + sread.attrib['name'] + "' init due to missing element")
 
-                name_dict['JointReader'] = name_JReader
                 name_dict['JointWriter'] = name_JWriter
                 name_dict['SkinReader'] = name_SReader
 

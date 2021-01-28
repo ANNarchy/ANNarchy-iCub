@@ -23,7 +23,7 @@
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
-from libcpp.memory cimport shared_ptr
+from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref
 
 from Joint_Reader cimport JointReader
@@ -32,16 +32,16 @@ import numpy as np
 
 cdef class PyJointReader:
 
+    # init method
     def __cinit__(self):
         print("Initialize iCub Interface: Joint Reader.")
+        self.cpp_joint_reader = make_shared[JointReader]()
 
-    @staticmethod
-    cdef PyJointReader from_ptr(shared_ptr[JointReader] _ptr):
-        # adapted from https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
-        # Call to __new__ bypasses __init__ constructor
-        cdef PyJointReader wrapper = PyJointReader.__new__(PyJointReader)
-        wrapper.cpp_joint_reader = _ptr
-        return wrapper
+    # close method
+    def __dealloc__(self):
+        print("Close iCub Interface: Joint Reader.")
+        self.cpp_joint_reader.reset()
+
 
     ### Access to joint reader member functions
     # Initialize the joint reader with given parameters

@@ -17,6 +17,8 @@
  *  along with this headers. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Skin_Reader.hpp"
+
 #include <yarp/dev/all.h>
 #include <yarp/os/all.h>
 #include <yarp/sig/all.h>
@@ -30,7 +32,7 @@
 #include <string>
 
 #include "INI_Reader/INIReader.h"
-#include "Skin_Reader.hpp"
+#include "Module_Base_Class.hpp"
 
 // Destructor
 SkinReader::~SkinReader() { Close(); }
@@ -42,17 +44,19 @@ bool SkinReader::Init(char arm, bool norm_data, std::string ini_path) {
 
         params: char arm        -- character to choose the arm side (r/R for right; l/L for left)
                 bool norm_data  -- true for normalized tactile data (iCub data: [0..255]; normalized [0..1.0])
-                ini_path                -- Path to the "interface_param.ini"-file
+                ini_path        -- Path to the "interface_param.ini"-file
 
         return: bool            -- return True, if successful
     */
 
-    if (!dev_init) {
+    if (!getDevInit()) {
         // Init YARP-Network
         if (!yarp::os::Network::checkNetwork()) {
             std::cerr << "[Skin Reader] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
         }
+
+        setType("Skin Reader", std::string(1, arm));
 
         // Prepare Reader for normalization
         std::string norm;
@@ -158,7 +162,7 @@ bool SkinReader::Init(char arm, bool norm_data, std::string ini_path) {
         //         kin_chains["hand"]->rmLink(i);
         //     }
 
-        dev_init = true;
+        setDevInit(true);
         return true;
     } else {
         std::cerr << "[Skin Reader " << side << "] Initialization aready done!" << std::endl;
@@ -184,7 +188,7 @@ void SkinReader::Close() {
         port_arm.close();
     }
 
-    dev_init = false;
+    setDevInit(false);
 }
 
 std::vector<std::vector<double>> SkinReader::GetTactileArm() {
@@ -314,17 +318,6 @@ bool SkinReader::ReadTactile() {
 }
 
 /*** auxilary functions ***/
-bool SkinReader::CheckInit() {
-    /*
-        Check if init function was called
-    */
-
-    if (!dev_init) {
-        std::cerr << "[Skin Reader] Error: Device is not initialized!" << std::endl;
-    }
-    return dev_init;
-}
-
 bool SkinReader::ReadTaxelPos(std::string filename_idx, std::string filename_pos, std::string part) {
     /*
         Read information about taxel position from config files

@@ -25,7 +25,6 @@ from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
 
-
 cdef extern from "Joint_Reader.hpp":
 
     cdef cppclass JointReader:
@@ -62,5 +61,3 @@ cdef extern from "Joint_Reader.hpp":
 cdef class PyJointReader:
     cdef shared_ptr[JointReader] cpp_joint_reader
 
-    @staticmethod
-    cdef PyJointReader from_ptr(shared_ptr[JointReader] _ptr)

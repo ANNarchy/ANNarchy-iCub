@@ -27,6 +27,8 @@
 #include <string>
 #include <vector>
 
+#include "Module_Base_Class.hpp"
+
 /**
  * \brief  Struct for the skin taxel positiiion data per iCub part
  */
@@ -38,7 +40,7 @@ struct TaxelData {
 /**
  * \brief  Read-out of the skin sensor data from the iCubs artificial skin
  */
-class SkinReader {
+class SkinReader : public Mod_BaseClass {
  public:
     // Constructor
     SkinReader() = default;
@@ -99,7 +101,6 @@ class SkinReader {
 
  private:
     /*** configuration variables ***/
-    bool dev_init = false;    // variable for initialization check
     std::string side;         // containing information about selected arm (right/left)
     double norm_fac;          // norming factor: 255.0 for normalized data
 
@@ -123,8 +124,6 @@ class SkinReader {
     // std::map<std::string, iCub::iKin::iKinChain *> kin_chains;    // iCub kinematic chain
 
     /*** auxilary functions ***/
-    // check if init function was called
-    bool CheckInit();
     // Read taxel positions from the ini files
     bool ReadTaxelPos(std::string filename_idx, std::string filename_pos, std::string part);
 };

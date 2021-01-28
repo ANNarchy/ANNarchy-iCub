@@ -1,5 +1,6 @@
 # distutils: language = c++
 # cython: language_level = 3
+# cython: profile=True
 
 """
    Copyright (C) 2019-2021 Torsten Fietzek; Helge Ülo Dinkelbach

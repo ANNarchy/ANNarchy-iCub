@@ -151,4 +151,16 @@ cdef class PyVisualReader:
 
         # call the interface
         return np.array(deref(self.cpp_visual_reader).ReadRobotEyes(), dtype=np.float32)
+
+    def close(self):
+        """
+            Calls void VisualReader::Stop()
+
+            function:
+                Stop reading images from the iCub, by terminating the RFModule and close module.
+        """
+        
+        # call the interface
+        deref(self.cpp_visual_reader).Close()
+
     ### end access to visual reader member functions
