@@ -48,7 +48,7 @@ class Mod_BaseClass {
     ~Mod_BaseClass();
 
     // template function for close method
-    virtual void Close();
+    virtual void Close() = 0;
 
     // Set values for type and part
     void setType(std::string value_type, std::string value_part);

@@ -21,6 +21,9 @@
 
 #include <iostream>
 
+// Destructor
+Mod_BaseClass::~Mod_BaseClass() { }
+
 bool Mod_BaseClass::CheckInit() {
     /*
         Check if the init function was called and module is registered at the main Interface
