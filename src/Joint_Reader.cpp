@@ -47,13 +47,13 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         return: bool                    -- return True, if successful
     */
 
-    if (!getDevInit()) {
+    if (!this->dev_init) {
         if (!CheckPartKey(part)) {
             std::cerr << "[Joint Reader] " << part << " is an invalid iCub part key!" << std::endl;
             return false;
         }
-        icub_part = part;
-        setType("Joint Reader", icub_part);
+        this->icub_part = part;
+
         if (pop_size < 0) {
             std::cerr << "[Joint Reader " << icub_part << "] Population size have to be positive!" << std::endl;
             return false;
@@ -153,7 +153,8 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
             }
         }
 
-        setDevInit(true);
+        this->type = "JointReader";
+        this->dev_init = true;
         return true;
     } else {
         std::cerr << "[Joint Reader " << icub_part << "] Initialization aready done!" << std::endl;
@@ -168,7 +169,7 @@ void JointReader::Close() {
     if (driver.isValid()) {
         driver.close();
     }
-    setDevInit(false);
+    this->dev_init = false;
 }
 
 int JointReader::GetJointCount() {

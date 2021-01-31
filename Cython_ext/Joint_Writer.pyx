@@ -24,7 +24,7 @@
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
-from libcpp.memory cimport shared_ptr
+from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref
 
 from Joint_Writer cimport JointWriter
@@ -33,23 +33,21 @@ import numpy as np
 
 cdef class PyJointWriter:
 
+    # init method
     def __cinit__(self):
         print("Initialize iCub Interface: Joint Writer.")
+        self.cpp_joint_writer = make_shared[JointWriter]()
 
-    @staticmethod
-    cdef PyJointWriter from_ptr(shared_ptr[JointWriter] _ptr):
-        # adapted from https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
-        # Call to __new__ bypasses __init__ constructor
-        cdef PyJointWriter wrapper = PyJointWriter.__new__(PyJointWriter)
-        wrapper.cpp_joint_writer = _ptr
-        return wrapper
-
+    # close method
+    def __dealloc__(self):
+        print("Close iCub Interface: Joint Writer.")
+        self.cpp_joint_writer.reset()
 
     ### Access to joint writer member functions
     # initialize the joint writer with given parameters
     def init(self, part, n_pop, degr_per_neuron=0.0, speed=10.0, ini_path = "../data/"):
         """
-            Calls bool JointWriter::Init(std::string std::string part, int pop_size, double deg_per_neuron, double speed)
+            Calls bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, double speed)
 
             function:
                 Initialize the joint writer with given parameters
@@ -71,20 +69,23 @@ cdef class PyJointWriter:
         cdef string key = part.encode('UTF-8')
         cdef string path = ini_path.encode('UTF-8')
 
-        # call the interface
-        return deref(self.cpp_joint_writer).Init(key, n_pop, degr_per_neuron, speed, path)
+        retval = deref(self.cpp_joint_writer).Init(key, n_pop, degr_per_neuron, speed, path)
+        if retval:
+            self.part = part
+        return retval
 
-    # close joint reader with cleanup
+    # close joint writer with cleanup
     def close(self):
         """
             Calls JointWriter::Close()
 
             function:
-                Close joint reader with cleanup
+                Close joint writer with cleanup
         """
 
         # call the interface
         deref(self.cpp_joint_writer).Close()
+        self.part = ""
 
     # return number of controlled joints
     def get_joint_count(self):

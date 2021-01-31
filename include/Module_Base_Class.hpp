@@ -27,19 +27,14 @@
 class Mod_BaseClass {
  private:
     bool registered = false;
-    bool dev_init = false;    // variable for initialization check
-    std::string type;
-    std::string part;
 
  protected:
     // check if init function was called
     bool CheckInit();
     // Set value for dev_init
-    void setDevInit(bool value);
-    // Get value for dev_init
-    bool getDevInit();
-    // Set value for registered
-    void setRegister(bool value);
+    bool dev_init = false;    // variable for initialization check
+    std::string type;
+    std::string icub_part;
 
  public:
     // Constructor
@@ -47,11 +42,11 @@ class Mod_BaseClass {
     // Destructor
     ~Mod_BaseClass();
 
+    // Set value for registered
+    void setRegister(bool value);
+    bool getRegister();
+
     // template function for close method
     virtual void Close() = 0;
 
-    // Set values for type and part
-    void setType(std::string value_type, std::string value_part);
-    std::string getType();
-    std::string getPart();
 };

@@ -21,16 +21,6 @@
 
 #include <yarp/os/all.h>
 
-#include <map>
-#include <memory>
-#include <string>
-#include <vector>
-
-#include "Joint_Reader.hpp"
-#include "Joint_Writer.hpp"
-#include "Module_Base_Class.hpp"
-#include "Skin_Reader.hpp"
-#include "Visual_Reader.hpp"
 
 /**
  * \brief Interfaces the different modules (Reader/Writer) and handles the use of multiple module instances.
@@ -38,7 +28,6 @@
 class iCubANN {
  private:
     yarp::os::Network Yarp;
-    std::vector<double> timemarker;
 
  public:
     // Constructor
@@ -46,56 +35,7 @@ class iCubANN {
     // Destructor
     ~iCubANN();
 
-    /** \brief associated visual reader (only one possible for left/right eye or both eyes) */
-    std::shared_ptr<VisualReader> visual_input;
-    /** \brief associated joint writers (one for every robot part) */
-    std::unordered_map<std::string, std::shared_ptr<JointWriter>> parts_writer;
-    /** \brief associated skin reader */
-    std::unordered_map<std::string, std::shared_ptr<SkinReader>> tactile_reader;
 
-    /***  Add intstances of the interface modules ***/
-    /**
-     * \brief Add an instance of the joint writer module. This has to be initialized with the init-method.
-     * \param[in] name name for the added joint writer in the map, can be freely selected
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
-     *          Typical errors:
-     *              - Name already used
-     */
-    bool AddJointWriter(std::string name);
-    /**
-     * \brief Add an instance of the skin reader module. This has to be initialized with the init-method.
-     * \param[in] name name for the added skin reader in the map, can be freely selected
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
-     *          Typical errors:
-     *              - Name already used
-     */
-    bool AddSkinReader(std::string name);
-    /**
-     * \brief Add the instance of the visual reader module. This has to be initialized with the init-method.
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
-     *          Typical errors:
-     *              - Name already used
-     */
-    bool AddVisualReader();
-
-    /***  Remove intstances of the interface modules ***/
-    /**
-     * \brief Remove the instance of the joint writer module.
-     * \param[in] name name of the joint writer in the map
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
-     */
-    bool RemoveJointWriter(std::string name);
-    /**
-     * \brief Remove the instance of the skin reader module.
-     * \param[in] name name of the skin reader in the map
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
-     */
-    bool RemoveSkinReader(std::string name);
-    /**
-     * \brief Remove the instance of the visual reader module.
-     * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
-     */
-    bool RemoveVisualReader();
 };
 
 extern iCubANN my_interface;

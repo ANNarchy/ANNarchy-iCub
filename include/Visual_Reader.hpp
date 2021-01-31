@@ -99,6 +99,7 @@ class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
  private:
     /** configuration variables **/
     int buffer_len = 30;    // length of the image buffer
+    bool rf_running = false;
 
     char act_eye;           // selected iCub eye to read images from
     int filter_ds;          // filter for the upscaling of the image

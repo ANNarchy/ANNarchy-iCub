@@ -47,16 +47,15 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         return: bool                    -- return True, if successful
     */
 
-    if (!getDevInit()) {
+    if (!this->dev_init) {
         // Check validity of the iCub part key
         if (!CheckPartKey(part)) {
             std::cerr << "[Joint Writer] " << part << " is an invalid iCub part key!" << std::endl;
             return false;
         }
+        this->icub_part = part;
 
         // Check validity of the population size
-        icub_part = part;
-        setType("Joint Writer", icub_part);
         if (pop_size < 0) {
             std::cerr << "[Joint Writer " << icub_part << "] Population size have to be positive!" << std::endl;
             return false;
@@ -194,7 +193,9 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
                 return false;
             }
         }
-        setDevInit(true);
+
+        this->type = "JointWriter";
+        this->dev_init = true;
         return true;
     } else {
         std::cerr << "[Joint Writer " << icub_part << "] Initialization aready done!" << std::endl;
@@ -209,7 +210,7 @@ void JointWriter::Close() {
     if (driver.isValid()) {
         driver.close();
     }
-    setDevInit(false);
+    this->dev_init = false;
 }
 
 int JointWriter::GetJointCount() {

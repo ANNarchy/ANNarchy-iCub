@@ -27,6 +27,7 @@ from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref
 
 from Joint_Reader cimport JointReader
+from iCub_Interface import iCubANN_wrapper
 
 import numpy as np
 
@@ -68,8 +69,10 @@ cdef class PyJointReader:
         # we need to transform py-string to c++ compatible string
         cdef string key = part.encode('UTF-8')
         cdef string path = ini_path.encode('UTF-8')
-
-        return deref(self.cpp_joint_reader).Init(key, sigma, n_pop, degr_per_neuron, path)
+        retval = deref(self.cpp_joint_reader).Init(key, sigma, n_pop, degr_per_neuron, path)
+        if retval:
+            self.part = part
+        return retval
 
     # close joint reader with cleanup
     def close(self):
@@ -82,6 +85,7 @@ cdef class PyJointReader:
        """
         # call the interface
         deref(self.cpp_joint_reader).Close()
+        self.part = ""
 
     # get the number of controlled joints
     def get_joint_count(self):

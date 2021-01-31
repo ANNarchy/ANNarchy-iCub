@@ -76,9 +76,10 @@ cdef extern from "Joint_Writer.hpp":
         # Write one joint with the joint angle encoded in a population.
         bool_t WritePopOne(vector[double], int, bool_t, string)
 
+        void setRegister(bint)
+        bint getRegister()
 
 cdef class PyJointWriter:
     cdef shared_ptr[JointWriter] cpp_joint_writer
-
-    @staticmethod
-    cdef PyJointWriter from_ptr(shared_ptr[JointWriter] _ptr)
+    cdef str name
+    cdef str part

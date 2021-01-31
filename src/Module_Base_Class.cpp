@@ -22,7 +22,7 @@
 #include <iostream>
 
 // Destructor
-Mod_BaseClass::~Mod_BaseClass() { }
+Mod_BaseClass::~Mod_BaseClass() {}
 
 bool Mod_BaseClass::CheckInit() {
     /*
@@ -33,21 +33,11 @@ bool Mod_BaseClass::CheckInit() {
                   << " Error: Device is not initialized!" << std::endl;
     }
     if (!registered) {
-        std::cerr << "[" << type << "]"
+        std::cerr << "[" << type << " " << icub_part << "]"
                   << " Error: Device is not registered!" << std::endl;
     }
     return dev_init & registered;
 }
 
-void Mod_BaseClass::setDevInit(bool value) { dev_init = value; }
-bool Mod_BaseClass::getDevInit() { return dev_init; }
-
-void Mod_BaseClass::setRegister(bool value) { registered = value; }
-
-void Mod_BaseClass::setType(std::string value_type, std::string value_part) {
-    type = value_type;
-    part = value_part;
-}
-
-std::string Mod_BaseClass::getType() { return type; }
-std::string Mod_BaseClass::getPart() { return part; }
+void Mod_BaseClass::setRegister(bool value) { this->registered = value; }
+bool Mod_BaseClass::getRegister() { return registered; }

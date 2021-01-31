@@ -57,7 +57,12 @@ cdef extern from "Joint_Reader.hpp":
         # Read one joint and return the joint angle encoded in a population.
         vector[double] ReadPopOne(int joint)
 
+        void setRegister(bint)
+        bint getRegister()
 
 cdef class PyJointReader:
     cdef shared_ptr[JointReader] cpp_joint_reader
+    cdef str name
+    cdef str part
+
 

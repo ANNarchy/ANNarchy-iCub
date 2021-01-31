@@ -187,7 +187,6 @@ class JointWriter : public Mod_BaseClass {
  private:
     /** configuration variables **/
     double velocity_max = 100;                  // maximum joint velocity
-    std::string icub_part;                      // string describing the part of the iCub
     std::vector<int32_t> joint_control_mode;    // string describing the active control mode
 
     std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys

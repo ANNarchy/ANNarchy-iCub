@@ -49,14 +49,12 @@ bool SkinReader::Init(char arm, bool norm_data, std::string ini_path) {
         return: bool            -- return True, if successful
     */
 
-    if (!getDevInit()) {
+    if (!this->dev_init) {
         // Init YARP-Network
         if (!yarp::os::Network::checkNetwork()) {
             std::cerr << "[Skin Reader] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
         }
-
-        setType("Skin Reader", std::string(1, arm));
 
         // Prepare Reader for normalization
         std::string norm;
@@ -162,7 +160,9 @@ bool SkinReader::Init(char arm, bool norm_data, std::string ini_path) {
         //         kin_chains["hand"]->rmLink(i);
         //     }
 
-        setDevInit(true);
+        this->type = "SkinReader";
+        this->icub_part = std::string(1, arm);
+        this->dev_init = true;
         return true;
     } else {
         std::cerr << "[Skin Reader " << side << "] Initialization aready done!" << std::endl;
@@ -188,7 +188,7 @@ void SkinReader::Close() {
         port_arm.close();
     }
 
-    setDevInit(false);
+    this->dev_init = false;
 }
 
 std::vector<std::vector<double>> SkinReader::GetTactileArm() {

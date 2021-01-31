@@ -23,7 +23,7 @@
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
-from libcpp.memory cimport shared_ptr
+from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref
 
 from Skin_Reader cimport SkinReader
@@ -32,16 +32,16 @@ import numpy as np
 
 cdef class PySkinReader:
 
+    # init method
     def __cinit__(self):
         print("Initialize iCub Interface: Skin Reader.")
+        self.cpp_skin_reader = make_shared[SkinReader]()
 
-    @staticmethod
-    cdef PySkinReader from_ptr(shared_ptr[SkinReader] _ptr):
-        # adapted from https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
-        # Call to __new__ bypasses __init__ constructor
-        cdef PySkinReader wrapper = PySkinReader.__new__(PySkinReader)
-        wrapper.cpp_skin_reader = _ptr
-        return wrapper
+    # close method
+    def __dealloc__(self):
+        print("Close iCub Interface: Skin Reader.")
+        self.cpp_skin_reader.reset()
+
 
     ### Access to skin reader member functions
     # init skin reader with given parameters

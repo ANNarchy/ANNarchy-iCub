@@ -22,10 +22,6 @@
 
 
 from libcpp.string cimport string
-from libcpp.vector cimport vector
-from libcpp cimport bool as bool_t
-from libcpp.memory cimport shared_ptr
-from libcpp.unordered_map cimport unordered_map as cmap
 
 cimport numpy as np
 import numpy as np
@@ -47,41 +43,8 @@ from Visual_Reader cimport PyVisualReader
 import xml.etree.ElementTree as ET
 import os
 
-cdef extern from "Interface_iCub.hpp":
-
-    cdef cppclass iCubANN:
-        iCubANN() except +
-        ### Manage instances of the reader/writer modules ###
-        # add an instance of joint writer
-        bool_t AddJointWriter(string)
-        # add an instance of skin reader
-        bool_t AddSkinReader(string)
-        # add the instance of visual reader
-        bool_t AddVisualReader()
-
-        # remove an instance of joint writer
-        bool_t RemoveJointWriter(string)
-        # remove an instance of skin reader
-        bool_t RemoveSkinReader(string)
-        # remove the instance of visual reader
-        bool_t RemoveVisualReader()
-
-        cmap[string, shared_ptr[JointWriter]] parts_writer
-        cmap[string, shared_ptr[SkinReader]] tactile_reader
-        shared_ptr[VisualReader] visual_input
-
-    # Instances:
-    iCubANN my_interface # defined in Interface_iCub.cpp
-
 
 cdef class iCubANN_wrapper:
-
-    cdef dict __dict__
-
-    parts_reader = {}
-    parts_writer = {}
-    tactile_reader = {}
-    visual_input = None
 
 
     # part keys for the iCub, which are needed for joint reader/writer initialization
@@ -135,296 +98,320 @@ cdef class iCubANN_wrapper:
         print("Initialize iCub Interface.")
         #my_interface.init() - we need a special init?
 
+        self.joint_reader = {}
+        self.joint_reader_parts = {}
+
+        self.joint_writer = {}
+        self.joint_writer_parts = {}
+
+        self.skin_reader = {}
+        self.skin_reader_parts = {}
+
+    def __dealloc__(self):
+        print("Close iCub Interface.")
+        self.joint_reader.clear()
+        self.joint_writer.clear()
+        self.skin_reader.clear()
+        self.visual_input = None
+
+
     def clear(self):
         print("Clear iCub interface")
-        for key, reader in self.parts_reader.items():
+        for key, reader in self.joint_reader.items():
             reader.close()
-        for key, writer in self.parts_writer.items():
+        for key, writer in self.joint_writer.items():
             writer.close()
-        for key, tactile in self.tactile_reader.items():
+        for key, tactile in self.skin_reader.items():
             tactile.close()
 
-        self.parts_reader.clear()
-        self.parts_writer.clear()
-        self.tactile_reader.clear()
+        self.joint_reader.clear()
+        self.joint_writer.clear()
+        self.skin_reader.clear()
 
-    ### Manage instances of the reader/writer modules ###
-    # add an instance of joint writer
-    def add_joint_writer(self, name):
-        """
-            Calls iCubANN::AddJointWriter(std::string name)
+        if not self.visual_input == None:
+            self.visual_input.Close()
+            self.visual_input = None
 
-            function:
-                Add an instance of joint writer with a given name
+    ### Manage the reader/writer modules ###
+    # register joint reader module
+    def register_jreader(self, str name, PyJointReader module):
+        if deref(module.cpp_joint_reader).getRegister():
+            print("[Interface iCub] Joint Reader module is already registered!")
+            return False
+        else:
+            if name in self.joint_reader:
+                print("[Interface iCub] Joint Reader module name is already used!")
+                return False
+            else:
+                if module.part in self.joint_reader_parts:
+                    print("[Interface iCub] Joint Reader module part is already used!")
+                    return False
+                else:
+                    self.joint_reader[name] = module
+                    module.name = name
+                    self.joint_reader_parts[module.part] = name
+                    deref(module.cpp_joint_reader).setRegister(1)
+                    return True
 
-            params:
-                std::string name        -- name for the added joint writer in the map, can be freely selected
-        """
-        # we need to transform py-string to c++ compatible string
-        cdef string s = name.encode('UTF-8')
-
-        # call the interface
-        if my_interface.AddJointWriter(s):
-            self.parts_writer[name] = PyJointWriter.from_ptr(my_interface.parts_writer[s])
+    # unregister joint reader  module
+    def unregister_jreader(self, PyJointReader module):
+        if deref(module.cpp_joint_reader).getRegister():
+            deref(module.cpp_joint_reader).setRegister(0)
+            self.joint_reader.pop(module.name, None)
+            self.joint_reader_parts.pop(module.part, None)
+            module.name = ""
             return True
         else:
+            print("[Interface iCub] Joint Reader module is not yet registered!")
             return False
 
+    # register joint writer  module
+    def register_jwriter(self, str name, PyJointWriter module):
+        if deref(module.cpp_joint_writer).getRegister():
+            print("[Interface iCub] Joint Writer module is already registered!")
+            return False
+        else:
+            if name in self.joint_writer:
+                print("[Interface iCub] Joint Writer module name is already used!")
+                return False
+            else:
+                if module.part in self.joint_writer_parts:
+                    print("[Interface iCub] Joint Writer module part is already used!")
+                    return False
+                else:
+                    self.joint_writer[name] = module
+                    module.name = name
+                    self.joint_writer_parts[module.part] = name
+                    deref(module.cpp_joint_writer).setRegister(1)
+                    return True
 
-    # add an instance of skin reader
-    def add_skin_reader(self, name):
-        """
-            Calls iCubANN::AddSkinReader(std::string name)
-
-            function:
-                Add an instance of skin reader with a given name
-
-            params:
-                std::string name        -- name for the added skin reader in the map, can be freely selected
-        """
-        # we need to transform py-string to c++ compatible string
-        cdef string s = name.encode('UTF-8')
-
-        # call the interface
-        if my_interface.AddSkinReader(s):
-            self.tactile_reader[name] = PySkinReader.from_ptr(my_interface.tactile_reader[s])
+    # unregister joint writer module
+    def unregister_jwriter(self, PyJointWriter module):
+        if deref(module.cpp_joint_writer).getRegister():
+            deref(module.cpp_joint_writer).setRegister(0)
+            self.joint_writer.pop(module.name, None)
+            self.joint_writer_parts.pop(module.part, None)
+            module.name = ""
             return True
         else:
+            print("[Interface iCub] Joint Writer module is not yet registered!")
             return False
 
-    # add an instance of visual reader
-    def add_visual_reader(self):
-        """
-            Calls iCubANN::AddVisualReader()
+    # register skin reader module
+    def register_skin_reader(self, str name, PySkinReader module):
+        if deref(module.cpp_skin_reader).getRegister():
+            print("[Interface iCub] Skin Reader module is already registered!")
+            return False
+        else:
+            if name in self.skin_reader:
+                print("[Interface iCub] Skin Reader module name is already used!")
+                return False
+            else:
+                if module.part in self.skin_reader_parts:
+                    print("[Interface iCub] Skin Reader module part is already used!")
+                    return False
+                else:
+                    self.skin_reader[name] = module
+                    module.name = name
+                    self.skin_reader_parts[module.part] = name
+                    deref(module.cpp_skin_reader).setRegister(1)
+                    return True
 
-            function:
-                Add an instance of visual reader
-        """
-        # call the interface
-        if my_interface.AddVisualReader():
-            self.visual_input = PyVisualReader.from_ptr(my_interface.visual_input)
+    # unregister skin reader module
+    def unregister_skin_reader(self, PySkinReader module):
+        if deref(module.cpp_skin_reader).getRegister():
+            deref(module.cpp_skin_reader).setRegister(0)
+            self.skin_reader.pop(module.name, None)
+            self.skin_reader_parts.pop(module.part, None)
+            module.name = ""
             return True
         else:
+            print("[Interface iCub] Skin Reader module is not yet registered!")
             return False
 
+    # register visual reader module
+    def register_vis_reader(self, PyVisualReader module):
+        if deref(module.cpp_visual_reader).getRegister():
+            print("[Interface iCub] Visual Reader module is already registered!")
+            return False
+        else:
+            if self.visual_input == None:
+                self.visual_input = module
+                deref(module.cpp_visual_reader).setRegister(1)
+                return True
+            else:
+                print("[Interface iCub] Visual Reader module is already used!")
+                return False
 
-    # remove an instance of joint writer
-    def rm_joint_writer(self, name):
-        """
-            Calls iCubANN::RemoveJointWriter(std::string name)
-
-            function:
-                Remove the instance of joint writer with the given name
-
-            params:
-                std::string name        -- name of the joint writer in the map, which should be remove
-        """
-        # we need to transform py-string to c++ compatible string
-        cdef string s = name.encode('UTF-8')
-
-        # call the interface
-        if my_interface.RemoveJointWriter(s):
-            del self.parts_writer[name]
+    # unregister skin reader module
+    def unregister_vis_reader(self, PyVisualReader module):
+        if deref(module.cpp_visual_reader).getRegister():
+            deref(module.cpp_visual_reader).setRegister(0)
+            self.visual_input = None
             return True
         else:
+            print("[Interface iCub] Visual Reader module is not yet registered!")
             return False
 
-    # remove an instance of skin reader
-    def rm_skin_reader(self, name):
-        """
-            Calls iCubANN::RemoveSkinReader(std::string name)
-
-            function:
-                Remove the instance of skin reader with the given name
-
-            params:
-                std::string name        -- name of the skin reader in the map, which should be remove
-        """
-        # we need to transform py-string to c++ compatible string
-        cdef string s = name.encode('UTF-8')
-
-        # call the interface
-        if my_interface.RemoveSkinReader(s):
-            del self.tactile_reader[name]
-            return True
-        else:
-            return False
-
-    # remove the instance of visual reader
-    def rm_visual_reader(self):
-        """
-            Calls iCubANN::AddVisualReader()
-
-            function:
-                Remove the visual reader instance
-        """
-        # call the interface
-        if my_interface.RemoveVisualReader():
-            del self.visual_input
-            return True
-        else:
-            return False
-
-    ### end Manage instances of the reader/writer module
 
     # initialize interface for a robot configuration defined in a XML-file
-    def init_robot_from_file(self, xml_file):
-        name_dict = {}
-        if os.path.isfile(xml_file):
-            tree = ET.parse(xml_file)
-            robot = tree.getroot()
+    # def init_robot_from_file(self, xml_file):
+        # name_dict = {}
+        # if os.path.isfile(xml_file):
+        #     tree = ET.parse(xml_file)
+        #     robot = tree.getroot()
 
-            if not robot == None:
-                # init joint reader
-                name_JReader = {}
-                for jread in robot.iter('JReader'):
-                    no_error_jread = True
-                    if(self.add_joint_reader(jread.attrib['name'])):
-                        if(jread.find('part') == None):
-                            print("Element part is missing")
-                            no_error_jread = False
-                        else:
-                            part = jread.find('part').text
-                        if(jread.find('sigma') == None):
-                            print("Element sigma is missing")
-                            no_error_jread = False
-                        else:
-                            sigma = float(jread.find('sigma').text)
-                        if(jread.find('popsize') == None):
-                            print("Element popsize is missing")
-                            no_error_jread = False
-                        else:
-                            popsize = int(jread.find('popsize').text)
-                        if(jread.find('ini_path') == None):
-                            print("Element ini_path is missing")
-                            no_error_jread = False
-                        else:
-                            ini_path = jread.find('ini_path').text
-                        if(jread.find('deg_per_neuron') == None):
-                            if(no_error_jread):
-                                self.parts_reader[jread.attrib['name']].init(part, sigma, popsize, ini_path=ini_path)
-                                name_JReader[part] = jread.attrib['name']
-                            else:
-                                print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
-                        else:
-                            deg_per_neuron = float(jread.find('deg_per_neuron').text)
-                            if(no_error_jread):
-                                self.parts_reader[jread.attrib['name']].init(part, sigma, popsize, deg_per_neuron=deg_per_neuron, ini_path=ini_path)
-                            else:
-                                print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
+        #     if not robot == None:
+        #         # init joint reader
+        #         name_JReader = {}
+        #         for jread in robot.iter('JReader'):
+        #             no_error_jread = True
+        #             if(self.add_joint_reader(jread.attrib['name'])):
+        #                 if(jread.find('part') == None):
+        #                     print("Element part is missing")
+        #                     no_error_jread = False
+        #                 else:
+        #                     part = jread.find('part').text
+        #                 if(jread.find('sigma') == None):
+        #                     print("Element sigma is missing")
+        #                     no_error_jread = False
+        #                 else:
+        #                     sigma = float(jread.find('sigma').text)
+        #                 if(jread.find('popsize') == None):
+        #                     print("Element popsize is missing")
+        #                     no_error_jread = False
+        #                 else:
+        #                     popsize = int(jread.find('popsize').text)
+        #                 if(jread.find('ini_path') == None):
+        #                     print("Element ini_path is missing")
+        #                     no_error_jread = False
+        #                 else:
+        #                     ini_path = jread.find('ini_path').text
+        #                 if(jread.find('deg_per_neuron') == None):
+        #                     if(no_error_jread):
+        #                         self.joint_reader[jread.attrib['name']].init(part, sigma, popsize, ini_path=ini_path)
+        #                         name_JReader[part] = jread.attrib['name']
+        #                     else:
+        #                         print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
+        #                 else:
+        #                     deg_per_neuron = float(jread.find('deg_per_neuron').text)
+        #                     if(no_error_jread):
+        #                         self.joint_reader[jread.attrib['name']].init(part, sigma, popsize, deg_per_neuron=deg_per_neuron, ini_path=ini_path)
+        #                     else:
+        #                         print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
 
-                # init joint writer
-                name_JWriter = {}
-                for jwrite in robot.iter('JWriter'):
-                    if(self.add_joint_writer(jwrite.attrib['name'])):
-                        no_error_jwrite = True
-                        if(jwrite.find('part') == None):
-                            print("Element part is missing")
-                            no_error_jwrite = False
-                        else:
-                            part = jwrite.find('part').text
-                        if(jwrite.find('popsize') == None):
-                            print("Element popsize is missing")
-                            no_error_jwrite = False
-                        else:
-                            popsize = int(jwrite.find('popsize').text)
-                        if(jwrite.find('speed') == None):
-                            print("Element speed is missing")
-                            no_error_jwrite = False
-                        else:
-                            speed = float(jwrite.find('speed').text)
-                        if(jwrite.find('ini_path') == None):
-                            print("Element ini_path is missing")
-                            no_error_jwrite = False
-                        else:
-                            ini_path = jwrite.find('ini_path').text
-                        if(jwrite.find('deg_per_neuron') == None):
-                            if(no_error_jwrite):
-                                self.parts_writer[jwrite.attrib['name']].init(part, popsize, speed=speed,ini_path=ini_path)
-                                name_JWriter[part] = jwrite.attrib['name']
-                            else:
-                                print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
-                        else:
-                            deg_per_neuron = float(jwrite.find('deg_per_neuron').text)
-                            if(no_error_jwrite):
-                                self.parts_writer[jwrite.attrib['name']].init(part, popsize, speed=speed, deg_per_neuron=deg_per_neuron, ini_path=ini_path)
-                            else:
-                                print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
+        #         # init joint writer
+        #         name_JWriter = {}
+        #         for jwrite in robot.iter('JWriter'):
+        #             if(self.add_joint_writer(jwrite.attrib['name'])):
+        #                 no_error_jwrite = True
+        #                 if(jwrite.find('part') == None):
+        #                     print("Element part is missing")
+        #                     no_error_jwrite = False
+        #                 else:
+        #                     part = jwrite.find('part').text
+        #                 if(jwrite.find('popsize') == None):
+        #                     print("Element popsize is missing")
+        #                     no_error_jwrite = False
+        #                 else:
+        #                     popsize = int(jwrite.find('popsize').text)
+        #                 if(jwrite.find('speed') == None):
+        #                     print("Element speed is missing")
+        #                     no_error_jwrite = False
+        #                 else:
+        #                     speed = float(jwrite.find('speed').text)
+        #                 if(jwrite.find('ini_path') == None):
+        #                     print("Element ini_path is missing")
+        #                     no_error_jwrite = False
+        #                 else:
+        #                     ini_path = jwrite.find('ini_path').text
+        #                 if(jwrite.find('deg_per_neuron') == None):
+        #                     if(no_error_jwrite):
+        #                         self.joint_writer[jwrite.attrib['name']].init(part, popsize, speed=speed,ini_path=ini_path)
+        #                         name_JWriter[part] = jwrite.attrib['name']
+        #                     else:
+        #                         print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
+        #                 else:
+        #                     deg_per_neuron = float(jwrite.find('deg_per_neuron').text)
+        #                     if(no_error_jwrite):
+        #                         self.joint_writer[jwrite.attrib['name']].init(part, popsize, speed=speed, deg_per_neuron=deg_per_neuron, ini_path=ini_path)
+        #                     else:
+        #                         print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
 
-                # init visual reader
-                for vread in robot.iter('VisReader'):
-                    if(self.add_visual_reader()):
-                        no_error_vread = True
-                        if(vread.find('eye') == None):
-                            print("Element eye is missing")
-                            no_error_vread = False
-                        else:
-                            eye = vread.find('eye').text
-                        if(vread.find('fov_width') == None or vread.find('fov_height')):
-                            print("Element fov_width or fov_height is missing")
-                            no_error_vread = False
-                        else:
-                            fov_width = float(vread.find('fov_width').text)
-                            fov_height = float(vread.find('fov_height').text)
-                        if(vread.find('img_width') == None or vread.find('img_height')):
-                            print("Element img_width or img_height is missing")
-                            no_error_vread = False
-                        else:
-                            img_width = float(vread.find('img_width').text)
-                            img_height = float(vread.find('img_height').text)
-                        if(vread.find('max_buffer_size') == None):
-                            print("Element max_buffer_size is missing")
-                            no_error_vread = False
-                        else:
-                            max_buffer_size = int(vread.find('max_buffer_size').text)
-                        if(vread.find('fast_filter') == None):
-                            print("Element fast_filter is missing")
-                            no_error_vread = False
-                        else:
-                            fast_filter = bool(vread.find('fast_filter').text)
-                        if(vread.find('ini_path') == None):
-                            print("Element ini_path is missing")
-                            no_error_vread = False
-                        else:
-                            ini_path = vread.find('ini_path').text
-                        if(no_error_vread):
-                            self.visual_input.init(eye, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter)
-                        else:
-                            print("Skipped Visual Reader init due to missing element")
+        #         # init visual reader
+        #         for vread in robot.iter('VisReader'):
+        #             if(self.add_visual_reader()):
+        #                 no_error_vread = True
+        #                 if(vread.find('eye') == None):
+        #                     print("Element eye is missing")
+        #                     no_error_vread = False
+        #                 else:
+        #                     eye = vread.find('eye').text
+        #                 if(vread.find('fov_width') == None or vread.find('fov_height')):
+        #                     print("Element fov_width or fov_height is missing")
+        #                     no_error_vread = False
+        #                 else:
+        #                     fov_width = float(vread.find('fov_width').text)
+        #                     fov_height = float(vread.find('fov_height').text)
+        #                 if(vread.find('img_width') == None or vread.find('img_height')):
+        #                     print("Element img_width or img_height is missing")
+        #                     no_error_vread = False
+        #                 else:
+        #                     img_width = float(vread.find('img_width').text)
+        #                     img_height = float(vread.find('img_height').text)
+        #                 if(vread.find('max_buffer_size') == None):
+        #                     print("Element max_buffer_size is missing")
+        #                     no_error_vread = False
+        #                 else:
+        #                     max_buffer_size = int(vread.find('max_buffer_size').text)
+        #                 if(vread.find('fast_filter') == None):
+        #                     print("Element fast_filter is missing")
+        #                     no_error_vread = False
+        #                 else:
+        #                     fast_filter = bool(vread.find('fast_filter').text)
+        #                 if(vread.find('ini_path') == None):
+        #                     print("Element ini_path is missing")
+        #                     no_error_vread = False
+        #                 else:
+        #                     ini_path = vread.find('ini_path').text
+        #                 if(no_error_vread):
+        #                     self.visual_input.init(eye, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter)
+        #                 else:
+        #                     print("Skipped Visual Reader init due to missing element")
 
-                # init tactiel reader
-                name_SReader = {}
-                for sread in robot.iter('TacReader'):
-                    if(self.add_skin_reader(sread.attrib['name'])):
-                        no_error_sread = True
-                        if(sread.find('arm') == None):
-                            print("Element arm is missing")
-                            no_error_sread = False
-                        else:
-                            arm = sread.find('arm').text
-                        if(sread.find('normalize') == None):
-                            print("Element norm is missing")
-                            no_error_sread = False
-                        else:
-                            norm = bool(sread.find('normalize').text)
-                        if(sread.find('ini_path') == None):
-                            print("Element ini_path is missing")
-                            no_error_sread = False
-                        else:
-                            ini_path = sread.find('ini_path').text
-                        if(no_error_sread):
-                            self.tactile_reader[sread.attrib['name']].init(arm, norm, ini_path)
-                            name_SReader[part] = sread.attrib['name']
-                        else:
-                            print("Skipped Skin Reader '" + sread.attrib['name'] + "' init due to missing element")
+        #         # init tactiel reader
+        #         name_SReader = {}
+        #         for sread in robot.iter('TacReader'):
+        #             if(self.add_skin_reader(sread.attrib['name'])):
+        #                 no_error_sread = True
+        #                 if(sread.find('arm') == None):
+        #                     print("Element arm is missing")
+        #                     no_error_sread = False
+        #                 else:
+        #                     arm = sread.find('arm').text
+        #                 if(sread.find('normalize') == None):
+        #                     print("Element norm is missing")
+        #                     no_error_sread = False
+        #                 else:
+        #                     norm = bool(sread.find('normalize').text)
+        #                 if(sread.find('ini_path') == None):
+        #                     print("Element ini_path is missing")
+        #                     no_error_sread = False
+        #                 else:
+        #                     ini_path = sread.find('ini_path').text
+        #                 if(no_error_sread):
+        #                     self.tactile_reader[sread.attrib['name']].init(arm, norm, ini_path)
+        #                     name_SReader[part] = sread.attrib['name']
+        #                 else:
+        #                     print("Skipped Skin Reader '" + sread.attrib['name'] + "' init due to missing element")
 
-                name_dict['JointWriter'] = name_JWriter
-                name_dict['SkinReader'] = name_SReader
+        #         name_dict['JointWriter'] = name_JWriter
+        #         name_dict['SkinReader'] = name_SReader
 
-                return True, name_dict
-            else:
-                print("Failed to read XML-file")
-                return False, name_dict
-        else:
-            print("Not a valid XML-Filepath given!")
-            return False, name_dict
+        #         return True, name_dict
+        #     else:
+        #         print("Failed to read XML-file")
+        #         return False, name_dict
+        # else:
+        #     print("Not a valid XML-Filepath given!")
+        #     return False, name_dict

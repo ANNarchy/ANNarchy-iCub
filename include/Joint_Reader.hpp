@@ -114,8 +114,6 @@ class JointReader : public Mod_BaseClass {
 
  private:
     /*** configuration variables ***/
-    std::string icub_part;    // string describing the part of the iCub
-
     std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
 
     /*** population coding parameters ***/

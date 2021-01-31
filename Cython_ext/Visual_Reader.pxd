@@ -53,8 +53,11 @@ cdef extern from "Visual_Reader.hpp":
         # Close Visual Reader module.
         void Close()
 
+        void setRegister(bint)
+        bint getRegister()
+
 cdef class PyVisualReader:
     cdef shared_ptr[VisualReader] cpp_visual_reader
+    cdef str name
+    cdef str part
 
-    @staticmethod
-    cdef PyVisualReader from_ptr(shared_ptr[VisualReader] _ptr)

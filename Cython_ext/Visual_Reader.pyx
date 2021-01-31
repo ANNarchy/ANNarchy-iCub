@@ -23,7 +23,7 @@
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
-from libcpp.memory cimport shared_ptr
+from libcpp.memory cimport shared_ptr, make_shared
 from libc.stdlib cimport malloc, free
 from cython.operator cimport dereference as deref
 
@@ -33,16 +33,15 @@ import numpy as np
 
 cdef class PyVisualReader:
 
+    # init method
     def __cinit__(self):
         print("Initialize iCub Interface: Visual Reader.")
+        self.cpp_visual_reader = make_shared[VisualReader]()
 
-    @staticmethod
-    cdef PyVisualReader from_ptr(shared_ptr[VisualReader] _ptr):
-        # adapted from https://cython.readthedocs.io/en/latest/src/userguide/extension_types.html
-        # Call to __new__ bypasses __init__ constructor
-        cdef PyVisualReader wrapper = PyVisualReader.__new__(PyVisualReader)
-        wrapper.cpp_visual_reader = _ptr
-        return wrapper
+    # close method
+    def __dealloc__(self):
+        print("Close iCub Interface: Visual Reader.")
+        self.cpp_visual_reader.reset()
 
     ### Access to visual reader member functions
     # init Visual reader with given parameters for image resolution, field of view and eye selection
