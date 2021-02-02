@@ -450,7 +450,7 @@ cdef class iCubANN_wrapper:
                     else:
                         ini_path = sread.find('ini_path').text
                     if(no_error_sread):
-                        sreader = PySkinReader() 
+                        sreader = PySkinReader()
                         if not sreader.init(self, sread.attrib['name'], arm, norm, ini_path):
                             print("Init Skin Reader '" + sread.attrib['name'] + "' failed!")
                     else:

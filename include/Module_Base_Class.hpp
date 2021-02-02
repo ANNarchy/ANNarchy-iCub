@@ -48,5 +48,4 @@ class Mod_BaseClass {
 
     // template function for close method
     virtual void Close() = 0;
-
 };

@@ -70,7 +70,7 @@ cdef class PyJointWriter:
         # we need to transform py-string to c++ compatible string
         cdef string key = part.encode('UTF-8')
         cdef string path = ini_path.encode('UTF-8')
-                
+
         self.part = part
         # preregister module for some prechecks e.g. part already in use
         if iCub.register_jwriter(name, self):

@@ -101,8 +101,8 @@ class SkinReader : public Mod_BaseClass {
 
  private:
     /*** configuration variables ***/
-    std::string side;         // containing information about selected arm (right/left)
-    double norm_fac;          // norming factor: 255.0 for normalized data
+    std::string side;    // containing information about selected arm (right/left)
+    double norm_fac;     // norming factor: 255.0 for normalized data
 
     /*** yarp data structures ***/
     yarp::os::BufferedPort<yarp::sig::Vector> port_hand;       // port for the hand

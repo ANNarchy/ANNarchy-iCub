@@ -19,11 +19,7 @@
 
 #include "Interface_iCub.hpp"
 
-
 iCubANN my_interface;
 
 // Destructor
-iCubANN::~iCubANN() {
-    Yarp.fini();
-}
-
+iCubANN::~iCubANN() { Yarp.fini(); }
