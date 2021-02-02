@@ -23,11 +23,11 @@
 
 from libcpp.string cimport string
 from libcpp.vector cimport vector
-from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref
 
 from Joint_Writer cimport JointWriter
+from iCub_Interface cimport iCubANN_wrapper
 
 import numpy as np
 
@@ -45,7 +45,7 @@ cdef class PyJointWriter:
 
     ### Access to joint writer member functions
     # initialize the joint writer with given parameters
-    def init(self, part, n_pop, degr_per_neuron=0.0, speed=10.0, ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str part, int n_pop, double degr_per_neuron=0.0, double speed=10.0, str ini_path = "../data/"):
         """
             Calls bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, double speed)
 
@@ -53,6 +53,8 @@ cdef class PyJointWriter:
                 Initialize the joint writer with given parameters
 
             params:
+                iCubANN_wrapper iCub    -- main interface wrapper
+                str name                -- name for the joint writer module
                 std::string part        -- string representing the robot part, has to match iCub part naming
                                             {left_(arm/leg), right_(arm/leg), head, torso}
                 int pop_size            -- number of neurons per population, encoding each one joint angle;
@@ -68,20 +70,31 @@ cdef class PyJointWriter:
         # we need to transform py-string to c++ compatible string
         cdef string key = part.encode('UTF-8')
         cdef string path = ini_path.encode('UTF-8')
+                
+        self.part = part
+        # preregister module for some prechecks e.g. part already in use
+        if iCub.register_jwriter(name, self):
+            retval = deref(self.cpp_joint_writer).Init(key, n_pop, degr_per_neuron, speed, path)
+            if not retval:
+                iCub.unregister_jwriter(self)
+            return retval
+        else:
+            return False
 
-        retval = deref(self.cpp_joint_writer).Init(key, n_pop, degr_per_neuron, speed, path)
-        if retval:
-            self.part = part
-        return retval
 
     # close joint writer with cleanup
-    def close(self):
+    def close(self, iCubANN_wrapper iCub):
         """
             Calls JointWriter::Close()
 
             function:
                 Close joint writer with cleanup
+
+            params:
+                iCubANN_wrapper iCub    -- main interface wrapper
         """
+
+        iCub.unregister_jwriter(self)
 
         # call the interface
         deref(self.cpp_joint_writer).Close()
@@ -134,7 +147,7 @@ cdef class PyJointWriter:
         return np.array(deref(self.cpp_joint_writer).GetNeuronsPerJoint())
 
     # set joint velocity
-    def set_joint_velocity(self, speed, joint=(-1)):
+    def set_joint_velocity(self, double speed, int joint=(-1)):
         """
             Calls bool JointWriter::SetJointVelocity(double speed, int joint)
 
@@ -152,7 +165,7 @@ cdef class PyJointWriter:
         # call the interface
         return deref(self.cpp_joint_writer).SetJointVelocity(speed, joint)
 
-    def set_joint_controlmode(self, control_mode, joint=(-1)):
+    def set_joint_controlmode(self, str control_mode, int joint=(-1)):
         """
             Calls bool JointWriter::SetJointControlMode(string control_mode, int joint)
 
@@ -172,7 +185,7 @@ cdef class PyJointWriter:
         return deref(self.cpp_joint_writer).SetJointControlMode(s1, joint)
 
     # write all joints with double values
-    def write_double_all(self, position, mode, blocking=True):
+    def write_double_all(self, position, str mode, blocking=True):
         """
             Calls bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, std::string mode)
 
@@ -182,7 +195,7 @@ cdef class PyJointWriter:
             params:
                 std::vector<double> position    -- joint angles to write to the robot joints
                 bool blocking                   -- if True, function waits for end of motion; default True
-                std::string mode                -- string to select the motion mode: 
+                std::string mode                -- string to select the motion mode:
                                                     - 'abs' for absolute joint angle positions
                                                     - 'rel' for relative joint angles
 
@@ -199,7 +212,7 @@ cdef class PyJointWriter:
         return deref(self.cpp_joint_writer).WriteDoubleAll(position, block, s1)
 
     # write all joints with double values
-    def write_double_multiple(self, position, joints, mode, blocking=True):
+    def write_double_multiple(self, position, joints, str mode, blocking=True):
         """
             Calls bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, bool blocking, std::string mode);
 
@@ -210,7 +223,7 @@ cdef class PyJointWriter:
                 std::vector<double> position    -- joint angles to write to the robot joints
                 std::vector<int> joints         -- Joint indizes of the jointwhich should be moved (head: [3, 4, 5] -> all eye movements)
                 bool blocking                   -- if True, function waits for end of motion; default True
-                std::string mode                -- string to select the motion mode: 
+                std::string mode                -- string to select the motion mode:
                                                     - 'abs' for absolute joint angle positions
                                                     - 'rel' for relative joint angles
             return:
@@ -226,7 +239,7 @@ cdef class PyJointWriter:
 
 
     # write one joint with double value
-    def write_double_one(self, position, joint, mode, blocking=True):
+    def write_double_one(self, position, int joint, str mode, blocking=True):
         """
             Calls bool JointWriter::WriteDouble(double position, int joint, bool blocking, std::string mode)
 
@@ -237,7 +250,7 @@ cdef class PyJointWriter:
                 double position     -- joint angle to write to the robot joint
                 int joint           -- joint number of the robot part
                 bool blocking       -- if True, function waits for end of motion; default True
-                std::string mode    -- string to select the motion mode: 
+                std::string mode    -- string to select the motion mode:
                                         - 'abs' for absolute joint angle position
                                         - 'rel' for relative joint angle
                                         - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
@@ -254,7 +267,7 @@ cdef class PyJointWriter:
         return deref(self.cpp_joint_writer).WriteDoubleOne(position, joint, block, s1)
 
     # write all joints with joint angles encoded in populations vectors
-    def write_pop_all(self, position_pops, mode, blocking=True):
+    def write_pop_all(self, position_pops, str mode, blocking=True):
         """
             Calls bool JointWriter::WritePopAll(std::string std::vector<std::vector<double>> position_popbool blocking, std::string mode)
 
@@ -278,7 +291,7 @@ cdef class PyJointWriter:
         return deref(self.cpp_joint_writer).WritePopAll(position_pops, block, s1)
 
     # write multiple joints with joint angles encoded in populations vectors
-    def write_pop_multiple(self, position_pops, joints, mode, blocking=True):
+    def write_pop_multiple(self, position_pops, joints, str mode, blocking=True):
         """
             Calls bool WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, bool blocking, std::string mode);
 
@@ -303,7 +316,7 @@ cdef class PyJointWriter:
         return deref(self.cpp_joint_writer).WritePopMultiple(position_pops, joints, block, s1)
 
     # write one joint with the joint angle encoded in a population vector
-    def write_pop_one(self, position_pop, joint, mode, blocking=True):
+    def write_pop_one(self, position_pop, int joint, str mode, blocking=True):
         """
             Calls bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool blocking, std::string mode)
 

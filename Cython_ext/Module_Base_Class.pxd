@@ -26,21 +26,4 @@ from libcpp cimport bool as bool_t
 cdef extern from "Module_Base_Class.hpp":
 
     cdef cppclass Mod_BaseClass:
-        Mod_BaseClass() except +    
-        
-        # Set values for type and part
-        void setType(string, string)
-        string getType()
-        string getPart()
-
-        # check if init function was called
-        bool_t CheckInit()
-        # Set value for dev_init
-        void setDevInit(bool_t)
-        # Get value for dev_init
-        bool_t getDevInit()
-        # Set value for registered
-        void setRegister(bool_t)
-
-cdef extern from "Module_Base_Class.hpp":
-    pass
+        Mod_BaseClass() except +

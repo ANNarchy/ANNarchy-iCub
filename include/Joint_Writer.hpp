@@ -194,7 +194,7 @@ class JointWriter : public Mod_BaseClass {
     /*** population coding data structures ***/
     std::vector<double> joint_deg_res_abs;    // degree per neuron for the population coding, value per joint
     std::vector<double> joint_deg_res_rel;    // degree per neuron for the population coding, value per joint
-    int joints;                               // number of joints
+    int joints = 0;                           // number of joints
 
     std::vector<double> joint_min;                      // minimum possible joint angles
     std::vector<double> joint_max;                      // maximum possible joint angles

@@ -234,7 +234,7 @@ int VisualReader::ImgsInBuffer() { return img_buffer.size(); }
 
 std::vector<std::vector<VisualReader::precision>> VisualReader::ReadRobotEyes() {
     std::vector<std::vector<VisualReader::precision>> imgs;
-    if(CheckInit()){
+    if (CheckInit()) {
         if (act_eye == 'B') {
             // read image from the iCub and get CV-Matrix
             iEyeRgb_r = port_left.read();
@@ -337,10 +337,11 @@ void VisualReader::Close() {
     if (rf_running) {
         // stop and close RFModule
         stopModule(true);
+        rf_running = false;
+    }
 
     // close Ports
     close();
-    }
 }
 
 /*** methods for the YARP-RFModule ***/
@@ -506,6 +507,7 @@ bool VisualReader::close() {
 
         return: bool      -- return True, if successful
     */
+
     // disconnect and close left eye port
     if (!port_left.isClosed()) {
         yarp::os::Network::disconnect(robot_port_prefix + "/cam/left", client_port_prefix + "/V_Reader/image/left:i");

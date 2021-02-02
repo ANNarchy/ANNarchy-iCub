@@ -32,7 +32,7 @@ bool Mod_BaseClass::CheckInit() {
         std::cerr << "[" << type << "]"
                   << " Error: Device is not initialized!" << std::endl;
     }
-    if (!registered) {
+    else if (!registered) {
         std::cerr << "[" << type << " " << icub_part << "]"
                   << " Error: Device is not registered!" << std::endl;
     }

@@ -22,12 +22,12 @@
 
 from libcpp.string cimport string
 from libcpp.vector cimport vector
-from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr, make_shared
 from libc.stdlib cimport malloc, free
 from cython.operator cimport dereference as deref
 
 from Visual_Reader cimport VisualReader
+from iCub_Interface cimport iCubANN_wrapper
 
 import numpy as np
 
@@ -45,7 +45,7 @@ cdef class PyVisualReader:
 
     ### Access to visual reader member functions
     # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def init(self, eye, fov_width=60, fov_height=48, img_width=320, img_height=240, max_buffer_size=10, fast_filter=True, ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str eye, double fov_width=60, double fov_height=48, int img_width=320, int img_height=240, int max_buffer_size=10, fast_filter=True, str ini_path = "../data/"):
         """
             Calls bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int max_buffer_size, int img_height)
 
@@ -53,21 +53,30 @@ cdef class PyVisualReader:
                 Initialize Visual reader with given parameters for image resolution, field of view and eye selection
 
             params:
-                char eye            -- characteer representing the selected eye (l/L; r/R)
-                double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
-                double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
-                int img_width       -- output image width in pixel (input width: 320px)
-                int img_height      -- output image height in pixel (input height: 240px)
-                fast_filter         -- flag to select the filter for image upscaling; True for a faster filter; default value is True
+                iCubANN_wrapper iCub    -- main interface wrapper
+                char eye                -- characteer representing the selected eye (l/L; r/R)
+                double fov_width        -- output field of view width in degree [0, 60] (input fov width: 60°)
+                double fov_height       -- output field of view height in degree [0, 48] (input fov height: 48°)
+                int img_width           -- output image width in pixel (input width: 320px)
+                int img_height          -- output image height in pixel (input height: 240px)
+                fast_filter             -- flag to select the filter for image upscaling; True for a faster filter; default value is True
 
             return:
-                bool                -- return True, if successful
+                bool                    -- return True, if successful
         """
         cdef char e = eye.encode('UTF-8')[0]
         cdef string path = ini_path.encode('UTF-8')
 
-        # call the interface
-        return deref(self.cpp_visual_reader).Init(e, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter, path)
+        self.part = eye
+        # preregister module for some prechecks e.g. eye already in use
+        if iCub.register_vis_reader(self):
+            # call the interface
+            retval = deref(self.cpp_visual_reader).Init(e, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter, path)
+            if not retval:
+                iCub.unregister_vis_reader(self)
+            return retval
+        else:
+            return False
 
     # return image vector from the image buffer and remove it from the buffer
     def read_from_buffer(self):
@@ -151,14 +160,19 @@ cdef class PyVisualReader:
         # call the interface
         return np.array(deref(self.cpp_visual_reader).ReadRobotEyes(), dtype=np.float32)
 
-    def close(self):
+    def close(self, iCubANN_wrapper iCub):
         """
             Calls void VisualReader::Stop()
 
             function:
                 Stop reading images from the iCub, by terminating the RFModule and close module.
+
+            params:
+                iCubANN_wrapper iCub    -- main interface wrapper
         """
-        
+
+        iCub.unregister_vis_reader(self)
+
         # call the interface
         deref(self.cpp_visual_reader).Close()
 

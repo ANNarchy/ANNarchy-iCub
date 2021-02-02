@@ -22,12 +22,11 @@
 
 from libcpp.string cimport string
 from libcpp.vector cimport vector
-from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref
 
 from Joint_Reader cimport JointReader
-from iCub_Interface import iCubANN_wrapper
+from iCub_Interface cimport iCubANN_wrapper
 
 import numpy as np
 
@@ -46,7 +45,7 @@ cdef class PyJointReader:
 
     ### Access to joint reader member functions
     # Initialize the joint reader with given parameters
-    def init(self, part, sigma, n_pop, degr_per_neuron=0.0, ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str part, double sigma, int n_pop, double degr_per_neuron=0.0, str ini_path = "../data/"):
         """
             Calls bool JointReader::Init(string part, double sigma, int pop_n, double deg_per_neuron)
 
@@ -54,6 +53,8 @@ cdef class PyJointReader:
                 Initialize the joint reader with given parameters
 
             params:
+                iCubANN_wrapper iCub    -- main interface wrapper
+                str name                -- name for the joint reader module
                 string part             -- string representing the robot part, has to match iCub part naming
                                             {left_(arm/leg), right_(arm/leg), head, torso}
                 sigma                   -- sigma for the joints angles populations coding
@@ -69,20 +70,32 @@ cdef class PyJointReader:
         # we need to transform py-string to c++ compatible string
         cdef string key = part.encode('UTF-8')
         cdef string path = ini_path.encode('UTF-8')
-        retval = deref(self.cpp_joint_reader).Init(key, sigma, n_pop, degr_per_neuron, path)
-        if retval:
-            self.part = part
-        return retval
+
+        self.part = part
+        # preregister module for some prechecks e.g. part already in use
+        if iCub.register_jreader(name, self):
+            # call the interface
+            retval = deref(self.cpp_joint_reader).Init(key, sigma, n_pop, degr_per_neuron, path)
+            if not retval:
+                iCub.unregister_jreader(self)
+            return retval
+        else:
+            return False
 
     # close joint reader with cleanup
-    def close(self):
+    def close(self, iCubANN_wrapper iCub):
         """
             Calls JointReader::Close()
 
             function:
                 Close joint reader with cleanup
 
+            params:
+                iCubANN_wrapper iCub    -- main interface wrapper
        """
+
+        iCub.unregister_jreader(self)
+
         # call the interface
         deref(self.cpp_joint_reader).Close()
         self.part = ""
@@ -147,7 +160,7 @@ cdef class PyJointReader:
         return np.array(deref(self.cpp_joint_reader).ReadDoubleAll(), dtype=np.float64)
 
     # read one joint and return joint angle directly as double value
-    def read_double_one(self, joint):
+    def read_double_one(self, int joint):
         """
             Calls double JointReader::ReadDoubleOne(int joint)
 
@@ -182,7 +195,7 @@ cdef class PyJointReader:
 
 
     # read one joint and return the joint angle encoded in a vector (population coding)
-    def read_pop_one(self, joint):
+    def read_pop_one(self, int joint):
         """
             Calls vector[double] JointReader::ReadPopOne(int joint)
 

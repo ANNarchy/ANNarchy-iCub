@@ -22,11 +22,11 @@
  """
 from libcpp.string cimport string
 from libcpp.vector cimport vector
-from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref
 
 from Skin_Reader cimport SkinReader
+from iCub_Interface cimport iCubANN_wrapper
 
 import numpy as np
 
@@ -45,7 +45,7 @@ cdef class PySkinReader:
 
     ### Access to skin reader member functions
     # init skin reader with given parameters
-    def init(self, arm, norm=True, ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str arm, norm=True, str ini_path = "../data/"):
         """
             Calls bool SkinReader::Init(char arm, bool norm_data)
 
@@ -53,29 +53,43 @@ cdef class PySkinReader:
                 Initialize skin reader with given parameters
 
             params:
-                char arm        -- character to choose the arm side (r/R for right; l/L for left)
-                bool norm_data  -- if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1])
-                ini_path        -- Path to the "interface_param.ini"-file
+                iCubANN_wrapper iCub    -- main interface wrapper
+                str name                -- name for the skin reader module
+                char arm                -- character to choose the arm side (r/R for right; l/L for left)
+                bool norm_data          -- if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1])
+                ini_path                -- Path to the "interface_param.ini"-file
 
             return:
-                bool            -- return True, if successful
+                bool                    -- return True, if successful
         """
         # we need to transform py-string to c++ compatible string
         cdef char a = arm.encode('UTF-8')[0]
         cdef string path = ini_path.encode('UTF-8')
 
-        # call the interface
-        return deref(self.cpp_skin_reader).Init(a, norm, path)
+        self.part = arm
+        # preregister module for some prechecks e.g. arm already in use
+        if iCub.register_skin_reader(name, self):
+            # call the interface
+            retval = deref(self.cpp_skin_reader).Init(a, norm, path)
+            if not retval:
+                iCub.unregister_skin_reader(self)
+            return retval
+        else:
+            return False
 
     # close and clean skin reader
-    def close(self):
+    def close(self, iCubANN_wrapper iCub):
         """
             Calls void SkinReader::Close()
 
             function:
                 Close and clean skin reader
 
+            params:
+                iCubANN_wrapper iCub    -- main interface wrapper
         """
+
+        iCub.unregister_skin_reader(self)
 
         # call the interface
         deref(self.cpp_skin_reader).Close()
@@ -125,7 +139,7 @@ cdef class PySkinReader:
         return np.array(deref(self.cpp_skin_reader).GetTactileHand())
 
     # return the taxel positions given by the ini files
-    def get_taxel_pos(self, skin_part):
+    def get_taxel_pos(self, str skin_part):
         """
             Calls std::vector<std::vector<double>> SkinReader::GetTaxelPos(std::string skin_part)
 

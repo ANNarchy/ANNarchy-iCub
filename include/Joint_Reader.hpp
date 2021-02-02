@@ -118,7 +118,7 @@ class JointReader : public Mod_BaseClass {
 
     /*** population coding parameters ***/
     std::vector<double> joint_deg_res;    // degree per neuron for the population coding, value per joint
-    int joints;                           // number of joints
+    int joints = 0;                       // number of joints
     double sigma_pop;                     // sigma for Gaussian envelope in the population coding
 
     std::vector<double> joint_min;                  // minimum possible joint angles
