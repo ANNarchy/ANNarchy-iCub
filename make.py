@@ -84,10 +84,15 @@ if __name__ == "__main__":
     new_content = contents.replace("PYTHON_INCLUDE", "`/usr/bin/python" + py_version + "-config --includes`") #
     new_content = new_content.replace("OPENCV_INCLUDE", "-I" + cv_include)
     new_content = new_content.replace("YARP_LIB", "-L" + yarp_prefix + "/lib")
+
+    compiler = ""
     if verbose:
-        new_content = new_content.replace("VERBOSE", "--verbose")
-    else:
-        new_content = new_content.replace("VERBOSE ", "")
+        compiler += "--verbose "
+
+    if pedantic:
+        compiler += "-pedantic"
+
+    new_content = new_content.replace("COMPILER", compiler)
 
     f=open("Makefile", "w")
     if f.mode == 'w':
@@ -109,6 +114,5 @@ if __name__ == "__main__":
         print("Compilation interrupted!")
     elif return_val == 512:
         print("Compilation failed!")
-        print("Please check include directories for YARP, OpenCV and Python!")
     else:
         print("Compilation failed!")

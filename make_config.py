@@ -6,8 +6,9 @@ Created on Thu Jul 9 20:26:04 CEST 2020
 config file for the package compilation process
 """
 
-# add the verbose flag to the g++ commands
+# add compiler flags to the g++ commands
 verbose = False
+pedantic = False
 
 # set the OpenCV include directory
 cv_include = "default"
