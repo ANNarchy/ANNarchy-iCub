@@ -25,118 +25,120 @@ import matplotlib.pylab as plt
 import numpy as np
 
 sys.path.append("../build/")
-import iCub_Interface   # requires iCub_Interface.so in the present directory
+# from ..build import iCub_Interface   # requires iCub_Interface.so in the present directory
+import iCub_Interface
+import Joint_Reader
+import Joint_Writer
+import Skin_Reader
+import Visual_Reader
 
 # Test support files
 from supplementary.auxilary_methods import encode
 
 #########################################################
-def call_test_jreader(ann_wrapper):
+def call_test_jreader(iCub):
     """
         Call test for the joint reader module to check different errors.
 
         params:
-            ann_wrapper     -- iCub_ANNarchy Interface
+            iCub     -- iCub_ANNarchy Interface
     """
 
     # add joint reader instances
-    ann_wrapper.add_joint_reader("J_Reader")
-    ann_wrapper.add_joint_reader("J_Reader")    # duplicate check
-    ann_wrapper.add_joint_reader("J_Reader1")
-    ann_wrapper.add_joint_reader("J_Reader2")
+    jreader = Joint_Reader.PyJointReader()
+    jreader1 = Joint_Reader.PyJointReader()
+    jreader2 = Joint_Reader.PyJointReader()
+
 
     print('finish adding')
     print('\n')
 
     # init joint reader
-    ann_wrapper.parts_reader["J_Reader"].init(ann_wrapper.PART_KEY_HEAD, 0.5, 15)
-    ann_wrapper.parts_reader["J_Reader"].init(ann_wrapper.PART_KEY_HEAD, 0.5, 15)        # double initialization
-    ann_wrapper.parts_reader["J_Reader1"].init(ann_wrapper.PART_KEY_RIGHT_ARM, -0.5, 15)      # negative sigma
-    ann_wrapper.parts_reader["J_Reader1"].init(ann_wrapper.PART_KEY_RIGHT_ARM, 0.5, 0, 2.0)   # neuron resolution
-    ann_wrapper.parts_reader["J_Reader2"].init('false_part_key', 0.5, 15)                     # false part key
-    ann_wrapper.parts_reader["J_Reader2"].init(ann_wrapper.PART_KEY_LEFT_ARM, 0.5, -15)       # negative population size
-    ann_wrapper.parts_reader["J_Reader2"].init(ann_wrapper.PART_KEY_LEFT_ARM, 0.5, 0, 0.0)    # wrong population sizing
-    if "NO_NAME" in ann_wrapper.parts_reader:
-        ann_wrapper.parts_reader["NO_NAME"].init(ann_wrapper.PART_KEY_LEFT_ARM, 0.5, 15)          # not existent name
-    else:
+    jreader.init(iCub, "JReader", iCub.PART_KEY_HEAD, 0.5, 15)
+    jreader.init(iCub, "JReader", iCub.PART_KEY_HEAD, 0.5, 15)        # double initialization
+    jreader1.init(iCub, "JReader1", iCub.PART_KEY_RIGHT_ARM, -0.5, 15)      # negative sigma
+    jreader1.init(iCub, "JReader1", iCub.PART_KEY_RIGHT_ARM, 0.5, 0, 2.0)   # neuron resolution
+    jreader2.init(iCub, "JReader2", 'false_part_key', 0.5, 15)                     # false part key
+    jreader2.init(iCub, "JReader2", iCub.PART_KEY_LEFT_ARM, 0.5, -15)       # negative population size
+    jreader2.init(iCub, "JReader2", iCub.PART_KEY_LEFT_ARM, 0.5, 0, 0.0)    # wrong population sizing
+    if iCub.get_jreader_by_name("NO_NAME") == None:
         print("Not existing name!")
 
-    ann_wrapper.rm_joint_reader("J_Reader2")
+    jreader2.close(iCub)
+    del jreader2
 
     print('finish JReader init')
     print('\n')
 
     # print joint resolutions for joint reader
-    print(ann_wrapper.parts_reader["J_Reader"].get_joints_deg_res())
-    print(ann_wrapper.parts_reader["J_Reader"].get_neurons_per_joint())
+    print(jreader.get_joints_deg_res())
+    print(jreader.get_neurons_per_joint())
 
-    print(ann_wrapper.parts_reader["J_Reader1"].get_joints_deg_res())
-    print(ann_wrapper.parts_reader["J_Reader1"].get_neurons_per_joint())
+    print(jreader1.get_joints_deg_res())
+    print(jreader1.get_neurons_per_joint())
 
     print('finish JReader resolutions')
     print('\n')
 
     # test read joints with joint reader
     print('read double_one')
-    print(ann_wrapper.parts_reader["J_Reader"].read_double_one(3))
+    print(jreader.read_double_one(3))
     print('read double_all')
-    print(ann_wrapper.parts_reader["J_Reader"].read_double_all())
+    print(jreader.read_double_all())
     print('read pop_one')
-    print(ann_wrapper.parts_reader["J_Reader"].read_pop_one(3))
+    print(jreader.read_pop_one(3))
     print('read pop_all')
-    print(ann_wrapper.parts_reader["J_Reader"].read_pop_all())
+    print(jreader.read_pop_all())
 
     print('finish JReader reading joints')
     print('\n')
 
     # close joint reader
-    ann_wrapper.parts_reader["J_Reader"].close()
-    ann_wrapper.parts_reader["J_Reader1"].close()
+    jreader.close(iCub)
+    jreader1.close(iCub)
 
     print('finish JReader close')
     print('\n')
 
 
 #########################################################
-def call_test_jwriter(ann_wrapper):
+def call_test_jwriter(iCub):
     """
         Call test for the joint writer module to check different errors.
 
         params:
-            ann_wrapper     -- iCub_ANNarchy Interface
+            iCub     -- iCub_ANNarchy Interface
     """
 
     # add joint writer instances
-    ann_wrapper.add_joint_writer("J_Writer")
-    ann_wrapper.add_joint_writer("J_Writer")   # duplicate check
-    ann_wrapper.add_joint_writer("J_Writer1")
-    ann_wrapper.add_joint_writer("J_Writer2")
+    jwriter = Joint_Writer.PyJointWriter()
+    jwriter1 = Joint_Writer.PyJointWriter()
+    jwriter2 = Joint_Writer.PyJointWriter()
 
     print('finish adding')
     print('\n')
 
     # init joint writer
-    ann_wrapper.parts_writer["J_Writer"].init(ann_wrapper.PART_KEY_HEAD, 15)
-    ann_wrapper.parts_writer["J_Writer"].init(ann_wrapper.PART_KEY_HEAD, 15)          # double initialization
-    ann_wrapper.parts_writer["J_Writer1"].init('false_part_key', 15)                  # false part key
-    ann_wrapper.parts_writer["J_Writer2"].init(ann_wrapper.PART_KEY_LEFT_ARM, -15)    # negative population size
-    ann_wrapper.parts_writer["J_Writer1"].init(ann_wrapper.PART_KEY_RIGHT_ARM, 0, 2.0)
-    # ann_wrapper.parts_writer["NO_NAME"].init(ann_wrapper.PART_KEY_LEFT_ARM, 15)       # not existent name
+    jwriter.init(iCub, "JointWriter", iCub.PART_KEY_HEAD, 15)
+    jwriter.init(iCub, "JointWriter", iCub.PART_KEY_HEAD, 15)               # double initialization
+    jwriter1.init(iCub, "JointWriter1", 'false_part_key', 15)               # false part key
+    jwriter1.init(iCub, "JointWriter1", iCub.PART_KEY_RIGHT_ARM, 0, 2.0)
+    jwriter2.init(iCub, "JointWriter2", iCub.PART_KEY_LEFT_ARM, -15)        # negative population size
 
-    ann_wrapper.rm_joint_writer("J_Writer2")
+    jwriter2.close(iCub)
 
     print('finish JWriter init')
     print('\n')
 
     # print joint population resolutions and velocity for joint writer
-    print(ann_wrapper.parts_writer["J_Writer"].get_joints_deg_res())
-    print(ann_wrapper.parts_writer["J_Writer"].get_neurons_per_joint())
-    print(ann_wrapper.parts_writer["J_Writer"].set_joint_velocity(15.0))
+    print(jwriter.get_joints_deg_res())
+    print(jwriter.get_neurons_per_joint())
+    print(jwriter.set_joint_velocity(15.0))
 
 
-    print(ann_wrapper.parts_writer["J_Writer1"].get_joints_deg_res())
-    print(ann_wrapper.parts_writer["J_Writer1"].get_neurons_per_joint())
-    print(ann_wrapper.parts_writer["J_Writer1"].set_joint_velocity(10.0, joint=3))
+    print(jwriter1.get_joints_deg_res())
+    print(jwriter1.get_neurons_per_joint())
+    print(jwriter1.set_joint_velocity(10.0, joint=3))
 
     print('finish JWriter resolutions')
     print('\n')
@@ -144,154 +146,152 @@ def call_test_jwriter(ann_wrapper):
     # define test positions
     double_all = np.zeros(6)
     double_all_rel = np.ones(6) * 5.1
-    test_pos = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5)
-    test_pos_rel = encode(ann_wrapper.PART_KEY_HEAD, 4, 15, 5, 0.5, relative=True)
+    test_pos = encode(iCub.PART_KEY_HEAD, 4, 15, 5, 0.5)
+    test_pos_rel = encode(iCub.PART_KEY_HEAD, 4, 15, 5, 0.5, relative=True)
     pop_multiple = np.zeros((3, 15))
     pop_multiple_rel = np.zeros((3, 15))
     pop_all = np.zeros((6, 15))
     pop_all_rel = np.zeros((6, 15))
 
     for i in range(3):
-        pop_multiple[i] = encode(ann_wrapper.PART_KEY_HEAD, i + 3, 15, 10., 0.5)
-        pop_multiple_rel[i] = encode(ann_wrapper.PART_KEY_HEAD, i + 3, 15, 10., 0.5, relative=True)
+        pop_multiple[i] = encode(iCub.PART_KEY_HEAD, i + 3, 15, 10., 0.5)
+        pop_multiple_rel[i] = encode(iCub.PART_KEY_HEAD, i + 3, 15, 10., 0.5, relative=True)
 
 
     for i in range(6):
-        pop_all[i] = encode(ann_wrapper.PART_KEY_HEAD, i, 15, 5., 0.5)
-        pop_all_rel[i] = encode(ann_wrapper.PART_KEY_HEAD, i, 15, 5., 0.5, relative=True)
+        pop_all[i] = encode(iCub.PART_KEY_HEAD, i, 15, 5., 0.5)
+        pop_all_rel[i] = encode(iCub.PART_KEY_HEAD, i, 15, 5., 0.5, relative=True)
 
     print("write absolute values")
     # test writing absolute joint angles
     print('write double_one')
-    print(ann_wrapper.parts_writer["J_Writer"].write_double_one(10.0, 4, "abs", True))
+    print(jwriter.write_double_one(10.0, 4, "abs", True))
     time.sleep(2.5)
     print('write double_multiple')
-    print(ann_wrapper.parts_writer["J_Writer"].write_double_multiple( [10., 10., 10.],  [3, 4, 5], "abs", True))
+    print(jwriter.write_double_multiple( [10., 10., 10.],  [3, 4, 5], "abs", True))
     time.sleep(2.5)
     print('write double_all')
-    print(ann_wrapper.parts_writer["J_Writer"].write_double_all(double_all, "abs", True))
+    print(jwriter.write_double_all(double_all, "abs", True))
     time.sleep(2.5)
     print('write pop_one')
-    print(ann_wrapper.parts_writer["J_Writer"].write_pop_one(test_pos, 4, "abs", True))
+    print(jwriter.write_pop_one(test_pos, 4, "abs", True))
     time.sleep(2.5)
     print('write pop_multiple')
-    print(ann_wrapper.parts_writer["J_Writer"].write_pop_multiple(pop_multiple, [3, 4, 5], "abs", True))
+    print(jwriter.write_pop_multiple(pop_multiple, [3, 4, 5], "abs", True))
     time.sleep(2.5)
     print('write pop_all')
-    print(ann_wrapper.parts_writer["J_Writer"].write_pop_all(pop_all, "abs", True))
+    print(jwriter.write_pop_all(pop_all, "abs", True))
 
     print("write relative values")
     # test writing relative joint angles
     print('write double_one')
-    print(ann_wrapper.parts_writer["J_Writer"].write_double_one(10.0, 4, "rel", True))
+    print(jwriter.write_double_one(10.0, 4, "rel", True))
     time.sleep(2.5)
     print('write double_multiple')
-    print(ann_wrapper.parts_writer["J_Writer"].write_double_multiple([10., 10., 10.], [3, 4, 5], "rel", True))
+    print(jwriter.write_double_multiple([10., 10., 10.], [3, 4, 5], "rel", True))
     time.sleep(2.5)
     print('write double_all')
-    print(ann_wrapper.parts_writer["J_Writer"].write_double_all(double_all_rel, "rel", True))
+    print(jwriter.write_double_all(double_all_rel, "rel", True))
     time.sleep(2.5)
     print('write pop_one')
-    print(ann_wrapper.parts_writer["J_Writer"].write_pop_one(test_pos_rel, 4, "rel", True))
+    print(jwriter.write_pop_one(test_pos_rel, 4, "rel", True))
     time.sleep(2.5)
     print('write pop_multiple')
-    print(ann_wrapper.parts_writer["J_Writer"].write_pop_multiple(pop_multiple_rel, [3, 4, 5], "rel", True))
+    print(jwriter.write_pop_multiple(pop_multiple_rel, [3, 4, 5], "rel", True))
     time.sleep(2.5)
     print('write pop_all')
-    print(ann_wrapper.parts_writer["J_Writer"].write_pop_all(pop_all_rel, "rel", True))
+    print(jwriter.write_pop_all(pop_all_rel, "rel", True))
 
     print('reset head position')
-    print(ann_wrapper.parts_writer["J_Writer"].write_double_all(double_all, "abs", True))
+    print(jwriter.write_double_all(double_all, "abs", True))
     time.sleep(2.5)
 
     print('finish JWriter writing joints')
     print('\n')
 
     # close joint writer modules
-    print(ann_wrapper.parts_writer["J_Writer"].close())
-    print(ann_wrapper.parts_writer["J_Writer1"].close())
+    print(jwriter.close(iCub))
+    print(jwriter1.close(iCub))
 
     print('finish JWriter close')
     print('\n')
 
 
 #########################################################
-def call_test_sreader(ann_wrapper):
+def call_test_sreader(iCub):
     """
         Call test for the skin reader module to check different errors.
 
         params:
-            ann_wrapper     -- iCub_ANNarchy Interface
+            iCub     -- iCub_ANNarchy Interface
     """
 
     # add skin reader instances
-    ann_wrapper.add_skin_reader("S_Reader")
-    ann_wrapper.add_skin_reader("S_Reader")    # duplicate check
-    ann_wrapper.add_skin_reader("S_Reader1")
+    sreader = Skin_Reader.PySkinReader()
+    sreader1 = Skin_Reader.PySkinReader()
 
     print('finish skin reader adding')
     print('\n')
 
     # init skin reader
-    ann_wrapper.tactile_reader["S_Reader"].init("r", True)       # correct init
-    ann_wrapper.tactile_reader["S_Reader"].init("r", True)       # double init
-    # ann_wrapper.tactile_reader["NO_NAME"].init("r", True)        # non existent name
-    ann_wrapper.tactile_reader["S_Reader1"].init("g", False)     # wrong eye descriptor
-    ann_wrapper.tactile_reader["S_Reader1"].init("l", False)     # correct init; non norm
+    sreader.init(iCub, "SkinReader", "r", True)       # correct init
+    sreader.init(iCub, "SkinReader", "r", True)       # double init
+    # iCub.tactile_reader["NO_NAME"].init(iCub, "r", True)        # non existent name
+    sreader1.init(iCub, "SkinReader1", "g", False)     # wrong eye descriptor
+    sreader1.init(iCub, "SkinReader1", "l", False)     # correct init; non norm
 
-    ann_wrapper.rm_skin_reader("S_Reader1")
+    sreader1.close(iCub)
 
     print('finish SReader init')
     print('\n')
 
     # print taxel positions
-    ann_wrapper.tactile_reader["S_Reader"].read_tactile()
-    print(ann_wrapper.tactile_reader["S_Reader"].get_taxel_pos("arm"))
-    print(ann_wrapper.tactile_reader["S_Reader"].get_taxel_pos("forearm"))
-    print(ann_wrapper.tactile_reader["S_Reader"].get_taxel_pos("hand"))
+    sreader.read_tactile()
+    print(sreader.get_taxel_pos("arm"))
+    print(sreader.get_taxel_pos("forearm"))
+    print(sreader.get_taxel_pos("hand"))
 
     # print tactile data
-    print(ann_wrapper.tactile_reader["S_Reader"].get_tactile_arm())
-    print(ann_wrapper.tactile_reader["S_Reader"].get_tactile_forearm())
-    print(ann_wrapper.tactile_reader["S_Reader"].get_tactile_hand())
+    print(sreader.get_tactile_arm())
+    print(sreader.get_tactile_forearm())
+    print(sreader.get_tactile_hand())
 
     # close skin reader
-    print(ann_wrapper.tactile_reader["S_Reader"].close())
+    print(sreader.close(iCub))
 
     print('finish SReader close')
     print('\n')
 
 
 #########################################################
-def call_test_vreader(ann_wrapper):
+def call_test_vreader(iCub):
     """
         Call test for the visual reader module to check different errors.
 
         params:
-            ann_wrapper     -- iCub_ANNarchy Interface
+            iCub     -- iCub_ANNarchy Interface
     """
 
     # add visual reader instance
-    ann_wrapper.add_visual_reader()
-    ann_wrapper.add_visual_reader()
+    visreader = Visual_Reader.PyVisualReader()
 
     print('finish visual reader adding')
     print('\n')
 
     # init visual reader
-    print(ann_wrapper.visual_input.init('r', 75, 48, 320, 240))  # invalid field of view width
-    print(ann_wrapper.visual_input.init('r', 60, 56, 320, 240))  # invalid field of view height
-    print(ann_wrapper.visual_input.init('t', 60, 48, 320, 240))  # invalid eye character
-    print(ann_wrapper.visual_input.init('r', 60, 48, 160, 120))  # output size below input size
-    print(ann_wrapper.visual_input.init('r'))                    # use of default values; init already done
+    print(visreader.init(iCub, 'r', 75, 48, 320, 240))  # invalid field of view width
+    print(visreader.init(iCub, 'r', 60, 56, 320, 240))  # invalid field of view height
+    print(visreader.init(iCub, 't', 60, 48, 320, 240))  # invalid eye character
+    print(visreader.init(iCub, 'r', 60, 48, 160, 120))  # output size below input size
+    print(visreader.init(iCub, 'r'))                    # use of default values; init already done
 
     print('finish VReader init')
     print('\n')
 
     # record images from the iCub cameras
-    ann_wrapper.visual_input.start()
+    visreader.start()
     time.sleep(1.5)
-    test_img = ann_wrapper.visual_input.read_from_buffer()
+    test_img = visreader.read_from_buffer()
     print(test_img.shape)
     if test_img.shape[0] > 0:
         test_img = test_img.reshape(120, 160)
@@ -303,46 +303,44 @@ def call_test_vreader(ann_wrapper):
         print('No buffered image!')
 
     # stop the visual reader instance
-    ann_wrapper.visual_input.stop()
+    visreader.stop()
     # first remove the old visual reader instance, then add and init a new visual reader instance
-    ann_wrapper.rm_visual_reader()
-    ann_wrapper.add_visual_reader()
-    print(ann_wrapper.visual_input.init('l'))                    # use of default values; reinitialization left eye
+    visreader.close(iCub)
+    print(visreader.init(iCub, 'l'))                    # use of default values; reinitialization left eye
 
     # first remove the old visual reader instance, then add and init a new visual reader instance
-    ann_wrapper.rm_visual_reader()
-    ann_wrapper.add_visual_reader()
-    print(ann_wrapper.visual_input.init('b'))                    # use of default values; reinitialization binocular
-    ann_wrapper.rm_visual_reader()
+    visreader.close(iCub)
+    print(visreader.init(iCub, 'b'))                    # use of default values; reinitialization binocular
+    visreader.close(iCub)
 
 
 #########################################################
 if __name__ == "__main__":
-    wrapper = iCub_Interface.iCubANN_wrapper()
+    iCub = iCub_Interface.iCubANN_wrapper()
 
     if len(sys.argv) > 1:
         for command in sys.argv[1:]:
             if command == 'all':
-                call_test_jreader(wrapper)
-                call_test_jwriter(wrapper)
-                call_test_sreader(wrapper)
-                call_test_vreader(wrapper)
+                call_test_jreader(iCub)
+                call_test_jwriter(iCub)
+                call_test_sreader(iCub)
+                call_test_vreader(iCub)
             elif command == "noskin":
-                call_test_jreader(wrapper)
-                call_test_jwriter(wrapper)
-                call_test_vreader(wrapper)
+                call_test_jreader(iCub)
+                call_test_jwriter(iCub)
+                call_test_vreader(iCub)
             elif command == "jreader":
-                call_test_jreader(wrapper)
+                call_test_jreader(iCub)
             elif command == "jwriter":
-                call_test_jwriter(wrapper)
+                call_test_jwriter(iCub)
             elif command == "sreader":
-                call_test_sreader(wrapper)
+                call_test_sreader(iCub)
             elif command == "vreader":
-                call_test_vreader(wrapper)
+                call_test_vreader(iCub)
             else:
                 print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader')
     else:
         print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader')
 
-    del wrapper
+    del iCub
     print('finished call tests')
