@@ -79,7 +79,7 @@ cdef class PyVisualReader:
             return False
 
     # return image vector from the image buffer and remove it from the buffer
-    def read_from_buffer(self):
+    def read_from_buffer(self, bint wait2img = True, int trials = 20):
         """
             Calls std::vector<precision> VisualReader::ReadFromBuf()
 
@@ -92,7 +92,7 @@ cdef class PyVisualReader:
         """
 
         # call the interface
-        return np.array(deref(self.cpp_visual_reader).ReadFromBuf(), dtype=np.float32)
+        return np.array(deref(self.cpp_visual_reader).ReadFromBuf(wait2img, trials))
 
     # start reading images from the iCub with a YARP-RFModule
     def start(self):

@@ -29,6 +29,7 @@
 #include <opencv2/opencv.hpp>
 #include <queue>
 #include <string>
+#include <thread>
 #include <typeinfo>
 
 #include "INI_Reader/INIReader.h"
@@ -176,7 +177,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
     }
 }
 
-std::vector<VisualReader::precision> VisualReader::ReadFromBuf() {
+std::vector<VisualReader::precision> VisualReader::ReadFromBuf(bool wait2img, int trials) {
     /*
         Read image vector from the image buffer and remove from the buffer. Call twice in binocular mode (first right eye image second left eye image).
 
@@ -185,13 +186,19 @@ std::vector<VisualReader::precision> VisualReader::ReadFromBuf() {
     std::vector<precision> img;
     if (CheckInit()) {
         // if image buffer is not empty return the image and delete it from the buffer
-        if (!img_buffer.empty()) {
+        if (wait2img) {
+            for (int i = 0; i <= trials; i++) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                if (!img_buffer.empty()) {
+                    img = img_buffer.front();
+                    img_buffer.pop_front();
+                    break;
+                }
+            }
+        } else if (!img_buffer.empty()) {
             img = img_buffer.front();
             img_buffer.pop_front();
         }
-        //  else {
-        //     printf("[Visual Reader] The image buffer is empty! \n");
-        // }
     }
     return img;
 }

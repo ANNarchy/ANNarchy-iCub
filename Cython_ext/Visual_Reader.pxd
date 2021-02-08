@@ -36,7 +36,7 @@ cdef extern from "Visual_Reader.hpp":
         bool_t Init(char, double, double, int, int, int, bool_t, string)
 
         # Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
-        vector[precision] ReadFromBuf()
+        vector[precision] ReadFromBuf(bool_t, int)
 
         # Start reading images from the iCub with YARP-RFModule.
         bool_t Start(int argc, char *[])

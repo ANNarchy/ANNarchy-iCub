@@ -117,19 +117,24 @@ cdef class iCubANN_wrapper:
 
     def clear(self):
         print("Clear iCub interface")
-        for key, reader in self.joint_reader.items():
-            reader.close()
-        for key, writer in self.joint_writer.items():
-            writer.close()
-        for key, tactile in self.skin_reader.items():
-            tactile.close()
+        size = len(self.joint_reader)
+        while size > 0:
+            self.joint_reader[list(self.joint_reader.keys())[0]].close(self)
+            size = len(self.joint_reader)
+        size = len(self.joint_reader)
+        while size > 0:
+            self.joint_writer[list(self.joint_writer.keys())[0]].close(self)
+            size = len(self.joint_writer)
+        while size > 0:
+            self.skin_reader[list(self.skin_reader.keys())[0]].close(self)
+            size = len(self.skin_reader)
 
         self.joint_reader.clear()
         self.joint_writer.clear()
         self.skin_reader.clear()
 
         if not self.visual_input == None:
-            self.visual_input.Close()
+            self.visual_input.close(self)
             self.visual_input = None
 
     ### Manage the reader/writer modules ###

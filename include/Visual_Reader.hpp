@@ -60,9 +60,11 @@ class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
 
     /**
      * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
+     * \param[in] wait2img wait for image in buffer
+     * \param[in] trials trials for waiting to image in buffer
      * \return image as 1D-vector from the image buffer
      */
-    std::vector<precision> ReadFromBuf();
+    std::vector<precision> ReadFromBuf(bool wait2img = false, int trials = 20);
 
     /**
      * \brief Start reading images from the iCub with YARP-RFModule.
