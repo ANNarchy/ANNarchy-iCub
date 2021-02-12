@@ -105,7 +105,6 @@ cdef class iCubANN_wrapper:
         self.joint_writer_parts = {}
 
         self.skin_reader = {}
-        self.skin_reader_parts = {}
 
     def __dealloc__(self):
         print("Close iCub Interface.")
@@ -212,22 +211,16 @@ cdef class iCubANN_wrapper:
                 print("[Interface iCub] Skin Reader module name is already used!")
                 return False
             else:
-                if module.part in self.skin_reader_parts:
-                    print("[Interface iCub] Skin Reader module part is already used!")
-                    return False
-                else:
-                    self.skin_reader[name] = module
-                    module.name = name
-                    self.skin_reader_parts[module.part] = name
-                    deref(module.cpp_skin_reader).setRegister(1)
-                    return True
+                self.skin_reader[name] = module
+                module.name = name
+                deref(module.cpp_skin_reader).setRegister(1)
+                return True
 
     # unregister skin reader module
     def unregister_skin_reader(self, PySkinReader module):
         if deref(module.cpp_skin_reader).getRegister():
             deref(module.cpp_skin_reader).setRegister(0)
             self.skin_reader.pop(module.name, None)
-            self.skin_reader_parts.pop(module.part, None)
             module.name = ""
             return True
         else:
@@ -294,12 +287,6 @@ cdef class iCubANN_wrapper:
             print("[Interface iCub] No Skin Reader module with the given name is registered!")
             return None
 
-    def get_skinreader_by_part(self, str part):
-        if (part in self.skin_reader_parts):
-            return self.skin_reader[self.skin_reader_parts[part]]
-        else:
-            print("[Interface iCub] No Skin Reader module with the given part is registered!")
-            return None
 
     def get_vis_reader(self):
         if self.visual_input == None:
@@ -463,7 +450,7 @@ cdef class iCubANN_wrapper:
 
                 name_dict["Joint_Reader"] = self.joint_reader_parts
                 name_dict["Joint_Writer"] = self.joint_writer_parts
-                name_dict["Skin_Reader"] = self.skin_reader_parts
+                name_dict["Skin_Reader"] = self.skin_reader.keys()
 
                 return True, name_dict
             else:

@@ -33,7 +33,7 @@ cdef extern from "Skin_Reader.hpp":
         SkinReader() except +
 
         # Initialize skin reader with given parameters.
-        bool_t Init(char, bool_t, string)
+        bool_t Init(string, char, bool_t, string)
 
         #  Close and clean skin reader
         void Close()

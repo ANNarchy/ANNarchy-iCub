@@ -65,12 +65,13 @@ cdef class PySkinReader:
         # we need to transform py-string to c++ compatible string
         cdef char a = arm.encode('UTF-8')[0]
         cdef string path = ini_path.encode('UTF-8')
+        cdef string name_mod = name.encode('UTF-8')
 
         self.part = arm
         # preregister module for some prechecks e.g. arm already in use
         if iCub.register_skin_reader(name, self):
             # call the interface
-            retval = deref(self.cpp_skin_reader).Init(a, norm, path)
+            retval = deref(self.cpp_skin_reader).Init(name_mod, a, norm, path)
             if not retval:
                 iCub.unregister_skin_reader(self)
             return retval

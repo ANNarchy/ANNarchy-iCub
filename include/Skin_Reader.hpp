@@ -58,7 +58,7 @@ class SkinReader : public Mod_BaseClass {
      *              - arguments not valid: e.g. arm character not correct; ini file not in given path
      *              - YARP-Server not running
      */
-    bool Init(char arm, bool norm_data, std::string ini_path = "../data/");
+    bool Init(std::string name, char arm, bool norm_data, std::string ini_path = "../data/");
 
     /**
      * \brief  Close and clean skin reader
