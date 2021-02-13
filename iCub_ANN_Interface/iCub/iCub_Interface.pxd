@@ -20,7 +20,7 @@
    along with this headers. If not, see [http://www.gnu.org/licenses/].
  """
 
-from Visual_Reader cimport PyVisualReader
+from .Visual_Reader cimport PyVisualReader
 
 cdef extern from "Interface_iCub.hpp":
 

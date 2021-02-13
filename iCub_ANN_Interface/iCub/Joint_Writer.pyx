@@ -26,8 +26,8 @@ from libcpp.vector cimport vector
 from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref
 
-from Joint_Writer cimport JointWriter
-from iCub_Interface cimport iCubANN_wrapper
+from .Joint_Writer cimport JointWriter
+from .iCub_Interface cimport iCubANN_wrapper
 
 import numpy as np
 

@@ -26,8 +26,8 @@ from libcpp.memory cimport shared_ptr, make_shared
 from libc.stdlib cimport malloc, free
 from cython.operator cimport dereference as deref
 
-from Visual_Reader cimport VisualReader
-from iCub_Interface cimport iCubANN_wrapper
+from .Visual_Reader cimport VisualReader
+from .iCub_Interface cimport iCubANN_wrapper
 
 import numpy as np
 

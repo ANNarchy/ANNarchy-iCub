@@ -3,7 +3,7 @@
 import os
 import sys
 
-from setuptools import Extension, setup
+from setuptools import Extension, setup, find_packages
 from Cython.Build import cythonize
 
 from make_config import yarp_prefix, cv_include
@@ -26,74 +26,95 @@ else:
     if not os.path.isdir(cv_include + "/opencv2"):
         sys.exit("Did not find OpenCV in given path! Please correct cv_include in make_config.py!")
 
-include_dir = ["./include", yarp_prefix + "/include", cv_include]
+include_dir = ["iCub_ANN_Interface/include", yarp_prefix + "/include", cv_include]
 
 libs = ["opencv_core", "opencv_imgproc",
         "YARP_dev", "YARP_init", "YARP_math", "YARP_name", "YARP_os", "YARP_run", "YARP_sig"]
 
 lib_dirs=["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib"]
 
-sources = ["include/INI_Reader/INIReader.cpp", "include/INI_Reader/ini.cpp", "src/Module_Base_Class.cpp"]
-sources1 = ["src/Joint_Reader.cpp", "src/Joint_Writer.cpp", "src/Skin_Reader.cpp", "src/Visual_Reader.cpp"]
+
+prefix_cy = "iCub_ANN_Interface/"
+prefix_cpp = "iCub_ANN_Interface/src/"
+
+sources = ["iCub_ANN_Interface/include/INI_Reader/INIReader.cpp", "iCub_ANN_Interface/include/INI_Reader/ini.cpp", prefix_cpp + "Module_Base_Class.cpp"]
+sources1 = [prefix_cpp + "Joint_Reader.cpp", prefix_cpp + "Joint_Writer.cpp", prefix_cpp + "Skin_Reader.cpp", prefix_cpp + "Visual_Reader.cpp"]
+
+package_data = ['__init__.py', 
+                'iCub/*pxd',
+                'iCub/*pyx',
+                'iCub/__init__.py',
+                'Sync/*pyx',
+                'Sync/__init__.py',
+                ]
+
+extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-w"]
 
 extensions = [
-    Extension("Joint_Reader", ["Cython_ext/Joint_Reader.pyx", "src/Joint_Reader.cpp"] + sources,
+    Extension("iCub_ANN_Interface.iCub.Joint_Reader", [prefix_cy + "iCub/Joint_Reader.pyx", prefix_cpp + "Joint_Reader.cpp"] + sources,
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=["-g", "-fPIC", "-std=c++17", "--shared"]
+        extra_compile_args=extra_compile_args
         ),
 
-    Extension("Joint_Writer", ["Cython_ext/Joint_Writer.pyx", "src/Joint_Writer.cpp"] + sources,
+    Extension("iCub_ANN_Interface.iCub.Joint_Writer", [prefix_cy + "iCub/Joint_Writer.pyx", prefix_cpp + "Joint_Writer.cpp"] + sources,
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=["-g", "-fPIC", "-std=c++17", "--shared"]
+        extra_compile_args=extra_compile_args
         ),
 
-    Extension("Skin_Reader", ["Cython_ext/Skin_Reader.pyx", "src/Skin_Reader.cpp"] + sources,
+    Extension("iCub_ANN_Interface.iCub.Skin_Reader", [prefix_cy + "iCub/Skin_Reader.pyx", prefix_cpp + "Skin_Reader.cpp"] + sources,
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=["-g", "-fPIC", "-std=c++17", "--shared"]
+        extra_compile_args=extra_compile_args
         ),
 
-    Extension("Visual_Reader", ["Cython_ext/Visual_Reader.pyx", "src/Visual_Reader.cpp"] + sources,
+    Extension("iCub_ANN_Interface.iCub.Visual_Reader", [prefix_cy + "iCub/Visual_Reader.pyx", prefix_cpp + "Visual_Reader.cpp"] + sources,
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=["-g", "-fPIC", "-std=c++17", "--shared"]
+        extra_compile_args=extra_compile_args
         ),
 
-    Extension("iCub_Interface", ["Cython_ext/iCub_Interface.pyx","./src/Interface_iCub.cpp"] + sources + sources1,
+    Extension("iCub_ANN_Interface.iCub.iCub_Interface", [prefix_cy + "iCub/iCub_Interface.pyx", prefix_cpp + "Interface_iCub.cpp"] + sources + sources1,
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=["-g", "-fPIC", "-std=c++17", "--shared"]
+        extra_compile_args=extra_compile_args
         ),
-    Extension("MasterClock", ["Cython_ext/Master_Clock.pyx"],
+
+    Extension("iCub_ANN_Interface.Sync.Master_Clock", [prefix_cy + "Sync/Master_Clock.pyx"],
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=["-g", "-fPIC", "-std=c++17", "--shared"]
+        extra_compile_args=extra_compile_args
         )
 ]
 
 setup(
-    name="iCub_Interface",
-    ext_modules=cythonize(extensions),
-    description="This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.",
-    version="0.3",
+    name="iCub_ANN_Interface",
+    packages=find_packages(),
+    ext_modules=cythonize(extensions, language_level=int(sys.version_info[0])),
+    description="Interface for iCub robot and ANNarchy neuro-simulator",
+    long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.""",
+    version="1.0",
     author="Torsten Fietzek",
-    keywords=["version", "0.3"],
     author_email="torsten.fietzek@informatik.tu-chemnitz.de",
-    license="GNU General Public License V3",
-    zip_safe=False
+    license="GPLv2+",
+    zip_safe=False,
+    package_data={'iCub_ANN_Interface': package_data},
+    install_requires=[
+        'numpy',
+        'cython'
+    ]
 )
 

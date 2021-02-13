@@ -25,8 +25,8 @@ from libcpp.vector cimport vector
 from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref
 
-from Skin_Reader cimport SkinReader
-from iCub_Interface cimport iCubANN_wrapper
+from .Skin_Reader cimport SkinReader
+from .iCub_Interface cimport iCubANN_wrapper
 
 import numpy as np
 

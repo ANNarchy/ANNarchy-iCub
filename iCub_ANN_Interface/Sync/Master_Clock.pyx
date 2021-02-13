@@ -25,7 +25,7 @@
 import threading as mp
 import time
 
-class Master_Clock(object):
+class MasterClock(object):
     def __init__(self):
         self.instances = []
         # mp.set_start_method('fork')
@@ -74,7 +74,7 @@ if __name__ == '__main__':
             print(self.iCub, T)
             pass
 
-    mc = Master_Clock()
+    mc = MasterClock()
     ANNnet = "TEST ANNarchy"
     ann_clock = ANNInterface(ANNnet)
     iCub = "TEST iCub"
