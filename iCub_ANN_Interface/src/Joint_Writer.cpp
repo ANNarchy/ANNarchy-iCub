@@ -413,6 +413,11 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
             return false;
         }
 
+        if (*(std::min_element(joint_selection.begin(), joint_selection.end())) < 0) {
+            std::cerr << "[Joint Writer " << icub_part << "] Minimum joint number is out of range!" << std::endl;
+            return false;
+        }
+
         // execute motion dependent on selected mode
         bool start = false;
         if (mode == "abs") {
@@ -478,7 +483,7 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
     if (CheckInit()) {
         // Check joint number
         if (joint >= joints || joint < 0) {
-            std::cerr << "[Joint Writer " << icub_part << "] Selected joint out of range!" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Selected joint <" << joint << "> out of range!" << std::endl;
             return false;
         }
         double act_pos;
@@ -735,7 +740,7 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
     if (CheckInit()) {
         // Check joint number
         if (joint >= joints || joint < 0) {
-            std::cerr << "[Joint Writer " << icub_part << "] Selected joint is out of range!" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Selected joint <" << joint << "> is out of range!" << std::endl;
             return false;
         }
 

@@ -305,14 +305,14 @@ double JointReader::ReadDoubleOne(int joint) {
         return: double          -- joint angle read from the robot
     */
 
-    double angle = 0.0;
+    double angle = -999.;
     if (CheckInit()) {
-        if (joint < joints && joint > 0) {
+        if (joint < joints && joint >= 0) {
             while (!ienc->getEncoder(joint, &angle)) {
                 yarp::os::Time::delay(0.001);
             }
         } else {
-            std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Selected joint <" << joint << "> is out of range!" << std::endl;
         }
     }
     return angle;
@@ -327,18 +327,18 @@ std::vector<double> JointReader::ReadDoubleOneTime(int joint) {
         return: double          -- joint angle read from the robot
     */
 
-    double angle = 0.0;
+    double angle = -999.;
     std::vector<double> angle_stamped;
 
     if (CheckInit()) {
-        if (joint < joints && joint > 0) {
+        if (joint < joints && joint >= 0) {
             while (!ienc->getEncoder(joint, &angle)) {
                 yarp::os::Time::delay(0.001);
             }
             angle_stamped.push_back(yarp::os::Time::now() * 1000.);
             angle_stamped.push_back(angle);
         } else {
-            std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Selected joint <" << joint << "> is out of range!" << std::endl;
         }
     }
     return angle_stamped;
@@ -377,14 +377,14 @@ std::vector<double> JointReader::ReadPopOne(int joint) {
 
     std::vector<double> angle_pop;
     if (CheckInit()) {
-        if (joint < joints || joint > 0) {
+        if (joint < joints && joint >= 0) {
             double angle;
             while (!ienc->getEncoder(joint, &angle)) {
                 yarp::os::Time::delay(0.01);
             }
             angle_pop = Encode(angle, joint);
         } else {
-            std::cerr << "[Joint Reader " << icub_part << "] Selected joint is out of range!" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Selected joint <" << joint << "> is out of range!" << std::endl;
         }
     }
     return angle_pop;
