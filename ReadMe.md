@@ -30,7 +30,12 @@ The main class is the "iCubANN" class, handling the subclass instances. The subc
 
 ## Folder structure
 - Interface_ANNarchy_iCub -> Main folder containing the whole interface
-    - Cython_ext -> Contains the Cython files (pyx, pxd) for wrapping the C++ code for the use in Python 
+    - Interface_ANN_iCub
+        - iCub -> Contains the Cython files (pyx, pxd) for wrapping the C++ code for the use in Python (iCub interaction modules)
+        - Sync -> Classes used for synchronized execution of iCub interaction, ANNarchy simulation and further modules
+        - include -> This folder contains the C++ header files for the interface modules.
+            - INI_Reader -> The INI-Reader is an external module, which is used to handle ini-files.
+        - src -> This folder contains the C++ source files for the interface modules.
     - data -> Folder capsulate the data files used by the interface.
         - sensor_positions -> This folder caontains the files from the iCub simulator installation with the position data for the tactile sensors.
         - interface_param.ini -> ini-file with several parameters for the interface
@@ -38,26 +43,27 @@ The main class is the "iCubANN" class, handling the subclass instances. The subc
         - joint_limits_real.ini -> In the ini file the real robot joint limitations of the iCub are given.<br>
                             !!! This should be checked before the usage with the real robot, to avoid damage. !!!
     - doc -> This folder contains the doxygen generated documentation for the interface
-    - include -> This folder contains the C++ header files for the interface modules.
-        - INI_Reader -> The INI-Reader is an external module, which is used to handle ini-files.
-    - src -> This folder contains the C++ source files for the interface modules.
     - Testfiles -> files for interface testing
 
 
 ## Preparation
+Simply install the interface with pip by executing the following line in a terminal in the interface directory.
+```
+pip install .
+```
 To use the interface in Python the source code has to be compiled. For compilation execute the make.py script. This generates the nessecary Makefile and starts the build process. In case of missing/false include directories the make_config file has to be modified.
-The resulting .so files are saved in the build folder. 
+The resulting .so files are saved in the build folder.
 
 For use in Python the build folder could be added to the Pythonpath-variable, therefore add the following line to the .bashrc in the home-directory:
 ```
 export PYTHONPATH=${PYTHONPATH}:/path/to/repo/Interface_ANNarchy_iCub/build
 ```
 
-Otherwise the library path has to be added to the import path inside your user python script module above `import iCub_Interface`. This is done with the sys module:
+Otherwise the library path has to be added to the import path inside your user python script module above `import iCub_ANN_Interface`. This is done with the sys module:
 ```Python
 import sys
 sys.path.append("path/to/so/files")
-import iCub_Interface
+import iCub_ANN_Interface
 ...
 ```
 
