@@ -64,23 +64,36 @@ import iCub_Interface
 ## Generic Python Example
 
 ```Python
-import iCub_Interface
+from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader
+import iCub_ANN_Interface.Vocabs as iCub_Constants
+
 
 iCub = iCub_Interface.iCubANN_wrapper()
 ...
 # add nessacary instances
-iCub.add_joint_reader(jreader_name)
-iCub.add_joint_writer(jwriter_name)
-iCub.add_skin_reader(sreader_name)
-iCub.add_visual_reader()
+jreader = Joint_Reader.PyJointReader()
+jwriter = Joint_Writer.PyJointWriter()
+sreader = Skin_Reader.PySkinReader()
+visreader = Visual_Reader.PyVisualReader()
+...
+
+# init modules (necessary for all modules before usage)
+jreader.init(iCub, name , ...)
+jwriter.init(iCub, name , ...)
+sreader.init(iCub, name , ...)
+visreader.init(iCub, ...)
+...
 
 # use interface modules
-iCub.parts_reader[jreader_name].method_name(...)
-iCub.parts_writer[jwriter_name].method_name(...)
-iCub.tactile_reader[sreader_name].method_name(...)
-iCub.visual_input.method_name(...)
+jreader.method_name(...)
+jwriter.method_name(...)
+sreader.method_name(...)
+visreader.method_name(...)
 ...
+...
+
 del iCub
+del jreader, jwriter, sreader, visreader
 ```
 
 ## useful links
@@ -103,3 +116,5 @@ Helge Ülo Dinkelbach<br>
 Python  >= 3.5<br>
 YARP    >= 3.2<br>
 OpenCV  >= 3.4<br>
+numpy  <br>
+
