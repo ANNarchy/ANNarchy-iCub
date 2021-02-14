@@ -25,12 +25,10 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-sys.path.append("../build/")
-import iCub_Interface  # requires iCub_Interface in the present directory
-import Joint_Reader
-import Joint_Writer
-import Skin_Reader
-import Visual_Reader
+# iCub ANNarchy Interface
+# sys.path.append("../build/")
+from iCub_ANN_Interface.iCub import iCub_Interface, Joint_Reader, Joint_Writer, Skin_Reader, Visual_Reader
+import iCub_ANN_Interface.Vocabs as iCub_Constants
 
 # Python libraries for simulator control
 import iCub_Python_Lib.iCubSim_world_controller as iSim_wc
@@ -70,8 +68,8 @@ def speed_test_jreader(ann_wrapper, test_count):
     print('____ Added all joint reader ____')
 
     # init joint reader
-    jreader1.init(ann_wrapper, "right_arm", ann_wrapper.PART_KEY_RIGHT_ARM, sigma, n_pop, neuron_res)
-    jreader2.init(ann_wrapper,"head", ann_wrapper.PART_KEY_HEAD, sigma, n_pop, neuron_res)
+    jreader1.init(ann_wrapper, "right_arm", iCub_Constants.PART_KEY_RIGHT_ARM, sigma, n_pop, neuron_res)
+    jreader2.init(ann_wrapper,"head", iCub_Constants.PART_KEY_HEAD, sigma, n_pop, neuron_res)
 
     print('____ Initialized all joint reader and writer ____')
     print('____________________________________________________________\n')
@@ -783,8 +781,8 @@ def vis_move_test(ann_wrapper):
 
     # init visual reader and joint writer instances
     visread.init(ann_wrapper, 'r', 60, 48, 80, 60)
-    hand_write.init(ann_wrapper, "moving", ann_wrapper.PART_KEY_RIGHT_ARM, n_pop, speed_arm)
-    head_write.init(ann_wrapper, "head", ann_wrapper.PART_KEY_HEAD, n_pop, speed_head)
+    hand_write.init(ann_wrapper, "moving", iCub_Constants.PART_KEY_RIGHT_ARM, n_pop, speed_arm)
+    head_write.init(ann_wrapper, "head", iCub_Constants.PART_KEY_HEAD, n_pop, speed_head)
 
     # move the right arm to the start position
     for i in range(hand_write.get_joint_count()):

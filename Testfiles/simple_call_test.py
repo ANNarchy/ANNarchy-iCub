@@ -24,13 +24,9 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-sys.path.append("../build/")
-# from ..build import iCub_Interface   # requires iCub_Interface.so in the present directory
-import iCub_Interface
-import Joint_Reader
-import Joint_Writer
-import Skin_Reader
-import Visual_Reader
+# sys.path.append("../build/")
+from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader
+import iCub_ANN_Interface.Vocabs as iCub_Constants
 
 # Test support files
 from supplementary.auxilary_methods import encode
@@ -54,13 +50,13 @@ def call_test_jreader(iCub):
     print('\n')
 
     # init joint reader
-    jreader.init(iCub, "JReader", iCub.PART_KEY_HEAD, 0.5, 15)
-    jreader.init(iCub, "JReader", iCub.PART_KEY_HEAD, 0.5, 15)        # double initialization
-    jreader1.init(iCub, "JReader1", iCub.PART_KEY_RIGHT_ARM, -0.5, 15)      # negative sigma
-    jreader1.init(iCub, "JReader1", iCub.PART_KEY_RIGHT_ARM, 0.5, 0, 2.0)   # neuron resolution
+    jreader.init(iCub, "JReader", iCub_Constants.PART_KEY_HEAD, 0.5, 15)
+    jreader.init(iCub, "JReader", iCub_Constants.PART_KEY_HEAD, 0.5, 15)        # double initialization
+    jreader1.init(iCub, "JReader1", iCub_Constants.PART_KEY_RIGHT_ARM, -0.5, 15)      # negative sigma
+    jreader1.init(iCub, "JReader1", iCub_Constants.PART_KEY_RIGHT_ARM, 0.5, 0, 2.0)   # neuron resolution
     jreader2.init(iCub, "JReader2", 'false_part_key', 0.5, 15)                     # false part key
-    jreader2.init(iCub, "JReader2", iCub.PART_KEY_LEFT_ARM, 0.5, -15)       # negative population size
-    jreader2.init(iCub, "JReader2", iCub.PART_KEY_LEFT_ARM, 0.5, 0, 0.0)    # wrong population sizing
+    jreader2.init(iCub, "JReader2", iCub_Constants.PART_KEY_LEFT_ARM, 0.5, -15)       # negative population size
+    jreader2.init(iCub, "JReader2", iCub_Constants.PART_KEY_LEFT_ARM, 0.5, 0, 0.0)    # wrong population sizing
     if iCub.get_jreader_by_name("NO_NAME") == None:
         print("Not existing name!")
 
@@ -119,11 +115,11 @@ def call_test_jwriter(iCub):
     print('\n')
 
     # init joint writer
-    jwriter.init(iCub, "JointWriter", iCub.PART_KEY_HEAD, 15)
-    jwriter.init(iCub, "JointWriter", iCub.PART_KEY_HEAD, 15)               # double initialization
+    jwriter.init(iCub, "JointWriter", iCub_Constants.PART_KEY_HEAD, 15)
+    jwriter.init(iCub, "JointWriter", iCub_Constants.PART_KEY_HEAD, 15)               # double initialization
     jwriter1.init(iCub, "JointWriter1", 'false_part_key', 15)               # false part key
-    jwriter1.init(iCub, "JointWriter1", iCub.PART_KEY_RIGHT_ARM, 0, 2.0)
-    jwriter2.init(iCub, "JointWriter2", iCub.PART_KEY_LEFT_ARM, -15)        # negative population size
+    jwriter1.init(iCub, "JointWriter1", iCub_Constants.PART_KEY_RIGHT_ARM, 0, 2.0)
+    jwriter2.init(iCub, "JointWriter2", iCub_Constants.PART_KEY_LEFT_ARM, -15)        # negative population size
 
     jwriter2.close(iCub)
 
@@ -146,21 +142,21 @@ def call_test_jwriter(iCub):
     # define test positions
     double_all = np.zeros(6)
     double_all_rel = np.ones(6) * 5.1
-    test_pos = encode(iCub.PART_KEY_HEAD, 4, 15, 5, 0.5)
-    test_pos_rel = encode(iCub.PART_KEY_HEAD, 4, 15, 5, 0.5, relative=True)
+    test_pos = encode(iCub_Constants.PART_KEY_HEAD, 4, 15, 5, 0.5)
+    test_pos_rel = encode(iCub_Constants.PART_KEY_HEAD, 4, 15, 5, 0.5, relative=True)
     pop_multiple = np.zeros((3, 15))
     pop_multiple_rel = np.zeros((3, 15))
     pop_all = np.zeros((6, 15))
     pop_all_rel = np.zeros((6, 15))
 
     for i in range(3):
-        pop_multiple[i] = encode(iCub.PART_KEY_HEAD, i + 3, 15, 10., 0.5)
-        pop_multiple_rel[i] = encode(iCub.PART_KEY_HEAD, i + 3, 15, 10., 0.5, relative=True)
+        pop_multiple[i] = encode(iCub_Constants.PART_KEY_HEAD, i + 3, 15, 10., 0.5)
+        pop_multiple_rel[i] = encode(iCub_Constants.PART_KEY_HEAD, i + 3, 15, 10., 0.5, relative=True)
 
 
     for i in range(6):
-        pop_all[i] = encode(iCub.PART_KEY_HEAD, i, 15, 5., 0.5)
-        pop_all_rel[i] = encode(iCub.PART_KEY_HEAD, i, 15, 5., 0.5, relative=True)
+        pop_all[i] = encode(iCub_Constants.PART_KEY_HEAD, i, 15, 5., 0.5)
+        pop_all_rel[i] = encode(iCub_Constants.PART_KEY_HEAD, i, 15, 5., 0.5, relative=True)
 
     print("write absolute values")
     # test writing absolute joint angles

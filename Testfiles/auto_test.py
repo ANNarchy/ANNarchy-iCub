@@ -24,12 +24,9 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-sys.path.append("../build/")
-import iCub_Interface  # requires iCub_Interface.so in the present directory
-import Joint_Reader
-import Joint_Writer
-import Skin_Reader
-import Visual_Reader
+# sys.path.append("../build/")
+from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader
+import iCub_ANN_Interface.Vocabs as iCub_Constants
 
 # Python libraries for simulator control
 import iCub_Python_Lib.iCubSim_world_controller as iSim_wc
@@ -111,7 +108,7 @@ def check_position_pop_all(name, read_method, position):
 
 def rel_pos_double(ann_wrapper, name, key, target_positions):
 
-    act_pos = np.array(ann_wrapper.get_jreader_by_name(name).read_double_all(), dtype=np.float64)
+    act_pos = np.array(ann_wrapper.get_jreader_by_part(name).read_double_all(), dtype=np.float64)
     rel_pos = target_positions[name][key] - act_pos
 
     return rel_pos
@@ -119,7 +116,7 @@ def rel_pos_double(ann_wrapper, name, key, target_positions):
 
 def rel_pos_pop(ann_wrapper, name, key, target_positions):
 
-    act_pos = np.array(ann_wrapper.get_jreader_by_name(name).read_double_all(), dtype=np.float64)
+    act_pos = np.array(ann_wrapper.get_jreader_by_part(name).read_double_all(), dtype=np.float64)
     rel_pos_d = target_positions[name][key] - act_pos
     rel_pos = np.zeros((act_pos.shape[0], params.n_pop_pos))
 
@@ -135,7 +132,7 @@ def write_joint_each(ann_wrapper, pos_type, positioning, block, name, target_pos
     test_results = {}
 
     for key in target_positions[name]:
-        print('______ Test position:', key)
+        print('______ Test position:', key, 'mode:', positioning)
         if positioning == "abs":
             target_pos = target_positions[name][key]
             check_pos = target_positions
@@ -172,7 +169,7 @@ def write_joint_mult(ann_wrapper, pos_type, positioning, block, name, target_pos
 
     print('____ Test part:', name)
     for key in target_positions[name]:
-        print('______ Test position:', key)
+        print('______ Test position:', key, 'mode:', positioning)
         if positioning == "abs":
             target_pos = target_positions[name][key]
             check_pos = target_positions
@@ -209,7 +206,7 @@ def write_joint_all(ann_wrapper, pos_type, positioning, block, name, target_posi
 
     print('____ Test part:', name)
     for key in target_positions[name]:
-        print('______ Test position:', key)
+        print('______ Test position:', key, 'mode:', positioning)
         if positioning == "abs":
             target_pos = target_positions[name][key]
             check_pos = target_positions
