@@ -1,10 +1,12 @@
 var searchData=
 [
-  ['motiondone_499',['MotionDone',['../df/d23/classJointWriter.html#acbf298c94376c51df8929aad40471408',1,'JointWriter']]],
-  ['motor_5finit_500',['motor_init',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#afeaa48ef8dee99e93b97ba521396b048',1,'iCub_Python_Lib::YARP_motor_control']]],
-  ['motor_5finit_5fcartesian_501',['motor_init_cartesian',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a0d78422c32c50e2e63a3f6e7dd8a7396',1,'iCub_Python_Lib::YARP_motor_control']]],
-  ['move_5feyes_502',['move_eyes',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#a2ad75ba049fffa24a2ad0b802eac92ef',1,'iCub_Python_Lib::YARP_motor_control']]],
-  ['move_5fmodel_503',['move_model',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#a3101eeef65f957aff7f0d4e8be454edd',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]],
-  ['move_5fmodel_5fgroup_504',['move_model_group',['../d8/d54/classiCub__Python__Lib_1_1iCubSim__model__groups__control_1_1ModelGroup.html#a0eee021788e743cee70c612a2074b354',1,'iCub_Python_Lib::iCubSim_model_groups_control::ModelGroup']]],
-  ['move_5fobject_505',['move_object',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#a467bcf5a149437a176f4db6791748a1e',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]]
+  ['set_5fopencv_5fprefix_304',['set_opencv_prefix',['../d3/d00/namespacemake.html#a43688cc1d2db03947f2592a8ab8636c9',1,'make']]],
+  ['set_5fyarp_5fprefix_305',['set_yarp_prefix',['../d3/d00/namespacemake.html#a246e25fb75a3b1a609c061bdf05a968b',1,'make']]],
+  ['setjointcontrolmode_306',['SetJointControlMode',['../df/d23/classJointWriter.html#abd17873a8db00f9b58b0d295f93a5a78',1,'JointWriter']]],
+  ['setjointvelocity_307',['SetJointVelocity',['../df/d23/classJointWriter.html#a83cd717afc5c4f0eec45f7b5b8f24456',1,'JointWriter']]],
+  ['setregister_308',['setRegister',['../d9/dfd/classMod__BaseClass.html#ad94e0776546e89b6df6265087714d7a7',1,'Mod_BaseClass']]],
+  ['settime_309',['setTime',['../d0/deb/classiCubClock.html#ac18ebe579cbaa79a12eb9e6631c1383c',1,'iCubClock']]],
+  ['skinreader_310',['SkinReader',['../d1/dc5/classSkinReader.html#a487f5c104331ce15c487bb8ebbc81046',1,'SkinReader']]],
+  ['start_311',['Start',['../d5/df3/classVisualReader.html#abcec5762793f47f2c4cfdcc0d070e430',1,'VisualReader']]],
+  ['stop_312',['Stop',['../d5/df3/classVisualReader.html#a37da0d80bcaea6d31d73b2c9248e2675',1,'VisualReader']]]
 ];

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ANNarchy iCub Interface
-   &#160;<span id="projectnumber">0.2</span>
+   &#160;<span id="projectnumber">1.0</span>
    </div>
   </td>
  </tr>
@@ -64,16 +64,26 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">make.py File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><a href="../../d3/de4/make_8py_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:d3/d00/namespacemake"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html">make</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a246e25fb75a3b1a609c061bdf05a968b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#a246e25fb75a3b1a609c061bdf05a968b">make.set_yarp_prefix</a> ()</td></tr>
+<tr class="separator:a246e25fb75a3b1a609c061bdf05a968b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43688cc1d2db03947f2592a8ab8636c9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#a43688cc1d2db03947f2592a8ab8636c9">make.set_opencv_prefix</a> ()</td></tr>
+<tr class="separator:a43688cc1d2db03947f2592a8ab8636c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -83,16 +93,16 @@ Variables</h2></td></tr>
 <tr class="separator:a0088f1e37260d46d356ac2812545128e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bbc4d14691eef45ee59cf4ed3a3f424"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#a6bbc4d14691eef45ee59cf4ed3a3f424">make.py_version</a> = str(py_major) + &quot;.&quot; + str(py_minor)</td></tr>
 <tr class="separator:a6bbc4d14691eef45ee59cf4ed3a3f424"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee70455d207672afb80642075513bcd9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#aee70455d207672afb80642075513bcd9">make.yarp_prefix</a> = os.environ[&quot;ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX&quot;]</td></tr>
-<tr class="separator:aee70455d207672afb80642075513bcd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15f6cf044647e5c4d4a026d5c2c1fd35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#a15f6cf044647e5c4d4a026d5c2c1fd35">make.yarp_data</a> = os.environ['YARP_DATA_DIRS'].split(':')[0].split('/')</td></tr>
-<tr class="separator:a15f6cf044647e5c4d4a026d5c2c1fd35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e37ad826b11873a96a7b59415a75c77"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#a3e37ad826b11873a96a7b59415a75c77">make.cv_include</a> = &quot;/usr/include/&quot;</td></tr>
-<tr class="separator:a3e37ad826b11873a96a7b59415a75c77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a645b71ac20a269959e8b4ba29a567bc2"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#a645b71ac20a269959e8b4ba29a567bc2">make.yarp_prefix</a> = set_yarp_prefix()</td></tr>
+<tr class="separator:a645b71ac20a269959e8b4ba29a567bc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87fb687d89898b2779e406e3bb0faee3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#a87fb687d89898b2779e406e3bb0faee3">make.cv_include</a> = set_opencv_prefix()</td></tr>
+<tr class="separator:a87fb687d89898b2779e406e3bb0faee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae87da6b20804fa8f91f1e82b5456ff8d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#ae87da6b20804fa8f91f1e82b5456ff8d">make.contents</a> = makefile.read()</td></tr>
 <tr class="separator:ae87da6b20804fa8f91f1e82b5456ff8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02e0184b8bdb6a8f01008a7b81dddb9f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#a02e0184b8bdb6a8f01008a7b81dddb9f">make.new_content</a> = contents.replace(&quot;PYTHON_INCLUDE&quot;, &quot;`/usr/bin/python&quot; + py_version + &quot;-config --includes`&quot;)</td></tr>
 <tr class="separator:a02e0184b8bdb6a8f01008a7b81dddb9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a965288b44892f9fbe7867a02fbe1e8"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#a1a965288b44892f9fbe7867a02fbe1e8">make.compiler</a> = &quot;&quot;</td></tr>
+<tr class="separator:a1a965288b44892f9fbe7867a02fbe1e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45fb3913049773943f5020076f345a37"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#a45fb3913049773943f5020076f345a37">make.f</a> = open(&quot;Makefile&quot;, &quot;w&quot;)</td></tr>
 <tr class="separator:a45fb3913049773943f5020076f345a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe247ef9ce638bc3351a731e0a0693da"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/namespacemake.html#afe247ef9ce638bc3351a731e0a0693da">make.j_arg</a> = &quot;&quot;</td></tr>

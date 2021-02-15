@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ANNarchy iCub Interface
-   &#160;<span id="projectnumber">0.2</span>
+   &#160;<span id="projectnumber">1.0</span>
    </div>
   </td>
  </tr>
@@ -74,6 +74,26 @@ $(function() {
  <a href="../../df/d23/classJointWriter.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d9/d8a/Joint__Writer_8hpp_source.html">Joint_Writer.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for JointWriter:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d8/d26/classJointWriter__inherit__graph.png" border="0" usemap="#JointWriter_inherit__map" alt="Inheritance graph"/></div>
+<map name="JointWriter_inherit__map" id="JointWriter_inherit__map">
+<area shape="rect" title="Write the joint angles to the iCub robots joints to move them." alt="" coords="22,80,113,107"/>
+<area shape="rect" href="../../d9/dfd/classMod__BaseClass.html" title="Base class for the sensor/actor reader/writer modules." alt="" coords="5,5,129,32"/>
+</map>
+<center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for JointWriter:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../da/dc0/classJointWriter__coll__graph.png" border="0" usemap="#JointWriter_coll__map" alt="Collaboration graph"/></div>
+<map name="JointWriter_coll__map" id="JointWriter_coll__map">
+<area shape="rect" title="Write the joint angles to the iCub robots joints to move them." alt="" coords="29,276,120,303"/>
+<area shape="rect" href="../../d9/dfd/classMod__BaseClass.html" title="Base class for the sensor/actor reader/writer modules." alt="" coords="13,200,137,227"/>
+<area shape="rect" title="STL class." alt="" coords="31,96,118,123"/>
+<area shape="rect" title="STL class." alt="" coords="5,5,144,47"/>
+</map>
+<center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -84,9 +104,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a62f41389d3c75318023d4909795c908c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#a62f41389d3c75318023d4909795c908c">Init</a> (std::string part, int pop_size, double deg_per_neuron=0.0, double speed=10.0, std::string ini_path=&quot;../data/&quot;)</td></tr>
 <tr class="memdesc:a62f41389d3c75318023d4909795c908c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the joint writer with given parameters.  <a href="../../df/d23/classJointWriter.html#a62f41389d3c75318023d4909795c908c">More...</a><br /></td></tr>
 <tr class="separator:a62f41389d3c75318023d4909795c908c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaffac87ae3bb0b441b67ce08bb92c3c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#aaffac87ae3bb0b441b67ce08bb92c3c0">Close</a> ()</td></tr>
-<tr class="memdesc:aaffac87ae3bb0b441b67ce08bb92c3c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close joint writer with cleanup.  <a href="../../df/d23/classJointWriter.html#aaffac87ae3bb0b441b67ce08bb92c3c0">More...</a><br /></td></tr>
-<tr class="separator:aaffac87ae3bb0b441b67ce08bb92c3c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa613e3b73ae3c8e22f34a31fbb7bb0a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#aa613e3b73ae3c8e22f34a31fbb7bb0a3">Close</a> () override</td></tr>
+<tr class="memdesc:aa613e3b73ae3c8e22f34a31fbb7bb0a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close joint writer with cleanup.  <a href="../../df/d23/classJointWriter.html#aa613e3b73ae3c8e22f34a31fbb7bb0a3">More...</a><br /></td></tr>
+<tr class="separator:aa613e3b73ae3c8e22f34a31fbb7bb0a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7ea03d181cabe4011c9a872450d8779"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#ab7ea03d181cabe4011c9a872450d8779">GetJointCount</a> ()</td></tr>
 <tr class="memdesc:ab7ea03d181cabe4011c9a872450d8779"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return number of controlled joints.  <a href="../../df/d23/classJointWriter.html#ab7ea03d181cabe4011c9a872450d8779">More...</a><br /></td></tr>
 <tr class="separator:ab7ea03d181cabe4011c9a872450d8779"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -97,6 +117,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:affbddda056e403e4f467cb8a647ca8f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of the populations encoding the joint angles.  <a href="../../df/d23/classJointWriter.html#affbddda056e403e4f467cb8a647ca8f9">More...</a><br /></td></tr>
 <tr class="separator:affbddda056e403e4f467cb8a647ca8f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbf298c94376c51df8929aad40471408"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#acbf298c94376c51df8929aad40471408">MotionDone</a> ()</td></tr>
+<tr class="memdesc:acbf298c94376c51df8929aad40471408"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a joint of the robot part is in motion.  <a href="../../df/d23/classJointWriter.html#acbf298c94376c51df8929aad40471408">More...</a><br /></td></tr>
 <tr class="separator:acbf298c94376c51df8929aad40471408"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83cd717afc5c4f0eec45f7b5b8f24456"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#a83cd717afc5c4f0eec45f7b5b8f24456">SetJointVelocity</a> (double speed, int joint)</td></tr>
 <tr class="memdesc:a83cd717afc5c4f0eec45f7b5b8f24456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of the populations encoding the joint angles.  <a href="../../df/d23/classJointWriter.html#a83cd717afc5c4f0eec45f7b5b8f24456">More...</a><br /></td></tr>
@@ -122,9 +143,33 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac6d675257fb04c5f61ece1d50fbf68f1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d23/classJointWriter.html#ac6d675257fb04c5f61ece1d50fbf68f1">WritePopOne</a> (std::vector&lt; double &gt; position_pop, int joint, bool blocking, std::string mode)</td></tr>
 <tr class="memdesc:ac6d675257fb04c5f61ece1d50fbf68f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write one joint with the joint angle encoded in a population.  <a href="../../df/d23/classJointWriter.html#ac6d675257fb04c5f61ece1d50fbf68f1">More...</a><br /></td></tr>
 <tr class="separator:ac6d675257fb04c5f61ece1d50fbf68f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classMod__BaseClass"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classMod__BaseClass')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d9/dfd/classMod__BaseClass.html">Mod_BaseClass</a></td></tr>
+<tr class="memitem:ab57b13ffe5256b65d99c762aeac4076e inherit pub_methods_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#ab57b13ffe5256b65d99c762aeac4076e">Mod_BaseClass</a> ()=default</td></tr>
+<tr class="separator:ab57b13ffe5256b65d99c762aeac4076e inherit pub_methods_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28232e733c8baf282b815dfdd602113f inherit pub_methods_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#a28232e733c8baf282b815dfdd602113f">~Mod_BaseClass</a> ()</td></tr>
+<tr class="separator:a28232e733c8baf282b815dfdd602113f inherit pub_methods_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad94e0776546e89b6df6265087714d7a7 inherit pub_methods_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#ad94e0776546e89b6df6265087714d7a7">setRegister</a> (bool value)</td></tr>
+<tr class="separator:ad94e0776546e89b6df6265087714d7a7 inherit pub_methods_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6451454023492c4046f72df21ad3beb7 inherit pub_methods_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#a6451454023492c4046f72df21ad3beb7">getRegister</a> ()</td></tr>
+<tr class="separator:a6451454023492c4046f72df21ad3beb7 inherit pub_methods_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_classMod__BaseClass"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classMod__BaseClass')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d9/dfd/classMod__BaseClass.html">Mod_BaseClass</a></td></tr>
+<tr class="memitem:a2ba576602cfca93323b39e2dd690c550 inherit pro_methods_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#a2ba576602cfca93323b39e2dd690c550">CheckInit</a> ()</td></tr>
+<tr class="separator:a2ba576602cfca93323b39e2dd690c550 inherit pro_methods_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classMod__BaseClass"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classMod__BaseClass')"><img src="../../closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="../../d9/dfd/classMod__BaseClass.html">Mod_BaseClass</a></td></tr>
+<tr class="memitem:a5eb7654d3ad98ddf2ed007dec1c36c1f inherit pro_attribs_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#a5eb7654d3ad98ddf2ed007dec1c36c1f">dev_init</a> = false</td></tr>
+<tr class="separator:a5eb7654d3ad98ddf2ed007dec1c36c1f inherit pro_attribs_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac09d541855bc26b427c786b78ee40d17 inherit pro_attribs_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#ac09d541855bc26b427c786b78ee40d17">type</a></td></tr>
+<tr class="separator:ac09d541855bc26b427c786b78ee40d17 inherit pro_attribs_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a014050283e7bf2608da61e055df67c inherit pro_attribs_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#a0a014050283e7bf2608da61e055df67c">icub_part</a></td></tr>
+<tr class="separator:a0a014050283e7bf2608da61e055df67c inherit pro_attribs_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Write the joint angles to the iCub robots joints to move them. </p>
+
+<p class="definition">Definition at line <a class="el" href="../../d9/d8a/Joint__Writer_8hpp_source.html#l00033">33</a> of file <a class="el" href="../../d9/d8a/Joint__Writer_8hpp_source.html">Joint_Writer.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a206d13821043ca9e4005922144f4cb0b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a206d13821043ca9e4005922144f4cb0b">&#9670;&nbsp;</a></span>JointWriter()</h2>
@@ -166,14 +211,19 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00034">34</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aaffac87ae3bb0b441b67ce08bb92c3c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaffac87ae3bb0b441b67ce08bb92c3c0">&#9670;&nbsp;</a></span>Close()</h2>
+<a id="aa613e3b73ae3c8e22f34a31fbb7bb0a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa613e3b73ae3c8e22f34a31fbb7bb0a3">&#9670;&nbsp;</a></span>Close()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void JointWriter::Close </td>
@@ -182,11 +232,20 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Close joint writer with cleanup. </p>
 
-<p class="reference">Referenced by <a class="el" href="../../df/d23/classJointWriter.html#ad0fb1b676fee108d05fad445f30b541e">~JointWriter()</a>.</p>
+<p>Implements <a class="el" href="../../d9/dfd/classMod__BaseClass.html#a34de6fe3f578d6b9620da5e4e414fd8c">Mod_BaseClass</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00206">206</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00034">~JointWriter()</a>.</p>
 
 </div>
 </div>
@@ -208,6 +267,8 @@ Public Member Functions</h2></td></tr>
 <p>Return number of controlled joints. </p>
 <dl class="section return"><dt>Returns</dt><dd>Number of joints, being controlled by the writer </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00216">216</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
+
 </div>
 </div>
 <a id="aa34000b652c429ce977954af386d7161"></a>
@@ -228,6 +289,8 @@ Public Member Functions</h2></td></tr>
 <p>Return the resolution in degree of the populations encoding the joint angles. </p>
 <dl class="section return"><dt>Returns</dt><dd>Return a vector of double, containing the resolution for every joints population coding in degree. E.g. Joint 0 is coded with 1° resolution: vector[0] = 1.0. </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00226">226</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
+
 </div>
 </div>
 <a id="affbddda056e403e4f467cb8a647ca8f9"></a>
@@ -247,6 +310,8 @@ Public Member Functions</h2></td></tr>
 
 <p>Return the size of the populations encoding the joint angles. </p>
 <dl class="section return"><dt>Returns</dt><dd>Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10 </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00237">237</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
 
 </div>
 </div>
@@ -312,6 +377,8 @@ Public Member Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00037">37</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
+
 </div>
 </div>
 <a id="acbf298c94376c51df8929aad40471408"></a>
@@ -328,6 +395,11 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Check if a joint of the robot part is in motion. </p>
+<dl class="section return"><dt>Returns</dt><dd>True, if joint is in motion. False if no joint is in motion. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00839">839</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
 
 </div>
 </div>
@@ -372,7 +444,9 @@ Public Member Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="../../df/d23/classJointWriter.html#a62f41389d3c75318023d4909795c908c">Init()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00284">284</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00037">Init()</a>.</p>
 
 </div>
 </div>
@@ -416,6 +490,8 @@ Public Member Functions</h2></td></tr>
 <li>missing initialization </li>
 </ul>
 </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00253">253</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
 
 </div>
 </div>
@@ -466,6 +542,8 @@ Public Member Functions</h2></td></tr>
 <li>missing initialization </li>
 </ul>
 </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00323">323</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
 
 </div>
 </div>
@@ -524,6 +602,8 @@ Public Member Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00388">388</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
+
 </div>
 </div>
 <a id="ab6dfb700a2962f300900edadab1d9876"></a>
@@ -581,6 +661,8 @@ Public Member Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00471">471</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
+
 </div>
 </div>
 <a id="a8cfb27b5e39e54f6f17ab4122c113884"></a>
@@ -631,6 +713,8 @@ Public Member Functions</h2></td></tr>
 <li>missing initialization </li>
 </ul>
 </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00555">555</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
 
 </div>
 </div>
@@ -688,6 +772,8 @@ Public Member Functions</h2></td></tr>
 <li>missing initialization </li>
 </ul>
 </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00635">635</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
 
 </div>
 </div>
@@ -747,11 +833,13 @@ Public Member Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html#l00728">728</a> of file <a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="../../d9/d8a/Joint__Writer_8hpp_source.html">Joint_Writer.hpp</a></li>
-<li><a class="el" href="../../d2/d49/src_2Joint__Writer_8cpp.html">src/Joint_Writer.cpp</a></li>
+<li><a class="el" href="../../d4/da1/Joint__Writer_8cpp_source.html">Joint_Writer.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

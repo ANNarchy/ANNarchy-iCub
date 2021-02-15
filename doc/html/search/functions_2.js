@@ -1,16 +1,15 @@
 var searchData=
 [
-  ['call_5ftest_5fjreader_439',['call_test_jreader',['../d9/d94/namespacesimple__call__test.html#a949f2d3e6ba89d1204b79d505d15402f',1,'simple_call_test']]],
-  ['call_5ftest_5fjwriter_440',['call_test_jwriter',['../d9/d94/namespacesimple__call__test.html#a4003e5f73a3ec788ef18d18f67b3d389',1,'simple_call_test']]],
-  ['call_5ftest_5fsreader_441',['call_test_sreader',['../d9/d94/namespacesimple__call__test.html#a544cfd3914bf97bcd39f8300db020d46',1,'simple_call_test']]],
-  ['call_5ftest_5fvreader_442',['call_test_vreader',['../d9/d94/namespacesimple__call__test.html#a7705bd30f8602304d2ff400ca614b96c',1,'simple_call_test']]],
-  ['change_5fcolor_443',['change_color',['../d8/dfc/classiCub__Python__Lib_1_1gazebo__world__controller_1_1WorldController.html#a303ccb534c72dd1c606f6aea410564d8',1,'iCub_Python_Lib::gazebo_world_controller::WorldController']]],
-  ['check_5fposition_5fdouble_5fall_444',['check_position_double_all',['../d0/dbb/namespaceauto__test.html#a869e1a54de457d56d35c94b78ecdfb9f',1,'auto_test']]],
-  ['check_5fposition_5fdouble_5fmult_445',['check_position_double_mult',['../d0/dbb/namespaceauto__test.html#a8d6b97065d42fdad9d4236f45891805c',1,'auto_test']]],
-  ['check_5fposition_5fpop_5fall_446',['check_position_pop_all',['../d0/dbb/namespaceauto__test.html#ae50474ed4d49a860356f1f25d9cbfde7',1,'auto_test']]],
-  ['check_5fposition_5fpop_5fmult_447',['check_position_pop_mult',['../d0/dbb/namespaceauto__test.html#a53a77feff50369075d397f932624f5bf',1,'auto_test']]],
-  ['close_448',['Close',['../d1/dc0/classJointReader.html#a630ce1a9ad4634a39dea88980e7b8440',1,'JointReader::Close()'],['../df/d23/classJointWriter.html#aaffac87ae3bb0b441b67ce08bb92c3c0',1,'JointWriter::Close()'],['../d1/dc5/classSkinReader.html#a96dd06173e329f2438721ed702b356db',1,'SkinReader::Close()']]],
-  ['create_5fmodel_449',['create_model',['../d8/dfc/classiCub__Python__Lib_1_1gazebo__world__controller_1_1WorldController.html#acddf81f4721fbc4d72caa77fcf7954dc',1,'iCub_Python_Lib.gazebo_world_controller.WorldController.create_model()'],['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#aed94bb7ed14eb258f80db331f71fd312',1,'iCub_Python_Lib.iCubSim_world_controller.WorldController.create_model()']]],
-  ['create_5fmotor_5fdict_450',['create_motor_dict',['../d1/d3d/namespaceiCub__Python__Lib_1_1YARP__motor__control.html#abb4600faf7993ea4d0a2690da5b05d2f',1,'iCub_Python_Lib::YARP_motor_control']]],
-  ['create_5fobject_451',['create_object',['../d8/dfc/classiCub__Python__Lib_1_1gazebo__world__controller_1_1WorldController.html#ac7420e53ec858e4872ecae4447d5aa24',1,'iCub_Python_Lib.gazebo_world_controller.WorldController.create_object()'],['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#abc55254d0469996fd1e083dd37a8ca26',1,'iCub_Python_Lib.iCubSim_world_controller.WorldController.create_object()']]]
+  ['get_266',['Get',['../d5/de4/classINIReader.html#a444ab67be741a41dcd26759d744b20db',1,'INIReader']]],
+  ['getboolean_267',['GetBoolean',['../d5/de4/classINIReader.html#a6fcbb2ebdfad098e34a14f2144f711f7',1,'INIReader']]],
+  ['getinteger_268',['GetInteger',['../d5/de4/classINIReader.html#a37ef1f422f1a5cb43bf63d82f4ea112f',1,'INIReader']]],
+  ['getjointcount_269',['GetJointCount',['../d1/dc0/classJointReader.html#aa20b87cccb1f94198046c178a34fab80',1,'JointReader::GetJointCount()'],['../df/d23/classJointWriter.html#ab7ea03d181cabe4011c9a872450d8779',1,'JointWriter::GetJointCount()']]],
+  ['getjointsdegres_270',['GetJointsDegRes',['../d1/dc0/classJointReader.html#a8ee347fd24a97eca044e77a4d147bf43',1,'JointReader::GetJointsDegRes()'],['../df/d23/classJointWriter.html#aa34000b652c429ce977954af386d7161',1,'JointWriter::GetJointsDegRes()']]],
+  ['getneuronsperjoint_271',['GetNeuronsPerJoint',['../d1/dc0/classJointReader.html#a0efb105a4a3dd8d2ad5659a6b55cc2d7',1,'JointReader::GetNeuronsPerJoint()'],['../df/d23/classJointWriter.html#affbddda056e403e4f467cb8a647ca8f9',1,'JointWriter::GetNeuronsPerJoint()']]],
+  ['getreal_272',['GetReal',['../d5/de4/classINIReader.html#a0a41e06f215552e5d7217a0abc5c214f',1,'INIReader']]],
+  ['getregister_273',['getRegister',['../d9/dfd/classMod__BaseClass.html#a6451454023492c4046f72df21ad3beb7',1,'Mod_BaseClass']]],
+  ['gettactilearm_274',['GetTactileArm',['../d1/dc5/classSkinReader.html#ac1950a90f8b7dfe386c01e742c3ea581',1,'SkinReader']]],
+  ['gettactileforearm_275',['GetTactileForearm',['../d1/dc5/classSkinReader.html#a680d4c4a71573380a1558c5564161935',1,'SkinReader']]],
+  ['gettactilehand_276',['GetTactileHand',['../d1/dc5/classSkinReader.html#a394716bf310a40055127108bd439f33d',1,'SkinReader']]],
+  ['gettaxelpos_277',['GetTaxelPos',['../d1/dc5/classSkinReader.html#a872ab1448112cbb01588e7cbc6372fa3',1,'SkinReader']]]
 ];

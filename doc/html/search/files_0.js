@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['auto_5ftest_2epy_379',['auto_test.py',['../d2/d9e/auto__test_8py.html',1,'']]],
-  ['auxilary_5fmethods_2epy_380',['auxilary_methods.py',['../db/d42/auxilary__methods_8py.html',1,'']]]
+  ['_5f_5finit_5f_5f_2epy_225',['__init__.py',['../d3/d9a/____init_____8py.html',1,'']]]
 ];

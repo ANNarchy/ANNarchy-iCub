@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ANNarchy iCub Interface
-   &#160;<span id="projectnumber">0.2</span>
+   &#160;<span id="projectnumber">1.0</span>
    </div>
   </td>
  </tr>
@@ -80,8 +80,9 @@ Inheritance diagram for VisualReader:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../de/d05/classVisualReader__inherit__graph.png" border="0" usemap="#VisualReader_inherit__map" alt="Inheritance graph"/></div>
 <map name="VisualReader_inherit__map" id="VisualReader_inherit__map">
-<area shape="rect" title="Read&#45;out of the camera images from the iCub robot." alt="" coords="25,80,133,107"/>
+<area shape="rect" title="Read&#45;out of the camera images from the iCub robot." alt="" coords="105,80,213,107"/>
 <area shape="rect" title=" " alt="" coords="5,5,152,32"/>
+<area shape="rect" href="../../d9/dfd/classMod__BaseClass.html" title="Base class for the sensor/actor reader/writer modules." alt="" coords="177,5,301,32"/>
 </map>
 <center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -89,8 +90,11 @@ Collaboration diagram for VisualReader:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../df/df8/classVisualReader__coll__graph.png" border="0" usemap="#VisualReader_coll__map" alt="Collaboration graph"/></div>
 <map name="VisualReader_coll__map" id="VisualReader_coll__map">
-<area shape="rect" title="Read&#45;out of the camera images from the iCub robot." alt="" coords="25,80,133,107"/>
-<area shape="rect" title=" " alt="" coords="5,5,152,32"/>
+<area shape="rect" title="Read&#45;out of the camera images from the iCub robot." alt="" coords="41,276,149,303"/>
+<area shape="rect" title=" " alt="" coords="5,200,152,227"/>
+<area shape="rect" href="../../d9/dfd/classMod__BaseClass.html" title="Base class for the sensor/actor reader/writer modules." alt="" coords="177,200,301,227"/>
+<area shape="rect" title="STL class." alt="" coords="195,96,282,123"/>
+<area shape="rect" title="STL class." alt="" coords="169,5,308,47"/>
 </map>
 <center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -108,9 +112,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afe67fea9ad05bbd61c67f5cfec4d9569"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df3/classVisualReader.html#afe67fea9ad05bbd61c67f5cfec4d9569">Init</a> (char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter, std::string ini_path)</td></tr>
 <tr class="memdesc:afe67fea9ad05bbd61c67f5cfec4d9569"><td class="mdescLeft">&#160;</td><td class="mdescRight">Init Visual reader with given parameters for image resolution, field of view and eye selection.  <a href="../../d5/df3/classVisualReader.html#afe67fea9ad05bbd61c67f5cfec4d9569">More...</a><br /></td></tr>
 <tr class="separator:afe67fea9ad05bbd61c67f5cfec4d9569"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a725e6ead6d6a8530d26732eb6af6bc5b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d5/df3/classVisualReader.html#a8d8c6e5e9b90ff1fa82f62572ffb6310">precision</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df3/classVisualReader.html#a725e6ead6d6a8530d26732eb6af6bc5b">ReadFromBuf</a> ()</td></tr>
-<tr class="memdesc:a725e6ead6d6a8530d26732eb6af6bc5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)  <a href="../../d5/df3/classVisualReader.html#a725e6ead6d6a8530d26732eb6af6bc5b">More...</a><br /></td></tr>
-<tr class="separator:a725e6ead6d6a8530d26732eb6af6bc5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c06db6a38a7a9cfab0891261dcee342"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d5/df3/classVisualReader.html#a8d8c6e5e9b90ff1fa82f62572ffb6310">precision</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df3/classVisualReader.html#a3c06db6a38a7a9cfab0891261dcee342">ReadFromBuf</a> (bool wait2img=false, int trials=20)</td></tr>
+<tr class="memdesc:a3c06db6a38a7a9cfab0891261dcee342"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)  <a href="../../d5/df3/classVisualReader.html#a3c06db6a38a7a9cfab0891261dcee342">More...</a><br /></td></tr>
+<tr class="separator:a3c06db6a38a7a9cfab0891261dcee342"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcec5762793f47f2c4cfdcc0d070e430"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df3/classVisualReader.html#abcec5762793f47f2c4cfdcc0d070e430">Start</a> (int argc, char *argv[])</td></tr>
 <tr class="memdesc:abcec5762793f47f2c4cfdcc0d070e430"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start reading images from the iCub with YARP-RFModule.  <a href="../../d5/df3/classVisualReader.html#abcec5762793f47f2c4cfdcc0d070e430">More...</a><br /></td></tr>
 <tr class="separator:abcec5762793f47f2c4cfdcc0d070e430"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,12 +122,41 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a37da0d80bcaea6d31d73b2c9248e2675"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop reading images from the iCub, by terminating the RFModule.  <a href="../../d5/df3/classVisualReader.html#a37da0d80bcaea6d31d73b2c9248e2675">More...</a><br /></td></tr>
 <tr class="separator:a37da0d80bcaea6d31d73b2c9248e2675"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebc3d265079f58988a8fa5d36412122d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df3/classVisualReader.html#aebc3d265079f58988a8fa5d36412122d">ImgsInBuffer</a> ()</td></tr>
+<tr class="memdesc:aebc3d265079f58988a8fa5d36412122d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the image count in the image buffer.  <a href="../../d5/df3/classVisualReader.html#aebc3d265079f58988a8fa5d36412122d">More...</a><br /></td></tr>
 <tr class="separator:aebc3d265079f58988a8fa5d36412122d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad79a846ca67e52156cc30cce880d754d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; <a class="el" href="../../d5/df3/classVisualReader.html#a8d8c6e5e9b90ff1fa82f62572ffb6310">precision</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df3/classVisualReader.html#ad79a846ca67e52156cc30cce880d754d">ReadRobotEyes</a> ()</td></tr>
+<tr class="memdesc:ad79a846ca67e52156cc30cce880d754d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a set of images from the robot cameras.  <a href="../../d5/df3/classVisualReader.html#ad79a846ca67e52156cc30cce880d754d">More...</a><br /></td></tr>
 <tr class="separator:ad79a846ca67e52156cc30cce880d754d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab97909c0ad78c5efd39898140acaf190"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df3/classVisualReader.html#ab97909c0ad78c5efd39898140acaf190">Close</a> () override</td></tr>
+<tr class="memdesc:ab97909c0ad78c5efd39898140acaf190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close Visual Reader module.  <a href="../../d5/df3/classVisualReader.html#ab97909c0ad78c5efd39898140acaf190">More...</a><br /></td></tr>
+<tr class="separator:ab97909c0ad78c5efd39898140acaf190"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classMod__BaseClass"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classMod__BaseClass')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d9/dfd/classMod__BaseClass.html">Mod_BaseClass</a></td></tr>
+<tr class="memitem:ab57b13ffe5256b65d99c762aeac4076e inherit pub_methods_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#ab57b13ffe5256b65d99c762aeac4076e">Mod_BaseClass</a> ()=default</td></tr>
+<tr class="separator:ab57b13ffe5256b65d99c762aeac4076e inherit pub_methods_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28232e733c8baf282b815dfdd602113f inherit pub_methods_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#a28232e733c8baf282b815dfdd602113f">~Mod_BaseClass</a> ()</td></tr>
+<tr class="separator:a28232e733c8baf282b815dfdd602113f inherit pub_methods_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad94e0776546e89b6df6265087714d7a7 inherit pub_methods_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#ad94e0776546e89b6df6265087714d7a7">setRegister</a> (bool value)</td></tr>
+<tr class="separator:ad94e0776546e89b6df6265087714d7a7 inherit pub_methods_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6451454023492c4046f72df21ad3beb7 inherit pub_methods_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#a6451454023492c4046f72df21ad3beb7">getRegister</a> ()</td></tr>
+<tr class="separator:a6451454023492c4046f72df21ad3beb7 inherit pub_methods_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_classMod__BaseClass"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classMod__BaseClass')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d9/dfd/classMod__BaseClass.html">Mod_BaseClass</a></td></tr>
+<tr class="memitem:a2ba576602cfca93323b39e2dd690c550 inherit pro_methods_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#a2ba576602cfca93323b39e2dd690c550">CheckInit</a> ()</td></tr>
+<tr class="separator:a2ba576602cfca93323b39e2dd690c550 inherit pro_methods_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classMod__BaseClass"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classMod__BaseClass')"><img src="../../closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="../../d9/dfd/classMod__BaseClass.html">Mod_BaseClass</a></td></tr>
+<tr class="memitem:a5eb7654d3ad98ddf2ed007dec1c36c1f inherit pro_attribs_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#a5eb7654d3ad98ddf2ed007dec1c36c1f">dev_init</a> = false</td></tr>
+<tr class="separator:a5eb7654d3ad98ddf2ed007dec1c36c1f inherit pro_attribs_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac09d541855bc26b427c786b78ee40d17 inherit pro_attribs_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#ac09d541855bc26b427c786b78ee40d17">type</a></td></tr>
+<tr class="separator:ac09d541855bc26b427c786b78ee40d17 inherit pro_attribs_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a014050283e7bf2608da61e055df67c inherit pro_attribs_classMod__BaseClass"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dfd/classMod__BaseClass.html#a0a014050283e7bf2608da61e055df67c">icub_part</a></td></tr>
+<tr class="separator:a0a014050283e7bf2608da61e055df67c inherit pro_attribs_classMod__BaseClass"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Read-out of the camera images from the iCub robot. </p>
+
+<p class="definition">Definition at line <a class="el" href="../../df/d49/Visual__Reader_8hpp_source.html#l00035">35</a> of file <a class="el" href="../../df/d49/Visual__Reader_8hpp_source.html">Visual_Reader.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a8d8c6e5e9b90ff1fa82f62572ffb6310"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8d8c6e5e9b90ff1fa82f62572ffb6310">&#9670;&nbsp;</a></span>precision</h2>
@@ -136,6 +169,8 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../df/d49/Visual__Reader_8hpp_source.html#l00037">37</a> of file <a class="el" href="../../df/d49/Visual__Reader_8hpp_source.html">Visual_Reader.hpp</a>.</p>
 
 </div>
 </div>
@@ -180,9 +215,44 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html#l00041">41</a> of file <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html">Visual_Reader.cpp</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab97909c0ad78c5efd39898140acaf190"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab97909c0ad78c5efd39898140acaf190">&#9670;&nbsp;</a></span>Close()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VisualReader::Close </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Close Visual Reader module. </p>
+
+<p>Implements <a class="el" href="../../d9/dfd/classMod__BaseClass.html#a34de6fe3f578d6b9620da5e4e414fd8c">Mod_BaseClass</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html#l00339">339</a> of file <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html">Visual_Reader.cpp</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html#l00041">~VisualReader()</a>.</p>
+
+</div>
+</div>
 <a id="aebc3d265079f58988a8fa5d36412122d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aebc3d265079f58988a8fa5d36412122d">&#9670;&nbsp;</a></span>ImgsInBuffer()</h2>
 
@@ -197,6 +267,11 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Return the image count in the image buffer. </p>
+<dl class="section return"><dt>Returns</dt><dd>Number of images in the buffer. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html#l00240">240</a> of file <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html">Visual_Reader.cpp</a>.</p>
 
 </div>
 </div>
@@ -282,10 +357,12 @@ Public Member Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html#l00044">44</a> of file <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html">Visual_Reader.cpp</a>.</p>
+
 </div>
 </div>
-<a id="a725e6ead6d6a8530d26732eb6af6bc5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a725e6ead6d6a8530d26732eb6af6bc5b">&#9670;&nbsp;</a></span>ReadFromBuf()</h2>
+<a id="a3c06db6a38a7a9cfab0891261dcee342"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c06db6a38a7a9cfab0891261dcee342">&#9670;&nbsp;</a></span>ReadFromBuf()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,14 +370,34 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">std::vector&lt; <a class="el" href="../../d5/df3/classVisualReader.html#a8d8c6e5e9b90ff1fa82f62572ffb6310">VisualReader::precision</a> &gt; VisualReader::ReadFromBuf </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>wait2img</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>trials</em> = <code>20</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">wait2img</td><td>wait for image in buffer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">trials</td><td>trials for waiting to image in buffer </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>image as 1D-vector from the image buffer </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html#l00180">180</a> of file <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html">Visual_Reader.cpp</a>.</p>
 
 </div>
 </div>
@@ -318,6 +415,11 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Read a set of images from the robot cameras. </p>
+<dl class="section return"><dt>Returns</dt><dd>camera images. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html#l00242">242</a> of file <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html">Visual_Reader.cpp</a>.</p>
 
 </div>
 </div>
@@ -361,6 +463,8 @@ Public Member Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
+<p class="definition">Definition at line <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html#l00206">206</a> of file <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html">Visual_Reader.cpp</a>.</p>
+
 </div>
 </div>
 <a id="a37da0d80bcaea6d31d73b2c9248e2675"></a>
@@ -380,11 +484,13 @@ Public Member Functions</h2></td></tr>
 
 <p>Stop reading images from the iCub, by terminating the RFModule. </p>
 
+<p class="definition">Definition at line <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html#l00228">228</a> of file <a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html">Visual_Reader.cpp</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="../../df/d49/Visual__Reader_8hpp_source.html">Visual_Reader.hpp</a></li>
-<li><a class="el" href="../../d9/de7/src_2Visual__Reader_8cpp.html">src/Visual_Reader.cpp</a></li>
+<li><a class="el" href="../../dc/d8f/Visual__Reader_8cpp_source.html">Visual_Reader.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

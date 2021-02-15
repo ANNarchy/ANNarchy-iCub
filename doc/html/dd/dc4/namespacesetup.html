@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ANNarchy iCub Interface
-   &#160;<span id="projectnumber">0.2</span>
+   &#160;<span id="projectnumber">1.0</span>
    </div>
   </td>
  </tr>
@@ -77,42 +77,52 @@ Variables</h2></td></tr>
 <tr class="separator:a64d27bb373bf0fe3edd82aa687c5927e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae33face1920fc1d75de71038254c429f"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#ae33face1920fc1d75de71038254c429f">py_version</a> = str(<a class="el" href="../../dd/dc4/namespacesetup.html#a6250383936d86ac128ad3347dd2db7e8">py_major</a>) + &quot;.&quot; + str(<a class="el" href="../../dd/dc4/namespacesetup.html#a64d27bb373bf0fe3edd82aa687c5927e">py_minor</a>)</td></tr>
 <tr class="separator:ae33face1920fc1d75de71038254c429f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d55e1988acca9f7aa7ff70b42bd19d0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a5d55e1988acca9f7aa7ff70b42bd19d0">yarp_prefix</a> = os.environ[&quot;ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX&quot;]</td></tr>
-<tr class="separator:a5d55e1988acca9f7aa7ff70b42bd19d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ee0eb03e7f58d117719dca780a693eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a9ee0eb03e7f58d117719dca780a693eb">yarp_data</a> = os.environ['YARP_DATA_DIRS'].split(':')[0].split('/')</td></tr>
-<tr class="separator:a9ee0eb03e7f58d117719dca780a693eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20fbc1e17027cb620c81982872abf58d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a20fbc1e17027cb620c81982872abf58d">cv_include</a> = None</td></tr>
-<tr class="separator:a20fbc1e17027cb620c81982872abf58d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e0820b1de73eedad69abe7cbba76109"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a0e0820b1de73eedad69abe7cbba76109">yarp_prefix</a> = set_yarp_prefix()</td></tr>
+<tr class="separator:a0e0820b1de73eedad69abe7cbba76109"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1abf7afd46f2736c33755e8709ac403"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#ad1abf7afd46f2736c33755e8709ac403">cv_include</a> = set_opencv_prefix()</td></tr>
+<tr class="separator:ad1abf7afd46f2736c33755e8709ac403"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4db17754c5de2edee8a0e2c5585ccabf"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a4db17754c5de2edee8a0e2c5585ccabf">include_dir</a> = [&quot;iCub_ANN_Interface/include&quot;, yarp_prefix + &quot;/include&quot;, cv_include]</td></tr>
+<tr class="separator:a4db17754c5de2edee8a0e2c5585ccabf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f6f13240cca22a0b50447d2de556b05"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a7f6f13240cca22a0b50447d2de556b05">libs</a></td></tr>
 <tr class="separator:a7f6f13240cca22a0b50447d2de556b05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c296d7b2a95bc529afe419b20127e7e"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a8c296d7b2a95bc529afe419b20127e7e">lib_dirs</a> = [&quot;/usr/lib&quot;, &quot;/usr/local/lib&quot;, yarp_prefix + &quot;/lib&quot;]</td></tr>
 <tr class="separator:a8c296d7b2a95bc529afe419b20127e7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4db17754c5de2edee8a0e2c5585ccabf"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a4db17754c5de2edee8a0e2c5585ccabf">include_dir</a> = [&quot;./include&quot;, yarp_prefix + &quot;/include&quot;, cv_include]</td></tr>
-<tr class="separator:a4db17754c5de2edee8a0e2c5585ccabf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6e22655fb1a2eb038d36c5b7cef3723"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#aa6e22655fb1a2eb038d36c5b7cef3723">sources</a> = [&quot;include/INI_Reader/INIReader.cpp&quot;, &quot;include/INI_Reader/ini.cpp&quot;]</td></tr>
+<tr class="memitem:a9bc566088ca4e358afc9eb4e20f3de7e"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a9bc566088ca4e358afc9eb4e20f3de7e">prefix_cy</a> = &quot;iCub_ANN_Interface/&quot;</td></tr>
+<tr class="separator:a9bc566088ca4e358afc9eb4e20f3de7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b68891607a92cd876387236b6e79f44"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a3b68891607a92cd876387236b6e79f44">prefix_cpp</a> = &quot;iCub_ANN_Interface/src/&quot;</td></tr>
+<tr class="separator:a3b68891607a92cd876387236b6e79f44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6e22655fb1a2eb038d36c5b7cef3723"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#aa6e22655fb1a2eb038d36c5b7cef3723">sources</a> = [&quot;iCub_ANN_Interface/include/INI_Reader/INIReader.cpp&quot;, &quot;iCub_ANN_Interface/include/INI_Reader/ini.cpp&quot;, prefix_cpp + &quot;Module_Base_Class.cpp&quot;]</td></tr>
 <tr class="separator:aa6e22655fb1a2eb038d36c5b7cef3723"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a075263c2cd9eab7a6090eef910fe0f1f"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a075263c2cd9eab7a6090eef910fe0f1f">sources1</a> = [&quot;src/Joint_Reader.cpp&quot;, &quot;src/Joint_Writer.cpp&quot;, &quot;src/Skin_Reader.cpp&quot;, &quot;src/Visual_Reader.cpp&quot;]</td></tr>
+<tr class="memitem:a075263c2cd9eab7a6090eef910fe0f1f"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a075263c2cd9eab7a6090eef910fe0f1f">sources1</a> = [<a class="el" href="../../dd/dc4/namespacesetup.html#a3b68891607a92cd876387236b6e79f44">prefix_cpp</a> + &quot;Joint_Reader.cpp&quot;, prefix_cpp + &quot;Joint_Writer.cpp&quot;, prefix_cpp + &quot;Skin_Reader.cpp&quot;, prefix_cpp + &quot;Visual_Reader.cpp&quot;]</td></tr>
 <tr class="separator:a075263c2cd9eab7a6090eef910fe0f1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a5ccc22976d20d42c6bb6c7651ce0be"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a0a5ccc22976d20d42c6bb6c7651ce0be">package_data</a></td></tr>
+<tr class="separator:a0a5ccc22976d20d42c6bb6c7651ce0be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae06ccc95fcdc051223af0cefa0f492d5"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#ae06ccc95fcdc051223af0cefa0f492d5">extra_compile_args</a> = [&quot;-g&quot;, &quot;-fPIC&quot;, &quot;-std=c++17&quot;, &quot;--shared&quot;, &quot;-O2&quot;, &quot;-w&quot;]</td></tr>
+<tr class="separator:ae06ccc95fcdc051223af0cefa0f492d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6b72d56ff85e52faea3f1487c6904f8"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#ab6b72d56ff85e52faea3f1487c6904f8">extensions</a></td></tr>
 <tr class="separator:ab6b72d56ff85e52faea3f1487c6904f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3a7a0638d76a01367c5bc3cc699447f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#ab3a7a0638d76a01367c5bc3cc699447f">name</a></td></tr>
 <tr class="separator:ab3a7a0638d76a01367c5bc3cc699447f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff2375a361fd5865c77bd9aa093be747"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#aff2375a361fd5865c77bd9aa093be747">packages</a></td></tr>
+<tr class="separator:aff2375a361fd5865c77bd9aa093be747"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bf56ea61d1e9865f316116dca2fbfea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a1bf56ea61d1e9865f316116dca2fbfea">ext_modules</a></td></tr>
 <tr class="separator:a1bf56ea61d1e9865f316116dca2fbfea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedf461ec52a946bda975938ba0b93ec0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#aedf461ec52a946bda975938ba0b93ec0">description</a></td></tr>
 <tr class="separator:aedf461ec52a946bda975938ba0b93ec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cda9dbfb952875376a0749fe08a5bde"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a4cda9dbfb952875376a0749fe08a5bde">long_description</a></td></tr>
+<tr class="separator:a4cda9dbfb952875376a0749fe08a5bde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2aa722b36a933088812b50ea79b97a5c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a2aa722b36a933088812b50ea79b97a5c">version</a></td></tr>
 <tr class="separator:a2aa722b36a933088812b50ea79b97a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a57a4772d418a06835249cbade0d86a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a3a57a4772d418a06835249cbade0d86a">author</a></td></tr>
 <tr class="separator:a3a57a4772d418a06835249cbade0d86a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73ae9ecb109f0dcab6f0b6a89043c5c3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a73ae9ecb109f0dcab6f0b6a89043c5c3">keywords</a></td></tr>
-<tr class="separator:a73ae9ecb109f0dcab6f0b6a89043c5c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b08034343aa2be607722a8b315f3625"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a5b08034343aa2be607722a8b315f3625">author_email</a></td></tr>
 <tr class="separator:a5b08034343aa2be607722a8b315f3625"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ed6f50a28bd6a8794f8e1153baa6de9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a8ed6f50a28bd6a8794f8e1153baa6de9">license</a></td></tr>
 <tr class="separator:a8ed6f50a28bd6a8794f8e1153baa6de9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13510753661cb74083a0c664db11dde9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#a13510753661cb74083a0c664db11dde9">zip_safe</a></td></tr>
 <tr class="separator:a13510753661cb74083a0c664db11dde9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abead4f26b530856f858f0d44c7cf2588"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dc4/namespacesetup.html#abead4f26b530856f858f0d44c7cf2588">install_requires</a></td></tr>
+<tr class="separator:abead4f26b530856f858f0d44c7cf2588"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Variable Documentation</h2>
 <a id="a3a57a4772d418a06835249cbade0d86a"></a>
@@ -126,6 +136,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00110">110</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -141,19 +153,23 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00111">111</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
 </div>
 </div>
-<a id="a20fbc1e17027cb620c81982872abf58d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20fbc1e17027cb620c81982872abf58d">&#9670;&nbsp;</a></span>cv_include</h2>
+<a id="ad1abf7afd46f2736c33755e8709ac403"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1abf7afd46f2736c33755e8709ac403">&#9670;&nbsp;</a></span>cv_include</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string setup.cv_include = None</td>
+          <td class="memname">setup.cv_include = set_opencv_prefix()</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00024">24</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -169,6 +185,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00107">107</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
 </div>
 </div>
 <a id="a1bf56ea61d1e9865f316116dca2fbfea"></a>
@@ -182,6 +200,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00106">106</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -197,6 +217,24 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00053">53</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
+</div>
+</div>
+<a id="ae06ccc95fcdc051223af0cefa0f492d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae06ccc95fcdc051223af0cefa0f492d5">&#9670;&nbsp;</a></span>extra_compile_args</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">list setup.extra_compile_args = [&quot;-g&quot;, &quot;-fPIC&quot;, &quot;-std=c++17&quot;, &quot;--shared&quot;, &quot;-O2&quot;, &quot;-w&quot;]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00051">51</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
 </div>
 </div>
 <a id="a4db17754c5de2edee8a0e2c5585ccabf"></a>
@@ -206,24 +244,28 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">list setup.include_dir = [&quot;./include&quot;, yarp_prefix + &quot;/include&quot;, cv_include]</td>
+          <td class="memname">list setup.include_dir = [&quot;iCub_ANN_Interface/include&quot;, yarp_prefix + &quot;/include&quot;, cv_include]</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00029">29</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
 </div>
 </div>
-<a id="a73ae9ecb109f0dcab6f0b6a89043c5c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73ae9ecb109f0dcab6f0b6a89043c5c3">&#9670;&nbsp;</a></span>keywords</h2>
+<a id="abead4f26b530856f858f0d44c7cf2588"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abead4f26b530856f858f0d44c7cf2588">&#9670;&nbsp;</a></span>install_requires</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">setup.keywords</td>
+          <td class="memname">setup.install_requires</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00115">115</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -238,6 +280,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00034">34</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -255,6 +299,8 @@ Variables</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;=  [<span class="stringliteral">&quot;opencv_core&quot;</span>, <span class="stringliteral">&quot;opencv_imgproc&quot;</span>,</div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;        <span class="stringliteral">&quot;YARP_dev&quot;</span>, <span class="stringliteral">&quot;YARP_init&quot;</span>, <span class="stringliteral">&quot;YARP_math&quot;</span>, <span class="stringliteral">&quot;YARP_name&quot;</span>, <span class="stringliteral">&quot;YARP_os&quot;</span>, <span class="stringliteral">&quot;YARP_run&quot;</span>, <span class="stringliteral">&quot;YARP_sig&quot;</span>]</div>
 </div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00031">31</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
 </div>
 </div>
 <a id="a8ed6f50a28bd6a8794f8e1153baa6de9"></a>
@@ -268,6 +314,24 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00112">112</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
+</div>
+</div>
+<a id="a4cda9dbfb952875376a0749fe08a5bde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cda9dbfb952875376a0749fe08a5bde">&#9670;&nbsp;</a></span>long_description</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setup.long_description</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00108">108</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -283,7 +347,80 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="../../d5/d9d/classiCubANN.html#a6d8a7ead6fa7e5a8cf3a2c4c33258984">iCubANN.AddJointReader()</a>, <a class="el" href="../../d5/d9d/classiCubANN.html#aa0b1a40d74d75170dd100e4c38fd556a">iCubANN.AddJointWriter()</a>, <a class="el" href="../../d5/d9d/classiCubANN.html#a590c53e8757043f66538bf94dd39ac35">iCubANN.AddSkinReader()</a>, <a class="el" href="../../d5/de4/classINIReader.html#a444ab67be741a41dcd26759d744b20db">INIReader.Get()</a>, <a class="el" href="../../d5/de4/classINIReader.html#a6fcbb2ebdfad098e34a14f2144f711f7">INIReader.GetBoolean()</a>, <a class="el" href="../../d5/de4/classINIReader.html#a37ef1f422f1a5cb43bf63d82f4ea112f">INIReader.GetInteger()</a>, <a class="el" href="../../d5/de4/classINIReader.html#a0a41e06f215552e5d7217a0abc5c214f">INIReader.GetReal()</a>, <a class="el" href="../../d3/d50/ini_8h.html#ad8b766ac18397b0b262559203ea7f602">ini_parse_stream()</a>, <a class="el" href="../../d5/d9d/classiCubANN.html#ae4ab1334733f141982e42d72454dd71a">iCubANN.RemoveJointReader()</a>, <a class="el" href="../../d5/d9d/classiCubANN.html#a760933d7406f9a35ab73c0d0c0dc6cc0">iCubANN.RemoveJointWriter()</a>, and <a class="el" href="../../d5/d9d/classiCubANN.html#ae75c249f4ccf3ece15aa5a2f322b17c3">iCubANN.RemoveSkinReader()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00104">104</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d2/d0a/INIReader_8cpp_source.html#l00027">INIReader.Get()</a>, <a class="el" href="../../d2/d0a/INIReader_8cpp_source.html#l00053">INIReader.GetBoolean()</a>, <a class="el" href="../../d2/d0a/INIReader_8cpp_source.html#l00034">INIReader.GetInteger()</a>, <a class="el" href="../../d2/d0a/INIReader_8cpp_source.html#l00044">INIReader.GetReal()</a>, <a class="el" href="../../d0/d1d/ini_8cpp_source.html#l00081">ini_parse_stream()</a>, and <a class="el" href="../../d2/d32/Skin__Reader_8cpp_source.html#l00041">SkinReader.Init()</a>.</p>
+
+</div>
+</div>
+<a id="a0a5ccc22976d20d42c6bb6c7651ce0be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a5ccc22976d20d42c6bb6c7651ce0be">&#9670;&nbsp;</a></span>package_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setup.package_data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;=  [<span class="stringliteral">&#39;__init__.py&#39;</span>, </div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;                <span class="stringliteral">&#39;iCub/*pxd&#39;</span>,</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;                <span class="stringliteral">&#39;iCub/*pyx&#39;</span>,</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;                <span class="stringliteral">&#39;iCub/__init__.py&#39;</span>,</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;                <span class="stringliteral">&#39;Sync/*pyx&#39;</span>,</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;                <span class="stringliteral">&#39;Sync/__init__.py&#39;</span>,</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;                ]</div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00043">43</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
+</div>
+</div>
+<a id="aff2375a361fd5865c77bd9aa093be747"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff2375a361fd5865c77bd9aa093be747">&#9670;&nbsp;</a></span>packages</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setup.packages</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00105">105</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
+</div>
+</div>
+<a id="a3b68891607a92cd876387236b6e79f44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b68891607a92cd876387236b6e79f44">&#9670;&nbsp;</a></span>prefix_cpp</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string setup.prefix_cpp = &quot;iCub_ANN_Interface/src/&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00038">38</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
+</div>
+</div>
+<a id="a9bc566088ca4e358afc9eb4e20f3de7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bc566088ca4e358afc9eb4e20f3de7e">&#9670;&nbsp;</a></span>prefix_cy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string setup.prefix_cy = &quot;iCub_ANN_Interface/&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00037">37</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -299,6 +436,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00013">13</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
 </div>
 </div>
 <a id="a64d27bb373bf0fe3edd82aa687c5927e"></a>
@@ -312,6 +451,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00014">14</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -327,6 +468,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00015">15</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
 </div>
 </div>
 <a id="aa6e22655fb1a2eb038d36c5b7cef3723"></a>
@@ -336,10 +479,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">list setup.sources = [&quot;include/INI_Reader/INIReader.cpp&quot;, &quot;include/INI_Reader/ini.cpp&quot;]</td>
+          <td class="memname">list setup.sources = [&quot;iCub_ANN_Interface/include/INI_Reader/INIReader.cpp&quot;, &quot;iCub_ANN_Interface/include/INI_Reader/ini.cpp&quot;, prefix_cpp + &quot;Module_Base_Class.cpp&quot;]</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00040">40</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -350,10 +495,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">list setup.sources1 = [&quot;src/Joint_Reader.cpp&quot;, &quot;src/Joint_Writer.cpp&quot;, &quot;src/Skin_Reader.cpp&quot;, &quot;src/Visual_Reader.cpp&quot;]</td>
+          <td class="memname">list setup.sources1 = [<a class="el" href="../../dd/dc4/namespacesetup.html#a3b68891607a92cd876387236b6e79f44">prefix_cpp</a> + &quot;Joint_Reader.cpp&quot;, prefix_cpp + &quot;Joint_Writer.cpp&quot;, prefix_cpp + &quot;Skin_Reader.cpp&quot;, prefix_cpp + &quot;Visual_Reader.cpp&quot;]</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00041">41</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -369,33 +516,23 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00109">109</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
+
 </div>
 </div>
-<a id="a9ee0eb03e7f58d117719dca780a693eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ee0eb03e7f58d117719dca780a693eb">&#9670;&nbsp;</a></span>yarp_data</h2>
+<a id="a0e0820b1de73eedad69abe7cbba76109"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e0820b1de73eedad69abe7cbba76109">&#9670;&nbsp;</a></span>yarp_prefix</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">setup.yarp_data = os.environ['YARP_DATA_DIRS'].split(':')[0].split('/')</td>
+          <td class="memname">setup.yarp_prefix = set_yarp_prefix()</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a5d55e1988acca9f7aa7ff70b42bd19d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d55e1988acca9f7aa7ff70b42bd19d0">&#9670;&nbsp;</a></span>yarp_prefix</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string setup.yarp_prefix = os.environ[&quot;ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX&quot;]</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00018">18</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>
@@ -410,6 +547,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../da/dab/setup_8py_source.html#l00113">113</a> of file <a class="el" href="../../da/dab/setup_8py_source.html">setup.py</a>.</p>
 
 </div>
 </div>

@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['idx_607',['idx',['../d4/dbf/structTaxelData.html#ae84a877a528c5e095f5579484514e92a',1,'TaxelData']]],
-  ['img_5fcount_608',['img_count',['../df/d34/namespacesupplementary_1_1testing__parameter.html#a5e39e063a5b9cb3e8a1bfac6b890813c',1,'supplementary::testing_parameter']]],
-  ['include_5fdir_609',['include_dir',['../dd/dc4/namespacesetup.html#a4db17754c5de2edee8a0e2c5585ccabf',1,'setup']]],
-  ['init_5fhand_5fpos_5frobot_5frf_610',['init_hand_pos_robot_rf',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#a6943abe1a0b841f94dd89b720099a871',1,'iCub_Python_Lib::iCub_transformation_matrices']]]
+  ['my_5finterface_377',['my_interface',['../d7/d55/Interface__iCub_8hpp.html#ab1e0892057f2b6649ead453c21f665bb',1,'my_interface():&#160;Interface_iCub.cpp'],['../dc/d14/Interface__iCub_8cpp.html#ab1e0892057f2b6649ead453c21f665bb',1,'my_interface():&#160;Interface_iCub.cpp']]]
 ];

@@ -1,4 +1,6 @@
 <map id="JointWriter" name="JointWriter">
-<area shape="rect" id="node3" title="STL class. " alt="" coords="181,103,261,130"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="5,96,132,137"/>
+<area shape="rect" id="node1" title="Write the joint angles to the iCub robots joints to move them." alt="" coords="29,276,120,303"/>
+<area shape="rect" id="node2" href="$d9/dfd/classMod__BaseClass.html" title="Base class for the sensor/actor reader/writer modules." alt="" coords="13,200,137,227"/>
+<area shape="rect" id="node3" title="STL class." alt="" coords="31,96,118,123"/>
+<area shape="rect" id="node4" title="STL class." alt="" coords="5,5,144,47"/>
 </map>

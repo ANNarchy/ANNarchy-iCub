@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['performance_5ftest_2epy_412',['performance_test.py',['../d0/d48/performance__test_8py.html',1,'']]],
-  ['plot_5fimage_5fprocessing_2epy_413',['plot_image_processing.py',['../d8/dd1/plot__image__processing_8py.html',1,'']]]
+  ['visual_5freader_2ecpp_258',['Visual_Reader.cpp',['../dc/d8f/Visual__Reader_8cpp.html',1,'']]],
+  ['visual_5freader_2ehpp_259',['Visual_Reader.hpp',['../df/d49/Visual__Reader_8hpp.html',1,'']]],
+  ['visual_5freader_2epxd_260',['Visual_Reader.pxd',['../d8/d30/Visual__Reader_8pxd.html',1,'']]],
+  ['visual_5freader_2epyx_261',['Visual_Reader.pyx',['../d2/d07/Visual__Reader_8pyx.html',1,'']]],
+  ['vocabs_2epy_262',['Vocabs.py',['../d7/d5b/Vocabs_8py.html',1,'']]]
 ];

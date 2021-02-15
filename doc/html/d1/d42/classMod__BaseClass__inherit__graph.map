@@ -1,0 +1,7 @@
+<map id="Mod_BaseClass" name="Mod_BaseClass">
+<area shape="rect" id="node1" title="Base class for the sensor/actor reader/writer modules." alt="" coords="169,5,293,32"/>
+<area shape="rect" id="node2" href="$d1/dc0/classJointReader.html" title="Read&#45;out of the joint angles of the iCub robot." alt="" coords="5,80,103,107"/>
+<area shape="rect" id="node3" href="$df/d23/classJointWriter.html" title="Write the joint angles to the iCub robots joints to move them." alt="" coords="127,80,218,107"/>
+<area shape="rect" id="node4" href="$d1/dc5/classSkinReader.html" title="Read&#45;out of the skin sensor data from the iCubs artificial skin." alt="" coords="242,80,338,107"/>
+<area shape="rect" id="node5" href="$d5/df3/classVisualReader.html" title="Read&#45;out of the camera images from the iCub robot." alt="" coords="363,80,471,107"/>
+</map>

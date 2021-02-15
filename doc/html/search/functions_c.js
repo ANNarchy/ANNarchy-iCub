@@ -1,25 +1,9 @@
 var searchData=
 [
-  ['read_5frobot_5feye_520',['read_robot_eye',['../d5/d58/namespaceiCub__Python__Lib_1_1YARP__image__processing.html#ad10643c714e7995503aa08a0e2234b16',1,'iCub_Python_Lib::YARP_image_processing']]],
-  ['read_5frobot_5feyes_521',['read_robot_eyes',['../d5/d58/namespaceiCub__Python__Lib_1_1YARP__image__processing.html#aa1c91934de1db42b732e12a8bb25eda7',1,'iCub_Python_Lib::YARP_image_processing']]],
-  ['readdoubleall_522',['ReadDoubleAll',['../d1/dc0/classJointReader.html#ad8577c98fa2df010547d37252947a88f',1,'JointReader']]],
-  ['readdoublealltime_523',['ReadDoubleAllTime',['../d1/dc0/classJointReader.html#a4d73f7ed44eb0fffef9fc7f6fd6f59d1',1,'JointReader']]],
-  ['readdoublemultiple_524',['ReadDoubleMultiple',['../d1/dc0/classJointReader.html#aa5d33147dae21c310c8154d6fbf9d06f',1,'JointReader']]],
-  ['readdoublemultipletime_525',['ReadDoubleMultipleTime',['../d1/dc0/classJointReader.html#af62b3cb57cd310e99fdee755d0b4d478',1,'JointReader']]],
-  ['readdoubleone_526',['ReadDoubleOne',['../d1/dc0/classJointReader.html#a74efecae39a9eeceb727db3424bc6b14',1,'JointReader']]],
-  ['readdoubleonetime_527',['ReadDoubleOneTime',['../d1/dc0/classJointReader.html#ab1aef78912727d1da1a3c18f3162d6b2',1,'JointReader']]],
-  ['readfrombuf_528',['ReadFromBuf',['../d5/df3/classVisualReader.html#a725e6ead6d6a8530d26732eb6af6bc5b',1,'VisualReader']]],
-  ['readpopall_529',['ReadPopAll',['../d1/dc0/classJointReader.html#a0a88164824a3280c31e70864f3415f81',1,'JointReader']]],
-  ['readpopone_530',['ReadPopOne',['../d1/dc0/classJointReader.html#a1e04826bec1695f818a8965471f9e756',1,'JointReader']]],
-  ['readroboteyes_531',['ReadRobotEyes',['../d5/df3/classVisualReader.html#ad79a846ca67e52156cc30cce880d754d',1,'VisualReader']]],
-  ['readtactile_532',['ReadTactile',['../d1/dc5/classSkinReader.html#ae31fc008ecebc10ab009378c7d3602cf',1,'SkinReader']]],
-  ['rel_5fpos_5fdouble_533',['rel_pos_double',['../d0/dbb/namespaceauto__test.html#a4e77d46ad790926e2f1ba6029b41e718',1,'auto_test']]],
-  ['rel_5fpos_5fpop_534',['rel_pos_pop',['../d0/dbb/namespaceauto__test.html#aa8d733fd9e441a7458df7fcbde8c4dbc',1,'auto_test']]],
-  ['removejointreader_535',['RemoveJointReader',['../d5/d9d/classiCubANN.html#ae4ab1334733f141982e42d72454dd71a',1,'iCubANN']]],
-  ['removejointwriter_536',['RemoveJointWriter',['../d5/d9d/classiCubANN.html#a760933d7406f9a35ab73c0d0c0dc6cc0',1,'iCubANN']]],
-  ['removeskinreader_537',['RemoveSkinReader',['../d5/d9d/classiCubANN.html#ae75c249f4ccf3ece15aa5a2f322b17c3',1,'iCubANN']]],
-  ['removevisualreader_538',['RemoveVisualReader',['../d5/d9d/classiCubANN.html#ae0acb7c52f2d269d611fee8097d604b5',1,'iCubANN']]],
-  ['rotate_5fmodel_539',['rotate_model',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#a2c405bb59e03d53d467a21ec859a1b6f',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]],
-  ['rotate_5fmodel_5fgroup_540',['rotate_model_group',['../d8/d54/classiCub__Python__Lib_1_1iCubSim__model__groups__control_1_1ModelGroup.html#a9eee588afcc3ea69a34beba106982dc5',1,'iCub_Python_Lib::iCubSim_model_groups_control::ModelGroup']]],
-  ['rotate_5fobject_541',['rotate_object',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html#adbd50c44ecaa169ad831614bc82e94db',1,'iCub_Python_Lib::iCubSim_world_controller::WorldController']]]
+  ['_7eicubann_320',['~iCubANN',['../d5/d9d/classiCubANN.html#ad4c0bbd3adb6f1a7ab2f056cbd7cd975',1,'iCubANN']]],
+  ['_7ejointreader_321',['~JointReader',['../d1/dc0/classJointReader.html#a78ff28faeb88eb858b3b4ed3dcb32d42',1,'JointReader']]],
+  ['_7ejointwriter_322',['~JointWriter',['../df/d23/classJointWriter.html#ad0fb1b676fee108d05fad445f30b541e',1,'JointWriter']]],
+  ['_7emod_5fbaseclass_323',['~Mod_BaseClass',['../d9/dfd/classMod__BaseClass.html#a28232e733c8baf282b815dfdd602113f',1,'Mod_BaseClass']]],
+  ['_7eskinreader_324',['~SkinReader',['../d1/dc5/classSkinReader.html#a91625eb163703b38d66013b31c934bea',1,'SkinReader']]],
+  ['_7evisualreader_325',['~VisualReader',['../d5/df3/classVisualReader.html#a481bbf0a59f5a641a680cd882a789fb4',1,'VisualReader']]]
 ];

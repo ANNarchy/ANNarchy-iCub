@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ANNarchy iCub Interface
-   &#160;<span id="projectnumber">0.2</span>
+   &#160;<span id="projectnumber">1.0</span>
    </div>
   </td>
  </tr>
@@ -90,7 +90,16 @@ $(function() {
 <h1>Folder structure</h1>
 <ul>
 <li>Interface_ANNarchy_iCub -&gt; Main folder containing the whole interface<ul>
-<li>Cython_ext -&gt; Contains the Cython files (pyx, pxd) for wrapping the C++ code for the use in Python</li>
+<li>Interface_ANN_iCub<ul>
+<li>iCub -&gt; Contains the Cython files (pyx, pxd) for wrapping the C++ code for the use in Python (iCub interaction modules)</li>
+<li>Sync -&gt; Classes used for synchronized execution of iCub interaction, ANNarchy simulation and further modules</li>
+<li>include -&gt; This folder contains the C++ header files for the interface modules.<ul>
+<li>INI_Reader -&gt; The INI-Reader is an external module, which is used to handle ini-files.</li>
+</ul>
+</li>
+<li>src -&gt; This folder contains the C++ source files for the interface modules.</li>
+</ul>
+</li>
 <li>data -&gt; Folder capsulate the data files used by the interface.<ul>
 <li>sensor_positions -&gt; This folder caontains the files from the iCub simulator installation with the position data for the tactile sensors.</li>
 <li>interface_param.ini -&gt; ini-file with several parameters for the interface</li>
@@ -100,40 +109,49 @@ $(function() {
 </ul>
 </li>
 <li>doc -&gt; This folder contains the doxygen generated documentation for the interface</li>
-<li>include -&gt; This folder contains the C++ header files for the interface modules.<ul>
-<li>INI_Reader -&gt; The INI-Reader is an external module, which is used to handle ini-files.</li>
-</ul>
-</li>
-<li>src -&gt; This folder contains the C++ source files for the interface modules.</li>
 <li>Testfiles -&gt; files for interface testing</li>
 </ul>
 </li>
 </ul>
 <h1>Preparation</h1>
-<p>To use the interface in Python the source code has to be compiled. For compilation execute the <a class="el" href="d3/de4/make_8py.html">make.py</a> script. This generates the nessecary Makefile and starts the build process. In case of missing/false include directories the <a class="el" href="d6/d19/namespacemake__config.html">make_config</a> file has to be modified. The resulting .so files are saved in the build folder.</p>
+<p>Simply install the interface with pip by executing the following line in a terminal in the interface directory. </p><div class="fragment"><div class="line">pip install .</div>
+</div><!-- fragment --><p>To use the interface in Python the source code has to be compiled. For compilation execute the <a class="el" href="d3/de4/make_8py.html">make.py</a> script. This generates the nessecary Makefile and starts the build process. In case of missing/false include directories the <a class="el" href="d6/d19/namespacemake__config.html">make_config</a> file has to be modified. The resulting .so files are saved in the build folder.</p>
 <p>For use in Python the build folder could be added to the Pythonpath-variable, therefore add the following line to the .bashrc in the home-directory: </p><div class="fragment"><div class="line">export PYTHONPATH=${PYTHONPATH}:/path/to/repo/Interface_ANNarchy_iCub/build</div>
-</div><!-- fragment --><p>Otherwise the library path has to be added to the import path inside your user python script module above <code>import iCub_Interface</code>. This is done with the sys module: </p><div class="fragment"><div class="line">import sys</div>
+</div><!-- fragment --><p>Otherwise the library path has to be added to the import path inside your user python script module above <code>import <a class="el" href="dc/d3a/namespaceiCub__ANN__Interface.html">iCub_ANN_Interface</a></code>. This is done with the sys module: </p><div class="fragment"><div class="line">import sys</div>
 <div class="line">sys.path.append(&quot;path/to/so/files&quot;)</div>
-<div class="line">import iCub_Interface</div>
+<div class="line">import iCub_ANN_Interface</div>
 <div class="line">...</div>
 </div><!-- fragment --><h1>Generic Python Example</h1>
-<div class="fragment"><div class="line">import iCub_Interface</div>
+<div class="fragment"><div class="line">from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader</div>
+<div class="line">import iCub_ANN_Interface.Vocabs as iCub_Constants</div>
+<div class="line"> </div>
 <div class="line"> </div>
 <div class="line">iCub = iCub_Interface.iCubANN_wrapper()</div>
 <div class="line">...</div>
 <div class="line"># add nessacary instances</div>
-<div class="line">iCub.add_joint_reader(jreader_name)</div>
-<div class="line">iCub.add_joint_writer(jwriter_name)</div>
-<div class="line">iCub.add_skin_reader(sreader_name)</div>
-<div class="line">iCub.add_visual_reader()</div>
+<div class="line">jreader = Joint_Reader.PyJointReader()</div>
+<div class="line">jwriter = Joint_Writer.PyJointWriter()</div>
+<div class="line">sreader = Skin_Reader.PySkinReader()</div>
+<div class="line">visreader = Visual_Reader.PyVisualReader()</div>
+<div class="line">...</div>
+<div class="line"> </div>
+<div class="line"># init modules (necessary for all modules before usage)</div>
+<div class="line">jreader.init(iCub, name , ...)</div>
+<div class="line">jwriter.init(iCub, name , ...)</div>
+<div class="line">sreader.init(iCub, name , ...)</div>
+<div class="line">visreader.init(iCub, ...)</div>
+<div class="line">...</div>
 <div class="line"> </div>
 <div class="line"># use interface modules</div>
-<div class="line">iCub.parts_reader[jreader_name].method_name(...)</div>
-<div class="line">iCub.parts_writer[jwriter_name].method_name(...)</div>
-<div class="line">iCub.tactile_reader[sreader_name].method_name(...)</div>
-<div class="line">iCub.visual_input.method_name(...)</div>
+<div class="line">jreader.method_name(...)</div>
+<div class="line">jwriter.method_name(...)</div>
+<div class="line">sreader.method_name(...)</div>
+<div class="line">visreader.method_name(...)</div>
 <div class="line">...</div>
+<div class="line">...</div>
+<div class="line"> </div>
 <div class="line">del iCub</div>
+<div class="line">del jreader, jwriter, sreader, visreader</div>
 </div><!-- fragment --><h1>useful links</h1>
 <p>Wiki for the iCub robot:<br  />
  <a href="http://wiki.icub.org/wiki/Manual">http://wiki.icub.org/wiki/Manual</a></p>
@@ -149,6 +167,7 @@ $(function() {
 <p>Python &gt;= 3.5<br  />
  YARP &gt;= 3.2<br  />
  OpenCV &gt;= 3.4<br  />
+ numpy <br  />
  </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->

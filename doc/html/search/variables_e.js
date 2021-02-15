@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['orientation_5frobot_5fhand_636',['orientation_robot_hand',['../d6/d8b/namespaceiCub__Python__Lib_1_1iCub__transformation__matrices.html#a4cdb710326050677fd6685418c94779d',1,'iCub_Python_Lib::iCub_transformation_matrices']]]
+  ['verbose_400',['verbose',['../d6/d19/namespacemake__config.html#a9a06a60fd87fa0d75b3f4eff0c3cf7f1',1,'make_config']]],
+  ['version_401',['version',['../dd/dc4/namespacesetup.html#a2aa722b36a933088812b50ea79b97a5c',1,'setup']]]
 ];

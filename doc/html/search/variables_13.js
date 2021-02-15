@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['verbose_675',['verbose',['../d6/d19/namespacemake__config.html#a9a06a60fd87fa0d75b3f4eff0c3cf7f1',1,'make_config']]],
-  ['version_676',['version',['../dd/dc4/namespacesetup.html#a2aa722b36a933088812b50ea79b97a5c',1,'setup']]],
-  ['visual_5finput_677',['visual_input',['../d5/d9d/classiCubANN.html#ab30f1de41d779518330636c942644f90',1,'iCubANN']]]
+  ['wrapper_762',['wrapper',['../d0/dbb/namespaceauto__test.html#ab7059cc2cc1485810c05098e03bcb878',1,'auto_test.wrapper()'],['../dd/d3c/namespaceperformance__test.html#a742d6bbd571aa74421a75988a16bf87f',1,'performance_test.wrapper()']]]
 ];

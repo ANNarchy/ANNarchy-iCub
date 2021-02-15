@@ -1,0 +1,4 @@
+<map id="JointReader" name="JointReader">
+<area shape="rect" id="node1" title="Read&#45;out of the joint angles of the iCub robot." alt="" coords="19,80,116,107"/>
+<area shape="rect" id="node2" href="$d9/dfd/classMod__BaseClass.html" title="Base class for the sensor/actor reader/writer modules." alt="" coords="5,5,129,32"/>
+</map>

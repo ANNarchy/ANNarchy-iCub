@@ -1,17 +1,9 @@
 var searchData=
 [
-  ['worldcontroller_322',['WorldController',['../d4/db4/classiCub__Python__Lib_1_1iCubSim__world__controller_1_1WorldController.html',1,'iCub_Python_Lib.iCubSim_world_controller.WorldController'],['../d8/dfc/classiCub__Python__Lib_1_1gazebo__world__controller_1_1WorldController.html',1,'iCub_Python_Lib.gazebo_world_controller.WorldController']]],
-  ['wrapper_323',['wrapper',['../d0/dbb/namespaceauto__test.html#ab7059cc2cc1485810c05098e03bcb878',1,'auto_test.wrapper()'],['../dd/d3c/namespaceperformance__test.html#a742d6bbd571aa74421a75988a16bf87f',1,'performance_test.wrapper()'],['../d9/d94/namespacesimple__call__test.html#a652ce85576b84e9431174ef3d8324021',1,'simple_call_test.wrapper()']]],
-  ['write_5fjoint_5fall_324',['write_joint_all',['../d0/dbb/namespaceauto__test.html#a8a9cbded8c888184d3d7e8f3fff262fc',1,'auto_test']]],
-  ['write_5fjoint_5feach_325',['write_joint_each',['../d0/dbb/namespaceauto__test.html#a0c774f79a455b0244ace20f84ad8ff49',1,'auto_test']]],
-  ['write_5fjoint_5fmult_326',['write_joint_mult',['../d0/dbb/namespaceauto__test.html#a7929006a32e1200fd6f98f994887fa44',1,'auto_test']]],
-  ['writeactionsyncall_327',['WriteActionSyncAll',['../d5/d9d/classiCubANN.html#a76f82906ef77be568dfccb335625a7dc',1,'iCubANN']]],
-  ['writeactionsyncmult_328',['WriteActionSyncMult',['../d5/d9d/classiCubANN.html#a9c4c455490c3c5e3492f91a9fa63a7da',1,'iCubANN']]],
-  ['writeactionsyncone_329',['WriteActionSyncOne',['../d5/d9d/classiCubANN.html#a21989192d508c87b0df3dfe4159885c5',1,'iCubANN']]],
-  ['writedoubleall_330',['WriteDoubleAll',['../df/d23/classJointWriter.html#a0b21bf4504ade96db501c8fc46c15a24',1,'JointWriter']]],
-  ['writedoublemultiple_331',['WriteDoubleMultiple',['../df/d23/classJointWriter.html#a3abbe9cee661f4b51c50f6c6454fd43d',1,'JointWriter']]],
-  ['writedoubleone_332',['WriteDoubleOne',['../df/d23/classJointWriter.html#ab6dfb700a2962f300900edadab1d9876',1,'JointWriter']]],
-  ['writepopall_333',['WritePopAll',['../df/d23/classJointWriter.html#a8cfb27b5e39e54f6f17ab4122c113884',1,'JointWriter']]],
-  ['writepopmultiple_334',['WritePopMultiple',['../df/d23/classJointWriter.html#a73b6bf7cf7fb9824037faa2ec10869b3',1,'JointWriter']]],
-  ['writepopone_335',['WritePopOne',['../df/d23/classJointWriter.html#ac6d675257fb04c5f61ece1d50fbf68f1',1,'JointWriter']]]
+  ['_7eicubann_202',['~iCubANN',['../d5/d9d/classiCubANN.html#ad4c0bbd3adb6f1a7ab2f056cbd7cd975',1,'iCubANN']]],
+  ['_7ejointreader_203',['~JointReader',['../d1/dc0/classJointReader.html#a78ff28faeb88eb858b3b4ed3dcb32d42',1,'JointReader']]],
+  ['_7ejointwriter_204',['~JointWriter',['../df/d23/classJointWriter.html#ad0fb1b676fee108d05fad445f30b541e',1,'JointWriter']]],
+  ['_7emod_5fbaseclass_205',['~Mod_BaseClass',['../d9/dfd/classMod__BaseClass.html#a28232e733c8baf282b815dfdd602113f',1,'Mod_BaseClass']]],
+  ['_7eskinreader_206',['~SkinReader',['../d1/dc5/classSkinReader.html#a91625eb163703b38d66013b31c934bea',1,'SkinReader']]],
+  ['_7evisualreader_207',['~VisualReader',['../d5/df3/classVisualReader.html#a481bbf0a59f5a641a680cd882a789fb4',1,'VisualReader']]]
 ];

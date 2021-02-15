@@ -1,0 +1,4 @@
+<map id="SkinReader" name="SkinReader">
+<area shape="rect" id="node1" title="Read&#45;out of the skin sensor data from the iCubs artificial skin." alt="" coords="19,80,115,107"/>
+<area shape="rect" id="node2" href="$d9/dfd/classMod__BaseClass.html" title="Base class for the sensor/actor reader/writer modules." alt="" coords="5,5,129,32"/>
+</map>
