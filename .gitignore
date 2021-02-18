@@ -13,7 +13,8 @@ Makefile
 /dist
 *.egg-info/
 *.so
-Cython_ext/*.cpp
+iCub_ANN_Interface/iCub/*.cpp
+iCub_ANN_Interface/Sync/*.cpp
 
 # VSCode files
 *.clang-format
