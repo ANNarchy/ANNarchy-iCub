@@ -48,7 +48,7 @@ package_data = ['__init__.py',
                 'Sync/__init__.py',
                 ]
 
-extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-w"]
+extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
 
 extensions = [
     Extension("iCub_ANN_Interface.iCub.Joint_Reader", [prefix_cy + "iCub/Joint_Reader.pyx", prefix_cpp + "Joint_Reader.cpp"] + sources,

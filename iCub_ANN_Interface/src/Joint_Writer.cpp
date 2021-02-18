@@ -24,7 +24,6 @@
 #include <yarp/sig/all.h>
 
 #include <algorithm>
-#include <boost/algorithm/string.hpp>
 #include <iostream>
 #include <string>
 
@@ -289,7 +288,7 @@ bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
     if (joint < 0) {
         for (int i = 0; i < joints; i++) {
             // set control modes
-            boost::algorithm::to_lower(control_mode);
+            std::transform(control_mode.begin(), control_mode.end(), control_mode.begin(), [](unsigned char c) { return std::tolower(c); });
             if (control_mode == "position") {
                 icont->setControlMode(i, VOCAB_CM_POSITION);
                 joint_control_mode[i] = static_cast<int32_t>(VOCAB_CM_POSITION);
@@ -304,7 +303,7 @@ bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
         }
     } else {
         // set control modes
-        boost::algorithm::to_lower(control_mode);
+        std::transform(control_mode.begin(), control_mode.end(), control_mode.begin(), [](unsigned char c) { return std::tolower(c); });
         if (control_mode == "position") {
             icont->setControlMode(joint, VOCAB_CM_POSITION);
             joint_control_mode[joint] = static_cast<int32_t>(VOCAB_CM_POSITION);
