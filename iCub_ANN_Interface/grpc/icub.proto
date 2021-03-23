@@ -1,0 +1,157 @@
+syntax = "proto3";
+package iCubInterfaceMessages;
+
+// response status
+enum Status {
+    UNKNOWN = 0;
+    SUCCESS = 1;
+    ERROR = 2;
+}
+
+message DoubleVector {
+    repeated double values = 1;
+}
+
+message ImageRequest {
+    // eye selection
+    string eye = 1;
+}
+
+message ImageResponse {
+    Status status = 1;
+    // flattened images (consider precision?)
+    repeated double imageL = 2;
+    repeated double imageR = 3;
+}
+
+message SingleJointRequest {
+    // selected part
+    string part = 1;
+    // selected joint
+    int32 joint = 2;
+}
+
+message SingleJointResponse {
+    Status status = 1;
+    // flattened images (consider precision?)
+    double angle = 2;
+}
+
+message AllJointRequest {
+    // selected part
+    string part = 1;
+}
+
+message AllJointResponse {
+    Status status = 1;
+    // flattened images (consider precision?)
+    repeated double angle = 2;
+}
+
+message SingleJointEncodedRequest {
+    // selected part
+    string part = 1;
+    // selected joint
+    int32 joint = 2;
+}
+
+message SingleJointEncodedResponse {
+    Status status = 1;
+    // flattened images (consider precision?)
+    repeated double angle = 2;
+}
+
+message AllJointEncodedRequest {
+    // selected part
+    string part = 1;
+}
+
+message AllJointEncodedResponse {
+    Status status = 1;
+    // flattened images (consider precision?)
+    repeated DoubleVector angle = 2;
+}
+
+
+message SingleTargetRequest {
+    // selected joint
+    int32 joint = 2;
+}
+
+message SingleTargetResponse {
+    Status status = 1;
+    // flattened images (consider precision?)
+    double angle = 2;
+}
+
+message AllTargetRequest {
+}
+
+message AllTargetResponse {
+    Status status = 1;
+    // flattened images (consider precision?)
+    repeated double angle = 2;
+}
+
+message SingleTargetEncodedRequest {
+    // selected part
+    string part = 1;
+    // selected joint
+    int32 joint = 2;
+}
+
+message SingleTargetEncodedResponse {
+    Status status = 1;
+    // flattened images (consider precision?)
+    repeated double angle = 2;
+}
+
+message AllTargetEncodedRequest {
+    // selected part
+    string part = 1;
+}
+
+message AllTargetEncodedResponse {
+    Status status = 1;
+    // flattened images (consider precision?)
+    repeated DoubleVector angle = 2;
+}
+
+message SkinRequest {
+    // selected part
+    string part = 1;
+    // selected skin section
+    string skin_section = 2;
+}
+
+message SkinResponse {
+    Status status = 1;
+    // flattened images (consider precision?)
+    repeated double sensor_data = 2;
+}
+
+service ProvideInput {
+    // provide Camera images
+    rpc ReadImage (ImageRequest) returns (ImageResponse) {}
+    // provide single joint angle
+    rpc ReadSingleJoint (SingleJointRequest) returns (SingleJointResponse) {}
+    // provide single joint angle
+    rpc ReadSingleJointEncoded (SingleJointEncodedRequest) returns (SingleJointEncodedResponse) {}
+    // provide single joint angle
+    rpc ReadAllJoints (AllJointRequest) returns (AllJointResponse) {}
+    // provide single joint angle
+    rpc ReadAllJointEncoded (AllJointEncodedRequest) returns (AllJointEncodedResponse) {}
+    // provide skin sensor data
+    rpc ReadSkin (SkinRequest) returns (SkinResponse) {}
+}
+
+service WriteOutput {
+    // provide single joint angle
+    rpc WriteSingleTarget (SingleTargetRequest) returns (SingleTargetResponse) {}
+    // provide single Target angle
+    rpc WriteSingleTargetEncoded (SingleTargetEncodedRequest) returns (SingleTargetEncodedResponse) {}
+    // provide single Target angle
+    rpc WriteAllTargets (AllTargetRequest) returns (AllTargetResponse) {}
+    // provide single Target angle
+    rpc WriteAllTargetEncoded (AllTargetEncodedRequest) returns (AllTargetEncodedResponse) {}
+}

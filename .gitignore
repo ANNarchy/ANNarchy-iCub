@@ -1,7 +1,15 @@
 # python related files
 *.pyc
 */__pycache__/
+annarchy
 
+# grpc compiled files
+*.pb.cc
+*.pb.h
+*_pb2_grpc.py 
+*_pb2.py 
+
+# testing files
 test_*.py
 
 # results
@@ -20,5 +28,6 @@ iCub_ANN_Interface/Sync/*.cpp
 *.clang-format
 *.vscode*
 
-
+# Filesystem
+.directory
 
