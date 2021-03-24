@@ -23,6 +23,15 @@ except:
     exit(0)
 from Cython.Build import cythonize
 
+# numpy
+try:
+    import numpy
+    print('Checking for numpy... OK')
+except:
+    print('Checking for numpy... NO')
+    print('Error : Python package "numpy" is required.')
+    print('You can install it from pip or: http://www.numpy.org')
+    exit(0)
 
 # test ANNarchy
 try:
@@ -88,7 +97,7 @@ else:
 
 
 # Setup lists with lib/include directories and names
-include_dir = ["/usr/include", "iCub_ANN_Interface/include", yarp_prefix + "/include", cv_include]
+include_dir = ["/usr/include", "iCub_ANN_Interface/include", yarp_prefix + "/include", cv_include, numpy.get_include()]
 
 libs = ["opencv_core", "opencv_imgproc",
         "YARP_dev", "YARP_init", "YARP_math", "YARP_name", "YARP_os", "YARP_run", "YARP_sig"]
