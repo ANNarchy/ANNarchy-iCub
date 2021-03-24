@@ -1,23 +1,30 @@
+"""
+Created on 
 
+@author: Torsten Fietzek
+
+setup file for the package compilation process
+"""
 
 import os
-import sys
 import subprocess
+import sys
 
-from make_config import yarp_prefix, cv_include
-from make import set_opencv_prefix, set_yarp_prefix
+from make_config import *
 
 # setuptools
 try:
-    from setuptools import setup, find_packages, Extension
+    from setuptools import Extension, find_packages, setup
     print('Checking for setuptools... OK')
 except:
     print('Checking for setuptools... NO')
     print('Error : Python package "setuptools" is required.')
     print('You can install it from pip or: http://pypi.python.org/pypi/setuptools')
     exit(0)
+from Cython.Build import cythonize
 
-# setuptools
+
+# test ANNarchy
 try:
     import ANNarchy
     print('Checking for ANNarchy... OK')
@@ -26,7 +33,6 @@ except:
     print('Error : Python package "ANNarchy" is required.')
     exit(0)
 
-from Cython.Build import cythonize
 
 # protobuf, grpc
 grpc_avaiable = True
@@ -39,7 +45,7 @@ else:
     grpc_avaiable = False
 
 try:
-    import grpc # includes grpc
+    import grpc     # includes grpc
     print('Checking for grpc ... OK')
 except:
     print('Checking for grpc (required for mpi) ... NO')
@@ -58,10 +64,12 @@ else:
     print("grpcio and/or protobuf c-compiler is missing ... abort")
     exit()
 
+
 # Python Version info
 py_major = sys.version_info[0]
 py_minor = sys.version_info[1]
 py_version = str(py_major) + "." + str(py_minor)
+
 
 # find YARP include path
 if yarp_prefix == "default":
@@ -69,6 +77,7 @@ if yarp_prefix == "default":
 else:
     if not os.path.isdir(yarp_prefix + "/include/yarp"):
         sys.exit("Did not find YARP in given path! Please correct yarp_prefix in make_config.py!")
+
 
 # find OpenCV include path
 if cv_include == "default":
@@ -91,6 +100,7 @@ lib_dirs=["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib"]
 prefix_cy = "iCub_ANN_Interface/"
 prefix_cpp = "iCub_ANN_Interface/src/"
 
+# Sourcefiles lists
 sources = ["iCub_ANN_Interface/include/INI_Reader/INIReader.cpp", "iCub_ANN_Interface/include/INI_Reader/ini.cpp", prefix_cpp + "Module_Base_Class.cpp"]
 sources1 = [prefix_cpp + "Joint_Reader.cpp", prefix_cpp + "Joint_Writer.cpp", prefix_cpp + "Skin_Reader.cpp", prefix_cpp + "Visual_Reader.cpp"]
 
@@ -103,7 +113,12 @@ package_data = ['__init__.py',
                 'ANNarchy_iCub_Populations/__init__.py',
                 ]
 
+# set compile arguments
 extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
+if verbose:
+    extra_compile_args.append("--verbose")
+if pedantic:
+    extra_compile_args.append("-pedantic")
 
 # define extensions for the cython-based modules
 extensions = [
@@ -156,6 +171,7 @@ extensions = [
         )
 ]
 
+# python dependencies
 dependencies = [
     'numpy',
     'scipy',
@@ -164,13 +180,18 @@ dependencies = [
     'sympy'
 ]
 
+version="1.0"
+filename = './iCub_ANN_Interface/version.py' 
+with open(filename, 'w') as file_object: 
+    file_object.write("__version__ = \"" + version + "\"")
+
 setup(
     name="iCub_ANN_Interface",
     packages=find_packages(),
     ext_modules=cythonize(extensions, language_level=int(sys.version_info[0])),
     description="Interface for iCub robot and ANNarchy neuro-simulator",
     long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.""",
-    version="1.0",
+    version=version,
     author="Torsten Fietzek, Helge Uelo Dinkelbach",
     author_email="torsten.fietzek@informatik.tu-chemnitz.de",
     license="GPLv2+",

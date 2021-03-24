@@ -16,6 +16,7 @@ test_*.py
 *.npy
 
 # application
+version.py
 Makefile
 /build
 /dist

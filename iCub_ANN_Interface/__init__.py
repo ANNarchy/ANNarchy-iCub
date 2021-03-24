@@ -16,6 +16,6 @@ from . import Vocabs
 from . import ANNarchy_iCub_Populations
 
 # Version
-__version__ = '0.1'
+from .version import __version__
 
 print( 'ANNarchy to iCub interface ' + __version__ + ' on ' + sys.platform + ' (' + os.name + ').' )
