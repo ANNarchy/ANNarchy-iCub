@@ -30,7 +30,6 @@
 #include <queue>
 #include <string>
 #include <thread>
-#include <typeinfo>
 
 #include "INI_Reader/INIReader.h"
 #include "Module_Base_Class.hpp"
@@ -171,6 +170,35 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         this->icub_part = std::string(1, eye);
         this->dev_init = true;
         return true;
+    } else {
+        std::cerr << "[Visual Reader] Initialization already done!" << std::endl;
+        return false;
+    }
+}
+
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size,
+                            bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
+    /*
+        Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
+
+        params: char eye            -- character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer)
+                double fov_width    -- output field of view width in degree [0, 60] (input fov width: 60°)
+                double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
+                int img_width       -- output image width in pixel (input width: 320px)
+                int img_height      -- output image height in pixel (input height: 240px)
+                int max_buffer_size -- maximum buffer length
+                bool fast_filter    -- flag to select the filter for image upscaling; True for a faster filter
+                string ip_address
+                unsigned int port
+
+        return: bool                -- return True, if successful
+    */
+    if (!this->dev_init) {
+        if (this->Init(eye, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter, ini_path)) {
+            this->_ip_address = ip_address;
+            this->_port = port;
+            return true;
+        }
     } else {
         std::cerr << "[Visual Reader] Initialization already done!" << std::endl;
         return false;

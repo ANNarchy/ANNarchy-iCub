@@ -59,6 +59,26 @@ class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
               std::string ini_path);
 
     /**
+     * \brief Init Visual reader with given parameters for image resolution,
+     * field of view and eye selection. \param[in] eye character representing
+     * the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye
+     * image are stored in the same buffer) \param[in] fov_width output field of
+     * view width in degree [0, 60] (input fov width: 60°) \param[in] fov_height
+     * output field of view height in degree [0, 48] (input fov height: 48°)
+     * \param[in] img_width output image width in pixel (input width: 320px)
+     * \param[in] img_height output image height in pixel (input height: 240px)
+     * \param[in] max_buffer_size maximum buffer length
+     * \param[in] fast_filter flag to select the filter for image upscaling;
+     * True for a faster filter \return True, if the initializatiion was
+     * successful. False if an error occured. Additionally, an error message is
+     * written to the error stream (cerr).\n Typical errors:
+     *              - arguments not valid: e.g. eye character not valid
+     *              - YARP-Server not running
+     */
+    bool InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter,
+                        std::string ini_path, std::string ip_address, unsigned int port);
+
+    /**
      * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
      * \param[in] wait2img wait for image in buffer
      * \param[in] trials trials for waiting to image in buffer
@@ -141,6 +161,10 @@ class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
     std::string robot_port_prefix;                                                 // robot portname prefix
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_right;    // port for the iCub right eye image
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;     // port for the iCub left eye image
+
+    /** grpc communication **/
+    std::string _ip_address = "";
+    unsigned int _port = -1;
 
     /*** methods for the YARP-RFModule ***/
     // configure RFModule

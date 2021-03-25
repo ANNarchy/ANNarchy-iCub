@@ -35,6 +35,9 @@ cdef extern from "Visual_Reader.hpp":
         # Init Visual reader with given parameters for image resolution, field of view and eye selection.
         bool_t Init(char, double, double, int, int, int, bool_t, string)
 
+        # Init Visual reader with given parameters for image resolution, field of view and eye selection and grpc communication.
+        bool_t InitGRPC(char, double, double, int, int, int, bool_t, string, string , unsigned int)
+
         # Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
         vector[precision] ReadFromBuf(bool_t, int)
 
