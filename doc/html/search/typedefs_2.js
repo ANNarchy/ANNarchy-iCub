@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['precision_407',['precision',['../d5/df3/classVisualReader.html#a8d8c6e5e9b90ff1fa82f62572ffb6310',1,'VisualReader']]]
+  ['ini_5fhandler_1431',['ini_handler',['../d3/d50/ini_8h.html#a7343d087975289e095471430150dbe59',1,'ini.h']]],
+  ['ini_5freader_1432',['ini_reader',['../d3/d50/ini_8h.html#a49ee9ec26dff11c908ef9abace9aae08',1,'ini.h']]]
 ];

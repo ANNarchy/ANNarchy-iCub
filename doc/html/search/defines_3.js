@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['py_5fssize_5ft_5fclean_700',['PY_SSIZE_T_CLEAN',['../d8/dfa/iCub__Interface_8cpp.html#ac9efdaac9411d0868b715edccca3269d',1,'PY_SSIZE_T_CLEAN():&#160;iCub_Interface.cpp'],['../dc/df3/Cython__ext_2Joint__Reader_8cpp.html#ac9efdaac9411d0868b715edccca3269d',1,'PY_SSIZE_T_CLEAN():&#160;Joint_Reader.cpp'],['../d5/d4e/Cython__ext_2Joint__Writer_8cpp.html#ac9efdaac9411d0868b715edccca3269d',1,'PY_SSIZE_T_CLEAN():&#160;Joint_Writer.cpp'],['../d3/da9/Master__Clock_8cpp.html#ac9efdaac9411d0868b715edccca3269d',1,'PY_SSIZE_T_CLEAN():&#160;Master_Clock.cpp'],['../db/d8c/Cython__ext_2Skin__Reader_8cpp.html#ac9efdaac9411d0868b715edccca3269d',1,'PY_SSIZE_T_CLEAN():&#160;Skin_Reader.cpp'],['../db/d1e/Cython__ext_2Visual__Reader_8cpp.html#ac9efdaac9411d0868b715edccca3269d',1,'PY_SSIZE_T_CLEAN():&#160;Visual_Reader.cpp']]]
+  ['max_5fname_1459',['MAX_NAME',['../d0/d1d/ini_8cpp.html#ac7c0207aa5a0e10d378be03b68041350',1,'ini.cpp']]],
+  ['max_5fsection_1460',['MAX_SECTION',['../d0/d1d/ini_8cpp.html#aaf452164719d4d290a4766282df9d690',1,'ini.cpp']]]
 ];

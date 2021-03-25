@@ -1,20 +1,7 @@
 var searchData=
 [
-  ['package_5fdata_136',['package_data',['../dd/dc4/namespacesetup.html#a0a5ccc22976d20d42c6bb6c7651ce0be',1,'setup']]],
-  ['packages_137',['packages',['../dd/dc4/namespacesetup.html#aff2375a361fd5865c77bd9aa093be747',1,'setup']]],
-  ['parseerror_138',['ParseError',['../d5/de4/classINIReader.html#a7527150689e2dbdc7388306c00d5e039',1,'INIReader']]],
-  ['part_5fkey_5fhead_139',['PART_KEY_HEAD',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#a0c5f9cd8b0000de046bdb0286b9c8316',1,'iCub_ANN_Interface::Vocabs']]],
-  ['part_5fkey_5fleft_5farm_140',['PART_KEY_LEFT_ARM',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#a5c85f472272ab4aa52bec3bf5df2f764',1,'iCub_ANN_Interface::Vocabs']]],
-  ['part_5fkey_5fleft_5fleg_141',['PART_KEY_LEFT_LEG',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#a14c252a1cb083bbd7906125e814d8761',1,'iCub_ANN_Interface::Vocabs']]],
-  ['part_5fkey_5fright_5farm_142',['PART_KEY_RIGHT_ARM',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#a605cd2a806b09c0889d5857aff3e0ef8',1,'iCub_ANN_Interface::Vocabs']]],
-  ['part_5fkey_5fright_5fleg_143',['PART_KEY_RIGHT_LEG',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#aa436b0253a70a8a1527f999c42e43ed1',1,'iCub_ANN_Interface::Vocabs']]],
-  ['part_5fkey_5ftorso_144',['PART_KEY_TORSO',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#af21b91f659a432f5f08053c017062527',1,'iCub_ANN_Interface::Vocabs']]],
-  ['pedantic_145',['pedantic',['../d6/d19/namespacemake__config.html#a6e9882c5e2d1d8b632f45b9b52184353',1,'make_config']]],
-  ['precision_146',['precision',['../d5/df3/classVisualReader.html#a8d8c6e5e9b90ff1fa82f62572ffb6310',1,'VisualReader']]],
-  ['prefix_5fcpp_147',['prefix_cpp',['../dd/dc4/namespacesetup.html#a3b68891607a92cd876387236b6e79f44',1,'setup']]],
-  ['prefix_5fcy_148',['prefix_cy',['../dd/dc4/namespacesetup.html#a9bc566088ca4e358afc9eb4e20f3de7e',1,'setup']]],
-  ['ptr_149',['ptr',['../dd/dc7/structini__parse__string__ctx.html#af663d77366545df9b12b166831745c75',1,'ini_parse_string_ctx']]],
-  ['py_5fmajor_150',['py_major',['../d3/d00/namespacemake.html#ade83979ca830b9432c926eef9b748c7c',1,'make.py_major()'],['../dd/dc4/namespacesetup.html#a6250383936d86ac128ad3347dd2db7e8',1,'setup.py_major()']]],
-  ['py_5fminor_151',['py_minor',['../d3/d00/namespacemake.html#a0088f1e37260d46d356ac2812545128e',1,'make.py_minor()'],['../dd/dc4/namespacesetup.html#a64d27bb373bf0fe3edd82aa687c5927e',1,'setup.py_minor()']]],
-  ['py_5fversion_152',['py_version',['../d3/d00/namespacemake.html#a6bbc4d14691eef45ee59cf4ed3a3f424',1,'make.py_version()'],['../dd/dc4/namespacesetup.html#ae33face1920fc1d75de71038254c429f',1,'setup.py_version()']]]
+  ['lib_5fdirs_315',['lib_dirs',['../dd/dc4/namespacesetup.html#a8c296d7b2a95bc529afe419b20127e7e',1,'setup']]],
+  ['libs_316',['libs',['../dd/dc4/namespacesetup.html#a7f6f13240cca22a0b50447d2de556b05',1,'setup']]],
+  ['license_317',['license',['../dd/dc4/namespacesetup.html#a8ed6f50a28bd6a8794f8e1153baa6de9',1,'setup']]],
+  ['long_5fdescription_318',['long_description',['../dd/dc4/namespacesetup.html#a4cda9dbfb952875376a0749fe08a5bde',1,'setup']]]
 ];

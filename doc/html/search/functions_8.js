@@ -1,14 +1,6 @@
 var searchData=
 [
-  ['readdoubleall_293',['ReadDoubleAll',['../d1/dc0/classJointReader.html#ad8577c98fa2df010547d37252947a88f',1,'JointReader']]],
-  ['readdoublealltime_294',['ReadDoubleAllTime',['../d1/dc0/classJointReader.html#a4d73f7ed44eb0fffef9fc7f6fd6f59d1',1,'JointReader']]],
-  ['readdoublemultiple_295',['ReadDoubleMultiple',['../d1/dc0/classJointReader.html#aa5d33147dae21c310c8154d6fbf9d06f',1,'JointReader']]],
-  ['readdoublemultipletime_296',['ReadDoubleMultipleTime',['../d1/dc0/classJointReader.html#af62b3cb57cd310e99fdee755d0b4d478',1,'JointReader']]],
-  ['readdoubleone_297',['ReadDoubleOne',['../d1/dc0/classJointReader.html#a74efecae39a9eeceb727db3424bc6b14',1,'JointReader']]],
-  ['readdoubleonetime_298',['ReadDoubleOneTime',['../d1/dc0/classJointReader.html#ab1aef78912727d1da1a3c18f3162d6b2',1,'JointReader']]],
-  ['readfrombuf_299',['ReadFromBuf',['../d5/df3/classVisualReader.html#a3c06db6a38a7a9cfab0891261dcee342',1,'VisualReader']]],
-  ['readpopall_300',['ReadPopAll',['../d1/dc0/classJointReader.html#a0a88164824a3280c31e70864f3415f81',1,'JointReader']]],
-  ['readpopone_301',['ReadPopOne',['../d1/dc0/classJointReader.html#a1e04826bec1695f818a8965471f9e756',1,'JointReader']]],
-  ['readroboteyes_302',['ReadRobotEyes',['../d5/df3/classVisualReader.html#ad79a846ca67e52156cc30cce880d754d',1,'VisualReader']]],
-  ['readtactile_303',['ReadTactile',['../d1/dc5/classSkinReader.html#ae31fc008ecebc10ab009378c7d3602cf',1,'SkinReader']]]
+  ['joint_1001',['joint',['../db/d5d/classiCubInterfaceMessages_1_1SingleJointRequest.html#a8eddf4fa5d297a5de7a491f7dfcbb7ed',1,'iCubInterfaceMessages::SingleJointRequest::joint()'],['../d3/d01/classiCubInterfaceMessages_1_1SingleJointEncodedRequest.html#a783496e60a147561d5ea41ad9032fda1',1,'iCubInterfaceMessages::SingleJointEncodedRequest::joint()'],['../d4/d58/classiCubInterfaceMessages_1_1SingleTargetRequest.html#ae719efaae1ede75ae903127968e316c3',1,'iCubInterfaceMessages::SingleTargetRequest::joint()'],['../d7/dbb/classiCubInterfaceMessages_1_1SingleTargetEncodedRequest.html#a59f512b1ff630f7949232a6409f065b1',1,'iCubInterfaceMessages::SingleTargetEncodedRequest::joint()']]],
+  ['jointreader_1002',['JointReader',['../d1/dc0/classJointReader.html#a87b608749f395f52327d7f81ff16480b',1,'JointReader']]],
+  ['jointwriter_1003',['JointWriter',['../df/d23/classJointWriter.html#a206d13821043ca9e4005922144f4cb0b',1,'JointWriter']]]
 ];

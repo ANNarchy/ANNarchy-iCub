@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['performance_5ftest_417',['performance_test',['../dd/d3c/namespaceperformance__test.html',1,'']]]
+  ['protobuf_5ficub_5f5fann_5f5finterface_5f2fgrpc_5f2ficub_5f2eproto_808',['protobuf_iCub_5fANN_5fInterface_2fgrpc_2ficub_2eproto',['../d0/d9b/namespaceprotobuf__iCub__5fANN__5fInterface__2fgrpc__2ficub__2eproto.html',1,'']]]
 ];

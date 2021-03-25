@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['ini_5fhandler_405',['ini_handler',['../d3/d50/ini_8h.html#a7343d087975289e095471430150dbe59',1,'ini.h']]],
-  ['ini_5freader_406',['ini_reader',['../d3/d50/ini_8h.html#a49ee9ec26dff11c908ef9abace9aae08',1,'ini.h']]]
+  ['clock_1430',['Clock',['../d9/de7/src_2Visual__Reader_8cpp.html#a0ef8d951d1ca5ab3cfaf7ab4c7a6fd80',1,'Visual_Reader.cpp']]]
 ];

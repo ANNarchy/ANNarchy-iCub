@@ -1,15 +1,12 @@
 var searchData=
 [
-  ['get_17',['Get',['../d5/de4/classINIReader.html#a444ab67be741a41dcd26759d744b20db',1,'INIReader']]],
-  ['getboolean_18',['GetBoolean',['../d5/de4/classINIReader.html#a6fcbb2ebdfad098e34a14f2144f711f7',1,'INIReader']]],
-  ['getinteger_19',['GetInteger',['../d5/de4/classINIReader.html#a37ef1f422f1a5cb43bf63d82f4ea112f',1,'INIReader']]],
-  ['getjointcount_20',['GetJointCount',['../d1/dc0/classJointReader.html#aa20b87cccb1f94198046c178a34fab80',1,'JointReader::GetJointCount()'],['../df/d23/classJointWriter.html#ab7ea03d181cabe4011c9a872450d8779',1,'JointWriter::GetJointCount()']]],
-  ['getjointsdegres_21',['GetJointsDegRes',['../d1/dc0/classJointReader.html#a8ee347fd24a97eca044e77a4d147bf43',1,'JointReader::GetJointsDegRes()'],['../df/d23/classJointWriter.html#aa34000b652c429ce977954af386d7161',1,'JointWriter::GetJointsDegRes()']]],
-  ['getneuronsperjoint_22',['GetNeuronsPerJoint',['../d1/dc0/classJointReader.html#a0efb105a4a3dd8d2ad5659a6b55cc2d7',1,'JointReader::GetNeuronsPerJoint()'],['../df/d23/classJointWriter.html#affbddda056e403e4f467cb8a647ca8f9',1,'JointWriter::GetNeuronsPerJoint()']]],
-  ['getreal_23',['GetReal',['../d5/de4/classINIReader.html#a0a41e06f215552e5d7217a0abc5c214f',1,'INIReader']]],
-  ['getregister_24',['getRegister',['../d9/dfd/classMod__BaseClass.html#a6451454023492c4046f72df21ad3beb7',1,'Mod_BaseClass']]],
-  ['gettactilearm_25',['GetTactileArm',['../d1/dc5/classSkinReader.html#ac1950a90f8b7dfe386c01e742c3ea581',1,'SkinReader']]],
-  ['gettactileforearm_26',['GetTactileForearm',['../d1/dc5/classSkinReader.html#a680d4c4a71573380a1558c5564161935',1,'SkinReader']]],
-  ['gettactilehand_27',['GetTactileHand',['../d1/dc5/classSkinReader.html#a394716bf310a40055127108bd439f33d',1,'SkinReader']]],
-  ['gettaxelpos_28',['GetTaxelPos',['../d1/dc5/classSkinReader.html#a872ab1448112cbb01588e7cbc6372fa3',1,'SkinReader']]]
+  ['entries_140',['entries',['../d5/db4/structprotobuf__iCub__5fANN__5fInterface__2fgrpc__2ficub__2eproto_1_1TableStruct.html#a3d8cb59cfe452eff938f4d6ffc43b9b2',1,'protobuf_iCub_5fANN_5fInterface_2fgrpc_2ficub_2eproto::TableStruct']]],
+  ['enum_5ftype_141',['enum_type',['../d3/d81/namespaceiCub__ANN__Interface_1_1grpc_1_1icub__pb2.html#a4a35a887336cedfa60e49535c6c6e039',1,'iCub_ANN_Interface::grpc::icub_pb2']]],
+  ['error_142',['ERROR',['../d5/d3e/namespaceiCubInterfaceMessages.html#af972724d143a31c10bf5222377cd6804a8721a1757f459da316b722ed9c29ecb7',1,'iCubInterfaceMessages::ERROR()'],['../d3/d81/namespaceiCub__ANN__Interface_1_1grpc_1_1icub__pb2.html#a2296f50bf633833ed8307e2ff2ddd26a',1,'iCub_ANN_Interface.grpc.icub_pb2.ERROR()']]],
+  ['experimental_5fasync_143',['experimental_async',['../dd/db2/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub_1_1experimental__async.html',1,'iCubInterfaceMessages::ProvideInput::Stub::experimental_async'],['../db/dbd/classiCubInterfaceMessages_1_1WriteOutput_1_1Stub_1_1experimental__async.html',1,'iCubInterfaceMessages::WriteOutput::Stub::experimental_async'],['../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a36c4789f53267d4d2bdd8838a07202cf',1,'iCubInterfaceMessages::ProvideInput::StubInterface::experimental_async()'],['../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#a707939be1c6cd77b6593631c9eb08bbc',1,'iCubInterfaceMessages::ProvideInput::Stub::experimental_async()'],['../dc/daa/classiCubInterfaceMessages_1_1WriteOutput_1_1StubInterface.html#a836e11f34d9942254db892a4f0c05d60',1,'iCubInterfaceMessages::WriteOutput::StubInterface::experimental_async()'],['../d4/d2c/classiCubInterfaceMessages_1_1WriteOutput_1_1Stub.html#a2eed0a1c84519dac0a152b36f8d541a1',1,'iCubInterfaceMessages::WriteOutput::Stub::experimental_async()']]],
+  ['experimental_5fasync_5finterface_144',['experimental_async_interface',['../d0/d2f/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface_1_1experimental__async__interface.html',1,'iCubInterfaceMessages::ProvideInput::StubInterface::experimental_async_interface'],['../dc/d8c/classiCubInterfaceMessages_1_1WriteOutput_1_1StubInterface_1_1experimental__async__interface.html',1,'iCubInterfaceMessages::WriteOutput::StubInterface::experimental_async_interface']]],
+  ['ext_5fmodules_145',['ext_modules',['../dd/dc4/namespacesetup.html#a1bf56ea61d1e9865f316116dca2fbfea',1,'setup']]],
+  ['extensions_146',['extensions',['../dd/dc4/namespacesetup.html#ab6b72d56ff85e52faea3f1487c6904f8',1,'setup']]],
+  ['extra_5fcompile_5fargs_147',['extra_compile_args',['../dd/dc4/namespacesetup.html#ae06ccc95fcdc051223af0cefa0f492d5',1,'setup']]],
+  ['eye_148',['eye',['../d8/d20/classiCubInterfaceMessages_1_1ImageRequest.html#a6225c2a8da27c73d7c9107c9eea165b2',1,'iCubInterfaceMessages::ImageRequest']]]
 ];

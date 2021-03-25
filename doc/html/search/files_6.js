@@ -1,8 +1,4 @@
 var searchData=
 [
-  ['visual_5freader_2ecpp_258',['Visual_Reader.cpp',['../dc/d8f/Visual__Reader_8cpp.html',1,'']]],
-  ['visual_5freader_2ehpp_259',['Visual_Reader.hpp',['../df/d49/Visual__Reader_8hpp.html',1,'']]],
-  ['visual_5freader_2epxd_260',['Visual_Reader.pxd',['../d8/d30/Visual__Reader_8pxd.html',1,'']]],
-  ['visual_5freader_2epyx_261',['Visual_Reader.pyx',['../d2/d07/Visual__Reader_8pyx.html',1,'']]],
-  ['vocabs_2epy_262',['Vocabs.py',['../d7/d5b/Vocabs_8py.html',1,'']]]
+  ['provideinputservices_2eh_849',['ProvideInputServices.h',['../dd/d80/ProvideInputServices_8h.html',1,'']]]
 ];

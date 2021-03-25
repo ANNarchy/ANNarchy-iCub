@@ -115,7 +115,7 @@ $(function() {
 </ul>
 <h1>Preparation</h1>
 <p>Simply install the interface with pip by executing the following line in a terminal in the interface directory. </p><div class="fragment"><div class="line">pip install .</div>
-</div><!-- fragment --><p>To use the interface in Python the source code has to be compiled. For compilation execute the <a class="el" href="d3/de4/make_8py.html">make.py</a> script. This generates the nessecary Makefile and starts the build process. In case of missing/false include directories the <a class="el" href="d6/d19/namespacemake__config.html">make_config</a> file has to be modified. The resulting .so files are saved in the build folder.</p>
+</div><!-- fragment --><p>To use the interface in Python the source code has to be compiled. For compilation execute the make.py script. This generates the nessecary Makefile and starts the build process. In case of missing/false include directories the <a class="el" href="d6/d19/namespacemake__config.html">make_config</a> file has to be modified. The resulting .so files are saved in the build folder.</p>
 <p>For use in Python the build folder could be added to the Pythonpath-variable, therefore add the following line to the .bashrc in the home-directory: </p><div class="fragment"><div class="line">export PYTHONPATH=${PYTHONPATH}:/path/to/repo/Interface_ANNarchy_iCub/build</div>
 </div><!-- fragment --><p>Otherwise the library path has to be added to the import path inside your user python script module above <code>import <a class="el" href="dc/d3a/namespaceiCub__ANN__Interface.html">iCub_ANN_Interface</a></code>. This is done with the sys module: </p><div class="fragment"><div class="line">import sys</div>
 <div class="line">sys.path.append(&quot;path/to/so/files&quot;)</div>
@@ -150,8 +150,8 @@ $(function() {
 <div class="line">...</div>
 <div class="line">...</div>
 <div class="line"> </div>
-<div class="line">del iCub</div>
 <div class="line">del jreader, jwriter, sreader, visreader</div>
+<div class="line">del iCub</div>
 </div><!-- fragment --><h1>useful links</h1>
 <p>Wiki for the iCub robot:<br  />
  <a href="http://wiki.icub.org/wiki/Manual">http://wiki.icub.org/wiki/Manual</a></p>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sources_397',['sources',['../dd/dc4/namespacesetup.html#aa6e22655fb1a2eb038d36c5b7cef3723',1,'setup']]],
-  ['sources1_398',['sources1',['../dd/dc4/namespacesetup.html#a075263c2cd9eab7a6090eef910fe0f1f',1,'setup']]]
+  ['name_1353',['name',['../dd/dc4/namespacesetup.html#ab3a7a0638d76a01367c5bc3cc699447f',1,'setup']]],
+  ['num_5fleft_1354',['num_left',['../dd/dc7/structini__parse__string__ctx.html#aea48cbdd64d060c55b3b68cb01cbe69f',1,'ini_parse_string_ctx']]]
 ];

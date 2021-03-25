@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$d4/dbf/structTaxelData.html" title="Struct for the skin taxel positiiion data per iCub part." alt="" coords="5,5,92,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,140,96,167"/>
+<area shape="rect" id="node2" href="$d9/db1/classiCub__ANN__Interface_1_1ANNarchy__iCub__Populations_1_1JointPopulation_1_1JointControl.html" title=" " alt="" coords="150,5,397,61"/>
+<area shape="rect" id="node3" href="$df/dc0/classiCub__ANN__Interface_1_1ANNarchy__iCub__Populations_1_1JointPopulation_1_1JointReadout.html" title=" " alt="" coords="150,85,397,141"/>
+<area shape="rect" id="node4" href="$d8/d74/classiCub__ANN__Interface_1_1ANNarchy__iCub__Populations_1_1SkinPopulation_1_1SkinPopulation.html" title=" " alt="" coords="150,165,397,221"/>
+<area shape="rect" id="node5" href="$dd/d05/classiCub__ANN__Interface_1_1ANNarchy__iCub__Populations_1_1VisionPopulation_1_1VisionPopulation.html" title=" " alt="" coords="144,245,403,301"/>
 </map>

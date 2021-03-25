@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['jointreader_212',['JointReader',['../d1/dc0/classJointReader.html',1,'']]],
-  ['jointwriter_213',['JointWriter',['../df/d23/classJointWriter.html',1,'']]]
+  ['doublevector_693',['DoubleVector',['../d0/dea/classiCubInterfaceMessages_1_1DoubleVector.html',1,'iCubInterfaceMessages']]],
+  ['doublevectordefaulttypeinternal_694',['DoubleVectorDefaultTypeInternal',['../d6/d24/classiCubInterfaceMessages_1_1DoubleVectorDefaultTypeInternal.html',1,'iCubInterfaceMessages']]]
 ];
