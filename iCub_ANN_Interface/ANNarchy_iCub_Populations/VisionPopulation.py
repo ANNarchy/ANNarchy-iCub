@@ -60,16 +60,14 @@ class VisionPopulation(Population):
         include_paths = iCub_ANN_Interface.__path__[0]+"/grpc/"
 
         self._specific_template['include_additional'] = """// grpc stuff
-/*
 #include "iCub_ANN_Interface/grpc/icub.grpc.pb.h"
 #include "iCub_ANN_Interface/grpc/icub.pb.h"
 #include "iCub_ANN_Interface/grpc/ProvideInputServices.h"
-*/
 """
         self._specific_template['declare_additional'] = """
     std::string ip_address;
     unsigned int port;
-    //ANNarchyServiceInstance* image_source;
+    ANNarchyServiceInstance* image_source;
         """
         self._specific_template['access_additional'] = """
     // Image Source ip address
@@ -89,6 +87,7 @@ class VisionPopulation(Population):
     }
 
     void connect() {
+        std::cout << "Connect to image source ..." << std::endl;
         //image_source = new ANNarchyServiceInstance(ip_address, port);
     }
     """

@@ -10,7 +10,11 @@ pop_vis = VisionPopulation( geometry = (320,240) )
 #pop_jread = JointReadout(geometry = (6,))
 
 #pop_sread = SkinPopulation(geometry = (48,))
-compile(compiler_flags="-I/home/hdin/Dokumente/git_repos/Interface_ANNarchy_iCub/ -lprotobuf -lgrpc++ -lgrpc++_reflection")
+compile(
+    compiler_flags="-I/home/hdin/Dokumente/git_repos/Interface_ANNarchy_iCub/",
+    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection",
+    add_sources=iCub_ANN_Interface.__path__[0]+"/grpc/*.cc"
+)
 
 # fancy other stuff ...
 for pop in populations():
