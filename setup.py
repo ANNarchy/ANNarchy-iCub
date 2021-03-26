@@ -65,14 +65,15 @@ except:
 if grpc_avaiable:
     grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
     grpc_python_plugin = subprocess.check_output(["which", "grpc_python_plugin"]).strip().decode(sys.stdout.encoding)
-    cmd = "protoc -I=. --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_cpp_plugin+" iCub_ANN_Interface/grpc/icub.proto"
-    print(cmd)
     os.system("protoc -I=. --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_cpp_plugin+" iCub_ANN_Interface/grpc/icub.proto")
     os.system("protoc -I=. --python_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_python_plugin+" iCub_ANN_Interface/grpc/icub.proto")
 else:
     print("grpcio and/or protobuf c-compiler is missing ... abort")
     exit()
 
+# build grpc proto related sourcefile to library
+print("Build grpc->proto files in seperated library")
+os.system("cd iCub_ANN_Interface/grpc/ && make EXTFLAGS=\"-I"+os.path.abspath("./")+"\"")
 
 # Python Version info
 py_major = sys.version_info[0]
@@ -113,8 +114,6 @@ prefix_cpp = "iCub_ANN_Interface/src/"
 # Sourcefiles lists
 sources = ["iCub_ANN_Interface/include/INI_Reader/INIReader.cpp", "iCub_ANN_Interface/include/INI_Reader/ini.cpp", prefix_cpp + "Module_Base_Class.cpp"]
 sources1 = [prefix_cpp + "Joint_Reader.cpp", prefix_cpp + "Joint_Writer.cpp", prefix_cpp + "Skin_Reader.cpp", prefix_cpp + "Visual_Reader.cpp"]
-grpc_sources = ["iCub_ANN_Interface/grpc/icub.grpc.pb.cc", "iCub_ANN_Interface/grpc/icub.pb.cc"]
-# grpc_sources = []
 
 package_data = ['__init__.py',
                 'iCub/*.pxd',
@@ -134,7 +133,7 @@ if pedantic:
 
 # define extensions for the cython-based modules
 extensions = [
-    Extension("iCub_ANN_Interface.iCub.Joint_Reader", [prefix_cy + "iCub/Joint_Reader.pyx", prefix_cpp + "Joint_Reader.cpp"] + sources + grpc_sources,
+    Extension("iCub_ANN_Interface.iCub.Joint_Reader", [prefix_cy + "iCub/Joint_Reader.pyx", prefix_cpp + "Joint_Reader.cpp"] + sources,
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
@@ -142,7 +141,7 @@ extensions = [
         extra_compile_args=extra_compile_args
         ),
 
-    Extension("iCub_ANN_Interface.iCub.Joint_Writer", [prefix_cy + "iCub/Joint_Writer.pyx", prefix_cpp + "Joint_Writer.cpp"] + sources + grpc_sources,
+    Extension("iCub_ANN_Interface.iCub.Joint_Writer", [prefix_cy + "iCub/Joint_Writer.pyx", prefix_cpp + "Joint_Writer.cpp"] + sources,
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
@@ -150,7 +149,7 @@ extensions = [
         extra_compile_args=extra_compile_args
         ),
 
-    Extension("iCub_ANN_Interface.iCub.Skin_Reader", [prefix_cy + "iCub/Skin_Reader.pyx", prefix_cpp + "Skin_Reader.cpp"] + sources + grpc_sources,
+    Extension("iCub_ANN_Interface.iCub.Skin_Reader", [prefix_cy + "iCub/Skin_Reader.pyx", prefix_cpp + "Skin_Reader.cpp"] + sources,
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
@@ -158,7 +157,7 @@ extensions = [
         extra_compile_args=extra_compile_args
         ),
 
-    Extension("iCub_ANN_Interface.iCub.Visual_Reader", [prefix_cy + "iCub/Visual_Reader.pyx", prefix_cpp + "Visual_Reader.cpp"] + sources + grpc_sources,
+    Extension("iCub_ANN_Interface.iCub.Visual_Reader", [prefix_cy + "iCub/Visual_Reader.pyx", prefix_cpp + "Visual_Reader.cpp"] + sources,
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
@@ -166,7 +165,7 @@ extensions = [
         extra_compile_args=extra_compile_args
         ),
 
-    Extension("iCub_ANN_Interface.iCub.iCub_Interface", [prefix_cy + "iCub/iCub_Interface.pyx", prefix_cpp + "Interface_iCub.cpp"] + sources + sources1 + grpc_sources,
+    Extension("iCub_ANN_Interface.iCub.iCub_Interface", [prefix_cy + "iCub/iCub_Interface.pyx", prefix_cpp + "Interface_iCub.cpp"] + sources + sources1,
         include_dirs=include_dir,
         libraries=libs,
         library_dirs=lib_dirs,
