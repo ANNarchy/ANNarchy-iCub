@@ -13,10 +13,11 @@ pop_vis = VisionPopulation( geometry = (320,240) )
 #pop_jread = JointReadout(geometry = (6,))
 
 #pop_sread = SkinPopulation(geometry = (48,))
+
+ann_interface_root = "/home/toto/Schreibtisch/Interface_ANNarchy_iCub/"
 compile(
-    compiler_flags="-I/home/toto/Schreibtisch/Interface_ANNarchy_iCub/",
-    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection",
-    add_sources=iCub_ANN_Interface.__path__[0]+"/grpc/*.cc"
+    compiler_flags="-I"+ann_interface_root,
+    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",
 )
 
 # fancy other stuff ...
