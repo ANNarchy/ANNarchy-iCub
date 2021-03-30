@@ -35,6 +35,15 @@ class MasterClock(object):
 
     def update(self, T):
         start = time.time()
+
+        input_proc = []
+        for i, inst in enumerate(self.instances):
+            input_proc.append(mp.Thread(name="inp_instance_"+str(i), target=inst.sync_input))
+            input_proc[-1].start()
+
+        for proc in input_proc:
+            proc.join()
+
         processes = []
         for i, inst in enumerate(self.instances):
             processes.append(mp.Thread(name="instance_"+str(i), target=inst.update, args=(T,)))
@@ -48,6 +57,10 @@ class MasterClock(object):
 class ClockInterface(object):
     def __init__(self):
         pass
+
+    def sync_input(self):
+        print("For each Sync-class the 'sync_input' method has to be implemented!")
+        raise NotImplementedError
 
     def update(self, T):
         print("For each Sync-class the 'update' method has to be implemented!")

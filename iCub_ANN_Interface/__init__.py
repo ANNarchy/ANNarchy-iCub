@@ -18,4 +18,7 @@ from . import ANNarchy_iCub_Populations
 # Version
 from .version import __version__
 
+# package root path -> used for grpc includes 
+__root_path__ = os.path.abspath("../")
+
 print( 'ANNarchy to iCub interface ' + __version__ + ' on ' + sys.platform + ' (' + os.name + ').' )

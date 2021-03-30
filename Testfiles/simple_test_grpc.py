@@ -14,7 +14,7 @@ pop_vis = VisionPopulation( geometry = (320,240) )
 
 #pop_sread = SkinPopulation(geometry = (48,))
 
-ann_interface_root = "/home/toto/Schreibtisch/Interface_ANNarchy_iCub/"
+ann_interface_root = iCub_ANN_Interface.__root_path__ + "/"
 compile(
     compiler_flags="-I"+ann_interface_root,
     extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",
