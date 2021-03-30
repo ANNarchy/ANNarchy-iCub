@@ -5,8 +5,10 @@ This program is an interface between the Neurosimulator ANNarchy and the iCub ro
 ## Interface description
 Possible actions are the reading and writing of joint angles, get the current state or move the robot joints. Further, the camera images and the tactile sensors data can be received.
 
+## TODO: update documentation -> outdated
 The interface has a modular structure with one main class and several subclasses.
-The main class is the "iCubANN" class, handling the subclass instances. The subclasses representing the different modules are JointReader, JointWriter, VisualReader and SkinReader with the following functionalities:
+The main class is the "iCub_ANN_wrapper" class. The subclasses representing the different modules are JointReader, JointWriter, VisualReader and SkinReader with the following functionalities:
+
 
 1. *JointReader:*<br>
     This module handles the joint reading. The iCub robot is divided in multiple robot parts, which are the head, right arm, left arm, torso right leg and left leg.<br>
@@ -51,21 +53,8 @@ Simply install the interface with pip by executing the following line in a termi
 ```
 pip install .
 ```
-To use the interface in Python the source code has to be compiled. For compilation execute the make.py script. This generates the nessecary Makefile and starts the build process. In case of missing/false include directories the make_config file has to be modified.
-The resulting .so files are saved in the build folder.
+In case of missing/false include directories the make_config.py file has to be modified.
 
-For use in Python the build folder could be added to the Pythonpath-variable, therefore add the following line to the .bashrc in the home-directory:
-```
-export PYTHONPATH=${PYTHONPATH}:/path/to/repo/Interface_ANNarchy_iCub/build
-```
-
-Otherwise the library path has to be added to the import path inside your user python script module above `import iCub_ANN_Interface`. This is done with the sys module:
-```Python
-import sys
-sys.path.append("path/to/so/files")
-import iCub_ANN_Interface
-...
-```
 
 ## Generic Python Example
 
@@ -98,8 +87,8 @@ visreader.method_name(...)
 ...
 ...
 
-del iCub
 del jreader, jwriter, sreader, visreader
+del iCub
 ```
 
 ## useful links
@@ -123,4 +112,3 @@ Python  >= 3.5<br>
 YARP    >= 3.2<br>
 OpenCV  >= 3.4<br>
 numpy  <br>
-
