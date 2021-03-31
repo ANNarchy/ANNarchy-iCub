@@ -36,7 +36,7 @@ if not visreader.init_grpc(iCub, 'r', ip_address="0.0.0.0", port=50000):
 visreader.close(iCub)
 
 # do something!
-#simulate()
+simulate(1)
 
 
 

@@ -12,6 +12,8 @@
 class ProvideInputServiceImpl final: public iCubInterfaceMessages::ProvideInput::Service {
     grpc::Status ReadImage(grpc::ServerContext* context, const iCubInterfaceMessages::ImageRequest *request, iCubInterfaceMessages::ImageResponse *response) {
         
+
+        return grpc::Status::OK;
     }
 };
 
@@ -44,4 +46,34 @@ public:
         this->server->Wait();
     }
 
+};
+
+class ClientInstance
+{
+    std::unique_ptr<iCubInterfaceMessages::ProvideInput::Stub> stub_;
+
+public:
+    ClientInstance(std::string ip_address, unsigned int port) {
+        auto server_str = ip_address+":"+std::to_string(static_cast<long>(port));
+        auto channel = grpc::CreateChannel(server_str, grpc::InsecureChannelCredentials());
+
+        stub_ = iCubInterfaceMessages::ProvideInput::NewStub(channel);
+
+        std::cout << "Client connects to " << server_str << std::endl;
+    }
+
+    std::vector<double> retrieve_image() {
+        grpc::ClientContext context;
+        iCubInterfaceMessages::ImageRequest request;
+        iCubInterfaceMessages::ImageResponse response;
+
+        auto state = stub_->ReadImage(&context, request, &response);
+
+        if (state.ok()) {
+            return std::vector<double>();
+        } else {
+            std::cerr << "ClientInstance::retrieve_image() failed: " << state.error_message() << std::endl;
+            return std::vector<double>();
+        }
+    }
 };

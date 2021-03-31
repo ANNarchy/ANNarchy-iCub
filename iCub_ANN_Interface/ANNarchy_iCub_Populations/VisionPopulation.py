@@ -1,3 +1,21 @@
+#===============================================================================
+#
+#     Copyright (C) 2021  Helge Uelo Dinkelbach, Torsten Fietzek
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     ANNarchy is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#===============================================================================
 import iCub_ANN_Interface
 
 from ANNarchy.core.Population import Population
@@ -8,7 +26,7 @@ from .iCubInterface import iCubInputInterface
 
 class VisionPopulation(Population):
 
-    def __init__(self, geometry=(320,240), ip_address="0.0.0.0", port=50000, copied=False):
+    def __init__(self, geometry=(320,240), ip_address="0.0.0.0", port=50002, copied=False):
         
         Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied )
 
@@ -67,7 +85,7 @@ class VisionPopulation(Population):
         self._specific_template['declare_additional'] = """
     std::string ip_address;
     unsigned int port;
-    ANNarchyServiceInstance* image_source;
+    ClientInstance* image_source;
         """
         self._specific_template['access_additional'] = """
     // Image Source ip address
@@ -87,9 +105,7 @@ class VisionPopulation(Population):
     }
 
     void connect() {
-        std::cout << "Connect to image source ..." << std::endl;
-        image_source = new ServerInstance(ip_address, port);
-        std::thread wait_thread(&ServerInstance::wait, image_source);
+        image_source = new ClientInstance(ip_address, port);
     }
     """
         self._specific_template['export_additional'] = """
@@ -114,7 +130,9 @@ class VisionPopulation(Population):
         pop%(id)s.connect()
 """ %{'id': self.id}
 
-        self._specific_template['update_variables'] = ""
+        self._specific_template['update_variables'] = """
+        r = image_source->retrieve_image();
+        """
 
     def _instantiate(self, cython_module):
 
