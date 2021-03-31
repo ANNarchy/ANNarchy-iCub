@@ -33,6 +33,9 @@
 
 #include "INI_Reader/INIReader.h"
 #include "Module_Base_Class.hpp"
+#include "ProvideInputServices.h"
+#include "iCub_ANN_Interface/grpc/icub.grpc.pb.h"
+#include "iCub_ANN_Interface/grpc/icub.pb.h"
 
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -197,6 +200,13 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
         if (this->Init(eye, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter, ini_path)) {
             this->_ip_address = ip_address;
             this->_port = port;
+            // void build_and_start() {
+            std::cout << "Create image source ..." << std::endl;
+            this->image_source = new ServerInstance(ip_address, port);
+            std::cout << "Created image sourced" << std::endl;
+            this->server_thread = std::thread(&ServerInstance::wait, this->image_source);
+            std::cout << "Created image sourced1" << std::endl;
+            // }
             return true;
         }
     } else {

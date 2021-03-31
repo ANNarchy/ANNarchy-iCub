@@ -28,13 +28,16 @@
 #include <vector>
 
 #include "Module_Base_Class.hpp"
+#include "ProvideInputServices.h"
+#include "iCub_ANN_Interface/grpc/icub.grpc.pb.h"
+#include "iCub_ANN_Interface/grpc/icub.pb.h"
 
 /**
  * \brief  Read-out of the camera images from the iCub robot
  */
 class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
  public:
-    typedef float precision;
+    typedef double precision;
 
     VisualReader() = default;
     ~VisualReader();
@@ -165,6 +168,8 @@ class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
     /** grpc communication **/
     std::string _ip_address = "";
     unsigned int _port = -1;
+    ServerInstance *image_source;
+    std::thread server_thread;
 
     /*** methods for the YARP-RFModule ***/
     // configure RFModule

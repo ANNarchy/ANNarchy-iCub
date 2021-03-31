@@ -102,9 +102,10 @@ include_dir = ["/usr/include", "iCub_ANN_Interface/include", "iCub_ANN_Interface
 
 libs = ["opencv_core", "opencv_imgproc",
         "YARP_dev", "YARP_init", "YARP_math", "YARP_name", "YARP_os", "YARP_run", "YARP_sig",
-        "protobuf", "grpc++", "grpc++_reflection"]
+        "protobuf", "grpc++", "grpc++_reflection", "iCub_ANN_grpc"]
 
-lib_dirs=["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib"]
+root_path = os.path.abspath("./")
+lib_dirs=["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib", root_path+"/iCub_ANN_Interface/grpc"]
 
 
 # Prefixes for Cython and C++ based code
@@ -125,7 +126,7 @@ package_data = ['__init__.py',
                 ]
 
 # set compile arguments
-extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
+extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall", "-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
 if verbose:
     extra_compile_args.append("--verbose")
 if pedantic:
@@ -138,7 +139,8 @@ extensions = [
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=extra_compile_args
+        extra_compile_args=extra_compile_args,
+        extra_link_args=["-L"+root_path+"/iCub_ANN_Interface/grpc", "-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/"]
         ),
 
     Extension("iCub_ANN_Interface.iCub.Joint_Writer", [prefix_cy + "iCub/Joint_Writer.pyx", prefix_cpp + "Joint_Writer.cpp"] + sources,
@@ -146,7 +148,8 @@ extensions = [
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=extra_compile_args
+        extra_compile_args=extra_compile_args,
+        extra_link_args=["-L"+root_path+"/iCub_ANN_Interface/grpc", "-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/"]
         ),
 
     Extension("iCub_ANN_Interface.iCub.Skin_Reader", [prefix_cy + "iCub/Skin_Reader.pyx", prefix_cpp + "Skin_Reader.cpp"] + sources,
@@ -154,7 +157,8 @@ extensions = [
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=extra_compile_args
+        extra_compile_args=extra_compile_args,
+        extra_link_args=["-L"+root_path+"/iCub_ANN_Interface/grpc", "-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/"]
         ),
 
     Extension("iCub_ANN_Interface.iCub.Visual_Reader", [prefix_cy + "iCub/Visual_Reader.pyx", prefix_cpp + "Visual_Reader.cpp"] + sources,
@@ -162,7 +166,8 @@ extensions = [
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=extra_compile_args
+        extra_compile_args=extra_compile_args,
+        extra_link_args=["-L"+root_path+"/iCub_ANN_Interface/grpc", "-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/"]
         ),
 
     Extension("iCub_ANN_Interface.iCub.iCub_Interface", [prefix_cy + "iCub/iCub_Interface.pyx", prefix_cpp + "Interface_iCub.cpp"] + sources + sources1,
@@ -170,7 +175,8 @@ extensions = [
         libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
-        extra_compile_args=extra_compile_args
+        extra_compile_args=extra_compile_args,
+        extra_link_args=["-L"+root_path+"/iCub_ANN_Interface/grpc", "-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/"]
         ),
 
     Extension("iCub_ANN_Interface.Sync.Master_Clock", [prefix_cy + "Sync/Master_Clock.pyx"],

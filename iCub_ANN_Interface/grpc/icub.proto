@@ -12,6 +12,13 @@ message DoubleVector {
     repeated double values = 1;
 }
 
+message TestRequest {
+}
+
+message TestResponse {
+    Status status = 2;
+}
+
 message ImageRequest {
     // eye selection
     string eye = 1;
@@ -33,7 +40,6 @@ message SingleJointRequest {
 
 message SingleJointResponse {
     Status status = 1;
-    // flattened images (consider precision?)
     double angle = 2;
 }
 
@@ -44,7 +50,6 @@ message AllJointRequest {
 
 message AllJointResponse {
     Status status = 1;
-    // flattened images (consider precision?)
     repeated double angle = 2;
 }
 
@@ -57,7 +62,6 @@ message SingleJointEncodedRequest {
 
 message SingleJointEncodedResponse {
     Status status = 1;
-    // flattened images (consider precision?)
     repeated double angle = 2;
 }
 
@@ -68,7 +72,6 @@ message AllJointEncodedRequest {
 
 message AllJointEncodedResponse {
     Status status = 1;
-    // flattened images (consider precision?)
     repeated DoubleVector angle = 2;
 }
 
@@ -80,7 +83,6 @@ message SingleTargetRequest {
 
 message SingleTargetResponse {
     Status status = 1;
-    // flattened images (consider precision?)
     double angle = 2;
 }
 
@@ -89,7 +91,6 @@ message AllTargetRequest {
 
 message AllTargetResponse {
     Status status = 1;
-    // flattened images (consider precision?)
     repeated double angle = 2;
 }
 
@@ -102,7 +103,6 @@ message SingleTargetEncodedRequest {
 
 message SingleTargetEncodedResponse {
     Status status = 1;
-    // flattened images (consider precision?)
     repeated double angle = 2;
 }
 
@@ -113,7 +113,6 @@ message AllTargetEncodedRequest {
 
 message AllTargetEncodedResponse {
     Status status = 1;
-    // flattened images (consider precision?)
     repeated DoubleVector angle = 2;
 }
 
@@ -126,11 +125,12 @@ message SkinRequest {
 
 message SkinResponse {
     Status status = 1;
-    // flattened images (consider precision?)
     repeated double sensor_data = 2;
 }
 
 service ProvideInput {
+    // provide Camera images
+    rpc ReadTest (TestRequest) returns (TestResponse) {}
     // provide Camera images
     rpc ReadImage (ImageRequest) returns (ImageResponse) {}
     // provide single joint angle

@@ -31,15 +31,14 @@ for pop in populations():
 iCub = iCub_Interface.iCubANN_wrapper()
 
 visreader = Visual_Reader.PyVisualReader()
-if not visreader.init_grpc(iCub, 'r', ip_address="0.0.0.0", port=50000):
+if not visreader.init_grpc(iCub, 'r', ip_address="0.0.0.0", port=pop.port):
+    print("Init failed")
     exit(0)
-visreader.close(iCub)
+print("Simulate")
 
 # do something!
 simulate(1)
+print("Simulated")
 
-
-
-
-
+visreader.close(iCub)
 
