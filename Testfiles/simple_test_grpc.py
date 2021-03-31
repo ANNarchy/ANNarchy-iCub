@@ -16,7 +16,7 @@ pop_vis = VisionPopulation( geometry = (320,240) )
 
 ann_interface_root = iCub_ANN_Interface.__root_path__ + "/"
 compile(
-    compiler_flags="-I"+ann_interface_root,
+    compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
     extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",
 )
 
