@@ -88,7 +88,8 @@ class VisionPopulation(Population):
 
     void connect() {
         std::cout << "Connect to image source ..." << std::endl;
-        //image_source = new ANNarchyServiceInstance(ip_address, port);
+        image_source = new ServerInstance(ip_address, port);
+        std::thread wait_thread(&ServerInstance::wait, image_source);
     }
     """
         self._specific_template['export_additional'] = """
