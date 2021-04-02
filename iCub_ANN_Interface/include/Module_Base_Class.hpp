@@ -19,7 +19,9 @@
 
 #pragma once
 
+#include <iostream>
 #include <string>
+#include <vector>
 
 /**
  * \brief Base class for the sensor/actor reader/writer modules
@@ -48,4 +50,7 @@ class Mod_BaseClass {
 
     // template function for close method
     virtual void Close() = 0;
+
+    virtual std::vector<double> provideData();
+    virtual double provideData(std::string value);
 };

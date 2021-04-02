@@ -28,9 +28,7 @@
 #include <vector>
 
 #include "Module_Base_Class.hpp"
-#include "ProvideInputServices.h"
-#include "iCub_ANN_Interface/grpc/icub.grpc.pb.h"
-#include "iCub_ANN_Interface/grpc/icub.pb.h"
+#include "ProvideInputServer.h"
 
 /**
  * \brief  Read-out of the camera images from the iCub robot
@@ -121,7 +119,9 @@ class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
      */
     void Close() override;
 
- private:
+    std::vector<double> provideData();
+
+  private:
     /** configuration variables **/
     int buffer_len = 30;    // length of the image buffer
     bool rf_running = false;
@@ -184,6 +184,8 @@ class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
     bool close() override;
 
     /*** auxilary methods ***/
+    // 
+    std::vector<precision> ProcessRead();
     // convert field of view horizontal degree position to horizontal pixel position
     double FovX2PixelX(double fx);
     // convert field of view vertical degree position to vertical pixel position

@@ -20,6 +20,7 @@
 #include "Module_Base_Class.hpp"
 
 #include <iostream>
+#include <string>
 
 // Destructor
 Mod_BaseClass::~Mod_BaseClass() {}
@@ -40,3 +41,13 @@ bool Mod_BaseClass::CheckInit() {
 
 void Mod_BaseClass::setRegister(bool value) { this->registered = value; }
 bool Mod_BaseClass::getRegister() { return registered; }
+
+std::vector<double> Mod_BaseClass::provideData() {
+    std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;
+    return std::vector<double>();
+}
+
+double Mod_BaseClass::provideData(std::string value) {
+    std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;
+    return 0.0;
+}

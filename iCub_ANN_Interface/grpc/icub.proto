@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 package iCubInterfaceMessages;
 
 // response status
@@ -20,8 +21,6 @@ message TestResponse {
 }
 
 message ImageRequest {
-    // eye selection
-    string eye = 1;
 }
 
 message ImageResponse {
@@ -32,10 +31,8 @@ message ImageResponse {
 }
 
 message SingleJointRequest {
-    // selected part
-    string part = 1;
     // selected joint
-    int32 joint = 2;
+    int32 joint = 1;
 }
 
 message SingleJointResponse {
@@ -44,8 +41,6 @@ message SingleJointResponse {
 }
 
 message AllJointRequest {
-    // selected part
-    string part = 1;
 }
 
 message AllJointResponse {

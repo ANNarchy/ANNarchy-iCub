@@ -33,14 +33,16 @@
 
 #include "INI_Reader/INIReader.h"
 #include "Module_Base_Class.hpp"
-#include "ProvideInputServices.h"
-#include "iCub_ANN_Interface/grpc/icub.grpc.pb.h"
-#include "iCub_ANN_Interface/grpc/icub.pb.h"
+#include "ProvideInputServer.h"
 
 typedef std::chrono::high_resolution_clock Clock;
 
 // Destructor
-VisualReader::~VisualReader() { Close(); }
+VisualReader::~VisualReader() {
+    image_source->shutdown();
+    server_thread.join();
+    Close();
+}
 
 /*** public methods for the user ***/
 bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter,
@@ -202,10 +204,10 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
             this->_port = port;
             // void build_and_start() {
             std::cout << "Create image source ..." << std::endl;
-            this->image_source = new ServerInstance(ip_address, port);
-            std::cout << "Created image sourced" << std::endl;
+            this->image_source = new ServerInstance(ip_address, port, this);
+            std::cout << "Created image source" << std::endl;
             this->server_thread = std::thread(&ServerInstance::wait, this->image_source);
-            std::cout << "Created image sourced1" << std::endl;
+            std::cout << "Created image source1" << std::endl;
             // }
             return true;
         }
@@ -341,34 +343,7 @@ std::vector<std::vector<VisualReader::precision>> VisualReader::ReadRobotEyes() 
             if (iEyeRgb == nullptr) {
                 return imgs;
             }
-            cv::Mat RgbMat = yarp::cv::toCvMat(*iEyeRgb);
-
-            // convert rgb image to grayscale image
-            cv::cvtColor(RgbMat, tmpMat, cv::COLOR_RGB2GRAY);
-
-            // extracting the output part of the field of view
-            if (!cut_img) {
-                ROV = tmpMat;
-            } else {
-                ROV = tmpMat(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
-            }
-
-            // resize ROV to given output resolution
-            if (res_scale_x == 1 && res_scale_x == 1) {
-                monoMat = ROV;
-            } else if (res_scale_x < 1 || res_scale_x < 1) {
-                cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
-            } else {
-                cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, filter_ds);
-            }
-
-            // normalize the image from 0..255 to 0..1.0
-            monoMat.convertTo(tmpMat1, new_type, norm_fact);
-
-            // flat the image matrix to 1D-vector
-            std::vector<precision> img_vec_norm = Mat2Vec(tmpMat1);
-
-            imgs.push_back(img_vec_norm);
+            imgs.push_back(ProcessRead());
         }
     }
     return imgs;
@@ -387,6 +362,22 @@ void VisualReader::Close() {
 
     // close Ports
     close();
+}
+
+std::vector<double> VisualReader::provideData() {
+
+    std::vector<double> img;
+    if (act_eye == 'L') {
+        iEyeRgb = port_left.read();
+    }
+    if (act_eye == 'R') {
+        iEyeRgb = port_right.read();
+    }
+
+    if (iEyeRgb == nullptr) {
+        return img;
+    }
+    return ProcessRead();
 }
 
 /*** methods for the YARP-RFModule ***/
@@ -570,6 +561,35 @@ bool VisualReader::close() {
 }
 
 /*** auxilary methods ***/
+std::vector<VisualReader::precision> VisualReader::ProcessRead() {
+    cv::Mat RgbMat = yarp::cv::toCvMat(*iEyeRgb);
+
+    // convert rgb image to grayscale image
+    cv::cvtColor(RgbMat, tmpMat, cv::COLOR_RGB2GRAY);
+
+    // extracting the output part of the field of view
+    if (!cut_img) {
+        ROV = tmpMat;
+    } else {
+        ROV = tmpMat(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+    }
+
+    // resize ROV to given output resolution
+    if (res_scale_x == 1 && res_scale_x == 1) {
+        monoMat = ROV;
+    } else if (res_scale_x < 1 || res_scale_x < 1) {
+        cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
+    } else {
+        cv::resize(ROV, monoMat, cv::Size(), res_scale_x, res_scale_y, filter_ds);
+    }
+
+    // normalize the image from 0..255 to 0..1.0
+    monoMat.convertTo(tmpMat1, new_type, norm_fact);
+
+    // flat the image matrix to 1D-vector
+    return Mat2Vec(tmpMat1);
+}
+
 double VisualReader::FovX2PixelX(double fx) {
     /*
         Convert field of view horizontal degree position to horizontal pixel position
