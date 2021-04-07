@@ -23,9 +23,11 @@
 #include <yarp/sig/all.h>
 
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "Module_Base_Class.hpp"
+#include "ProvideInputServer.h"
 
 /**
  * \brief  Read-out of the joint angles of the iCub robot
@@ -51,7 +53,9 @@ class JointReader : public Mod_BaseClass {
      *              - arguments not valid: e.g. part string not correct or ini file not in given path \n
      *              - YARP-Server not running
      */
-    bool Init(std::string part, double sigma, int pop_n, double deg_per_neuron = 0., std::string ini_path = "../data/");
+    bool Init(std::string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path);
+
+    bool InitGRPC(std::string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path, std::string ip_address, unsigned int port);
 
     /**
      * \brief  Close joint reader with cleanup
@@ -106,13 +110,29 @@ class JointReader : public Mod_BaseClass {
     std::vector<std::vector<double>> ReadPopAll();
 
     /**
-     * \brief Read one joint and return the joint angle encoded in a population.
-     * \param[in] joint joint number of the robot part
-     * \return Population vector encoding the joint angle.
+     * \brief Read multiple joints and return the joint angles encoded in populations. 
+     * \return Population vectors encoding multiple joint angles from associated robot part.
+     */
+    std::vector<std::vector<double>> ReadPopMultiple(std::vector<int> joint_select);
+
+    /**
+     * \brief Read one joint and return the joint angle encoded in a
+     * population. \param[in] joint joint number of the robot part \return
+     * Population vector encoding the joint angle.
      */
     std::vector<double> ReadPopOne(int joint);
 
- private:
+    /*** gRPC functions ***/
+    /**
+     * \brief Read one joint and return joint angle directly in degree as double value
+     * \param[in] joint Joint number of the robot part
+     * \return Joint angle, read from the robot in degree.
+     */
+    std::vector<double> provideData(int value, bool enc);
+    std::vector<double> provideData(std::vector<int32_t> value, bool enc);
+    std::vector<double> provideData(bool enc);
+
+ private :
     /*** configuration variables ***/
     std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
 
@@ -129,6 +149,12 @@ class JointReader : public Mod_BaseClass {
     yarp::sig::Vector joint_angles;    // yarp vector for reading all joint angles
     yarp::dev::PolyDriver driver;      // yarp driver needed for reading joint encoders
     yarp::dev::IEncoders *ienc;        // iCub joint encoder interface
+
+    /** grpc communication **/
+    std::string _ip_address = "";
+    unsigned int _port = -1;
+    ServerInstance *joint_source;
+    std::thread server_thread;
 
     /*** auxilary functions ***/
     // check if iCub part key is valid

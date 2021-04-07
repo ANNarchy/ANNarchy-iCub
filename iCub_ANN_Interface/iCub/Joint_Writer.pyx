@@ -53,16 +53,16 @@ cdef class PyJointWriter:
                 Initialize the joint writer with given parameters
 
             params:
-                iCubANN_wrapper iCub    -- main interface wrapper
-                str name                -- name for the joint writer module
-                std::string part        -- string representing the robot part, has to match iCub part naming
-                                            {left_(arm/leg), right_(arm/leg), head, torso}
-                int pop_size            -- number of neurons per population, encoding each one joint angle;
-                                            only works if parameter "deg_per_neuron" is not set
-                double deg_per_neuron   -- degree per neuron in the populationencoding the joints angles;
-                                            if set: population size depends on joint working range
-                double speed            -- velocity for the joint movements
-                ini_path                -- Path to the "interface_param.ini"-file
+                iCubANN_wrapper iCub    -- main interface wrapper  
+                str name                -- name for the joint writer module  
+                std::string part        -- string representing the robot part, has to match iCub part naming<br>
+                                            {left_(arm/leg), right_(arm/leg), head, torso}<br>
+                int pop_size            -- number of neurons per population, encoding each one joint angle;<br>
+                                            only works if parameter "deg_per_neuron" is not set<br>
+                double deg_per_neuron   -- degree per neuron in the populationencoding the joints angles;<br>
+                                            if set: population size depends on joint working range<br>
+                double speed            -- velocity for the joint movements<br>
+                ini_path                -- Path to the "interface_param.ini"-file<br>
 
             return:
                 bool                    -- return True, if successful
@@ -340,4 +340,9 @@ cdef class PyJointWriter:
         # call the interface
         return deref(self.cpp_joint_writer).WritePopOne(position_pop, joint, block, s1)
 
+    # decode position with internal method
+    def decode(self, position_pop, int joint):
+        # call the interface
+        return deref(self.cpp_joint_writer).Decode_ext(position_pop, joint)
+    
     ### end access to joint writer member functions

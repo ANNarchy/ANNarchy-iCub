@@ -26,7 +26,7 @@ from .iCubInterface import iCubInputInterface
 
 class VisionPopulation(Population):
 
-    def __init__(self, geometry=(320,240), ip_address="0.0.0.0", port=50005, copied=False):
+    def __init__(self, geometry=(320,240), ip_address="0.0.0.0", port=50000, copied=False):
         
         Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied )
 

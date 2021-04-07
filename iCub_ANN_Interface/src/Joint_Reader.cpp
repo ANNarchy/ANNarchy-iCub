@@ -27,12 +27,19 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "INI_Reader/INIReader.h"
+#include "Module_Base_Class.hpp"
+#include "ProvideInputServer.h"
 
 // Destructor
-JointReader::~JointReader() { Close(); }
+JointReader::~JointReader() {
+    joint_source->shutdown();
+    server_thread.join();
+    Close();
+}
 
 /*** public methods for the user ***/
 bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_per_neuron, std::string ini_path) {
@@ -158,6 +165,38 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
         return true;
     } else {
         std::cerr << "[Joint Reader " << icub_part << "] Initialization aready done!" << std::endl;
+        return false;
+    }
+}
+
+bool JointReader::InitGRPC(std::string part, double sigma, int pop_size, double deg_per_neuron, std::string ini_path,
+                           std::string ip_address, unsigned int port) {
+    /*
+        Initialize the joint reader with given parameters
+
+        params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+                sigma                   -- sigma for the joints angles populations coding
+                int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+                double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+                string ip_address
+                unsigned int port
+
+        return: bool                    -- return True, if successful
+    */
+
+    if (!this->dev_init) {
+        if (this->Init(part, sigma, pop_size, deg_per_neuron, ini_path)) {
+            this->_ip_address = ip_address;
+            this->_port = port;
+            this->joint_source = new ServerInstance(ip_address, port, this);
+            this->server_thread = std::thread(&ServerInstance::wait, this->joint_source);
+            return true;
+        } else {
+            std::cerr << "[Joint Reader] Initialization failed!" << std::endl;
+            return false;
+        }
+    } else {
+        std::cerr << "[Joint Reader] Initialization already done!" << std::endl;
         return false;
     }
 }
@@ -366,6 +405,31 @@ std::vector<std::vector<double>> JointReader::ReadPopAll() {
     return angle_pops;
 }
 
+std::vector<std::vector<double>> JointReader::ReadPopMultiple(std::vector<int> joint_select) {
+    /*
+        Read all joints and return joint angles directly as double value
+
+        return: std::vector<std::vector<double>>    -- joint angles read from the robot
+    */
+
+    std::vector<double> angles;
+    std::vector<std::vector<double>> angle_select;
+
+    if (CheckInit()) {
+        const auto [min, max] = std::minmax_element(joint_select.begin(), joint_select.end());
+        if (*min > 0 && *max < joints) {
+            angles.resize(joints);
+            while (!ienc->getEncoders(angles.data())) {
+                yarp::os::Time::delay(0.001);
+            }
+            for (int i = 0; i < joint_select.size(); i++) {
+                angle_select.push_back(Encode(angles[joint_select[i]], joint_select[i]));
+            }
+        }
+    }
+    return angle_select;
+}
+
 std::vector<double> JointReader::ReadPopOne(int joint) {
     /*
         Read one joint and return the joint angle encoded in a vector
@@ -388,6 +452,41 @@ std::vector<double> JointReader::ReadPopOne(int joint) {
         }
     }
     return angle_pop;
+}
+
+/*** gRPC functions ***/
+std::vector<double> JointReader::provideData(int value, bool enc) {
+    if (enc) {
+        return ReadPopOne(value);
+    } else {
+        return std::vector<double>(1, ReadDoubleOne(value));
+    }
+}
+
+std::vector<double> JointReader::provideData(std::vector<int32_t> value, bool enc) {
+    if (enc) {
+        auto angles = ReadPopMultiple(value);
+        std::vector<double> v;
+        for (size_t i = 0; i < angles.size(); i++) {
+            v.insert(v.end(), angles[i].begin(), angles[i].end());
+        }
+        return v;
+    } else {
+        return ReadDoubleMultiple(value);
+    }
+}
+
+std::vector<double> JointReader::provideData(bool enc) {
+    if (enc) {
+        auto angles = ReadPopAll();
+        std::vector<double> v;
+        for (size_t i = 0; i < angles.size(); i++) {
+            v.insert(v.end(), angles[i].begin(), angles[i].end());
+        }
+        return v;
+    } else {
+        return ReadDoubleAll();
+    }
 }
 
 /*** auxilary functions ***/

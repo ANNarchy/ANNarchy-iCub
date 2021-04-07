@@ -26,6 +26,7 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
+#include <thread>
 
 #include "Module_Base_Class.hpp"
 #include "ProvideInputServer.h"
@@ -119,6 +120,13 @@ class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
      */
     void Close() override;
 
+    /**
+     * \brief Read image vector from the image buffer and remove it from the internal buffer. 
+     * Call twice in binocular mode (first right eye image second left eye image) 
+     * \param[in] wait2img wait for image in buffer
+     * \param[in] trials trials for waiting to image in buffer
+     * \return image as 1D-vector from the image buffer
+     */
     std::vector<double> provideData();
 
   private:

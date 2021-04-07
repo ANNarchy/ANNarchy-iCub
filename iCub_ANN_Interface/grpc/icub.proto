@@ -33,43 +33,36 @@ message ImageResponse {
 message SingleJointRequest {
     // selected joint
     int32 joint = 1;
+    // selected joint
+    bool encode = 2;
 }
 
 message SingleJointResponse {
     Status status = 1;
-    double angle = 2;
-}
-
-message AllJointRequest {
-}
-
-message AllJointResponse {
-    Status status = 1;
     repeated double angle = 2;
 }
 
-message SingleJointEncodedRequest {
-    // selected part
-    string part = 1;
+message MultiJointRequest {
     // selected joint
-    int32 joint = 2;
+    repeated int32 joint = 1;
+    // selected joint
+    bool encode = 2;
 }
 
-message SingleJointEncodedResponse {
+message MultiJointResponse {
     Status status = 1;
     repeated double angle = 2;
 }
 
-message AllJointEncodedRequest {
-    // selected part
-    string part = 1;
+message AllJointsRequest {
+    // selected joint
+    bool encode = 1;
 }
 
-message AllJointEncodedResponse {
+message AllJointsResponse {
     Status status = 1;
-    repeated DoubleVector angle = 2;
+    repeated double angle = 2;
 }
-
 
 message SingleTargetRequest {
     // selected joint
@@ -90,10 +83,8 @@ message AllTargetResponse {
 }
 
 message SingleTargetEncodedRequest {
-    // selected part
-    string part = 1;
     // selected joint
-    int32 joint = 2;
+    int32 joint = 1;
 }
 
 message SingleTargetEncodedResponse {
@@ -102,8 +93,6 @@ message SingleTargetEncodedResponse {
 }
 
 message AllTargetEncodedRequest {
-    // selected part
-    string part = 1;
 }
 
 message AllTargetEncodedResponse {
@@ -112,8 +101,6 @@ message AllTargetEncodedResponse {
 }
 
 message SkinRequest {
-    // selected part
-    string part = 1;
     // selected skin section
     string skin_section = 2;
 }
@@ -130,12 +117,10 @@ service ProvideInput {
     rpc ReadImage (ImageRequest) returns (ImageResponse) {}
     // provide single joint angle
     rpc ReadSingleJoint (SingleJointRequest) returns (SingleJointResponse) {}
-    // provide single joint angle
-    rpc ReadSingleJointEncoded (SingleJointEncodedRequest) returns (SingleJointEncodedResponse) {}
-    // provide single joint angle
-    rpc ReadAllJoints (AllJointRequest) returns (AllJointResponse) {}
-    // provide single joint angle
-    rpc ReadAllJointEncoded (AllJointEncodedRequest) returns (AllJointEncodedResponse) {}
+    // provide multi joint angles
+    rpc ReadMultiJoints (MultiJointRequest) returns (MultiJointResponse) {}
+    // provide all joint angles
+    rpc ReadAllJoints (AllJointsRequest) returns (AllJointsResponse) {}
     // provide skin sensor data
     rpc ReadSkin (SkinRequest) returns (SkinResponse) {}
 }

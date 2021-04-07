@@ -48,9 +48,14 @@ class Mod_BaseClass {
     void setRegister(bool value);
     bool getRegister();
 
+    std::string get_identifier();
+
     // template function for close method
     virtual void Close() = 0;
 
     virtual std::vector<double> provideData();
-    virtual double provideData(std::string value);
+    virtual std::vector<double> provideData(int value, bool enc);
+    virtual std::vector<double> provideData(std::vector<int32_t> value,
+                                            bool enc);
+    virtual std::vector<double> provideData(bool enc);
 };

@@ -184,6 +184,8 @@ class JointWriter : public Mod_BaseClass {
      */
     bool WritePopOne(std::vector<double> position_pop, int joint, bool blocking, std::string mode);
 
+    double Decode_ext(std::vector<double> position_pop, int joint);
+
  private:
     /** configuration variables **/
     double velocity_max = 100;                  // maximum joint velocity

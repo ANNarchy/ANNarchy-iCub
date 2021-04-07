@@ -73,3 +73,40 @@ def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0, relative=F
 
     return pos_pop
 
+
+def decode(part, joint, pop_size, position_pop, relative=False):
+    """
+    Decode the population coded joint angle to double value
+
+        params:
+            part            -- robot part
+            joint           -- joint number
+            pop_size        -- size of the population
+            position_pop    -- population encoded joint angle
+            joint           -- joint number of the robot part
+
+        return:
+            joint_angle     -- decoded joint angle
+    """
+
+    joint_min = j_lim[part]['joint_' + str(joint) + '_min']
+    joint_max = j_lim[part]['joint_' + str(joint) + '_max']
+    joint_range = joint_max - joint_min + 1
+
+    if relative:
+        joint_range = joint_range * 2. - 1
+        min_val = -joint_range
+    else:
+        min_val = joint_min
+
+    joint_deg_res = joint_range / pop_size
+
+    sum_pop_w = 0
+    sum_pop = 0
+    for i in range(pop_size):
+        sum_pop_w = sum_pop_w + position_pop[i] * (min_val + i * joint_deg_res)
+        sum_pop = sum_pop + position_pop[i]
+
+    joint_angle = sum_pop_w / sum_pop
+
+    return joint_angle

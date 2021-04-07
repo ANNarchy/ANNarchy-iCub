@@ -47,7 +47,7 @@ cdef class PyJointReader:
     # Initialize the joint reader with given parameters
     def init(self, iCubANN_wrapper iCub, str name, str part, double sigma, int n_pop, double degr_per_neuron=0.0, str ini_path = "../data/"):
         """
-            Calls bool JointReader::Init(string part, double sigma, int pop_n, double deg_per_neuron)
+            Calls bool JointReader::Init(string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path)
 
             function:
                 Initialize the joint reader with given parameters
@@ -67,15 +67,48 @@ cdef class PyJointReader:
             return:
                 bool                    -- return True, if successful
         """
-        # we need to transform py-string to c++ compatible string
-        cdef string key = part.encode('UTF-8')
-        cdef string path = ini_path.encode('UTF-8')
 
         self.part = part
         # preregister module for some prechecks e.g. part already in use
         if iCub.register_jreader(name, self):
             # call the interface
-            retval = deref(self.cpp_joint_reader).Init(key, sigma, n_pop, degr_per_neuron, path)
+            retval = deref(self.cpp_joint_reader).Init(part.encode('UTF-8'), sigma, n_pop, degr_per_neuron, ini_path.encode('UTF-8'))
+            if not retval:
+                iCub.unregister_jreader(self)
+            return retval
+        else:
+            return False
+
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, double sigma, int n_pop, double degr_per_neuron=0.0, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50005):
+        """
+            Calls bool InitGRPC(string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path, std::string ip_address, unsigned int port)
+
+            function:
+                Initialize the joint reader with given parameters
+
+            params:
+                iCubANN_wrapper iCub    -- main interface wrapper
+                str name                -- name for the joint reader module
+                string part             -- string representing the robot part, has to match iCub part naming
+                                            {left_(arm/leg), right_(arm/leg), head, torso}
+                sigma                   -- sigma for the joints angles populations coding
+                int pop_size            -- number of neurons per population, encoding each one joint angle
+                                            only works if parameter "deg_per_neuron" is not set
+                double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles
+                                            if set: population size depends on joint working range
+                ini_path                -- Path to the "interface_param.ini"-file
+                string ip_address       --
+                unsigned int port       --
+
+            return:
+                bool                    -- return True, if successful
+        """
+
+        self.part = part
+        # preregister module for some prechecks e.g. part already in use
+        if iCub.register_jreader(name, self):
+            # call the interface
+            retval = deref(self.cpp_joint_reader).InitGRPC(part.encode('UTF-8'), sigma, n_pop, degr_per_neuron, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
             if not retval:
                 iCub.unregister_jreader(self)
             return retval

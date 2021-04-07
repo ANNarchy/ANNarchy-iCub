@@ -30,11 +30,9 @@ bool Mod_BaseClass::CheckInit() {
         Check if the init function was called and module is registered at the main Interface
     */
     if (!dev_init) {
-        std::cerr << "[" << type << "]"
-                  << " Error: Device is not initialized!" << std::endl;
+        std::cerr << "[" << type << "] Error: Device is not initialized!" << std::endl;
     } else if (!registered) {
-        std::cerr << "[" << type << " " << icub_part << "]"
-                  << " Error: Device is not registered!" << std::endl;
+        std::cerr << "[" << type << ": " << icub_part << "] Error: Device is not registered!" << std::endl;
     }
     return dev_init & registered;
 }
@@ -42,12 +40,24 @@ bool Mod_BaseClass::CheckInit() {
 void Mod_BaseClass::setRegister(bool value) { this->registered = value; }
 bool Mod_BaseClass::getRegister() { return registered; }
 
+std::string Mod_BaseClass::get_identifier() { return type + ": " + icub_part; }
+
 std::vector<double> Mod_BaseClass::provideData() {
     std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;
     return std::vector<double>();
 }
 
-double Mod_BaseClass::provideData(std::string value) {
+std::vector<double> Mod_BaseClass::provideData(int value, bool enc) {
     std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;
-    return 0.0;
+    return std::vector<double>();
+}
+
+std::vector<double> Mod_BaseClass::provideData(std::vector<int32_t> value, bool enc) {
+    std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;
+    return std::vector<double>();
+}
+
+std::vector<double> Mod_BaseClass::provideData(bool enc) {
+    std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;
+    return std::vector<double>();
 }

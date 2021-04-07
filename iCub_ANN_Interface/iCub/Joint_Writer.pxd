@@ -79,6 +79,9 @@ cdef extern from "Joint_Writer.hpp":
         void setRegister(bint)
         bint getRegister()
 
+        # Return decoded joint angle
+        double Decode_ext(vector[double], int)
+
 cdef class PyJointWriter:
     cdef shared_ptr[JointWriter] cpp_joint_writer
     cdef str name

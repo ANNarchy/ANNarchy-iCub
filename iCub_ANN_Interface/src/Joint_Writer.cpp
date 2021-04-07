@@ -798,6 +798,8 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
     }
 }
 
+double JointWriter::Decode_ext(std::vector<double> position_pop, int joint) { return Decode(position_pop, joint, neuron_deg_abs); }
+
 /*** auxilary methods ***/
 bool JointWriter::CheckPartKey(std::string key) {
     /*

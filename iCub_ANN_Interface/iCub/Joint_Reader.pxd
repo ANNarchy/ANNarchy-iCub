@@ -33,6 +33,9 @@ cdef extern from "Joint_Reader.hpp":
         # Initialize the joint reader with given parameters
         bool_t Init(string, double, int, double, string)
 
+        # Initialize the joint reader with given parameters and grpc communication.
+        bool_t InitGRPC(string, double, int, double, string, string , unsigned int)
+
         # Close joint reader with cleanup
         void Close()
 

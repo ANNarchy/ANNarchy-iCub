@@ -29,7 +29,26 @@ class ProvideInputServiceImpl final : public iCubInterfaceMessages::ProvideInput
 
     grpc::Status ReadSingleJoint(grpc::ServerContext *context, const iCubInterfaceMessages::SingleJointRequest *request,
                                  iCubInterfaceMessages::SingleJointResponse *response) override {
-        response->set_angle(interface_instance->provideData(""));
+        auto angle = interface_instance->provideData(request->joint(), request->encode());
+        google::protobuf::RepeatedField<double> data(angle.begin(), angle.end());
+        response->mutable_angle()->Swap(&data);
+        return grpc::Status::OK;
+    }
+
+    grpc::Status ReadMultiJoints(grpc::ServerContext *context, const iCubInterfaceMessages::MultiJointRequest *request,
+                               iCubInterfaceMessages::MultiJointResponse *response) override {
+        auto angles =
+            interface_instance->provideData(std::vector<int32_t>(request->joint().begin(), request->joint().end()), request->encode());
+        google::protobuf::RepeatedField<double> data(angles.begin(), angles.end());
+        response->mutable_angle()->Swap(&data);
+        return grpc::Status::OK;
+    }
+
+    grpc::Status ReadAllJoints(grpc::ServerContext *context, const iCubInterfaceMessages::AllJointsRequest *request,
+                                 iCubInterfaceMessages::AllJointsResponse *response) override {
+        auto angles = interface_instance->provideData(request->encode());
+        google::protobuf::RepeatedField<double> data(angles.begin(), angles.end());
+        response->mutable_angle()->Swap(&data);
         return grpc::Status::OK;
     }
 
@@ -58,16 +77,17 @@ class ServerInstance {
         // builder.SetMaxMessageSize(4*1024*1024);
 
         server = std::unique_ptr<grpc::Server>(builder.BuildAndStart());
-        std::cout << "Server listening on " << ip_address << ":" << port << std::endl;
+        std::cout << "[" << implementation.interface_instance->get_identifier() << "] Server listening on " << ip_address << ":" << port
+                  << std::endl;
     }
 
     void wait() {
-        std::cout << "Server is in wait mode!" << std::endl;
+        // std::cout << "Server is in wait mode!" << std::endl;
         this->server->Wait();
     }
 
     void shutdown() {
-        std::cout << "Shutdown gRPC Server!" << std::endl;
+        std::cout << "[" << implementation.interface_instance->get_identifier() << "] Shutdown gRPC Server." << std::endl;
         this->server->Shutdown();
     }
 };
