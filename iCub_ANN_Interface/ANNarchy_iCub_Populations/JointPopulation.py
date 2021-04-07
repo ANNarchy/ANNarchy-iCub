@@ -87,6 +87,12 @@ class JointControl(Population):
     std::string ip_address;
     unsigned int port;
     WriteOutputServerInstance<PopStruct%(id)s>* joint_server;
+    std::thread server_thread;
+
+    ~PopStruct%(id)s() {
+        joint_server->shutdown();
+        server_thread.join();
+    }
     """ % {'id': self.id}
         self._specific_template['access_additional'] = """
     // Joint Source ip address
@@ -107,6 +113,7 @@ class JointControl(Population):
 
     void connect() {
         joint_server = new WriteOutputServerInstance<PopStruct%(id)s>(ip_address, port, new WriteOutputServiceImpl<PopStruct%(id)s>(this) );
+        this->server_thread = std::thread(&WriteOutputServerInstance<PopStruct%(id)s>::wait, this->joint_server);
     }
     """ % {'id': self.id}
         self._specific_template['export_additional'] = """
