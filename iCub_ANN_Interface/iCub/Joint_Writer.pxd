@@ -35,6 +35,9 @@ cdef extern from "Joint_Writer.hpp":
         # Initialize the joint writer with given parameters
         bool_t Init(string, int, double, double, string)
 
+        bool_t InitGRPC(string, int, double, double, string, string, unsigned int)
+
+
         # Close joint writer with cleanup
         void Close()
 
@@ -81,6 +84,12 @@ cdef extern from "Joint_Writer.hpp":
 
         # Return decoded joint angle
         double Decode_ext(vector[double], int)
+
+        void Retrieve_ANNarchy_Input()
+        void Write_ANNarchy_Input(int, bool_t, string)
+
+        void Retrieve_ANNarchy_Input_enc()
+        void Write_ANNarchy_Input_enc(int, bool_t, string)
 
 cdef class PyJointWriter:
     cdef shared_ptr[JointWriter] cpp_joint_writer

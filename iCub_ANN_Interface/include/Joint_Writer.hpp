@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "Module_Base_Class.hpp"
+#include "WriteOutputClient.h"
 
 /**
  * \brief Write the joint angles to the iCub robots joints to move them.
@@ -52,6 +53,8 @@ class JointWriter : public Mod_BaseClass {
      *              - YARP-Server not running
      */
     bool Init(std::string part, int pop_size, double deg_per_neuron = 0.0, double speed = 10.0, std::string ini_path = "../data/");
+
+    bool InitGRPC(std::string part, int pop_size, double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port);
 
     /**
      * \brief  Close joint writer with cleanup
@@ -185,6 +188,11 @@ class JointWriter : public Mod_BaseClass {
     bool WritePopOne(std::vector<double> position_pop, int joint, bool blocking, std::string mode);
 
     double Decode_ext(std::vector<double> position_pop, int joint);
+    void Retrieve_ANNarchy_Input();
+    void Write_ANNarchy_Input(int joint, bool blocking, std::string mode);
+
+    void Retrieve_ANNarchy_Input_enc();
+    void Write_ANNarchy_Input_enc(int joint, bool blocking, std::string mode);
 
  private:
     /** configuration variables **/
@@ -210,6 +218,13 @@ class JointWriter : public Mod_BaseClass {
     yarp::dev::IPositionControl *ipos;    // iCub position control interface
     yarp::dev::IEncoders *ienc;           // iCub joint encoder interface
     yarp::dev::IControlMode *icont;       // iCub joint control mode interface
+
+    /** grpc communication **/
+    std::string _ip_address = "";
+    unsigned int _port = -1;
+    WriteClientInstance *joint_source;
+    double joint_value;
+    std::vector<double> joint_value_enc;
 
     /*** auxilary methods ***/
     // check if iCub part key is valid

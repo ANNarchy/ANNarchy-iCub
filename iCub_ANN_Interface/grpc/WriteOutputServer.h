@@ -21,12 +21,21 @@ class WriteOutputServiceImpl final : public iCubInterfaceMessages::WriteOutput::
         return grpc::Status::OK;
     }
 
+    grpc::Status WriteSingleTargetEncoded(grpc::ServerContext *context, const iCubInterfaceMessages::SingleTargetEncodedRequest *request,
+                                          iCubInterfaceMessages::SingleTargetEncodedResponse *response) override {
+
+        response->mutable_angle()->Swap(&google::protobuf::RepeatedField<double> (pop->r.begin(), pop->r.end()));
+        response->set_status(iCubInterfaceMessages::Status::SUCCESS);
+
+        return grpc::Status::OK;
+    }
+
 public:
     WriteOutputServiceImpl(ANNarchyPopulation* pop) {
         this->pop = pop;
     }
 
-    ANNarchyPopulation* pop;
+    ANNarchyPopulation* pop; // never delete
 };
 
 template<typename ANNarchyPopulation>

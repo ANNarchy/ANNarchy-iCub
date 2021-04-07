@@ -81,6 +81,39 @@ cdef class PyJointWriter:
         else:
             return False
 
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, int n_pop, double degr_per_neuron=0.0, double speed=10.0, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50010):
+        """
+            Calls bool JointWriter::Init_gRPC(std::string part, int pop_size, double deg_per_neuron, double speed)
+
+            function:
+                Initialize the joint writer with given parameters
+
+            params:
+                iCubANN_wrapper iCub    -- main interface wrapper  
+                str name                -- name for the joint writer module  
+                std::string part        -- string representing the robot part, has to match iCub part naming<br>
+                                            {left_(arm/leg), right_(arm/leg), head, torso}<br>
+                int pop_size            -- number of neurons per population, encoding each one joint angle;<br>
+                                            only works if parameter "deg_per_neuron" is not set<br>
+                double deg_per_neuron   -- degree per neuron in the populationencoding the joints angles;<br>
+                                            if set: population size depends on joint working range<br>
+                double speed            -- velocity for the joint movements<br>
+                ini_path                -- Path to the "interface_param.ini"-file<br>
+
+            return:
+                bool                    -- return True, if successful
+        """
+
+        self.part = part
+        # preregister module for some prechecks e.g. part already in use
+        if iCub.register_jwriter(name, self):
+            retval = deref(self.cpp_joint_writer).InitGRPC(part.encode('UTF-8'), n_pop, degr_per_neuron, speed, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
+            if not retval:
+                iCub.unregister_jwriter(self)
+            return retval
+        else:
+            return False
+
 
     # close joint writer with cleanup
     def close(self, iCubANN_wrapper iCub):
@@ -345,4 +378,28 @@ cdef class PyJointWriter:
         # call the interface
         return deref(self.cpp_joint_writer).Decode_ext(position_pop, joint)
     
+    def retrieve_ANNarchy_input(self):
+        return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input()
+
+    def write_ANNarchy_input(self, int joint, str mode, blocking=True):
+        # we need to transform py-string to c++ compatible string
+        cdef string s1 = mode.encode('UTF-8')
+
+        cdef bint block = blocking.__int__()
+
+        # call the interface
+        return deref(self.cpp_joint_writer).Write_ANNarchy_Input(joint, block, s1)
+    
+    def retrieve_ANNarchy_input_enc(self):
+        return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_enc()
+
+    def write_ANNarchy_input_enc(self, int joint, str mode, blocking=True):
+        # we need to transform py-string to c++ compatible string
+        cdef string s1 = mode.encode('UTF-8')
+
+        cdef bint block = blocking.__int__()
+
+        # call the interface
+        return deref(self.cpp_joint_writer).Write_ANNarchy_Input_enc(joint, block, s1)
+
     ### end access to joint writer member functions

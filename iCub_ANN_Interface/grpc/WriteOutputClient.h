@@ -18,4 +18,35 @@ public:
         std::cout << "Client connects to " << server_str << std::endl;
     }
 
+    double retrieve_singletarget(){
+        iCubInterfaceMessages::SingleTargetRequest request;
+        iCubInterfaceMessages::SingleTargetResponse response;
+
+        grpc::ClientContext context;
+
+        auto state = stub_->WriteSingleTarget(&context, request, &response);
+
+        if (state.ok()) {
+            return response.angle();
+        } else {
+            std::cerr << "WriteClientInstance::retrieve_singletarget() failed: " << state.error_message() << std::endl;
+            return 0.;
+        }
+    }
+
+    std::vector<double> retrieve_singletarget_enc() {
+        iCubInterfaceMessages::SingleTargetEncodedRequest request;
+        iCubInterfaceMessages::SingleTargetEncodedResponse response;
+
+        grpc::ClientContext context;
+
+        auto state = stub_->WriteSingleTargetEncoded(&context, request, &response);
+
+        if (state.ok()) {
+            return std::vector<double>(response.angle().begin(), response.angle().end());
+        } else {
+            std::cerr << "WriteClientInstance::retrieve_singletarget_enc() failed: " << state.error_message() << std::endl;
+            return std::vector<double>(1., 0.0);
+        }
+    }
 };

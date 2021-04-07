@@ -28,6 +28,7 @@
 #include <string>
 
 #include "INI_Reader/INIReader.h"
+#include "WriteOutputClient.h"
 
 // Destructor
 JointWriter::~JointWriter() { Close(); }
@@ -198,6 +199,37 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
         return true;
     } else {
         std::cerr << "[Joint Writer " << icub_part << "] Initialization aready done!" << std::endl;
+        return false;
+    }
+}
+
+bool JointWriter::InitGRPC(std::string part, int pop_size, double deg_per_neuron, double speed, std::string ini_path,
+                           std::string ip_address, unsigned int port) {
+    /*
+        Initialize the joint reader with given parameters
+
+        params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+                sigma                   -- sigma for the joints angles populations coding
+                int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+                double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+                string ip_address
+                unsigned int port
+
+        return: bool                    -- return True, if successful
+    */
+
+    if (!this->dev_init) {
+        if (this->Init(part, pop_size, deg_per_neuron, speed, ini_path)) {
+            this->_ip_address = ip_address;
+            this->_port = port;
+            this->joint_source = new WriteClientInstance(ip_address, port);
+            return true;
+        } else {
+            std::cerr << "[Joint Writer] Initialization failed!" << std::endl;
+            return false;
+        }
+    } else {
+        std::cerr << "[Joint Writer] Initialization already done!" << std::endl;
         return false;
     }
 }
@@ -799,6 +831,16 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
 }
 
 double JointWriter::Decode_ext(std::vector<double> position_pop, int joint) { return Decode(position_pop, joint, neuron_deg_abs); }
+
+void JointWriter::Retrieve_ANNarchy_Input() { joint_value = joint_source->retrieve_singletarget(); }
+void JointWriter::Write_ANNarchy_Input(int joint, bool blocking, std::string mode) {
+    WriteDoubleOne(joint_value, joint, blocking, mode);
+}
+
+void JointWriter::Retrieve_ANNarchy_Input_enc() { joint_value_enc = joint_source->retrieve_singletarget_enc(); }
+void JointWriter::Write_ANNarchy_Input_enc(int joint, bool blocking, std::string mode) {
+    WritePopOne(joint_value_enc, joint, blocking, mode);
+}
 
 /*** auxilary methods ***/
 bool JointWriter::CheckPartKey(std::string key) {
