@@ -221,15 +221,17 @@ class JointReadout(Population):
         pop%(id)s.connect()
 """ %{'id': self.id}
 
-        self._specific_template['update_variables'] = """
-        if (joints.size() == 0) {
-            r  = joint_source->retrieve_alljoints(encoded);
-        } else if (joints.size() == 1) {
-            r  = joint_source->retrieve_singlejoint(joints[0], encoded);
-        } else {
-            r  = joint_source->retrieve_multijoints(joints, encoded);
-        }
-
+        if len(self._joints) == 0:
+            self._specific_template['update_variables'] = """
+        r  = joint_source->retrieve_alljoints(encoded);
+        """
+        elif len(self._joints) == 1:
+            self._specific_template['update_variables'] = """
+        r  = joint_source->retrieve_singlejoint(joints[0], encoded);
+        """
+        else:
+            self._specific_template['update_variables'] = """
+        r  = joint_source->retrieve_multijoints(joints, encoded);
         """
 
     def _instantiate(self, cython_module):
