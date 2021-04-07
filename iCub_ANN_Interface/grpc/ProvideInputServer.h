@@ -58,7 +58,6 @@ class ProvideInputServiceImpl final : public iCubInterfaceMessages::ProvideInput
 
 class ServerInstance {
     std::unique_ptr<grpc::Server> server;
-    // ProvideInputServiceImpl implementation;
     ProvideInputServiceImpl implementation;
 
  public:
