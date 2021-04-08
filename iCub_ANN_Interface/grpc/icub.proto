@@ -74,6 +74,14 @@ message SingleTargetResponse {
     double angle = 2;
 }
 
+message MultiTargetRequest {
+}
+
+message MultiTargetResponse {
+    Status status = 1;
+    repeated double angle = 2;
+}
+
 message AllTargetRequest {
 }
 
@@ -92,12 +100,20 @@ message SingleTargetEncodedResponse {
     repeated double angle = 2;
 }
 
+message MultiTargetEncodedRequest {
+}
+
+message MultiTargetEncodedResponse {
+    Status status = 1;
+    repeated double angle = 2;
+}
+
 message AllTargetEncodedRequest {
 }
 
 message AllTargetEncodedResponse {
     Status status = 1;
-    repeated DoubleVector angle = 2;
+    repeated double angle = 2;
 }
 
 message SkinRequest {
@@ -130,8 +146,12 @@ service WriteOutput {
     rpc WriteSingleTarget (SingleTargetRequest) returns (SingleTargetResponse) {}
     // provide single Target angle
     rpc WriteSingleTargetEncoded (SingleTargetEncodedRequest) returns (SingleTargetEncodedResponse) {}
-    // provide single Target angle
+    // provide multiple Target angles
+    rpc WriteMultiTargets (MultiTargetRequest) returns (MultiTargetResponse) {}
+    // provide all Target angles
+    rpc WriteMultiTargetsEncoded (MultiTargetEncodedRequest) returns (MultiTargetEncodedResponse) {}
+    // provide all Target angles
     rpc WriteAllTargets (AllTargetRequest) returns (AllTargetResponse) {}
-    // provide single Target angle
-    rpc WriteAllTargetEncoded (AllTargetEncodedRequest) returns (AllTargetEncodedResponse) {}
+    // provide all Target angles
+    rpc WriteAllTargetsEncoded (AllTargetEncodedRequest) returns (AllTargetEncodedResponse) {}
 }

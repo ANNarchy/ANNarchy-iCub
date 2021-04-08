@@ -203,7 +203,7 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
     }
 }
 
-bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, bool blocking, std::string mode,
+bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking,
                            double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize the joint reader with given parameters
@@ -225,6 +225,7 @@ bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<
             this->_blocking = blocking;
             this->_mode = mode;
             this->_joint_select = joint_select;
+            this->pop_size = pop_size;
             return true;
         } else {
             std::cerr << "[Joint Writer] Initialization failed!" << std::endl;
@@ -834,11 +835,35 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
 
 double JointWriter::Decode_ext(std::vector<double> position_pop, int joint) { return Decode(position_pop, joint, neuron_deg_abs); }
 
-void JointWriter::Retrieve_ANNarchy_Input() { joint_value = joint_source->retrieve_singletarget(); }
-void JointWriter::Write_ANNarchy_Input() { WriteDoubleOne(joint_value, _joint_select[0], _blocking, _mode); }
+void JointWriter::Retrieve_ANNarchy_Input_SJ() { joint_value = joint_source->retrieve_singletarget(); }
+void JointWriter::Write_ANNarchy_Input_SJ() { WriteDoubleOne(joint_value, _joint_select[0], _blocking, _mode); }
 
-void JointWriter::Retrieve_ANNarchy_Input_enc() { joint_value_1dvector = joint_source->retrieve_singletarget_enc(); }
-void JointWriter::Write_ANNarchy_Input_enc() { WritePopOne(joint_value_1dvector, _joint_select[0], _blocking, _mode); }
+void JointWriter::Retrieve_ANNarchy_Input_SJ_enc() { joint_value_1dvector = joint_source->retrieve_singletarget_enc(); }
+void JointWriter::Write_ANNarchy_Input_SJ_enc() { WritePopOne(joint_value_1dvector, _joint_select[0], _blocking, _mode); }
+
+void JointWriter::Retrieve_ANNarchy_Input_MJ() { joint_value_1dvector = joint_source->retrieve_multitarget(); }
+void JointWriter::Write_ANNarchy_Input_MJ() { WriteDoubleMultiple(joint_value_1dvector, _joint_select, _blocking, _mode); }
+
+void JointWriter::Retrieve_ANNarchy_Input_MJ_enc() {
+    joint_value_1dvector = joint_source->retrieve_multitarget_enc();
+    for (unsigned int i = 0; i < joint_value_1dvector.size(); i += pop_size) {
+        joint_value_2dvector.push_back(
+            std::vector<double>((joint_value_1dvector.begin() + i), (joint_value_1dvector.begin() + i + pop_size + 1)));
+    }
+}
+void JointWriter::Write_ANNarchy_Input_MJ_enc() { WritePopMultiple(joint_value_2dvector, _joint_select, _blocking, _mode); }
+
+void JointWriter::Retrieve_ANNarchy_Input_AJ() { joint_value_1dvector = joint_source->retrieve_alltarget(); }
+void JointWriter::Write_ANNarchy_Input_AJ() { WriteDoubleAll(joint_value_1dvector, _blocking, _mode); }
+
+void JointWriter::Retrieve_ANNarchy_Input_AJ_enc() {
+    joint_value_1dvector = joint_source->retrieve_alltarget_enc();
+    for (unsigned int i = 0; i < joint_value_1dvector.size(); i += pop_size) {
+        joint_value_2dvector.push_back(
+            std::vector<double>((joint_value_1dvector.begin() + i), (joint_value_1dvector.begin() + i + pop_size + 1)));
+    }
+}
+void JointWriter::Write_ANNarchy_Input_AJ_enc() { WritePopAll(joint_value_2dvector, _blocking, _mode); }
 
 /*** auxilary methods ***/
 bool JointWriter::CheckPartKey(std::string key) {

@@ -25,10 +25,10 @@ def normal_pdf(value, mean, sigma):
         return:
                             -- function value for the normal distribution
     """
-    inv_sqrt_2pi = 1.0 / (sigma * np.sqrt(2 * np.pi))
+    # inv_sqrt_2pi = 1.0 / (sigma * np.sqrt(2 * np.pi))
     a = (value - mean) / sigma
 
-    return inv_sqrt_2pi * np.exp(-0.5 * a * a)
+    return 1. * np.exp(-0.5 * a * a)
 
 def encode(part, joint, pop_size, joint_angle, sigma, resolution=0.0, relative=False):
     """

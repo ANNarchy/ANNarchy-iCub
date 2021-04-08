@@ -49,4 +49,68 @@ public:
             return std::vector<double>(1., 0.0);
         }
     }
+
+    std::vector<double> retrieve_multitarget() {
+        iCubInterfaceMessages::MultiTargetRequest request;
+        iCubInterfaceMessages::MultiTargetResponse response;
+
+        grpc::ClientContext context;
+
+        auto state = stub_->WriteMultiTargets(&context, request, &response);
+
+        if (state.ok()) {
+            return std::vector<double>(response.angle().begin(), response.angle().end());
+        } else {
+            std::cerr << "WriteClientInstance::retrieve_multitarget() failed: " << state.error_message() << std::endl;
+            return std::vector<double>(1., 0.0);
+        }
+    }
+
+    std::vector<double> retrieve_multitarget_enc() {
+        iCubInterfaceMessages::MultiTargetEncodedRequest request;
+        iCubInterfaceMessages::MultiTargetEncodedResponse response;
+
+        grpc::ClientContext context;
+
+        auto state = stub_->WriteMultiTargetsEncoded(&context, request, &response);
+
+        if (state.ok()) {
+            return std::vector<double>(response.angle().begin(), response.angle().end());
+        } else {
+            std::cerr << "WriteClientInstance::retrieve_multitarget_enc() failed: " << state.error_message() << std::endl;
+            return std::vector<double>();
+        }
+    }
+
+    std::vector<double> retrieve_alltarget() {
+        iCubInterfaceMessages::AllTargetRequest request;
+        iCubInterfaceMessages::AllTargetResponse response;
+
+        grpc::ClientContext context;
+
+        auto state = stub_->WriteAllTargets(&context, request, &response);
+
+        if (state.ok()) {
+            return std::vector<double>(response.angle().begin(), response.angle().end());
+        } else {
+            std::cerr << "WriteClientInstance::retrieve_alltarget() failed: " << state.error_message() << std::endl;
+            return std::vector<double>(1., 0.0);
+        }
+    }
+
+    std::vector<double> retrieve_alltarget_enc() {
+        iCubInterfaceMessages::AllTargetEncodedRequest request;
+        iCubInterfaceMessages::AllTargetEncodedResponse response;
+
+        grpc::ClientContext context;
+
+        auto state = stub_->WriteAllTargetsEncoded(&context, request, &response);
+
+        if (state.ok()) {
+            return std::vector<double>(response.angle().begin(), response.angle().end());
+        } else {
+            std::cerr << "WriteClientInstance::retrieve_alltarget_enc() failed: " << state.error_message() << std::endl;
+            return std::vector<double>();
+        }
+    }
 };

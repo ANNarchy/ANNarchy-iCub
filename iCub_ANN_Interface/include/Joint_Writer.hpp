@@ -54,8 +54,8 @@ class JointWriter : public Mod_BaseClass {
      */
     bool Init(std::string part, unsigned int pop_size, double deg_per_neuron = 0.0, double speed = 10.0, std::string ini_path = "../data/");
 
-    bool InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, bool blocking, std::string mode,
-                               double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port);
+    bool InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking,
+                  double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port);
 
     /**
      * \brief  Close joint writer with cleanup
@@ -189,11 +189,24 @@ class JointWriter : public Mod_BaseClass {
     bool WritePopOne(std::vector<double> position_pop, int joint, bool blocking, std::string mode);
 
     double Decode_ext(std::vector<double> position_pop, int joint);
-    void Retrieve_ANNarchy_Input();
-    void Write_ANNarchy_Input();
 
-    void Retrieve_ANNarchy_Input_enc();
-    void Write_ANNarchy_Input_enc();
+    void Retrieve_ANNarchy_Input_SJ();
+    void Write_ANNarchy_Input_SJ();
+
+    void Retrieve_ANNarchy_Input_SJ_enc();
+    void Write_ANNarchy_Input_SJ_enc();
+
+    void Retrieve_ANNarchy_Input_MJ();
+    void Write_ANNarchy_Input_MJ();
+
+    void Retrieve_ANNarchy_Input_MJ_enc();
+    void Write_ANNarchy_Input_MJ_enc();
+
+    void Retrieve_ANNarchy_Input_AJ();
+    void Write_ANNarchy_Input_AJ();
+
+    void Retrieve_ANNarchy_Input_AJ_enc();
+    void Write_ANNarchy_Input_AJ_enc();
 
  private:
     /** configuration variables **/
@@ -206,6 +219,7 @@ class JointWriter : public Mod_BaseClass {
     std::vector<double> joint_deg_res_abs;    // degree per neuron for the population coding, value per joint
     std::vector<double> joint_deg_res_rel;    // degree per neuron for the population coding, value per joint
     int joints = 0;                           // number of joints
+    unsigned int pop_size = 0;                           // number of joints
 
     std::vector<double> joint_min;                      // minimum possible joint angles
     std::vector<double> joint_max;                      // maximum possible joint angles

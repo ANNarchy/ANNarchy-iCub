@@ -509,7 +509,7 @@ std::vector<double> JointReader::Encode(double joint_angle, int joint) {
         Encode given joint position into a vector
 
         params: double joint_angle              -- joint angle read from the robot
-                unsigned int joint                       -- joint number of the robot part
+                int joint                       -- joint number of the robot part
 
         return: std::vector<double>             -- population encoded joint angle
     */

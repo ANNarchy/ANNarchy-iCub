@@ -378,18 +378,46 @@ cdef class PyJointWriter:
         # call the interface
         return deref(self.cpp_joint_writer).Decode_ext(position_pop, joint)
     
-    def retrieve_ANNarchy_input(self):
-        return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input()
+    def retrieve_ANNarchy_input_single(self):
+        return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_SJ()
 
-    def write_ANNarchy_input(self):
+    def write_ANNarchy_input_single(self):
         # call the interface
-        return deref(self.cpp_joint_writer).Write_ANNarchy_Input()
+        return deref(self.cpp_joint_writer).Write_ANNarchy_Input_SJ()
     
-    def retrieve_ANNarchy_input_enc(self):
-        return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_enc()
+    def retrieve_ANNarchy_input_single_enc(self):
+        return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_SJ_enc()
 
-    def write_ANNarchy_input_enc(self):
+    def write_ANNarchy_input_single_enc(self):
         # call the interface
-        return deref(self.cpp_joint_writer).Write_ANNarchy_Input_enc()
+        return deref(self.cpp_joint_writer).Write_ANNarchy_Input_SJ_enc()
+
+    def retrieve_ANNarchy_input_multi(self):
+        return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_MJ()
+
+    def write_ANNarchy_input_multi(self):
+        # call the interface
+        return deref(self.cpp_joint_writer).Write_ANNarchy_Input_MJ()
+    
+    def retrieve_ANNarchy_input_multi_enc(self):
+        return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_MJ_enc()
+
+    def write_ANNarchy_input_multi_enc(self):
+        # call the interface
+        return deref(self.cpp_joint_writer).Write_ANNarchy_Input_MJ_enc()
+
+    def retrieve_ANNarchy_input_all(self):
+        return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_AJ()
+
+    def write_ANNarchy_input_all(self):
+        # call the interface
+        return deref(self.cpp_joint_writer).Write_ANNarchy_Input_AJ()
+    
+    def retrieve_ANNarchy_input_all_enc(self):
+        return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_AJ_enc()
+
+    def write_ANNarchy_input_all_enc(self):
+        # call the interface
+        return deref(self.cpp_joint_writer).Write_ANNarchy_Input_AJ_enc()
 
     ### end access to joint writer member functions
