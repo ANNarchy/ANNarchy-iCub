@@ -31,10 +31,10 @@ cdef extern from "Joint_Reader.hpp":
         JointReader() except +
 
         # Initialize the joint reader with given parameters
-        bool_t Init(string, double, int, double, string)
+        bool_t Init(string, double, unsigned int, double, string)
 
         # Initialize the joint reader with given parameters and grpc communication.
-        bool_t InitGRPC(string, double, int, double, string, string , unsigned int)
+        bool_t InitGRPC(string, double, unsigned int, double, string, string , unsigned int)
 
         # Close joint reader with cleanup
         void Close()
@@ -46,7 +46,7 @@ cdef extern from "Joint_Reader.hpp":
         vector[double] GetJointsDegRes()
 
         # Return the size of the populations encoding the joint angles
-        vector[int] GetNeuronsPerJoint()
+        vector[unsigned int] GetNeuronsPerJoint()
 
         # Read all joints and return joint angles directly in degree as double values
         vector[double] ReadDoubleAll()

@@ -45,7 +45,7 @@ cdef class PyJointWriter:
 
     ### Access to joint writer member functions
     # initialize the joint writer with given parameters
-    def init(self, iCubANN_wrapper iCub, str name, str part, int n_pop, double degr_per_neuron=0.0, double speed=10.0, str ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str part, unsigned int n_pop, double degr_per_neuron=0.0, double speed=10.0, str ini_path = "../data/"):
         """
             Calls bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, double speed)
 
@@ -81,7 +81,7 @@ cdef class PyJointWriter:
         else:
             return False
 
-    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, int n_pop, double degr_per_neuron=0.0, double speed=10.0, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50010):
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, unsigned int n_pop, joints, str mode, blocking=True, double degr_per_neuron=0.0, double speed=10.0, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50010):
         """
             Calls bool JointWriter::Init_gRPC(std::string part, int pop_size, double deg_per_neuron, double speed)
 
@@ -107,7 +107,7 @@ cdef class PyJointWriter:
         self.part = part
         # preregister module for some prechecks e.g. part already in use
         if iCub.register_jwriter(name, self):
-            retval = deref(self.cpp_joint_writer).InitGRPC(part.encode('UTF-8'), n_pop, degr_per_neuron, speed, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
+            retval = deref(self.cpp_joint_writer).InitGRPC(part.encode('UTF-8'), n_pop, joints, mode.encode('UTF-8'), blocking.__int__(), degr_per_neuron, speed, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
             if not retval:
                 iCub.unregister_jwriter(self)
             return retval
@@ -381,25 +381,15 @@ cdef class PyJointWriter:
     def retrieve_ANNarchy_input(self):
         return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input()
 
-    def write_ANNarchy_input(self, int joint, str mode, blocking=True):
-        # we need to transform py-string to c++ compatible string
-        cdef string s1 = mode.encode('UTF-8')
-
-        cdef bint block = blocking.__int__()
-
+    def write_ANNarchy_input(self):
         # call the interface
-        return deref(self.cpp_joint_writer).Write_ANNarchy_Input(joint, block, s1)
+        return deref(self.cpp_joint_writer).Write_ANNarchy_Input()
     
     def retrieve_ANNarchy_input_enc(self):
         return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_enc()
 
-    def write_ANNarchy_input_enc(self, int joint, str mode, blocking=True):
-        # we need to transform py-string to c++ compatible string
-        cdef string s1 = mode.encode('UTF-8')
-
-        cdef bint block = blocking.__int__()
-
+    def write_ANNarchy_input_enc(self):
         # call the interface
-        return deref(self.cpp_joint_writer).Write_ANNarchy_Input_enc(joint, block, s1)
+        return deref(self.cpp_joint_writer).Write_ANNarchy_Input_enc()
 
     ### end access to joint writer member functions

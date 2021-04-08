@@ -53,9 +53,10 @@ class JointReader : public Mod_BaseClass {
      *              - arguments not valid: e.g. part string not correct or ini file not in given path \n
      *              - YARP-Server not running
      */
-    bool Init(std::string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path);
+    bool Init(std::string part, double sigma, unsigned int pop_n, double deg_per_neuron, std::string ini_path);
 
-    bool InitGRPC(std::string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path, std::string ip_address, unsigned int port);
+    bool InitGRPC(std::string part, double sigma, unsigned int pop_n, double deg_per_neuron, std::string ini_path, std::string ip_address,
+                  unsigned int port);
 
     /**
      * \brief  Close joint reader with cleanup
@@ -78,7 +79,7 @@ class JointReader : public Mod_BaseClass {
      * \brief Return the size of the populations encoding the joint angles
      * \return Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10
      */
-    std::vector<int> GetNeuronsPerJoint();
+    std::vector<unsigned int> GetNeuronsPerJoint();
 
     /**
      * \brief Read all joints and return joint angles directly in degree as double values
@@ -110,7 +111,7 @@ class JointReader : public Mod_BaseClass {
     std::vector<std::vector<double>> ReadPopAll();
 
     /**
-     * \brief Read multiple joints and return the joint angles encoded in populations. 
+     * \brief Read multiple joints and return the joint angles encoded in populations.
      * \return Population vectors encoding multiple joint angles from associated robot part.
      */
     std::vector<std::vector<double>> ReadPopMultiple(std::vector<int> joint_select);
@@ -132,7 +133,7 @@ class JointReader : public Mod_BaseClass {
     std::vector<double> provideData(std::vector<int32_t> value, bool enc);
     std::vector<double> provideData(bool enc);
 
- private :
+ private:
     /*** configuration variables ***/
     std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
 

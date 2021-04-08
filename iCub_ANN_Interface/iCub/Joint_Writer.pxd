@@ -33,10 +33,10 @@ cdef extern from "Joint_Writer.hpp":
         JointWriter() except +
 
         # Initialize the joint writer with given parameters
-        bool_t Init(string, int, double, double, string)
+        bool_t Init(string, unsigned int, double, double, string)
 
-        bool_t InitGRPC(string, int, double, double, string, string, unsigned int)
-
+        # Initialize the joint writer with given parameters for use with gRPC
+        bool_t InitGRPC(string, unsigned int, vector[int], bool_t, string, double, double, string, string, unsigned int)
 
         # Close joint writer with cleanup
         void Close()
@@ -48,7 +48,7 @@ cdef extern from "Joint_Writer.hpp":
         vector[double] GetJointsDegRes()
 
         # Return the size of the populations encoding the joint angles
-        vector[int] GetNeuronsPerJoint()
+        vector[unsigned int] GetNeuronsPerJoint()
 
         # Return the size of the populations encoding the joint angles
         bool_t SetJointVelocity(double, int)
@@ -86,10 +86,10 @@ cdef extern from "Joint_Writer.hpp":
         double Decode_ext(vector[double], int)
 
         void Retrieve_ANNarchy_Input()
-        void Write_ANNarchy_Input(int, bool_t, string)
+        void Write_ANNarchy_Input()
 
         void Retrieve_ANNarchy_Input_enc()
-        void Write_ANNarchy_Input_enc(int, bool_t, string)
+        void Write_ANNarchy_Input_enc()
 
 cdef class PyJointWriter:
     cdef shared_ptr[JointWriter] cpp_joint_writer

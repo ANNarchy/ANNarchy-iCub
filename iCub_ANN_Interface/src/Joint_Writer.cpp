@@ -34,12 +34,12 @@
 JointWriter::~JointWriter() { Close(); }
 
 /*** public methods for the user ***/
-bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, double speed, std::string ini_path) {
+bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_neuron, double speed, std::string ini_path) {
     /*
         Initialize the joint writer with given parameters
 
         params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-                int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+                unsigned int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
                 double speed            -- velocity for the joint motions
                 ini_path                -- Path to the "interface_param.ini"-file
@@ -159,14 +159,14 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
                 neuron_deg_abs[i].resize(pop_size);
                 joint_deg_res_abs[i] = joint_range / pop_size;
 
-                for (int j = 0; j < neuron_deg_abs[i].size(); j++) {
+                for (unsigned int j = 0; j < neuron_deg_abs[i].size(); j++) {
                     neuron_deg_abs[i][j] = joint_min[i] + j * joint_deg_res_abs[i];
                 }
                 // relative joint angles
                 neuron_deg_rel[i].resize(pop_size);
                 joint_deg_res_rel[i] = 2 * joint_range / pop_size;
 
-                for (int j = 0; j < neuron_deg_rel[i].size(); j++) {
+                for (unsigned int j = 0; j < neuron_deg_rel[i].size(); j++) {
                     neuron_deg_rel[i][j] = -joint_range + j * joint_deg_res_rel[i];
                 }
             } else if (deg_per_neuron > 0.0) {    // with given neuron resolution
@@ -175,7 +175,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
                 neuron_deg_abs[i].resize(joint_res);
                 joint_deg_res_abs[i] = deg_per_neuron;
 
-                for (int j = 0; j < neuron_deg_abs[i].size(); j++) {
+                for (unsigned int j = 0; j < neuron_deg_abs[i].size(); j++) {
                     neuron_deg_abs[i][j] = joint_min[i] + j * deg_per_neuron;
                 }
                 // relative joint angles
@@ -183,7 +183,7 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
                 neuron_deg_rel[i].resize(joint_res);
                 joint_deg_res_rel[i] = deg_per_neuron;
 
-                for (int j = 0; j < neuron_deg_rel[i].size(); j++) {
+                for (unsigned int j = 0; j < neuron_deg_rel[i].size(); j++) {
                     neuron_deg_rel[i][j] = -joint_range + j * deg_per_neuron;
                 }
             } else {
@@ -203,14 +203,13 @@ bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, do
     }
 }
 
-bool JointWriter::InitGRPC(std::string part, int pop_size, double deg_per_neuron, double speed, std::string ini_path,
-                           std::string ip_address, unsigned int port) {
+bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, bool blocking, std::string mode,
+                           double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize the joint reader with given parameters
 
         params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-                sigma                   -- sigma for the joints angles populations coding
-                int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+                unsigned int pop_size   -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
                 string ip_address
                 unsigned int port
@@ -223,6 +222,9 @@ bool JointWriter::InitGRPC(std::string part, int pop_size, double deg_per_neuron
             this->_ip_address = ip_address;
             this->_port = port;
             this->joint_source = new WriteClientInstance(ip_address, port);
+            this->_blocking = blocking;
+            this->_mode = mode;
+            this->_joint_select = joint_select;
             return true;
         } else {
             std::cerr << "[Joint Writer] Initialization failed!" << std::endl;
@@ -265,14 +267,14 @@ std::vector<double> JointWriter::GetJointsDegRes() {
     return joint_deg_res_abs;
 }
 
-std::vector<int> JointWriter::GetNeuronsPerJoint() {
+std::vector<unsigned int> JointWriter::GetNeuronsPerJoint() {
     /*
         Get the size of the populations, encoding the joint angles
 
-        return: std::vector<int>        -- return vector, containing the population size for every joint
+        return: std::vector<unsigned int>        -- return vector, containing the population size for every joint
     */
 
-    std::vector<int> neuron_counts(joints);
+    std::vector<unsigned int> neuron_counts(joints);
     if (CheckInit()) {
         for (int i = 0; i < joints; i++) {
             neuron_counts[i] = neuron_deg_abs[i].size();
@@ -374,7 +376,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
         bool start = false;
         if (mode == "abs") {
             // clamp to joint limits
-            for (int i = 0; i < position.size(); i++) {
+            for (unsigned int i = 0; i < position.size(); i++) {
                 position[i] = std::clamp(position[i], joint_min[i], joint_max[i]);
             }
             // start motion
@@ -429,7 +431,7 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
 
     if (CheckInit()) {
         // Check joint count
-        if (joint_selection.size() > joints) {
+        if (joint_selection.size() > (unsigned int)joints) {
             std::cerr << "[Joint Writer " << icub_part << "] Too many joints for the robot part!" << std::endl;
             return false;
         }
@@ -453,7 +455,7 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
         bool start = false;
         if (mode == "abs") {
             // clamp to joint limits
-            for (int i = 0; i < position.size(); i++) {
+            for (unsigned int i = 0; i < position.size(); i++) {
                 position[i] = std::clamp(position[i], joint_min[joint_selection[i]], joint_max[joint_selection[i]]);
             }
             // start motion
@@ -696,7 +698,7 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
         bool start = false;
         if (mode == "abs") {
             // Decode positions from populations
-            for (int i = 0; i < joint_selection.size(); i++) {
+            for (unsigned int i = 0; i < joint_selection.size(); i++) {
                 joint_angles[i] = Decode(position_pops[i], joint_selection[i], neuron_deg_abs);
                 if (std::isnan(joint_angles[i])) {
                     std::cerr << "[Joint Writer " << icub_part << "] Invalid joint angle in population code!" << std::endl;
@@ -708,7 +710,7 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
 
         } else if (mode == "rel") {
             // Decode positions from populations
-            for (int i = 0; i < joint_selection.size(); i++) {
+            for (unsigned int i = 0; i < joint_selection.size(); i++) {
                 joint_angles[i] = Decode(position_pops[i], joint_selection[i], neuron_deg_rel);
                 if (std::isnan(joint_angles[i])) {
                     std::cerr << "[Joint Writer " << icub_part << "] Invalid joint angle in population code!" << std::endl;
@@ -833,14 +835,10 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
 double JointWriter::Decode_ext(std::vector<double> position_pop, int joint) { return Decode(position_pop, joint, neuron_deg_abs); }
 
 void JointWriter::Retrieve_ANNarchy_Input() { joint_value = joint_source->retrieve_singletarget(); }
-void JointWriter::Write_ANNarchy_Input(int joint, bool blocking, std::string mode) {
-    WriteDoubleOne(joint_value, joint, blocking, mode);
-}
+void JointWriter::Write_ANNarchy_Input() { WriteDoubleOne(joint_value, _joint_select[0], _blocking, _mode); }
 
-void JointWriter::Retrieve_ANNarchy_Input_enc() { joint_value_enc = joint_source->retrieve_singletarget_enc(); }
-void JointWriter::Write_ANNarchy_Input_enc(int joint, bool blocking, std::string mode) {
-    WritePopOne(joint_value_enc, joint, blocking, mode);
-}
+void JointWriter::Retrieve_ANNarchy_Input_enc() { joint_value_1dvector = joint_source->retrieve_singletarget_enc(); }
+void JointWriter::Write_ANNarchy_Input_enc() { WritePopOne(joint_value_1dvector, _joint_select[0], _blocking, _mode); }
 
 /*** auxilary methods ***/
 bool JointWriter::CheckPartKey(std::string key) {
@@ -867,16 +865,13 @@ double JointWriter::Decode(std::vector<double> position_pop, int joint, std::vec
         return: double joint_angle              -- decoded joint angle
     */
 
-    int size = position_pop.size();
     double sum_pop_w = 0;
     double sum_pop = 0;
-    for (int i = 0; i < size; i++) {
+    for (unsigned int i = 0; i < position_pop.size(); i++) {
         sum_pop_w = sum_pop_w + position_pop[i] * neuron_deg[joint][i];
         sum_pop = sum_pop + position_pop[i];
     }
-    double joint_angle = sum_pop_w / sum_pop;
-
-    return joint_angle;
+    return sum_pop_w / sum_pop;
 }
 
 bool JointWriter::MotionDone() {

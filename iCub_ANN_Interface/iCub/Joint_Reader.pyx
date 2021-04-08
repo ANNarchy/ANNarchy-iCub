@@ -45,7 +45,7 @@ cdef class PyJointReader:
 
     ### Access to joint reader member functions
     # Initialize the joint reader with given parameters
-    def init(self, iCubANN_wrapper iCub, str name, str part, double sigma, int n_pop, double degr_per_neuron=0.0, str ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str part, double sigma, unsigned int n_pop, double degr_per_neuron=0.0, str ini_path = "../data/"):
         """
             Calls bool JointReader::Init(string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path)
 
@@ -58,7 +58,7 @@ cdef class PyJointReader:
                 string part             -- string representing the robot part, has to match iCub part naming
                                             {left_(arm/leg), right_(arm/leg), head, torso}
                 sigma                   -- sigma for the joints angles populations coding
-                int pop_size            -- number of neurons per population, encoding each one joint angle
+                unsigned int pop_size            -- number of neurons per population, encoding each one joint angle
                                             only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles
                                             if set: population size depends on joint working range
@@ -79,7 +79,7 @@ cdef class PyJointReader:
         else:
             return False
 
-    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, double sigma, int n_pop, double degr_per_neuron=0.0, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50005):
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, double sigma, unsigned int n_pop, double degr_per_neuron=0.0, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50005):
         """
             Calls bool InitGRPC(string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path, std::string ip_address, unsigned int port)
 
@@ -92,7 +92,7 @@ cdef class PyJointReader:
                 string part             -- string representing the robot part, has to match iCub part naming
                                             {left_(arm/leg), right_(arm/leg), head, torso}
                 sigma                   -- sigma for the joints angles populations coding
-                int pop_size            -- number of neurons per population, encoding each one joint angle
+                unsigned int pop_size            -- number of neurons per population, encoding each one joint angle
                                             only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles
                                             if set: population size depends on joint working range

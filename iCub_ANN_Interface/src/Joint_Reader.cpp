@@ -42,7 +42,7 @@ JointReader::~JointReader() {
 }
 
 /*** public methods for the user ***/
-bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_per_neuron, std::string ini_path) {
+bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, double deg_per_neuron, std::string ini_path) {
     /*
         Initialize the joint reader with given parameters
 
@@ -141,7 +141,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
                 neuron_deg[i].resize(pop_size);
                 joint_deg_res[i] = joint_range / pop_size;
 
-                for (int j = 0; j < neuron_deg[i].size(); j++) {
+                for (unsigned int j = 0; j < neuron_deg[i].size(); j++) {
                     neuron_deg[i][j] = joint_min[i] + j * joint_deg_res[i];
                 }
 
@@ -150,7 +150,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
                 neuron_deg[i].resize(joint_res);
                 joint_deg_res[i] = deg_per_neuron;
 
-                for (int j = 0; j < neuron_deg[i].size(); j++) {
+                for (unsigned int j = 0; j < neuron_deg[i].size(); j++) {
                     neuron_deg[i][j] = joint_min[i] + j * deg_per_neuron;
                 }
             } else {
@@ -169,7 +169,7 @@ bool JointReader::Init(std::string part, double sigma, int pop_size, double deg_
     }
 }
 
-bool JointReader::InitGRPC(std::string part, double sigma, int pop_size, double deg_per_neuron, std::string ini_path,
+bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size, double deg_per_neuron, std::string ini_path,
                            std::string ip_address, unsigned int port) {
     /*
         Initialize the joint reader with given parameters
@@ -234,14 +234,14 @@ std::vector<double> JointReader::GetJointsDegRes() {
     return joint_deg_res;
 }
 
-std::vector<int> JointReader::GetNeuronsPerJoint() {
+std::vector<unsigned int> JointReader::GetNeuronsPerJoint() {
     /*
         Return the size of the populations encoding the joint angles
 
-        return: std::vector<int>        -- return vector, containing the population size for every joint
+        return: std::vector<unsigned int>        -- return vector, containing the population size for every joint
     */
 
-    std::vector<int> neuron_counts(joints);
+    std::vector<unsigned int> neuron_counts(joints);
     if (CheckInit()) {
         for (int i = 0; i < joints; i++) {
             neuron_counts[i] = neuron_deg[i].size();
@@ -288,7 +288,7 @@ std::vector<double> JointReader::ReadDoubleAllTime() {
 
 std::vector<double> JointReader::ReadDoubleMultiple(std::vector<int> joint_select) {
     /*
-        Read all joints and return joint angles directly as double value
+        Read multiple joints and return joint angles directly as double value
 
         return: std::vector<double>     -- joint angles read from the robot
     */
@@ -302,7 +302,7 @@ std::vector<double> JointReader::ReadDoubleMultiple(std::vector<int> joint_selec
             while (!ienc->getEncoders(angles.data())) {
                 yarp::os::Time::delay(0.001);
             }
-            for (int i = 0; i < joint_select.size(); i++) {
+            for (unsigned int i = 0; i < joint_select.size(); i++) {
                 angle_select.push_back(angles[joint_select[i]]);
             }
         }
@@ -326,7 +326,7 @@ std::vector<double> JointReader::ReadDoubleMultipleTime(std::vector<int> joint_s
                 yarp::os::Time::delay(0.001);
             }
             angle_stamped.push_back(yarp::os::Time::now() * 1000.);
-            for (int i = 0; i < joint_select.size(); i++) {
+            for (unsigned int i = 0; i < joint_select.size(); i++) {
                 angle_select.push_back(angles[joint_select[i]]);
             }
             angle_stamped.insert(angle_stamped.end(), angle_select.begin(), angle_select.end());
@@ -339,7 +339,7 @@ double JointReader::ReadDoubleOne(int joint) {
     /*
         Read one joint and return joint angle directly as double value
 
-        params: int joint       -- joint number of the robot part
+        params: unsigned int joint       -- joint number of the robot part
 
         return: double          -- joint angle read from the robot
     */
@@ -407,9 +407,9 @@ std::vector<std::vector<double>> JointReader::ReadPopAll() {
 
 std::vector<std::vector<double>> JointReader::ReadPopMultiple(std::vector<int> joint_select) {
     /*
-        Read all joints and return joint angles directly as double value
+        Read multiple joints and return joint angles encoded in vectors
 
-        return: std::vector<std::vector<double>>    -- joint angles read from the robot
+        return: std::vector<std::vector<double>>    -- vector of population vectors encoding every joint angle from associated robot part
     */
 
     std::vector<double> angles;
@@ -422,7 +422,7 @@ std::vector<std::vector<double>> JointReader::ReadPopMultiple(std::vector<int> j
             while (!ienc->getEncoders(angles.data())) {
                 yarp::os::Time::delay(0.001);
             }
-            for (int i = 0; i < joint_select.size(); i++) {
+            for (unsigned int i = 0; i < joint_select.size(); i++) {
                 angle_select.push_back(Encode(angles[joint_select[i]], joint_select[i]));
             }
         }
@@ -434,7 +434,7 @@ std::vector<double> JointReader::ReadPopOne(int joint) {
     /*
         Read one joint and return the joint angle encoded in a vector
 
-        params: int joint               -- joint number of the robot part
+        params: unsigned int joint               -- joint number of the robot part
 
         return: std::vector<double>     -- population vector encoding the joint angle
     */
@@ -509,14 +509,14 @@ std::vector<double> JointReader::Encode(double joint_angle, int joint) {
         Encode given joint position into a vector
 
         params: double joint_angle              -- joint angle read from the robot
-                int joint                       -- joint number of the robot part
+                unsigned int joint                       -- joint number of the robot part
 
         return: std::vector<double>             -- population encoded joint angle
     */
 
-    int size = neuron_deg.at(joint).size();
+    auto size = neuron_deg.at(joint).size();
     std::vector<double> pos_pop(size);
-    for (int i = 0; i < size; i++) {
+    for (unsigned int i = 0; i < size; i++) {
         pos_pop[i] = (NormalPdf(neuron_deg[joint][i], joint_angle, sigma_pop));
     }
 

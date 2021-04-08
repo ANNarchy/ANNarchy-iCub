@@ -222,7 +222,7 @@ std::vector<VisualReader::precision> VisualReader::ReadFromBuf(bool wait2img, in
     if (CheckInit()) {
         // if image buffer is not empty return the image and delete it from the buffer
         if (wait2img) {
-            for (int i = 0; i <= trials; i++) {
+            for (unsigned int i = 0; i <= trials; i++) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
                 if (!img_buffer.empty()) {
                     img = img_buffer.front();
@@ -629,7 +629,7 @@ std::vector<VisualReader::precision> VisualReader::Mat2Vec(cv::Mat matrix) {
     if (matrix.isContinuous()) {    // faster, only possible when data is continous in memory
         vec.assign(reinterpret_cast<precision *>(matrix.data), reinterpret_cast<precision *>(matrix.data) + matrix.total());
     } else {    // slower, but is always possible
-        for (int i = 0; i < matrix.rows; ++i) {
+        for (unsigned int i = 0; i < matrix.rows; ++i) {
             vec.insert(vec.begin(), matrix.ptr<precision>(i), matrix.ptr<precision>(i) + matrix.cols);
         }
     }

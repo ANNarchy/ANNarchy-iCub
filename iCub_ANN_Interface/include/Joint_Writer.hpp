@@ -52,9 +52,10 @@ class JointWriter : public Mod_BaseClass {
      *              - arguments not valid: e.g. part string not correct or ini file not in given path
      *              - YARP-Server not running
      */
-    bool Init(std::string part, int pop_size, double deg_per_neuron = 0.0, double speed = 10.0, std::string ini_path = "../data/");
+    bool Init(std::string part, unsigned int pop_size, double deg_per_neuron = 0.0, double speed = 10.0, std::string ini_path = "../data/");
 
-    bool InitGRPC(std::string part, int pop_size, double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port);
+    bool InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, bool blocking, std::string mode,
+                               double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port);
 
     /**
      * \brief  Close joint writer with cleanup
@@ -77,7 +78,7 @@ class JointWriter : public Mod_BaseClass {
      * \brief Return the size of the populations encoding the joint angles
      * \return Return vector, containing the population size for every joint. E.g. Angle of joint 0 is encoded in a population with 10 neurons: vector[0] = 10
      */
-    std::vector<int> GetNeuronsPerJoint();
+    std::vector<unsigned int> GetNeuronsPerJoint();
 
     /**
      * \brief Check if a joint of the robot part is in motion
@@ -189,10 +190,10 @@ class JointWriter : public Mod_BaseClass {
 
     double Decode_ext(std::vector<double> position_pop, int joint);
     void Retrieve_ANNarchy_Input();
-    void Write_ANNarchy_Input(int joint, bool blocking, std::string mode);
+    void Write_ANNarchy_Input();
 
     void Retrieve_ANNarchy_Input_enc();
-    void Write_ANNarchy_Input_enc(int joint, bool blocking, std::string mode);
+    void Write_ANNarchy_Input_enc();
 
  private:
     /** configuration variables **/
@@ -223,8 +224,12 @@ class JointWriter : public Mod_BaseClass {
     std::string _ip_address = "";
     unsigned int _port = -1;
     WriteClientInstance *joint_source;
+    std::vector<int> _joint_select;
+    bool _blocking;
+    std::string _mode;
     double joint_value;
-    std::vector<double> joint_value_enc;
+    std::vector<double> joint_value_1dvector;
+    std::vector<std::vector<double>> joint_value_2dvector;
 
     /*** auxilary methods ***/
     // check if iCub part key is valid

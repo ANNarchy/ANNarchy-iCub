@@ -245,7 +245,7 @@ std::vector<std::vector<double>> SkinReader::GetTaxelPos(std::string skin_part) 
         auto idx_arr = taxel_pos_data[skin_part].idx;
         // std::cout << "index:" << idx_arr << std::endl;
         yarp::sig::Vector test;
-        for (int i = 0; i < idx_arr.size(); i++) {
+        for (unsigned int i = 0; i < idx_arr.size(); i++) {
             if (idx_arr[i] > 0) taxel_positions.push_back(init_pos[i]);
         }
     }
@@ -272,7 +272,7 @@ bool SkinReader::ReadTactile() {
             // auto init_pos_h = taxel_pos_data[skin_part_h].arr;
             auto idx_arr_h = taxel_pos_data[skin_part_h].idx;
             std::vector<double> tmp_hand_data;
-            for (int i = 0; i < idx_arr_h.size(); i++) {
+            for (unsigned int i = 0; i < idx_arr_h.size(); i++) {
                 if (idx_arr_h[i] > 0) tmp_hand_data.push_back(tactile_hand->data()[i] * norm_fac);
             }
             hand_data.push_back(tmp_hand_data);
@@ -287,7 +287,7 @@ bool SkinReader::ReadTactile() {
             // auto init_pos_f = taxel_pos_data[skin_part_f].arr;
             auto idx_arr_f = taxel_pos_data[skin_part_f].idx;
             std::vector<double> tmp_farm_data;
-            for (int i = 0; i < idx_arr_f.size(); i++) {
+            for (unsigned int i = 0; i < idx_arr_f.size(); i++) {
                 if (idx_arr_f[i] > 0) tmp_farm_data.push_back(tactile_forearm->data()[i] * norm_fac);
             }
             forearm_data.push_back(tmp_farm_data);
@@ -302,7 +302,7 @@ bool SkinReader::ReadTactile() {
             // auto init_pos_a = taxel_pos_data[skin_part_a].arr;
             auto idx_arr_a = taxel_pos_data[skin_part_a].idx;
             std::vector<double> tmp_arm_data;
-            for (int i = 0; i < idx_arr_a.size(); i++) {
+            for (unsigned int i = 0; i < idx_arr_a.size(); i++) {
                 if (idx_arr_a[i] > 0) tmp_arm_data.push_back(tactile_arm->data()[i] * norm_fac);
             }
             arm_data.push_back(tmp_arm_data);
