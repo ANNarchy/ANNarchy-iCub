@@ -53,8 +53,8 @@ cdef class PyJointWriter:
                 Initialize the joint writer with given parameters
 
             params:
-                iCubANN_wrapper iCub    -- main interface wrapper  
-                str name                -- name for the joint writer module  
+                iCubANN_wrapper iCub    -- main interface wrapper
+                str name                -- name for the joint writer module
                 std::string part        -- string representing the robot part, has to match iCub part naming<br>
                                             {left_(arm/leg), right_(arm/leg), head, torso}<br>
                 int pop_size            -- number of neurons per population, encoding each one joint angle;<br>
@@ -89,8 +89,8 @@ cdef class PyJointWriter:
                 Initialize the joint writer with given parameters
 
             params:
-                iCubANN_wrapper iCub    -- main interface wrapper  
-                str name                -- name for the joint writer module  
+                iCubANN_wrapper iCub    -- main interface wrapper
+                str name                -- name for the joint writer module
                 std::string part        -- string representing the robot part, has to match iCub part naming<br>
                                             {left_(arm/leg), right_(arm/leg), head, torso}<br>
                 int pop_size            -- number of neurons per population, encoding each one joint angle;<br>
@@ -99,6 +99,8 @@ cdef class PyJointWriter:
                                             if set: population size depends on joint working range<br>
                 double speed            -- velocity for the joint movements<br>
                 ini_path                -- Path to the "interface_param.ini"-file<br>
+                string ip_address       -- gRPC server ip address
+                unsigned int port       -- gRPC server port
 
             return:
                 bool                    -- return True, if successful
@@ -377,14 +379,14 @@ cdef class PyJointWriter:
     def decode(self, position_pop, int joint):
         # call the interface
         return deref(self.cpp_joint_writer).Decode_ext(position_pop, joint)
-    
+
     def retrieve_ANNarchy_input_single(self):
         return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_SJ()
 
     def write_ANNarchy_input_single(self):
         # call the interface
         return deref(self.cpp_joint_writer).Write_ANNarchy_Input_SJ()
-    
+
     def retrieve_ANNarchy_input_single_enc(self):
         return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_SJ_enc()
 
@@ -398,7 +400,7 @@ cdef class PyJointWriter:
     def write_ANNarchy_input_multi(self):
         # call the interface
         return deref(self.cpp_joint_writer).Write_ANNarchy_Input_MJ()
-    
+
     def retrieve_ANNarchy_input_multi_enc(self):
         return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_MJ_enc()
 
@@ -412,7 +414,7 @@ cdef class PyJointWriter:
     def write_ANNarchy_input_all(self):
         # call the interface
         return deref(self.cpp_joint_writer).Write_ANNarchy_Input_AJ()
-    
+
     def retrieve_ANNarchy_input_all_enc(self):
         return deref(self.cpp_joint_writer).Retrieve_ANNarchy_Input_AJ_enc()
 

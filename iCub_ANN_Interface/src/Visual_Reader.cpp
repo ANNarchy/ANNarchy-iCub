@@ -38,14 +38,10 @@
 typedef std::chrono::high_resolution_clock Clock;
 
 // Destructor
-VisualReader::~VisualReader() {
-    image_source->shutdown();
-    server_thread.join();
-    Close();
-}
-
+VisualReader::~VisualReader() { Close(); }
+// TODO: typing -> replace int with unsigned int, where it is useful 
 /*** public methods for the user ***/
-bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter,
+bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size, bool fast_filter,
                         std::string ini_path) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view and eye selection
@@ -55,7 +51,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
                 double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width       -- output image width in pixel (input width: 320px)
                 int img_height      -- output image height in pixel (input height: 240px)
-                int max_buffer_size -- maximum buffer length
+                unsigned int max_buffer_size -- maximum buffer length
                 bool fast_filter    -- flag to select the filter for image upscaling; True for a faster filter
 
         return: bool                -- return True, if successful
@@ -181,7 +177,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
     }
 }
 
-bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size,
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size,
                             bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
@@ -191,10 +187,10 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
                 double fov_height   -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width       -- output image width in pixel (input width: 320px)
                 int img_height      -- output image height in pixel (input height: 240px)
-                int max_buffer_size -- maximum buffer length
+                unsigned int max_buffer_size -- maximum buffer length
                 bool fast_filter    -- flag to select the filter for image upscaling; True for a faster filter
-                string ip_address
-                unsigned int port
+                string ip_address   -- gRPC server ip address
+                unsigned int port   -- gRPC server port
 
         return: bool                -- return True, if successful
     */
@@ -204,6 +200,7 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
             this->_port = port;
             this->image_source = new ServerInstance(ip_address, port, this);
             this->server_thread = std::thread(&ServerInstance::wait, this->image_source);
+            dev_init_grpc = true;
             return true;
         }
     } else {
@@ -353,6 +350,13 @@ void VisualReader::Close() {
         // stop and close RFModule
         stopModule(true);
         rf_running = false;
+    }
+
+    if (dev_init_grpc) {
+        image_source->shutdown();
+        server_thread.join();
+        delete image_source;
+        dev_init_grpc = false;
     }
 
     // close Ports
@@ -629,7 +633,7 @@ std::vector<VisualReader::precision> VisualReader::Mat2Vec(cv::Mat matrix) {
     if (matrix.isContinuous()) {    // faster, only possible when data is continous in memory
         vec.assign(reinterpret_cast<precision *>(matrix.data), reinterpret_cast<precision *>(matrix.data) + matrix.total());
     } else {    // slower, but is always possible
-        for (unsigned int i = 0; i < matrix.rows; ++i) {
+        for (int i = 0; i < matrix.rows; ++i) {
             vec.insert(vec.begin(), matrix.ptr<precision>(i), matrix.ptr<precision>(i) + matrix.cols);
         }
     }

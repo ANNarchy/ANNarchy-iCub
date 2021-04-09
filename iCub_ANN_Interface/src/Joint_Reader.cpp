@@ -35,11 +35,7 @@
 #include "ProvideInputServer.h"
 
 // Destructor
-JointReader::~JointReader() {
-    joint_source->shutdown();
-    server_thread.join();
-    Close();
-}
+JointReader::~JointReader() { Close(); }
 
 /*** public methods for the user ***/
 bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, double deg_per_neuron, std::string ini_path) {
@@ -178,8 +174,8 @@ bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size
                 sigma                   -- sigma for the joints angles populations coding
                 int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
-                string ip_address
-                unsigned int port
+                string ip_address       -- gRPC server ip address
+                unsigned int port       -- gRPC server port
 
         return: bool                    -- return True, if successful
     */
@@ -190,6 +186,7 @@ bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size
             this->_port = port;
             this->joint_source = new ServerInstance(ip_address, port, this);
             this->server_thread = std::thread(&ServerInstance::wait, this->joint_source);
+            this->dev_init_grpc = true;
             return true;
         } else {
             std::cerr << "[Joint Reader] Initialization failed!" << std::endl;
@@ -208,6 +205,14 @@ void JointReader::Close() {
     if (driver.isValid()) {
         driver.close();
     }
+
+    if (dev_init_grpc) {
+        joint_source->shutdown();
+        server_thread.join();
+        delete joint_source;
+        dev_init_grpc = false;
+    }
+
     this->dev_init = false;
 }
 
@@ -455,6 +460,7 @@ std::vector<double> JointReader::ReadPopOne(int joint) {
 }
 
 /*** gRPC functions ***/
+// TODO seperated functions for different modi -> set enc/joints in init
 std::vector<double> JointReader::provideData(int value, bool enc) {
     if (enc) {
         return ReadPopOne(value);
@@ -463,11 +469,11 @@ std::vector<double> JointReader::provideData(int value, bool enc) {
     }
 }
 
-std::vector<double> JointReader::provideData(std::vector<int32_t> value, bool enc) {
+std::vector<double> JointReader::provideData(std::vector<int> value, bool enc) {
     if (enc) {
         auto angles = ReadPopMultiple(value);
         std::vector<double> v;
-        for (size_t i = 0; i < angles.size(); i++) {
+        for (unsigned int i = 0; i < angles.size(); i++) {
             v.insert(v.end(), angles[i].begin(), angles[i].end());
         }
         return v;

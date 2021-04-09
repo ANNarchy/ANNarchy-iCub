@@ -55,6 +55,20 @@ class JointReader : public Mod_BaseClass {
      */
     bool Init(std::string part, double sigma, unsigned int pop_n, double deg_per_neuron, std::string ini_path);
 
+    /**
+     * \brief Initialize the joint reader with given parameters
+     * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
+     * \param[in] sigma Standard deviation for the joints angles populations coding.
+     * \param[in] pop_n Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+     * \param[in] deg_per_neuron (default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+     * \param[in] ini_path Path to the "interface_param.ini"-file.
+     * \param[in] ip_address gRPC server ip address -> has to match ip address of the JointReadOut-Population
+     * \param[in] port gRPC server port -> has to match port of the JointReadOut-Population
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: e.g. part string not correct or ini file not in given path \n
+     *              - YARP-Server not running
+     */
     bool InitGRPC(std::string part, double sigma, unsigned int pop_n, double deg_per_neuron, std::string ini_path, std::string ip_address,
                   unsigned int port);
 
@@ -117,20 +131,15 @@ class JointReader : public Mod_BaseClass {
     std::vector<std::vector<double>> ReadPopMultiple(std::vector<int> joint_select);
 
     /**
-     * \brief Read one joint and return the joint angle encoded in a
-     * population. \param[in] joint joint number of the robot part \return
-     * Population vector encoding the joint angle.
+     * \brief Read one joint and return the joint angle encoded in a population. 
+     * \param[in] joint joint number of the robot part 
+     * \return Population vector encoding the joint angle.
      */
     std::vector<double> ReadPopOne(int joint);
 
     /*** gRPC functions ***/
-    /**
-     * \brief Read one joint and return joint angle directly in degree as double value
-     * \param[in] joint Joint number of the robot part
-     * \return Joint angle, read from the robot in degree.
-     */
     std::vector<double> provideData(int value, bool enc);
-    std::vector<double> provideData(std::vector<int32_t> value, bool enc);
+    std::vector<double> provideData(std::vector<int> value, bool enc);
     std::vector<double> provideData(bool enc);
 
  private:

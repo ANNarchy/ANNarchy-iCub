@@ -25,8 +25,8 @@
 #include <deque>
 #include <opencv2/opencv.hpp>
 #include <string>
-#include <vector>
 #include <thread>
+#include <vector>
 
 #include "Module_Base_Class.hpp"
 #include "ProvideInputServer.h"
@@ -57,28 +57,27 @@ class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
      *              - arguments not valid: e.g. eye character not valid
      *              - YARP-Server not running
      */
-    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter,
+    bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size, bool fast_filter,
               std::string ini_path);
 
     /**
-     * \brief Init Visual reader with given parameters for image resolution,
-     * field of view and eye selection. \param[in] eye character representing
-     * the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye
-     * image are stored in the same buffer) \param[in] fov_width output field of
-     * view width in degree [0, 60] (input fov width: 60°) \param[in] fov_height
-     * output field of view height in degree [0, 48] (input fov height: 48°)
+     * \brief Init Visual reader with given parameters for image resolution, field of view and eye selection. 
+     * \param[in] eye character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer) 
+     * \param[in] fov_width output field of view width in degree [0, 60] (input fov width: 60°) 
+     * \param[in] fov_height * output field of view height in degree [0, 48] (input fov height: 48°)
      * \param[in] img_width output image width in pixel (input width: 320px)
      * \param[in] img_height output image height in pixel (input height: 240px)
      * \param[in] max_buffer_size maximum buffer length
-     * \param[in] fast_filter flag to select the filter for image upscaling;
-     * True for a faster filter \return True, if the initializatiion was
-     * successful. False if an error occured. Additionally, an error message is
-     * written to the error stream (cerr).\n Typical errors:
+     * \param[in] fast_filter flag to select the filter for image upscaling; True for a faster filter 
+     * \param[in] ip_address gRPC server ip address -> has to match ip address of the Vision-Population
+     * \param[in] port gRPC server port -> has to match port of the Vision-Population
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n 
+     *          Typical errors:
      *              - arguments not valid: e.g. eye character not valid
      *              - YARP-Server not running
      */
-    bool InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size, bool fast_filter,
-                        std::string ini_path, std::string ip_address, unsigned int port);
+    bool InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size,
+                  bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port);
 
     /**
      * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
@@ -129,9 +128,9 @@ class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
      */
     std::vector<double> provideData();
 
-  private:
+ private:
     /** configuration variables **/
-    int buffer_len = 30;    // length of the image buffer
+    unsigned int buffer_len = 30;    // length of the image buffer
     bool rf_running = false;
 
     char act_eye;           // selected iCub eye to read images from
