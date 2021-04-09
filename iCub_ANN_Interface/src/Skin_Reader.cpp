@@ -33,6 +33,7 @@
 
 #include "INI_Reader/INIReader.h"
 #include "Module_Base_Class.hpp"
+#include "ProvideInputServer.h"
 
 // Destructor
 SkinReader::~SkinReader() { Close(); }
@@ -169,6 +170,25 @@ bool SkinReader::Init(std::string name, char arm, bool norm_data, std::string in
     }
 }
 
+bool SkinReader::InitGRPC(std::string name, char arm, bool norm_data, std::string ini_path, std::string ip_address, unsigned int port) {
+    if (!this->dev_init) {
+        if (this->Init(name, arm, norm_data, ini_path)) {
+            this->_ip_address = ip_address;
+            this->_port = port;
+            this->skin_source = new ServerInstance(ip_address, port, this);
+            this->server_thread = std::thread(&ServerInstance::wait, this->skin_source);
+            this->dev_init_grpc = true;
+            return true;
+        } else {
+            std::cerr << "[Skin Reader] Initialization failed!" << std::endl;
+            return false;
+        }
+    } else {
+        std::cerr << "[Skin Reader] Initialization already done!" << std::endl;
+        return false;
+    }
+}
+
 void SkinReader::Close() {
     /*
         Close and clean skin reader
@@ -185,6 +205,13 @@ void SkinReader::Close() {
     if (!port_arm.isClosed()) {
         yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_arm_comp").c_str(), ("/Skin_Reader/" + side + "_arm:i").c_str());
         port_arm.close();
+    }
+
+    if (dev_init_grpc) {
+        skin_source->shutdown();
+        server_thread.join();
+        delete skin_source;
+        dev_init_grpc = false;
     }
 
     this->dev_init = false;
@@ -314,6 +341,56 @@ bool SkinReader::ReadTactile() {
     } else {
         return false;
     }
+}
+
+unsigned int SkinReader::GetTactileArmSize() { return taxel_pos_data["arm"].idx.size(); }
+unsigned int SkinReader::GetTactileForearmSize() { return taxel_pos_data["forearm"].idx.size(); }
+unsigned int SkinReader::GetTactileHandSize() { return taxel_pos_data["hand"].idx.size(); }
+
+// TODO seperated functions for different sections
+std::vector<double> SkinReader::provideData(int section) {
+    std::vector<double> sensor_data;
+
+    if (section == 3) {
+        tactile_hand = port_hand.read();
+        if (tactile_hand != NULL) {
+            std::string skin_part_h = "hand";
+            auto idx_arr_h = taxel_pos_data[skin_part_h].idx;
+            for (unsigned int i = 0; i < idx_arr_h.size(); i++) {
+                if (idx_arr_h[i] > 0) sensor_data.push_back(tactile_hand->data()[i] * norm_fac);
+            }
+        } else {
+            std::cerr << "[Skin Reader " + side + "] Error in reading hand tactile data from the iCub!" << std::endl;
+        }
+
+    } else if (section == 2) {
+        tactile_forearm = port_forearm.read();
+        if (tactile_forearm != NULL) {
+            std::string skin_part_f = "forearm";
+            auto idx_arr_f = taxel_pos_data[skin_part_f].idx;
+            for (unsigned int i = 0; i < idx_arr_f.size(); i++) {
+                if (idx_arr_f[i] > 0) sensor_data.push_back(tactile_forearm->data()[i] * norm_fac);
+            }
+        } else {
+            std::cerr << "[Skin Reader " + side + "] Error in reading forearm tactile data from the iCub!" << std::endl;
+        }
+
+    } else if (section == 1) {
+        tactile_arm = port_arm.read();
+        // ARM
+        if (tactile_arm != NULL) {
+            std::string skin_part_a = "arm";
+            auto idx_arr_a = taxel_pos_data[skin_part_a].idx;
+            for (unsigned int i = 0; i < idx_arr_a.size(); i++) {
+                if (idx_arr_a[i] > 0) sensor_data.push_back(tactile_arm->data()[i] * norm_fac);
+            }
+        } else {
+            std::cerr << "[Skin Reader " + side + "] Error in reading arm tactile data from the iCub!" << std::endl;
+        }
+    } else {
+        std::cerr << "[Skin Reader " + side + "] Undefined skin section!" << std::endl;
+    }
+    return sensor_data;
 }
 
 /*** auxilary functions ***/

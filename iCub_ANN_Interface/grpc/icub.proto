@@ -118,12 +118,21 @@ message AllTargetEncodedResponse {
 
 message SkinRequest {
     // selected skin section
-    string skin_section = 2;
+    string skin_section = 1;
 }
 
 message SkinResponse {
     Status status = 1;
     repeated double sensor_data = 2;
+}
+
+message SkinArmRequest {
+}
+
+message SkinForearmRequest {
+}
+
+message SkinHandRequest {
 }
 
 service ProvideInput {
@@ -139,6 +148,12 @@ service ProvideInput {
     rpc ReadAllJoints (AllJointsRequest) returns (AllJointsResponse) {}
     // provide skin sensor data
     rpc ReadSkin (SkinRequest) returns (SkinResponse) {}
+    // provide skin sensor data
+    rpc ReadSkinArm (SkinArmRequest) returns (SkinResponse) {}
+    // provide skin sensor data
+    rpc ReadSkinForearm (SkinForearmRequest) returns (SkinResponse) {}
+    // provide skin sensor data
+    rpc ReadSkinHand (SkinHandRequest) returns (SkinResponse) {}
 }
 
 service WriteOutput {

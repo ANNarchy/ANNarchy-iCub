@@ -35,6 +35,8 @@ cdef extern from "Skin_Reader.hpp":
         # Initialize skin reader with given parameters.
         bool_t Init(string, char, bool_t, string)
 
+        bool_t InitGRPC(string, char, bool_t, string, string, unsigned int)
+
         #  Close and clean skin reader
         void Close()
 
@@ -52,6 +54,10 @@ cdef extern from "Skin_Reader.hpp":
 
         # The sensor data is read and buffered inside. It can be accessed through GetTactileArm, GetTactileForearm and GetTactileHand.
         bool_t ReadTactile()
+
+        unsigned int GetTactileArmSize()
+        unsigned int GetTactileForearmSize()
+        unsigned int GetTactileHandSize()
 
         void setRegister(bint)
         bint getRegister()

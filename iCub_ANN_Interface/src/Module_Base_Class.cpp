@@ -52,12 +52,17 @@ std::vector<double> Mod_BaseClass::provideData(int value, bool enc) {
     return std::vector<double>();
 }
 
-std::vector<double> Mod_BaseClass::provideData(std::vector<int32_t> value, bool enc) {
+std::vector<double> Mod_BaseClass::provideData(std::vector<int> value, bool enc) {
     std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;
     return std::vector<double>();
 }
 
 std::vector<double> Mod_BaseClass::provideData(bool enc) {
+    std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;
+    return std::vector<double>();
+}
+
+std::vector<double> Mod_BaseClass::provideData(int value) {
     std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;
     return std::vector<double>();
 }

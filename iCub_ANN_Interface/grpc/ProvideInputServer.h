@@ -36,19 +36,43 @@ class ProvideInputServiceImpl final : public iCubInterfaceMessages::ProvideInput
     }
 
     grpc::Status ReadMultiJoints(grpc::ServerContext *context, const iCubInterfaceMessages::MultiJointRequest *request,
-                               iCubInterfaceMessages::MultiJointResponse *response) override {
+                                 iCubInterfaceMessages::MultiJointResponse *response) override {
         auto angles =
-            interface_instance->provideData(std::vector<int32_t>(request->joint().begin(), request->joint().end()), request->encode());
+            interface_instance->provideData(std::vector<int>(request->joint().begin(), request->joint().end()), request->encode());
         google::protobuf::RepeatedField<double> data(angles.begin(), angles.end());
         response->mutable_angle()->Swap(&data);
         return grpc::Status::OK;
     }
 
     grpc::Status ReadAllJoints(grpc::ServerContext *context, const iCubInterfaceMessages::AllJointsRequest *request,
-                                 iCubInterfaceMessages::AllJointsResponse *response) override {
+                               iCubInterfaceMessages::AllJointsResponse *response) override {
         auto angles = interface_instance->provideData(request->encode());
         google::protobuf::RepeatedField<double> data(angles.begin(), angles.end());
         response->mutable_angle()->Swap(&data);
+        return grpc::Status::OK;
+    }
+
+    grpc::Status ReadSkinArm(grpc::ServerContext *context, const iCubInterfaceMessages::SkinArmRequest *request,
+                             iCubInterfaceMessages::SkinResponse *response) override {
+        auto skin_data = interface_instance->provideData(1);
+        google::protobuf::RepeatedField<double> data(skin_data.begin(), skin_data.end());
+        response->mutable_sensor_data()->Swap(&data);
+        return grpc::Status::OK;
+    }
+
+    grpc::Status ReadSkinForearm(grpc::ServerContext *context, const iCubInterfaceMessages::SkinForearmRequest *request,
+                                 iCubInterfaceMessages::SkinResponse *response) override {
+        auto skin_data = interface_instance->provideData(2);
+        google::protobuf::RepeatedField<double> data(skin_data.begin(), skin_data.end());
+        response->mutable_sensor_data()->Swap(&data);
+        return grpc::Status::OK;
+    }
+
+    grpc::Status ReadSkinHand(grpc::ServerContext *context, const iCubInterfaceMessages::SkinHandRequest *request,
+                              iCubInterfaceMessages::SkinResponse *response) override {
+        auto skin_data = interface_instance->provideData(3);
+        google::protobuf::RepeatedField<double> data(skin_data.begin(), skin_data.end());
+        response->mutable_sensor_data()->Swap(&data);
         return grpc::Status::OK;
     }
 

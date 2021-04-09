@@ -78,6 +78,39 @@ cdef class PySkinReader:
         else:
             return False
 
+    # init skin reader with given parameters
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str arm, norm=True, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50015):
+        """
+            Calls bool SkinReader::Init(char arm, bool norm_data)
+
+            function:
+                Initialize skin reader with given parameters
+
+            params:
+                iCubANN_wrapper iCub    -- main interface wrapper
+                str name                -- name for the skin reader module
+                char arm                -- character to choose the arm side (r/R for right; l/L for left)
+                bool norm_data          -- if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1])
+                ini_path                -- Path to the "interface_param.ini"-file
+                string ip_address       -- gRPC server ip address
+                unsigned int port       -- gRPC server port
+
+            return:
+                bool                    -- return True, if successful
+        """
+        # we need to transform py-string to c++ compatible string
+        self.part = arm
+        # preregister module for some prechecks e.g. arm already in use
+        if iCub.register_skin_reader(name, self):
+            # call the interface
+            retval = deref(self.cpp_skin_reader).InitGRPC(name.encode('UTF-8'), arm.encode('UTF-8')[0], norm.__int__(), ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
+            if not retval:
+                iCub.unregister_skin_reader(self)
+            return retval
+        else:
+            return False
+
+
     # close and clean skin reader
     def close(self, iCubANN_wrapper iCub):
         """
@@ -110,6 +143,21 @@ cdef class PySkinReader:
         # call the interface
         return np.array(deref(self.cpp_skin_reader).GetTactileArm())
 
+    # return tactile data for upper arm skin
+    def get_tactile_arm_size(self):
+        """
+            Calls unsigned int SkinReader::GetTactileArmSize()
+
+            function:
+                Return size of tactile data for the arm skin
+
+            return:
+                unsigned int     -- size of sensor data vector -> arm section
+        """
+
+        # call the interface
+        return deref(self.cpp_skin_reader).GetTactileArmSize()
+
     # return tactile data for forearm skin
     def get_tactile_forearm(self):
         """
@@ -123,6 +171,20 @@ cdef class PySkinReader:
         """
         # call the interface
         return np.array(deref(self.cpp_skin_reader).GetTactileForearm())
+
+    # return tactile data for forearm skin
+    def get_tactile_forearm_size(self):
+        """
+            Calls unsigned int SkinReader::GetTactileForearmSize()
+
+            function:
+                Return size of tactile data for the forearm skin
+
+            return:
+                unsigned int     -- size of sensor data vector -> forearm section
+        """
+        # call the interface
+        return deref(self.cpp_skin_reader).GetTactileForearmSize()
 
     # return tactile data for hand skin
     def get_tactile_hand(self):
@@ -138,6 +200,21 @@ cdef class PySkinReader:
 
         # call the interface
         return np.array(deref(self.cpp_skin_reader).GetTactileHand())
+
+    # return tactile data for hand skin
+    def get_tactile_hand_size(self):
+        """
+            Calls unsigned int SkinReader::GetTactileHandSize()
+
+            function:
+                Return size of tactile data for the hand skin
+
+            return:
+                unsigned int     -- size of sensor data vector -> hand section
+        """
+
+        # call the interface
+        return deref(self.cpp_skin_reader).GetTactileHandSize()
 
     # return the taxel positions given by the ini files
     def get_taxel_pos(self, str skin_part):
@@ -171,5 +248,7 @@ cdef class PySkinReader:
 
         # call the interface
         return deref(self.cpp_skin_reader).ReadTactile()
+
+
 
     ### end access to skin reader member functions

@@ -28,15 +28,16 @@
 #include <vector>
 
 #include "Module_Base_Class.hpp"
+#include "ProvideInputServer.h"
 
 /**
- * \brief  Struct for the skin taxel positiiion data per iCub part
+ * \brief  Struct for the skin taxel position data per iCub part
  */
 struct TaxelData {
     std::vector<int> idx;                    // index array
     std::vector<std::vector<double>> arr;    // taxel position array -> x;y;z position for the idx taxel
 };
-
+// TODO: getter for skin section sizes
 /**
  * \brief  Read-out of the skin sensor data from the iCubs artificial skin
  */
@@ -58,7 +59,9 @@ class SkinReader : public Mod_BaseClass {
      *              - arguments not valid: e.g. arm character not correct; ini file not in given path
      *              - YARP-Server not running
      */
-    bool Init(std::string name, char arm, bool norm_data, std::string ini_path = "../data/");
+    bool Init(std::string name, char arm, bool norm_data, std::string ini_path);
+
+    bool InitGRPC(std::string name, char arm, bool norm_data, std::string ini_path, std::string ip_address, unsigned int port);
 
     /**
      * \brief  Close and clean skin reader
@@ -99,6 +102,16 @@ class SkinReader : public Mod_BaseClass {
      */
     bool ReadTactile();
 
+    /**
+     * \brief Return tactile data for upper arm skin.
+     * \return vector, containing the tactile data of the upper arm for the last time steps
+     */
+    unsigned int GetTactileArmSize();
+    unsigned int GetTactileForearmSize();
+    unsigned int GetTactileHandSize();
+
+    std::vector<double> provideData(int section);
+
  private:
     /*** configuration variables ***/
     std::string side;    // containing information about selected arm (right/left)
@@ -120,6 +133,12 @@ class SkinReader : public Mod_BaseClass {
 
     /*** sensor position data ***/
     std::map<std::string, TaxelData> taxel_pos_data;    // contains taxel position data for different skin parts
+
+    /** grpc communication **/
+    std::string _ip_address = "";
+    unsigned int _port = -1;
+    ServerInstance *skin_source;
+    std::thread server_thread;
 
     // std::map<std::string, iCub::iKin::iKinChain *> kin_chains;    // iCub kinematic chain
 

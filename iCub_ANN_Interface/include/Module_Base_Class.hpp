@@ -34,7 +34,8 @@ class Mod_BaseClass {
     // check if init function was called
     bool CheckInit();
     // Set value for dev_init
-    bool dev_init = false;    // variable for initialization check
+    bool dev_init = false;         // variable for initialization check
+    bool dev_init_grpc = false;    // variable for gRPC initialization check
     std::string type;
     std::string icub_part;
 
@@ -55,7 +56,7 @@ class Mod_BaseClass {
 
     virtual std::vector<double> provideData();
     virtual std::vector<double> provideData(int value, bool enc);
-    virtual std::vector<double> provideData(std::vector<int32_t> value,
-                                            bool enc);
+    virtual std::vector<double> provideData(std::vector<int> value, bool enc);
     virtual std::vector<double> provideData(bool enc);
+    virtual std::vector<double> provideData(int value);
 };
