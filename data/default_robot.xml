@@ -29,7 +29,7 @@
         <ini_path>../data/</ini_path>
         <?deg_per_neuron as alternative to popsize?>
     </JWriter>
-    <VisReader>
+    <VisReader name="VR_both">
         <eye>b</eye>
         <fov_width>60</fov_width>
         <fov_height>48</fov_height>
