@@ -36,8 +36,8 @@ class Mod_BaseClass {
     // Set value for dev_init
     bool dev_init = false;         // variable for initialization check
     bool dev_init_grpc = false;    // variable for gRPC initialization check
-    std::string type;
-    std::string icub_part;
+    std::string type;              // Module type e.g. Joint Reader
+    std::string icub_part;         // 
 
  public:
     // Constructor

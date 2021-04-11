@@ -161,10 +161,10 @@ class JointReader : public Mod_BaseClass {
     yarp::dev::IEncoders *ienc;        // iCub joint encoder interface
 
     /** grpc communication **/
-    std::string _ip_address = "";
-    unsigned int _port = -1;
-    ServerInstance *joint_source;
-    std::thread server_thread;
+    std::string _ip_address = "";    // gRPC server ip address
+    unsigned int _port = -1;         // gRPC server port
+    ServerInstance *joint_source;    // gRPC server instance
+    std::thread server_thread;       // thread for running the gRPC server in parallel
 
     /*** auxilary functions ***/
     // check if iCub part key is valid

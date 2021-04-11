@@ -61,5 +61,6 @@ cdef extern from "Visual_Reader.hpp":
 
 cdef class PyVisualReader:
     cdef shared_ptr[VisualReader] cpp_visual_reader
+    cdef str name
     cdef str part
 

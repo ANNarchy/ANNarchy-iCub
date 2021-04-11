@@ -62,23 +62,19 @@ cdef class PySkinReader:
             return:
                 bool                    -- return True, if successful
         """
-        # we need to transform py-string to c++ compatible string
-        cdef char a = arm.encode('UTF-8')[0]
-        cdef string path = ini_path.encode('UTF-8')
-        cdef string name_mod = name.encode('UTF-8')
 
         self.part = arm
         # preregister module for some prechecks e.g. arm already in use
         if iCub.register_skin_reader(name, self):
             # call the interface
-            retval = deref(self.cpp_skin_reader).Init(name_mod, a, norm, path)
+            retval = deref(self.cpp_skin_reader).Init(name.encode('UTF-8'), arm.encode('UTF-8')[0], norm.__int__(), ini_path.encode('UTF-8'))
             if not retval:
                 iCub.unregister_skin_reader(self)
             return retval
         else:
             return False
 
-    # init skin reader with given parameters
+    # Initialize the skin reader with given parameters for use with gRPC
     def init_grpc(self, iCubANN_wrapper iCub, str name, str arm, norm=True, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50015):
         """
             Calls bool SkinReader::Init(char arm, bool norm_data)
@@ -143,7 +139,7 @@ cdef class PySkinReader:
         # call the interface
         return np.array(deref(self.cpp_skin_reader).GetTactileArm())
 
-    # return tactile data for upper arm skin
+    # return size of tactile data for upper arm skin
     def get_tactile_arm_size(self):
         """
             Calls unsigned int SkinReader::GetTactileArmSize()
@@ -172,7 +168,7 @@ cdef class PySkinReader:
         # call the interface
         return np.array(deref(self.cpp_skin_reader).GetTactileForearm())
 
-    # return tactile data for forearm skin
+    # return size of tactile data for forearm skin
     def get_tactile_forearm_size(self):
         """
             Calls unsigned int SkinReader::GetTactileForearmSize()
@@ -201,7 +197,7 @@ cdef class PySkinReader:
         # call the interface
         return np.array(deref(self.cpp_skin_reader).GetTactileHand())
 
-    # return tactile data for hand skin
+    # return size of tactile data for hand skin
     def get_tactile_hand_size(self):
         """
             Calls unsigned int SkinReader::GetTactileHandSize()

@@ -55,8 +55,11 @@ cdef extern from "Skin_Reader.hpp":
         # The sensor data is read and buffered inside. It can be accessed through GetTactileArm, GetTactileForearm and GetTactileHand.
         bool_t ReadTactile()
 
+        # Return size of tactile data for upper arm  skin.
         unsigned int GetTactileArmSize()
+        # Return size of tactile data for forearm skin.
         unsigned int GetTactileForearmSize()
+        # Return size of tactile data for hand skin.
         unsigned int GetTactileHandSize()
 
         void setRegister(bint)

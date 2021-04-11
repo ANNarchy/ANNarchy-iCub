@@ -61,6 +61,18 @@ class SkinReader : public Mod_BaseClass {
      */
     bool Init(std::string name, char arm, bool norm_data, std::string ini_path);
 
+    /**
+     * \brief Initialize skin reader with given parameters.
+     * \param[in] arm character to choose the arm side (r/R for right; l/L for left)
+     * \param[in] norm_data if True, data is normalized from 0..255 to 0..1.0
+     * \param[in] ini_path Path to the "interface_param.ini"-file.
+     * \param[in] ip_address gRPC server ip address -> has to match ip address of the Vision-Population
+     * \param[in] port gRPC server port -> has to match port of the Vision-Population
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: e.g. arm character not correct; ini file not in given path
+     *              - YARP-Server not running
+     */
     bool InitGRPC(std::string name, char arm, bool norm_data, std::string ini_path, std::string ip_address, unsigned int port);
 
     /**
@@ -135,10 +147,10 @@ class SkinReader : public Mod_BaseClass {
     std::map<std::string, TaxelData> taxel_pos_data;    // contains taxel position data for different skin parts
 
     /** grpc communication **/
-    std::string _ip_address = "";
-    unsigned int _port = -1;
-    ServerInstance *skin_source;
-    std::thread server_thread;
+    std::string _ip_address = "";    // gRPC server ip address
+    unsigned int _port = -1;         // gRPC server port
+    ServerInstance *skin_source;     // gRPC server instance
+    std::thread server_thread;       // thread for running the gRPC server in parallel
 
     // std::map<std::string, iCub::iKin::iKinChain *> kin_chains;    // iCub kinematic chain
 

@@ -81,6 +81,7 @@ cdef class PyJointWriter:
         else:
             return False
 
+    # Initialize the joint writer with given parameters for use with gRPC
     def init_grpc(self, iCubANN_wrapper iCub, str name, str part, unsigned int n_pop, joints, str mode, blocking=True, double degr_per_neuron=0.0, double speed=10.0, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50010):
         """
             Calls bool JointWriter::Init_gRPC(std::string part, int pop_size, double deg_per_neuron, double speed)

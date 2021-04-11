@@ -45,7 +45,7 @@ cdef class PyVisualReader:
 
     ### Access to visual reader member functions
     # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def init(self, iCubANN_wrapper iCub, str eye, double fov_width=60, double fov_height=48, int img_width=320, int img_height=240, int max_buffer_size=10, fast_filter=True, str ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str eye, double fov_width=60, double fov_height=48, int img_width=320, int img_height=240, int max_buffer_size=10, fast_filter=True, str ini_path = "../data/"):
         """
             Calls bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int max_buffer_size, int img_height)
 
@@ -64,14 +64,12 @@ cdef class PyVisualReader:
             return:
                 bool                    -- return True, if successful
         """
-        cdef char e = eye.encode('UTF-8')[0]
-        cdef string path = ini_path.encode('UTF-8')
 
         self.part = eye
-        # preregister module for some prechecks e.g. eye already in use
-        if iCub.register_vis_reader(self):
+        # preregister module for some prechecks e.g. name already in use
+        if iCub.register_vis_reader(name, self):
             # call the interface
-            retval = deref(self.cpp_visual_reader).Init(e, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter, path)
+            retval = deref(self.cpp_visual_reader).Init(eye.encode('UTF-8')[0], fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter, ini_path.encode('UTF-8'))
             if not retval:
                 iCub.unregister_vis_reader(self)
             return retval
@@ -79,7 +77,7 @@ cdef class PyVisualReader:
             return False
 
     # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def init_grpc(self, iCubANN_wrapper iCub, str eye, double fov_width=60, double fov_height=48, int img_width=320, int img_height=240, int max_buffer_size=10, fast_filter=True, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50000):
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str eye, double fov_width=60, double fov_height=48, int img_width=320, int img_height=240, int max_buffer_size=10, fast_filter=True, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50000):
         """
             Calls bool InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size,
                             bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port)
@@ -95,20 +93,18 @@ cdef class PyVisualReader:
                 int img_width           -- output image width in pixel (input width: 320px)
                 int img_height          -- output image height in pixel (input height: 240px)
                 fast_filter             -- flag to select the filter for image upscaling; True for a faster filter; default value is True
-                string ip_address       --
-                unsigned int port       --
+                string ip_address       -- gRPC server ip address
+                unsigned int port       -- gRPC server port
 
             return:
                 bool                    -- return True, if successful
         """
-        cdef char e = eye.encode('UTF-8')[0]
-        cdef string path = ini_path.encode('UTF-8')
 
         self.part = eye
         # preregister module for some prechecks e.g. eye already in use
         if iCub.register_vis_reader(self):
             # call the interface
-            retval = deref(self.cpp_visual_reader).InitGRPC(e, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter, path, ip_address.encode('UTF-8'), port)
+            retval = deref(self.cpp_visual_reader).InitGRPC(eye.encode('UTF-8')[0], fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
             if not retval:
                 iCub.unregister_vis_reader(self)
             return retval
@@ -116,70 +112,70 @@ cdef class PyVisualReader:
             return False
 
     # return image vector from the image buffer and remove it from the buffer
-    def read_from_buffer(self, bint wait2img = True, int trials = 20):
-        """
-            Calls std::vector<precision> VisualReader::ReadFromBuf()
+    # def read_from_buffer(self, bint wait2img = True, int trials = 20):
+        # """
+        #     Calls std::vector<precision> VisualReader::ReadFromBuf()
 
-            function:
-                Return image vector from the image buffer and remove it from the buffer.
-                The return type depends on the selected precision (float/double).
+        #     function:
+        #         Return image vector from the image buffer and remove it from the buffer.
+        #         The return type depends on the selected precision (float/double).
 
-            return:
-                std::vector<precision>     -- image (1D-vector) from the image buffer
-        """
+        #     return:
+        #         std::vector<precision>     -- image (1D-vector) from the image buffer
+        # """
 
-        # call the interface
-        return np.array(deref(self.cpp_visual_reader).ReadFromBuf(wait2img, trials))
+        # # call the interface
+        # return np.array(deref(self.cpp_visual_reader).ReadFromBuf(wait2img, trials))
 
-    # start reading images from the iCub with a YARP-RFModule
-    def start(self):
-        """
-            Calls void VisualReader::Start(int argc, char *argv[])
+    # # start reading images from the iCub with a YARP-RFModule
+    # def start(self):
+        # """
+        #     Calls void VisualReader::Start(int argc, char *argv[])
 
-            function:
-                Start reading images from the iCub with a YARP-RFModule
-        """
-        argv=[]
-        # Declare char**
-        cdef char** c_argv
-        argc = len(argv)
-        # Allocate memory
-        c_argv = <char**>malloc(argc * sizeof(char*))
-        # Check if allocation went fine
-        if c_argv is NULL:
-            raise MemoryError()
-        # Convert str to char* and store it into our char**
-        for i in range(argc):
-            argv[i] = argv[i].encode('UTF-8')
-            c_argv[i] = argv[i]
-        # call the interface
-        start = deref(self.cpp_visual_reader).Start(argc, c_argv)
-        # Let him go
-        free(c_argv)
-        return start
+        #     function:
+        #         Start reading images from the iCub with a YARP-RFModule
+        # """
+        # argv=[]
+        # # Declare char**
+        # cdef char** c_argv
+        # argc = len(argv)
+        # # Allocate memory
+        # c_argv = <char**>malloc(argc * sizeof(char*))
+        # # Check if allocation went fine
+        # if c_argv is NULL:
+        #     raise MemoryError()
+        # # Convert str to char* and store it into our char**
+        # for i in range(argc):
+        #     argv[i] = argv[i].encode('UTF-8')
+        #     c_argv[i] = argv[i]
+        # # call the interface
+        # start = deref(self.cpp_visual_reader).Start(argc, c_argv)
+        # # Let him go
+        # free(c_argv)
+        # return start
 
-    # stop reading images from the iCub, by terminating the RFModule
-    def stop(self):
-        """
-            Calls void VisualReader::Stop()
+    # # stop reading images from the iCub, by terminating the RFModule
+    # def stop(self):
+        # """
+        #     Calls void VisualReader::Stop()
 
-            function:
-                Stop reading images from the iCub, by terminating the RFModule
-        """
+        #     function:
+        #         Stop reading images from the iCub, by terminating the RFModule
+        # """
 
-        # call the interface
-        deref(self.cpp_visual_reader).Stop()
+        # # call the interface
+        # deref(self.cpp_visual_reader).Stop()
 
-    def imgs_in_buffer(self):
-        """
-            Calls void VisualReader::ImgsInBuffer()
+    # def imgs_in_buffer(self):
+        # """
+        #     Calls void VisualReader::ImgsInBuffer()
 
-            function:
-                Return number of images in the image buffer
-        """
+        #     function:
+        #         Return number of images in the image buffer
+        # """
 
-        # call the interface
-        return deref(self.cpp_visual_reader).ImgsInBuffer()
+        # # call the interface
+        # return deref(self.cpp_visual_reader).ImgsInBuffer()
 
     # return image vector from the image buffer and remove it from the buffer
     def read_robot_eyes(self):
@@ -200,10 +196,10 @@ cdef class PyVisualReader:
     # deinitialize module
     def close(self, iCubANN_wrapper iCub):
         """
-            Calls void VisualReader::Stop()
+            Calls void VisualReader::Close()
 
             function:
-                Stop reading images from the iCub, by terminating the RFModule and close module.
+                close the module module.
 
             params:
                 iCubANN_wrapper iCub    -- main interface wrapper

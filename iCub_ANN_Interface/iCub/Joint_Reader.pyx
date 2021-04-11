@@ -58,7 +58,7 @@ cdef class PyJointReader:
                 string part             -- string representing the robot part, has to match iCub part naming
                                             {left_(arm/leg), right_(arm/leg), head, torso}
                 sigma                   -- sigma for the joints angles populations coding
-                unsigned int pop_size            -- number of neurons per population, encoding each one joint angle
+                unsigned int pop_size   -- number of neurons per population, encoding each one joint angle 
                                             only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles
                                             if set: population size depends on joint working range
@@ -79,6 +79,7 @@ cdef class PyJointReader:
         else:
             return False
 
+    # Initialize the joint reader with given parameters for use with gRPC
     def init_grpc(self, iCubANN_wrapper iCub, str name, str part, double sigma, unsigned int n_pop, double degr_per_neuron=0.0, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50005):
         """
             Calls bool InitGRPC(string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path, std::string ip_address, unsigned int port)
@@ -92,13 +93,13 @@ cdef class PyJointReader:
                 string part             -- string representing the robot part, has to match iCub part naming
                                             {left_(arm/leg), right_(arm/leg), head, torso}
                 sigma                   -- sigma for the joints angles populations coding
-                unsigned int pop_size            -- number of neurons per population, encoding each one joint angle
+                unsigned int pop_size   -- number of neurons per population, encoding each one joint angle
                                             only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles
                                             if set: population size depends on joint working range
                 ini_path                -- Path to the "interface_param.ini"-file
-                string ip_address       --
-                unsigned int port       --
+                string ip_address       -- gRPC server ip address
+                unsigned int port       -- gRPC server port
 
             return:
                 bool                    -- return True, if successful

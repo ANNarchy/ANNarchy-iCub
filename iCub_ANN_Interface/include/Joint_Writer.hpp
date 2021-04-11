@@ -52,8 +52,22 @@ class JointWriter : public Mod_BaseClass {
      *              - arguments not valid: e.g. part string not correct or ini file not in given path
      *              - YARP-Server not running
      */
-    bool Init(std::string part, unsigned int pop_size, double deg_per_neuron = 0.0, double speed = 10.0, std::string ini_path = "../data/");
+    bool Init(std::string part, unsigned int pop_size, double deg_per_neuron, double speed, std::string ini_path);
 
+    /**
+     * \brief Initialize the joint writer with given parameters
+     * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
+     * \param[in] pop_size Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+     * \param[in] deg_per_neuron (default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+     * \param[in] speed Velocity to set for the joint motions.
+     * \param[in] ini_path Path to the "interface_param.ini"-file.
+     * \param[in] ip_address gRPC server ip address -> has to match ip address of the JointControl-Population
+     * \param[in] port gRPC server port -> has to match port of the JointControl-Population
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: e.g. part string not correct or ini file not in given path
+     *              - YARP-Server not running
+     */
     bool InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking,
                   double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port);
 
