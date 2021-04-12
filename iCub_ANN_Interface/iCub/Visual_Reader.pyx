@@ -102,7 +102,7 @@ cdef class PyVisualReader:
 
         self.part = eye
         # preregister module for some prechecks e.g. eye already in use
-        if iCub.register_vis_reader(self):
+        if iCub.register_vis_reader(name, self):
             # call the interface
             retval = deref(self.cpp_visual_reader).InitGRPC(eye.encode('UTF-8')[0], fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
             if not retval:

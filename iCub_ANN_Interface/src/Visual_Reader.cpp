@@ -65,6 +65,13 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 
         buffer_len = max_buffer_size;
 
+        // init YARP-Network
+        yarp::os::Network::init();
+        if (!yarp::os::Network::checkNetwork()) {
+            std::cerr << "[Visual Reader] YARP Network is not online. Check nameserver is running!" << std::endl;
+            return false;
+        }
+
         // compute output field of view borders in input image
         if (fov_width <= icub_fov_x) {
             out_fov_x_low = static_cast<int>(ceil(FovX2PixelX(-fov_width / 2.0)));
@@ -115,13 +122,6 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         }
 
         norm_fact = 1 / 255.0;
-
-        // init YARP-Network
-        yarp::os::Network::init();
-        if (!yarp::os::Network::checkNetwork()) {
-            std::cerr << "[Visual Reader] YARP Network is not online. Check nameserver is running!" << std::endl;
-            return false;
-        }
 
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "interface_param.ini");
@@ -195,6 +195,7 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
 
         return: bool                -- return True, if successful
     */
+
     if (!this->dev_init) {
         if (this->Init(eye, fov_width, fov_height, img_width, img_height, max_buffer_size, fast_filter, ini_path)) {
             this->_ip_address = ip_address;
@@ -203,6 +204,9 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
             this->server_thread = std::thread(&ServerInstance::wait, this->image_source);
             dev_init_grpc = true;
             return true;
+        } else {
+            std::cerr << "[Visual Reader] Initialization failed!" << std::endl;
+            return false;
         }
     } else {
         std::cerr << "[Visual Reader] Initialization already done!" << std::endl;

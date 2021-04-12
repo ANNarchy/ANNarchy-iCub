@@ -352,12 +352,18 @@ cdef class iCubANN_wrapper:
                         args['ip_address'] = jwrite.find('ip_address').text
                         if(not (jwrite.find('port') == None)):
                             args['port'] = int(jwrite.find('port').text)
-                            grpc=True
+                            if(not (jwrite.find('joint_select') == None)):
+                                args['joint_select'] = [int(x) for x in jwrite.find('joint_select').text.split(",")]
+                                if(not (jwrite.find('mode') == None)):
+                                    args['mode'] = jwrite.find('mode').text
+                                    if(not (jwrite.find('blocking') == None)):
+                                        args['blocking'] = bool(jwrite.find('blocking').text)
+                                        grpc=True
                     if(jwrite.find('deg_per_neuron') == None):
                         if(no_error_jwrite):
                             writer = PyJointWriter()
                             if grpc:
-                                if not writer.init_grpc(self, jwrite.attrib['name'], args['part'], args['popsize'], speed=args['speed'], ini_path=args['ini_path'], ip_address=args['ip_address'] , port=args['port']):
+                                if not writer.init_grpc(self, jwrite.attrib['name'], args['part'], args['popsize'], args['joint_select'], args['mode'], blocking=args['blocking'], speed=args['speed'], ini_path=args['ini_path'], ip_address=args['ip_address'] , port=args['port']):
                                     print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
                             else:
                                 if not writer.init(self, jwrite.attrib['name'], args['part'], args['popsize'], args['speed'], ini_path=args['ini_path']):
@@ -369,7 +375,7 @@ cdef class iCubANN_wrapper:
                         if(no_error_jwrite):
                             writer = PyJointWriter()
                             if grpc:
-                                if not writer.init_grpc(self, jwrite.attrib['name'], args['part'], args['popsize'], speed=args['speed'], deg_per_neuron=deg_per_neuron, ini_path=args['ini_path'], ip_address=args['ip_address'] , port=args['port']):
+                                if not writer.init_grpc(self, jwrite.attrib['name'], args['part'], args['popsize'], args['joint_select'], args['mode'], blocking=args['blocking'], speed=args['speed'], deg_per_neuron=deg_per_neuron, ini_path=args['ini_path'], ip_address=args['ip_address'] , port=args['port']):
                                     print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
                             else:
                                 if not writer.init(self, jwrite.attrib['name'], args['part'], args['sigma'], args['popsize'], deg_per_neuron=deg_per_neuron, ini_path=args['ini_path']):
