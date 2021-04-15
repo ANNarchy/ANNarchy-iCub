@@ -32,7 +32,10 @@
 
 #include "INI_Reader/INIReader.h"
 #include "Module_Base_Class.hpp"
+
+#ifdef _USE_GRPC
 #include "ProvideInputServer.h"
+#endif
 
 // Destructor
 JointReader::~JointReader() { Close(); }
@@ -165,6 +168,7 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
     }
 }
 
+#ifdef _USE_GRPC
 bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size, double deg_per_neuron, std::string ini_path,
                            std::string ip_address, unsigned int port) {
     /*
@@ -197,6 +201,25 @@ bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size
         return false;
     }
 }
+#else
+bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size, double deg_per_neuron, std::string ini_path,
+                           std::string ip_address, unsigned int port) {
+    /*
+        Initialize the joint reader with given parameters
+
+        params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+                sigma                   -- sigma for the joints angles populations coding
+                int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+                double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+                string ip_address       -- gRPC server ip address
+                unsigned int port       -- gRPC server port
+
+        return: bool                    -- return True, if successful
+    */
+    std::cerr << "[Joint Reader] gRPC is not included in the setup process!" << std::endl;
+    return false;
+   }
+#endif
 
 void JointReader::Close() {
     /*
@@ -205,13 +228,14 @@ void JointReader::Close() {
     if (driver.isValid()) {
         driver.close();
     }
-
+#ifdef _USE_GRPC
     if (dev_init_grpc) {
         joint_source->shutdown();
         server_thread.join();
         delete joint_source;
         dev_init_grpc = false;
     }
+#endif
 
     this->dev_init = false;
 }
@@ -461,6 +485,7 @@ std::vector<double> JointReader::ReadPopOne(int joint) {
 
 /*** gRPC functions ***/
 // TODO seperated functions for different modi -> set enc/joints in init
+#ifdef _USE_GRPC
 std::vector<double> JointReader::provideData(int value, bool enc) {
     if (enc) {
         return ReadPopOne(value);
@@ -494,6 +519,7 @@ std::vector<double> JointReader::provideData(bool enc) {
         return ReadDoubleAll();
     }
 }
+#endif
 
 /*** auxilary functions ***/
 bool JointReader::CheckPartKey(std::string key) {

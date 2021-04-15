@@ -29,7 +29,9 @@
 #include <vector>
 
 #include "Module_Base_Class.hpp"
+#ifdef _USE_GRPC
 #include "ProvideInputServer.h"
+#endif
 
 /**
  * \brief  Read-out of the camera images from the iCub robot
@@ -38,7 +40,12 @@
 class VisualReader : public Mod_BaseClass {
 
      public:
+#ifdef _SINGLE_PRECISION
+        typedef float precision;
+#endif
+#ifdef _DOUBLE_PRECISION
         typedef double precision;
+#endif
 
         VisualReader() = default;
         ~VisualReader();
@@ -128,7 +135,9 @@ class VisualReader : public Mod_BaseClass {
      * \param[in] trials trials for waiting to image in buffer
      * \return image as 1D-vector from the image buffer
      */
+#ifdef _USE_GRPC
         std::vector<double> provideData();
+#endif 
 
      private:
         /** configuration variables **/
@@ -138,7 +147,7 @@ class VisualReader : public Mod_BaseClass {
         char act_eye;           // selected iCub eye to read images from
         int filter_ds;          // filter for the upscaling of the image
         bool cut_img;           // flag, being true if a part of the field of view is cutted of the image
-        precision norm_fact;    // norming factor for the normalization of the image
+        precision norm_fact;    // normalization factor for the normalization of the image
 
         /** fix iCub-visual data **/
         const int icub_width = 320;      // iCub image width in pixel
@@ -175,10 +184,12 @@ class VisualReader : public Mod_BaseClass {
         yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;     // port for the iCub left eye image
 
         /** grpc communication **/
+#ifdef _USE_GRPC
         std::string _ip_address = "";    // gRPC server ip address
         unsigned int _port = -1;         // gRPC server port
         ServerInstance *image_source;    // gRPC server instance
         std::thread server_thread;       // thread for running the gRPC server in parallel
+#endif
 
         /*** methods for the YARP-RFModule ***/
         // // configure RFModule

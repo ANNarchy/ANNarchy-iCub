@@ -27,7 +27,9 @@
 #include <vector>
 
 #include "Module_Base_Class.hpp"
+#ifdef _USE_GRPC
 #include "ProvideInputServer.h"
+#endif
 
 /**
  * \brief  Read-out of the joint angles of the iCub robot
@@ -138,9 +140,11 @@ class JointReader : public Mod_BaseClass {
     std::vector<double> ReadPopOne(int joint);
 
     /*** gRPC functions ***/
+#ifdef _USE_GRPC
     std::vector<double> provideData(int value, bool enc);
     std::vector<double> provideData(std::vector<int> value, bool enc);
     std::vector<double> provideData(bool enc);
+#endif
 
  private:
     /*** configuration variables ***/
@@ -161,10 +165,12 @@ class JointReader : public Mod_BaseClass {
     yarp::dev::IEncoders *ienc;        // iCub joint encoder interface
 
     /** grpc communication **/
+#ifdef _USE_GRPC
     std::string _ip_address = "";    // gRPC server ip address
     unsigned int _port = -1;         // gRPC server port
     ServerInstance *joint_source;    // gRPC server instance
     std::thread server_thread;       // thread for running the gRPC server in parallel
+#endif
 
     /*** auxilary functions ***/
     // check if iCub part key is valid

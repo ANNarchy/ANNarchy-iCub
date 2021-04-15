@@ -33,7 +33,9 @@
 
 #include "INI_Reader/INIReader.h"
 #include "Module_Base_Class.hpp"
+#ifdef _USE_GRPC
 #include "ProvideInputServer.h"
+#endif
 
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -41,6 +43,7 @@ typedef std::chrono::high_resolution_clock Clock;
 VisualReader::~VisualReader() { Close(); }
 
 // TODO: typing -> replace int with unsigned int, where it is useful
+// integer bilder übertragen?
 /*** public methods for the user ***/
 bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size,
                         bool fast_filter, std::string ini_path) {
@@ -178,6 +181,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
     }
 }
 
+#ifdef _USE_GRPC
 bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size,
                             bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
@@ -213,6 +217,28 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
         return false;
     }
 }
+#else
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size,
+                            bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
+    /*
+        Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
+
+        params: char eye                        -- character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer)
+                double fov_width                -- output field of view width in degree [0, 60] (input fov width: 60°)
+                double fov_height               -- output field of view height in degree [0, 48] (input fov height: 48°)
+                int img_width                   -- output image width in pixel (input width: 320px)
+                int img_height                  -- output image height in pixel (input height: 240px)
+                unsigned int max_buffer_size    -- maximum buffer length
+                bool fast_filter                -- flag to select the filter for image upscaling; True for a faster filter
+                string ip_address               -- gRPC server ip address
+                unsigned int port               -- gRPC server port
+
+        return: bool                -- return True, if successful
+    */
+    std::cerr << "[Visual Reader] gRPC is not included in the setup process!" << std::endl;
+    return false;
+}
+#endif
 
 // std::vector<VisualReader::precision> VisualReader::ReadFromBuf(bool wait2img, int trials) {
 //     /*
@@ -361,12 +387,14 @@ void VisualReader::Close() {
     //     rf_running = false;
     // }
 
+#ifdef _USE_GRPC
     if (dev_init_grpc) {
         image_source->shutdown();
         server_thread.join();
         delete image_source;
         dev_init_grpc = false;
     }
+#endif
 
     // close Ports
     // disconnect and close left eye port
@@ -384,6 +412,8 @@ void VisualReader::Close() {
     this->dev_init = false;
 }
 
+/*** gRPC related functions ***/
+#ifdef _USE_GRPC
 std::vector<double> VisualReader::provideData() {
 
     std::vector<double> img;
@@ -399,6 +429,7 @@ std::vector<double> VisualReader::provideData() {
     }
     return ProcessRead();
 }
+#endif
 
 /*** methods for the YARP-RFModule ***/
 // bool VisualReader::configure(yarp::os::ResourceFinder &rf) {

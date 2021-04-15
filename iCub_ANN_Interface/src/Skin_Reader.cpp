@@ -33,7 +33,9 @@
 
 #include "INI_Reader/INIReader.h"
 #include "Module_Base_Class.hpp"
+#ifdef _USE_GRPC
 #include "ProvideInputServer.h"
+#endif
 
 // Destructor
 SkinReader::~SkinReader() { Close(); }
@@ -170,6 +172,7 @@ bool SkinReader::Init(std::string name, char arm, bool norm_data, std::string in
     }
 }
 
+#ifdef _USE_GRPC
 bool SkinReader::InitGRPC(std::string name, char arm, bool norm_data, std::string ini_path, std::string ip_address, unsigned int port) {
     if (!this->dev_init) {
         if (this->Init(name, arm, norm_data, ini_path)) {
@@ -188,6 +191,12 @@ bool SkinReader::InitGRPC(std::string name, char arm, bool norm_data, std::strin
         return false;
     }
 }
+#else
+bool SkinReader::InitGRPC(std::string name, char arm, bool norm_data, std::string ini_path, std::string ip_address, unsigned int port) {
+    std::cerr << "[Skin Reader] gRPC is not included in the setup process!" << std::endl;
+    return false;
+}
+#endif
 
 void SkinReader::Close() {
     /*
@@ -206,14 +215,14 @@ void SkinReader::Close() {
         yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_arm_comp").c_str(), ("/Skin_Reader/" + side + "_arm:i").c_str());
         port_arm.close();
     }
-
+#ifdef _USE_GRPC
     if (dev_init_grpc) {
         skin_source->shutdown();
         server_thread.join();
         delete skin_source;
         dev_init_grpc = false;
     }
-
+#endif
     this->dev_init = false;
 }
 
@@ -347,7 +356,9 @@ unsigned int SkinReader::GetTactileArmSize() { return taxel_pos_data["arm"].idx.
 unsigned int SkinReader::GetTactileForearmSize() { return taxel_pos_data["forearm"].idx.size(); }
 unsigned int SkinReader::GetTactileHandSize() { return taxel_pos_data["hand"].idx.size(); }
 
+/*** gRPC related functions ***/
 // TODO seperated functions for different sections
+#ifdef _USE_GRPC
 std::vector<double> SkinReader::provideData(int section) {
     std::vector<double> sensor_data;
 
@@ -392,6 +403,7 @@ std::vector<double> SkinReader::provideData(int section) {
     }
     return sensor_data;
 }
+#endif
 
 /*** auxilary functions ***/
 bool SkinReader::ReadTaxelPos(std::string filename_idx, std::string filename_pos, std::string part) {

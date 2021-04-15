@@ -26,7 +26,9 @@
 #include <vector>
 
 #include "Module_Base_Class.hpp"
+#ifdef _USE_GRPC
 #include "WriteOutputClient.h"
+#endif
 
 /**
  * \brief Write the joint angles to the iCub robots joints to move them.
@@ -249,6 +251,7 @@ class JointWriter : public Mod_BaseClass {
     yarp::dev::IControlMode *icont;       // iCub joint control mode interface
 
     /** grpc communication **/
+#ifdef _USE_GRPC
     std::string _ip_address = "";
     unsigned int _port = -1;
     WriteClientInstance *joint_source;
@@ -258,6 +261,7 @@ class JointWriter : public Mod_BaseClass {
     double joint_value;
     std::vector<double> joint_value_1dvector;
     std::vector<std::vector<double>> joint_value_2dvector;
+#endif
 
     /*** auxilary methods ***/
     // check if iCub part key is valid

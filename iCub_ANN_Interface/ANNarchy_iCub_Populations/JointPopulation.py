@@ -22,8 +22,6 @@ from ANNarchy.core.Population import Population
 from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import _error
 
-from .iCubInterface import iCubInputInterface, iCubOutputInterface
-
 class JointControl(Population):
     """
     Set the position/orientation of joints, e. g. elbow or finger.
@@ -32,18 +30,19 @@ class JointControl(Population):
 
         Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied )
 
-        self._iCub = iCubOutputInterface(ip_address=ip_address, port=port)
+        self._ip_address = ip_address
+        self._port = port
 
     def _init_attributes(self):
 
         Population._init_attributes(self)
 
-        self.cyInstance.set_ip_address(self._iCub._ip_address)
-        self.cyInstance.set_port(self._iCub._port)
+        self.cyInstance.set_ip_address(self._ip_address)
+        self.cyInstance.set_port(self._port)
 
     def _copy(self):
 
-        return JointControl(geometry=self.geometry, ip_address=self._iCub._ip_address, port=self._iCub._port, copied=True)
+        return JointControl(geometry=self.geometry, ip_address=self._ip_address, port=self._port, copied=True)
 
     @property
     def ip_address(self):
@@ -81,7 +80,7 @@ class JointControl(Population):
 
         self._specific_template['include_additional'] = """// grpc stuff
 #include "iCub_ANN_Interface/grpc/WriteOutputServer.h"
-"""        
+"""
 
         self._specific_template['declare_additional'] = """
     std::string ip_address;
@@ -135,7 +134,7 @@ class JointControl(Population):
     def get_port(self):
         return pop%(id)s.get_port()
     def connect(self):
-        pop%(id)s.connect()        
+        pop%(id)s.connect()
 """ %{'id': self.id}
 
     def _instantiate(self, cython_module):
@@ -145,8 +144,6 @@ class JointControl(Population):
 
     def connect(self):
         # create socket and connect
-        self._iCub.create_and_connect()
-
         if self.initialized:
             self.cyInstance.connect()
 
@@ -158,7 +155,8 @@ class JointReadout(Population):
 
         Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied )
 
-        self._iCub = iCubInputInterface(ip_address=ip_address, port=port)
+        self._ip_address = ip_address
+        self._port = port
         self._joints = joints
         self._encoded = encoded
 
@@ -169,12 +167,12 @@ class JointReadout(Population):
 
         self.cyInstance.set_joints(self._joints)
         self.cyInstance.set_encoded(self._encoded)
-        self.cyInstance.set_ip_address(self._iCub._ip_address)
-        self.cyInstance.set_port(self._iCub._port)
+        self.cyInstance.set_ip_address(self._ip_address)
+        self.cyInstance.set_port(self._port)
 
     def _copy(self):
 
-        return JointReadout(geometry=self.geometry, ip_address=self._iCub._ip_address, port=self._iCub._port, copied=True)
+        return JointReadout(geometry=self.geometry, ip_address=self._ip_address, port=self._port, copied=True)
 
     @property
     def ip_address(self):
@@ -339,7 +337,5 @@ class JointReadout(Population):
 
     def connect(self):
         # create socket and connect
-        self._iCub.create_and_connect()
-
         if self.initialized:
             self.cyInstance.connect()

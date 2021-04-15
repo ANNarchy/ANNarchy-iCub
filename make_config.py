@@ -13,6 +13,12 @@ import sys
 verbose = False
 pedantic = True
 
+# Use gRPC for direct iCub to ANNarchy communication
+use_grpc = False
+
+# select data precision for images
+double_precision = True
+
 # set the OpenCV include directory
 cv_include = "default"
 

@@ -28,7 +28,9 @@
 #include <vector>
 
 #include "Module_Base_Class.hpp"
+#ifdef _USE_GRPC
 #include "ProvideInputServer.h"
+#endif
 
 /**
  * \brief  Struct for the skin taxel position data per iCub part
@@ -122,7 +124,9 @@ class SkinReader : public Mod_BaseClass {
     unsigned int GetTactileForearmSize();
     unsigned int GetTactileHandSize();
 
+#ifdef _USE_GRPC
     std::vector<double> provideData(int section);
+#endif
 
  private:
     /*** configuration variables ***/
@@ -147,10 +151,12 @@ class SkinReader : public Mod_BaseClass {
     std::map<std::string, TaxelData> taxel_pos_data;    // contains taxel position data for different skin parts
 
     /** grpc communication **/
+#ifdef _USE_GRPC
     std::string _ip_address = "";    // gRPC server ip address
     unsigned int _port = -1;         // gRPC server port
     ServerInstance *skin_source;     // gRPC server instance
     std::thread server_thread;       // thread for running the gRPC server in parallel
+#endif
 
     // std::map<std::string, iCub::iKin::iKinChain *> kin_chains;    // iCub kinematic chain
 

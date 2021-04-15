@@ -28,7 +28,10 @@
 #include <string>
 
 #include "INI_Reader/INIReader.h"
+#include "Module_Base_Class.hpp"
+#ifdef _USE_GRPC
 #include "WriteOutputClient.h"
+#endif
 
 // Destructor
 JointWriter::~JointWriter() { Close(); }
@@ -187,7 +190,7 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
                     neuron_deg_rel[i][j] = -joint_range + j * deg_per_neuron;
                 }
             } else {
-                std::cerr << "[Joint Reader " << icub_part
+                std::cerr << "[Joint Writer " << icub_part
                           << "] Error in population size definition. Check the values for pop_size or deg_per_neuron!" << std::endl;
                 driver.close();
                 return false;
@@ -202,11 +205,11 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
         return false;
     }
 }
-
+#ifdef _USE_GRPC
 bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking,
                            double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
-        Initialize the joint reader with given parameters
+        Initialize the joint Writer with given parameters
 
         params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
                 unsigned int pop_size   -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
@@ -236,7 +239,24 @@ bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<
         return false;
     }
 }
+#else
+bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking,
+                           double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port) {
+    /*
+        Initialize the joint Writer with given parameters
 
+        params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+                unsigned int pop_size   -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+                double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+                string ip_address
+                unsigned int port
+
+        return: bool                    -- return True, if successful
+    */
+    std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl;
+    return false;
+}
+#endif
 void JointWriter::Close() {
     /*
         Close joint writer with cleanup
@@ -835,6 +855,8 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
 
 double JointWriter::Decode_ext(std::vector<double> position_pop, int joint) { return Decode(position_pop, joint, neuron_deg_abs); }
 
+/*** gRPC related functions ***/
+#ifdef _USE_GRPC
 void JointWriter::Retrieve_ANNarchy_Input_SJ() { joint_value = joint_source->retrieve_singletarget(); }
 void JointWriter::Write_ANNarchy_Input_SJ() { WriteDoubleOne(joint_value, _joint_select[0], _blocking, _mode); }
 
@@ -864,6 +886,31 @@ void JointWriter::Retrieve_ANNarchy_Input_AJ_enc() {
     }
 }
 void JointWriter::Write_ANNarchy_Input_AJ_enc() { WritePopAll(joint_value_2dvector, _blocking, _mode); }
+#else
+void JointWriter::Retrieve_ANNarchy_Input_SJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
+void JointWriter::Write_ANNarchy_Input_SJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
+
+void JointWriter::Retrieve_ANNarchy_Input_SJ_enc() {
+    std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl;
+}
+void JointWriter::Write_ANNarchy_Input_SJ_enc() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
+
+void JointWriter::Retrieve_ANNarchy_Input_MJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
+void JointWriter::Write_ANNarchy_Input_MJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
+
+void JointWriter::Retrieve_ANNarchy_Input_MJ_enc() {
+    std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl;
+}
+void JointWriter::Write_ANNarchy_Input_MJ_enc() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
+
+void JointWriter::Retrieve_ANNarchy_Input_AJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
+void JointWriter::Write_ANNarchy_Input_AJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
+
+void JointWriter::Retrieve_ANNarchy_Input_AJ_enc() {
+    std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl;
+}
+void JointWriter::Write_ANNarchy_Input_AJ_enc() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
+#endif
 
 /*** auxilary methods ***/
 bool JointWriter::CheckPartKey(std::string key) {

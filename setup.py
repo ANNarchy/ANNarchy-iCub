@@ -1,7 +1,7 @@
 """
 Created on 
 
-@author: Torsten Fietzek
+@author: Torsten Fietzek, Helge Uelo Dinkelbach
 
 setup file for the package compilation process
 """
@@ -42,38 +42,50 @@ except:
     print('Error : Python package "ANNarchy" is required.')
     exit(0)
 
+root_path = os.path.abspath("./")
 
-# protobuf, grpc
-grpc_avaiable = True
+grpc_include_dir = []
+grpc_libs = []
+grpc_lib_dir = []
+grpc_package_data = []
 
-if os.system("protoc --version") == 0:
-    print('Checking for protoc ... OK')
-else:
-    print('Checking for protoc ... OK')
-    print("Protobuf C-compiler (protoc) not found")
-    grpc_avaiable = False
+if use_grpc:
+    # protobuf, grpc
+    grpc_avaiable = True
 
-try:
-    import grpc     # includes grpc
-    print('Checking for grpc ... OK')
-except:
-    print('Checking for grpc (required for mpi) ... NO')
-    print("You can install grpcio from pip ")
-    grpc_avaiable = False
+    if os.system("protoc --version") == 0:
+        print('Checking for protoc ... OK')
+    else:
+        print('Checking for protoc ... OK')
+        print("Protobuf C-compiler (protoc) not found")
+        grpc_avaiable = False
 
-# build the interface gRPC definitions
-if grpc_avaiable:
-    grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
-    grpc_python_plugin = subprocess.check_output(["which", "grpc_python_plugin"]).strip().decode(sys.stdout.encoding)
-    os.system("protoc -I=. --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_cpp_plugin+" iCub_ANN_Interface/grpc/icub.proto")
-    os.system("protoc -I=. --python_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_python_plugin+" iCub_ANN_Interface/grpc/icub.proto")
-else:
-    print("grpcio and/or protobuf c-compiler is missing ... abort")
-    exit()
+    # try:
+    #     import grpc     # includes grpc
+    #     print('Checking for grpc ... OK')
+    # except:
+    #     print('Checking for grpc (required for mpi) ... NO')
+    #     print("You can install grpcio from pip ")
+    #     grpc_avaiable = False
 
-# build grpc proto related sourcefile to library
-print("Build grpc->proto files in seperated library")
-os.system("cd iCub_ANN_Interface/grpc/ && make EXTFLAGS=\"-I"+os.path.abspath("./")+"\"")
+    # build the interface gRPC definitions
+    if grpc_avaiable:
+        grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
+        # grpc_python_plugin = subprocess.check_output(["which", "grpc_python_plugin"]).strip().decode(sys.stdout.encoding)
+        os.system("protoc -I=. --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_cpp_plugin+" iCub_ANN_Interface/grpc/icub.proto")
+        # os.system("protoc -I=. --python_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_python_plugin+" iCub_ANN_Interface/grpc/icub.proto")
+    else:
+        print("grpcio and/or protobuf c-compiler is missing ... abort")
+        exit()
+
+    # build grpc proto related sourcefile to library
+    print("Build grpc->proto files in seperated library")
+    os.system("cd iCub_ANN_Interface/grpc/ && make EXTFLAGS=\"-I"+os.path.abspath("./")+"\"")
+ 
+    grpc_include_dir.append("iCub_ANN_Interface/grpc")
+    grpc_libs += ["protobuf", "grpc++", "grpc++_reflection", "iCub_ANN_grpc"]
+    grpc_lib_dir += [root_path+"/iCub_ANN_Interface/grpc"]
+    grpc_package_data = ['ANNarchy_iCub_Populations/__init__.py', 'grpc/*.so']
 
 # Python Version info
 py_major = sys.version_info[0]
@@ -98,14 +110,12 @@ else:
 
 
 # Setup lists with lib/include directories and names
-include_dir = ["/usr/include", "iCub_ANN_Interface/include", "iCub_ANN_Interface/grpc", "./", yarp_prefix + "/include", cv_include, numpy.get_include()]
+include_dir = ["/usr/include", "iCub_ANN_Interface/include", "./", yarp_prefix + "/include", cv_include, numpy.get_include()] + grpc_include_dir
 
 libs = ["opencv_core", "opencv_imgproc",
-        "YARP_dev", "YARP_init", "YARP_math", "YARP_name", "YARP_os", "YARP_run", "YARP_sig",
-        "protobuf", "grpc++", "grpc++_reflection", "iCub_ANN_grpc"]
+        "YARP_dev", "YARP_init", "YARP_math", "YARP_name", "YARP_os", "YARP_run", "YARP_sig"] + grpc_libs
 
-root_path = os.path.abspath("./")
-lib_dirs=["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib", root_path+"/iCub_ANN_Interface/grpc"]
+lib_dirs=["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib"] + grpc_lib_dir
 
 
 # Prefixes for Cython and C++ based code
@@ -121,16 +131,21 @@ package_data = ['__init__.py',
                 'iCub/*.pyx',
                 'iCub/__init__.py',
                 'Sync/*.pyx',
-                'Sync/__init__.py',
-                'ANNarchy_iCub_Populations/__init__.py',
-                ]
+                'Sync/__init__.py'
+                ] + grpc_package_data
 
 # set compile arguments
-extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall", "-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
+extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
 if verbose:
     extra_compile_args.append("--verbose")
 if pedantic:
     extra_compile_args.append("-pedantic")
+if use_grpc:
+    extra_compile_args += ["-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/", "-D_USE_GRPC"]
+if double_precision:
+    extra_compile_args.append("-D_DOUBLE_PRECISION")
+else:
+    extra_compile_args.append("-D_SINGLE_PRECISION")
 
 # define extensions for the cython-based modules
 extensions = [
@@ -202,6 +217,11 @@ filename = './iCub_ANN_Interface/version.py'
 with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
     file_object.write("__version__ = \"" + version + "\"")
+
+filename = './iCub_ANN_Interface/use_grpc.py'
+with open(filename, 'w') as file_object:
+    file_object.write("# automatically generated in setup.py\n")
+    file_object.write("__use_grpc__ = " + str(use_grpc))
 
 setup(
     name="iCub_ANN_Interface",

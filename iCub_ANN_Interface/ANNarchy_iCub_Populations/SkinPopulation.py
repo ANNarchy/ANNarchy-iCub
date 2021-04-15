@@ -22,7 +22,6 @@ from ANNarchy.core.Population import Population
 from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import _error
 
-from .iCubInterface import iCubInputInterface
 
 class SkinPopulation(Population):
 
@@ -30,20 +29,21 @@ class SkinPopulation(Population):
 
         Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied )
 
-        self._iCub = iCubInputInterface(ip_address=ip_address, port=port)
         self._skin_section = skin_section
+        self._ip_address = ip_address
+        self._port = port
 
     def _init_attributes(self):
 
         Population._init_attributes(self)
 
-        self.cyInstance.set_ip_address(self._iCub._ip_address)
-        self.cyInstance.set_port(self._iCub._port)
+        self.cyInstance.set_ip_address(self._ip_address)
+        self.cyInstance.set_port(self._port)
 
 
     def _copy(self):
 
-        return SkinPopulation(geometry=self.geometry, ip_address=self._iCub._ip_address, port=self._iCub._port, copied=True)
+        return SkinPopulation(geometry=self.geometry, ip_address=self._ip_address, port=self._port, copied=True)
 
     @property
     def ip_address(self):
@@ -151,7 +151,5 @@ class SkinPopulation(Population):
 
     def connect(self):
         # create socket and connect
-        self._iCub.create_and_connect()
-
         if self.initialized:
             self.cyInstance.connect()
