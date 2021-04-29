@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # iCub ANNarchy Interface
-import iCub_ANN_Interface
+from iCub_ANN_Interface import __root_path__ as interface_root
 import iCub_ANN_Interface.Vocabs as iCub_Constants
 from iCub_ANN_Interface.ANNarchy_iCub_Populations import *
 from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, Skin_Reader, Visual_Reader, iCub_Interface
@@ -361,7 +361,10 @@ def call_test_vreader(iCub, ann_interface_root):
 if __name__ == "__main__":
     # prepare iCub Interface
     iCub = iCub_Interface.iCubANN_wrapper()
-    ann_interface_root = iCub_ANN_Interface.__root_path__ + "/"
+    ann_interface_root = interface_root + "/"
+
+    if not os.path.isdir("./results"):
+        os.mkdir("./results")
 
     if len(sys.argv) > 1:
         for command in sys.argv[1:]:
