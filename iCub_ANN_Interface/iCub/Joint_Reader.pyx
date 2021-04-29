@@ -45,7 +45,7 @@ cdef class PyJointReader:
 
     ### Access to joint reader member functions
     # Initialize the joint reader with given parameters
-    def init(self, iCubANN_wrapper iCub, str name, str part, double sigma, unsigned int n_pop, double degr_per_neuron=0.0, str ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str part, double sigma, unsigned int n_pop, double degr_per_neuron=0.0, str ini_path="../data/"):
         """
             Calls bool JointReader::Init(string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path)
 
@@ -80,7 +80,7 @@ cdef class PyJointReader:
             return False
 
     # Initialize the joint reader with given parameters for use with gRPC
-    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, double sigma, unsigned int n_pop, double degr_per_neuron=0.0, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50005):
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, double sigma, unsigned int n_pop, double degr_per_neuron=0.0, str ini_path="../data/", str ip_address="0.0.0.0", unsigned int port=50005):
         """
             Calls bool InitGRPC(string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path, std::string ip_address, unsigned int port)
 

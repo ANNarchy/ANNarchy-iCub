@@ -132,7 +132,7 @@ def call_test_jwriter(iCub, ann_interface_root):
     pop_jctrl_all_pop = JointControl(geometry = (len(joints_all), popsize), port=50015)
 
 
-    compile(directory='annarchy_jwriter', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
+    compile(directory='results/annarchy_jwriter', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
     extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
 
     # fancy other stuff ...
