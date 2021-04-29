@@ -9,25 +9,26 @@ config file for the package compilation process
 import os
 import sys
 
-# add compiler flags to the g++ commands
+# Add compiler flags to the g++ commands
 verbose = False
 pedantic = False
 
 # Use gRPC for direct iCub to ANNarchy communication
-use_grpc = True
+use_grpc = False
 
-# select data precision for images
+# Select typ precision for images returned by the visual reader
 double_precision = True
 
-# set the OpenCV include directory -> only set this if the setup fails due to missing path
+# Set the OpenCV include directory -> only set this if the setup fails due to missing OpenCV path
 cv_include = "default"
 
-# set the prefix of the YARP installation -> only set this if the setup fails due to missing path
+# Set the prefix of the YARP installation -> only set this if the setup fails due to missing YARP path
 yarp_prefix = "default"
 
-# build process
+# Build process
 rebuild_grpc = False # set to true if the grpc code changed and need a rebuild, e.g. after an update of the repository
 
+## Helper functions to determine the OpenCV and YARP include paths
 def set_yarp_prefix():
     # Yarp install direction
     yarp_prefix = None
