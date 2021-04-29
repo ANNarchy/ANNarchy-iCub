@@ -18,6 +18,14 @@ from . import ANNarchy_iCub_Populations
 # Version
 from .version import __version__
 
+__all__ = [
+    # Modules
+    'iCub',
+    'Sync',
+    'Vocabs',
+    'ANNarchy_iCub_Populations'
+]
+
 # package root path -> used for grpc includes 
 __root_path__ = os.path.abspath("../")
 
