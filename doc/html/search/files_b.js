@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['yarp_5fimage_5fprocessing_2epy_430',['YARP_image_processing.py',['../d7/d01/YARP__image__processing_8py.html',1,'']]],
-  ['yarp_5fmotor_5fcontrol_2epy_431',['YARP_motor_control.py',['../de/da7/YARP__motor__control_8py.html',1,'']]],
-  ['yarp_5fnetwork_5fcontrol_2epy_432',['YARP_network_control.py',['../d9/dda/YARP__network__control_8py.html',1,'']]]
+  ['writeoutputclient_2eh_1044',['WriteOutputClient.h',['../da/db5/WriteOutputClient_8h.html',1,'']]],
+  ['writeoutputserver_2eh_1045',['WriteOutputServer.h',['../d7/d63/WriteOutputServer_8h.html',1,'']]]
 ];

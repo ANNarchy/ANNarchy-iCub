@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['unknown_1420',['UNKNOWN',['../d3/d81/namespaceiCub__ANN__Interface_1_1grpc_1_1icub__pb2.html#a5e17fd8674de241602f9d468a0c80e38',1,'iCub_ANN_Interface::grpc::icub_pb2']]]
+  ['use_5fgrpc_1707',['use_grpc',['../d6/d19/namespacemake__config.html#a348e35c6b345bf88e35f0ee77110f701',1,'make_config']]],
+  ['used_5fgrpc_1708',['used_grpc',['../dd/dc4/namespacesetup.html#a24fc8c373de8815dd7dc2ee1ed9d5eb2',1,'setup']]]
 ];

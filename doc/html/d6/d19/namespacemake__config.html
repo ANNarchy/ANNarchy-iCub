@@ -81,12 +81,18 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a9a06a60fd87fa0d75b3f4eff0c3cf7f1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d19/namespacemake__config.html#a9a06a60fd87fa0d75b3f4eff0c3cf7f1">verbose</a> = False</td></tr>
 <tr class="separator:a9a06a60fd87fa0d75b3f4eff0c3cf7f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e9882c5e2d1d8b632f45b9b52184353"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d19/namespacemake__config.html#a6e9882c5e2d1d8b632f45b9b52184353">pedantic</a> = True</td></tr>
+<tr class="memitem:a6e9882c5e2d1d8b632f45b9b52184353"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d19/namespacemake__config.html#a6e9882c5e2d1d8b632f45b9b52184353">pedantic</a> = False</td></tr>
 <tr class="separator:a6e9882c5e2d1d8b632f45b9b52184353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a348e35c6b345bf88e35f0ee77110f701"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d19/namespacemake__config.html#a348e35c6b345bf88e35f0ee77110f701">use_grpc</a> = True</td></tr>
+<tr class="separator:a348e35c6b345bf88e35f0ee77110f701"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4039bc5acbca8ac7ed09e593d0b9dacf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d19/namespacemake__config.html#a4039bc5acbca8ac7ed09e593d0b9dacf">double_precision</a> = True</td></tr>
+<tr class="separator:a4039bc5acbca8ac7ed09e593d0b9dacf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cc4984de0ed3048bfc7967bff8f363e"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d19/namespacemake__config.html#a9cc4984de0ed3048bfc7967bff8f363e">cv_include</a> = &quot;default&quot;</td></tr>
 <tr class="separator:a9cc4984de0ed3048bfc7967bff8f363e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa72f0e0da05e626e1996c9520374df78"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d19/namespacemake__config.html#aa72f0e0da05e626e1996c9520374df78">yarp_prefix</a> = &quot;default&quot;</td></tr>
 <tr class="separator:aa72f0e0da05e626e1996c9520374df78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a181d6122ef031d732a6833386377719d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d19/namespacemake__config.html#a181d6122ef031d732a6833386377719d">rebuild_grpc</a> = False</td></tr>
+<tr class="separator:a181d6122ef031d732a6833386377719d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><pre class="fragment">Created on Thu Jul 9 20:26:04 CEST 2020
@@ -110,7 +116,7 @@ config file for the package compilation process
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00048">48</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00056">56</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
 
 </div>
 </div>
@@ -129,7 +135,7 @@ config file for the package compilation process
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00023">23</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00031">31</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
 
 </div>
 </div>
@@ -146,7 +152,23 @@ config file for the package compilation process
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00017">17</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00023">23</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
+
+</div>
+</div>
+<a id="a4039bc5acbca8ac7ed09e593d0b9dacf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4039bc5acbca8ac7ed09e593d0b9dacf">&#9670;&nbsp;</a></span>double_precision</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool make_config.double_precision = True</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00020">20</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
 
 </div>
 </div>
@@ -157,12 +179,44 @@ config file for the package compilation process
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool make_config.pedantic = True</td>
+          <td class="memname">bool make_config.pedantic = False</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00014">14</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
+
+</div>
+</div>
+<a id="a181d6122ef031d732a6833386377719d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a181d6122ef031d732a6833386377719d">&#9670;&nbsp;</a></span>rebuild_grpc</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool make_config.rebuild_grpc = False</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00029">29</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
+
+</div>
+</div>
+<a id="a348e35c6b345bf88e35f0ee77110f701"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a348e35c6b345bf88e35f0ee77110f701">&#9670;&nbsp;</a></span>use_grpc</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool make_config.use_grpc = True</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00017">17</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
 
 </div>
 </div>
@@ -194,7 +248,7 @@ config file for the package compilation process
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00020">20</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d6/d30/make__config_8py_source.html#l00026">26</a> of file <a class="el" href="../../d6/d30/make__config_8py_source.html">make_config.py</a>.</p>
 
 </div>
 </div>

@@ -107,31 +107,40 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        # Initialize skin reader with given parameters.</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        bool_t Init(string, char, bool_t, string)</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        #  Close and clean skin reader</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        void Close()</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        # Return tactile data for upper arm skin.</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        vector[vector[double]] GetTactileArm()</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        # Return tactile data for forearm skin.</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        vector[vector[double]] GetTactileForearm()</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        # Return tactile data for hand skin.</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        vector[vector[double]] GetTactileHand()</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        # Return the taxel positions given by the ini files.</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        vector[vector[double]] GetTaxelPos(string)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        # The sensor data is read and buffered inside. It can be accessed through GetTactileArm, GetTactileForearm and GetTactileHand.</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        bool_t ReadTactile()</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        void setRegister(bint)</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        bint getRegister()</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;cdef class PySkinReader:</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    cdef shared_ptr[SkinReader] cpp_skin_reader</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    cdef str name</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    cdef str part</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        bool_t InitGRPC(string, char, bool_t, string, string, unsigned int)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        #  Close and clean skin reader</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        void Close()</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        # Return tactile data for upper arm skin.</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        vector[vector[double]] GetTactileArm()</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        # Return tactile data for forearm skin.</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        vector[vector[double]] GetTactileForearm()</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        # Return tactile data for hand skin.</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        vector[vector[double]] GetTactileHand()</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        # Return the taxel positions given by the ini files.</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        vector[vector[double]] GetTaxelPos(string)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        # The sensor data is read and buffered inside. It can be accessed through GetTactileArm, GetTactileForearm and GetTactileHand.</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        bool_t ReadTactile()</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        # Return size of tactile data for upper arm  skin.</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        unsigned int GetTactileArmSize()</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        # Return size of tactile data for forearm skin.</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        unsigned int GetTactileForearmSize()</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        # Return size of tactile data for hand skin.</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        unsigned int GetTactileHandSize()</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        void setRegister(bint)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        bint getRegister()</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;cdef class PySkinReader:</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    cdef shared_ptr[SkinReader] cpp_skin_reader</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    cdef str name</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    cdef str part</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

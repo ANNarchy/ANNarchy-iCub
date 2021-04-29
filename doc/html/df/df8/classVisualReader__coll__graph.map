@@ -1,7 +1,6 @@
 <map id="VisualReader" name="VisualReader">
-<area shape="rect" id="node1" title="Read&#45;out of the camera images from the iCub robot." alt="" coords="41,276,149,303"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,200,152,227"/>
-<area shape="rect" id="node3" href="$d9/dfd/classMod__BaseClass.html" title="Base class for the sensor/actor reader/writer modules." alt="" coords="177,200,301,227"/>
-<area shape="rect" id="node4" title="STL class." alt="" coords="195,96,282,123"/>
-<area shape="rect" id="node5" title="STL class." alt="" coords="169,5,308,47"/>
+<area shape="rect" id="node1" title="Read&#45;out of the camera images from the iCub robot." alt="" coords="21,276,129,303"/>
+<area shape="rect" id="node2" href="$d9/dfd/classMod__BaseClass.html" title="Base class for the sensor/actor reader/writer modules." alt="" coords="13,200,137,227"/>
+<area shape="rect" id="node3" title="STL class." alt="" coords="31,96,118,123"/>
+<area shape="rect" id="node4" title="STL class." alt="" coords="5,5,144,47"/>
 </map>

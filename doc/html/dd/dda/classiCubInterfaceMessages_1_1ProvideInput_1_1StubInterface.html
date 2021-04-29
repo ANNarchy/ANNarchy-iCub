@@ -95,6 +95,12 @@ Classes</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0f6796a274a313547111334bd55a273d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a0f6796a274a313547111334bd55a273d">~StubInterface</a> ()</td></tr>
 <tr class="separator:a0f6796a274a313547111334bd55a273d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95a212a3331d761778e50cee4544735e"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a95a212a3331d761778e50cee4544735e">ReadTest</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d0/d39/classiCubInterfaceMessages_1_1TestRequest.html">iCubInterfaceMessages::TestRequest</a> &amp;request, ::<a class="el" href="../../db/d18/classiCubInterfaceMessages_1_1TestResponse.html">iCubInterfaceMessages::TestResponse</a> *response)=0</td></tr>
+<tr class="separator:a95a212a3331d761778e50cee4544735e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b52cfb79fa9afbc6edc46616c80df37"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../db/d18/classiCubInterfaceMessages_1_1TestResponse.html">iCubInterfaceMessages::TestResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a1b52cfb79fa9afbc6edc46616c80df37">AsyncReadTest</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d0/d39/classiCubInterfaceMessages_1_1TestRequest.html">iCubInterfaceMessages::TestRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:a1b52cfb79fa9afbc6edc46616c80df37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7830f84b06bb294bc6451bd2e2e8ac80"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../db/d18/classiCubInterfaceMessages_1_1TestResponse.html">iCubInterfaceMessages::TestResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a7830f84b06bb294bc6451bd2e2e8ac80">PrepareAsyncReadTest</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d0/d39/classiCubInterfaceMessages_1_1TestRequest.html">iCubInterfaceMessages::TestRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:a7830f84b06bb294bc6451bd2e2e8ac80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43c8b53713bba1c4bc0c45e86a12bffc"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a43c8b53713bba1c4bc0c45e86a12bffc">ReadImage</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d8/d20/classiCubInterfaceMessages_1_1ImageRequest.html">iCubInterfaceMessages::ImageRequest</a> &amp;request, ::<a class="el" href="../../d6/db7/classiCubInterfaceMessages_1_1ImageResponse.html">iCubInterfaceMessages::ImageResponse</a> *response)=0</td></tr>
 <tr class="separator:a43c8b53713bba1c4bc0c45e86a12bffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ba7a83953ac0355d4d231ecfe326fdf"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d6/db7/classiCubInterfaceMessages_1_1ImageResponse.html">iCubInterfaceMessages::ImageResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a1ba7a83953ac0355d4d231ecfe326fdf">AsyncReadImage</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d8/d20/classiCubInterfaceMessages_1_1ImageRequest.html">iCubInterfaceMessages::ImageRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
@@ -107,30 +113,42 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9c34a8358cc702d3981a6d88e6f715c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6dc61f933486957508213684c1c1814"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d3/d81/classiCubInterfaceMessages_1_1SingleJointResponse.html">iCubInterfaceMessages::SingleJointResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#ae6dc61f933486957508213684c1c1814">PrepareAsyncReadSingleJoint</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../db/d5d/classiCubInterfaceMessages_1_1SingleJointRequest.html">iCubInterfaceMessages::SingleJointRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
 <tr class="separator:ae6dc61f933486957508213684c1c1814"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0cda1ee345a91da986029358459298b"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#aa0cda1ee345a91da986029358459298b">ReadSingleJointEncoded</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d3/d01/classiCubInterfaceMessages_1_1SingleJointEncodedRequest.html">iCubInterfaceMessages::SingleJointEncodedRequest</a> &amp;request, ::<a class="el" href="../../d0/dca/classiCubInterfaceMessages_1_1SingleJointEncodedResponse.html">iCubInterfaceMessages::SingleJointEncodedResponse</a> *response)=0</td></tr>
-<tr class="separator:aa0cda1ee345a91da986029358459298b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39b364b8c2c3b0aa7e19f3abce3e969e"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d0/dca/classiCubInterfaceMessages_1_1SingleJointEncodedResponse.html">iCubInterfaceMessages::SingleJointEncodedResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a39b364b8c2c3b0aa7e19f3abce3e969e">AsyncReadSingleJointEncoded</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d3/d01/classiCubInterfaceMessages_1_1SingleJointEncodedRequest.html">iCubInterfaceMessages::SingleJointEncodedRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
-<tr class="separator:a39b364b8c2c3b0aa7e19f3abce3e969e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1ea1481be7765c74de5d07ff505681e"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d0/dca/classiCubInterfaceMessages_1_1SingleJointEncodedResponse.html">iCubInterfaceMessages::SingleJointEncodedResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#ac1ea1481be7765c74de5d07ff505681e">PrepareAsyncReadSingleJointEncoded</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d3/d01/classiCubInterfaceMessages_1_1SingleJointEncodedRequest.html">iCubInterfaceMessages::SingleJointEncodedRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
-<tr class="separator:ac1ea1481be7765c74de5d07ff505681e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca678cc08ce7ccd1e8392c81229809ed"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#aca678cc08ce7ccd1e8392c81229809ed">ReadAllJoints</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d7/d5a/classiCubInterfaceMessages_1_1AllJointRequest.html">iCubInterfaceMessages::AllJointRequest</a> &amp;request, ::<a class="el" href="../../de/d0d/classiCubInterfaceMessages_1_1AllJointResponse.html">iCubInterfaceMessages::AllJointResponse</a> *response)=0</td></tr>
-<tr class="separator:aca678cc08ce7ccd1e8392c81229809ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11d040cc307393205966dde9d571a264"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../de/d0d/classiCubInterfaceMessages_1_1AllJointResponse.html">iCubInterfaceMessages::AllJointResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a11d040cc307393205966dde9d571a264">AsyncReadAllJoints</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d7/d5a/classiCubInterfaceMessages_1_1AllJointRequest.html">iCubInterfaceMessages::AllJointRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
-<tr class="separator:a11d040cc307393205966dde9d571a264"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad35f392a0ab4af845bdad989c4f2318c"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../de/d0d/classiCubInterfaceMessages_1_1AllJointResponse.html">iCubInterfaceMessages::AllJointResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#ad35f392a0ab4af845bdad989c4f2318c">PrepareAsyncReadAllJoints</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d7/d5a/classiCubInterfaceMessages_1_1AllJointRequest.html">iCubInterfaceMessages::AllJointRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
-<tr class="separator:ad35f392a0ab4af845bdad989c4f2318c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ab39bdea4a53cbd57b66e582f5db6e6"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a8ab39bdea4a53cbd57b66e582f5db6e6">ReadAllJointEncoded</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d4/dde/classiCubInterfaceMessages_1_1AllJointEncodedRequest.html">iCubInterfaceMessages::AllJointEncodedRequest</a> &amp;request, ::<a class="el" href="../../dd/d75/classiCubInterfaceMessages_1_1AllJointEncodedResponse.html">iCubInterfaceMessages::AllJointEncodedResponse</a> *response)=0</td></tr>
-<tr class="separator:a8ab39bdea4a53cbd57b66e582f5db6e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9f880c1a64ae6ced7b400ea731be9cc"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../dd/d75/classiCubInterfaceMessages_1_1AllJointEncodedResponse.html">iCubInterfaceMessages::AllJointEncodedResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#ab9f880c1a64ae6ced7b400ea731be9cc">AsyncReadAllJointEncoded</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d4/dde/classiCubInterfaceMessages_1_1AllJointEncodedRequest.html">iCubInterfaceMessages::AllJointEncodedRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
-<tr class="separator:ab9f880c1a64ae6ced7b400ea731be9cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46cd6ed61456cfa24e500ed0a0e14039"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../dd/d75/classiCubInterfaceMessages_1_1AllJointEncodedResponse.html">iCubInterfaceMessages::AllJointEncodedResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a46cd6ed61456cfa24e500ed0a0e14039">PrepareAsyncReadAllJointEncoded</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d4/dde/classiCubInterfaceMessages_1_1AllJointEncodedRequest.html">iCubInterfaceMessages::AllJointEncodedRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
-<tr class="separator:a46cd6ed61456cfa24e500ed0a0e14039"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac671fd54019a47bb0f7b78e5f4c855d9"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#ac671fd54019a47bb0f7b78e5f4c855d9">ReadMultiJoints</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d9/d96/classiCubInterfaceMessages_1_1MultiJointRequest.html">iCubInterfaceMessages::MultiJointRequest</a> &amp;request, ::<a class="el" href="../../d3/df3/classiCubInterfaceMessages_1_1MultiJointResponse.html">iCubInterfaceMessages::MultiJointResponse</a> *response)=0</td></tr>
+<tr class="separator:ac671fd54019a47bb0f7b78e5f4c855d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2022ca8026b81afc621e82e90cc9ef0b"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d3/df3/classiCubInterfaceMessages_1_1MultiJointResponse.html">iCubInterfaceMessages::MultiJointResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a2022ca8026b81afc621e82e90cc9ef0b">AsyncReadMultiJoints</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d9/d96/classiCubInterfaceMessages_1_1MultiJointRequest.html">iCubInterfaceMessages::MultiJointRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:a2022ca8026b81afc621e82e90cc9ef0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab81708d18647a82b31e4ef0606765ed4"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d3/df3/classiCubInterfaceMessages_1_1MultiJointResponse.html">iCubInterfaceMessages::MultiJointResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#ab81708d18647a82b31e4ef0606765ed4">PrepareAsyncReadMultiJoints</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d9/d96/classiCubInterfaceMessages_1_1MultiJointRequest.html">iCubInterfaceMessages::MultiJointRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:ab81708d18647a82b31e4ef0606765ed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a885fb6d8cf178779753c5471b22abe56"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a885fb6d8cf178779753c5471b22abe56">ReadAllJoints</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d1/dad/classiCubInterfaceMessages_1_1AllJointsRequest.html">iCubInterfaceMessages::AllJointsRequest</a> &amp;request, ::<a class="el" href="../../d3/d5a/classiCubInterfaceMessages_1_1AllJointsResponse.html">iCubInterfaceMessages::AllJointsResponse</a> *response)=0</td></tr>
+<tr class="separator:a885fb6d8cf178779753c5471b22abe56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58b1140c42ac37ee54ebcfdfcb5533b3"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d3/d5a/classiCubInterfaceMessages_1_1AllJointsResponse.html">iCubInterfaceMessages::AllJointsResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a58b1140c42ac37ee54ebcfdfcb5533b3">AsyncReadAllJoints</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d1/dad/classiCubInterfaceMessages_1_1AllJointsRequest.html">iCubInterfaceMessages::AllJointsRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:a58b1140c42ac37ee54ebcfdfcb5533b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a116b7a03a63310aa7d1e888081124d03"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d3/d5a/classiCubInterfaceMessages_1_1AllJointsResponse.html">iCubInterfaceMessages::AllJointsResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a116b7a03a63310aa7d1e888081124d03">PrepareAsyncReadAllJoints</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d1/dad/classiCubInterfaceMessages_1_1AllJointsRequest.html">iCubInterfaceMessages::AllJointsRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:a116b7a03a63310aa7d1e888081124d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7a2cce32b29d04a915a08e2502be805"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#ae7a2cce32b29d04a915a08e2502be805">ReadSkin</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d5/df8/classiCubInterfaceMessages_1_1SkinRequest.html">iCubInterfaceMessages::SkinRequest</a> &amp;request, ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> *response)=0</td></tr>
 <tr class="separator:ae7a2cce32b29d04a915a08e2502be805"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc90533e12b204b231e4edfc4221fd97"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#abc90533e12b204b231e4edfc4221fd97">AsyncReadSkin</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d5/df8/classiCubInterfaceMessages_1_1SkinRequest.html">iCubInterfaceMessages::SkinRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
 <tr class="separator:abc90533e12b204b231e4edfc4221fd97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdfa27750de53fe60aa93bf82f895254"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#afdfa27750de53fe60aa93bf82f895254">PrepareAsyncReadSkin</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d5/df8/classiCubInterfaceMessages_1_1SkinRequest.html">iCubInterfaceMessages::SkinRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
 <tr class="separator:afdfa27750de53fe60aa93bf82f895254"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c8948312f7b05d060723f82744bb423"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a4c8948312f7b05d060723f82744bb423">ReadSkinArm</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../df/dd1/classiCubInterfaceMessages_1_1SkinArmRequest.html">iCubInterfaceMessages::SkinArmRequest</a> &amp;request, ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> *response)=0</td></tr>
+<tr class="separator:a4c8948312f7b05d060723f82744bb423"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f70eab8d035a87b5247ed50b8696e4f"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a6f70eab8d035a87b5247ed50b8696e4f">AsyncReadSkinArm</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../df/dd1/classiCubInterfaceMessages_1_1SkinArmRequest.html">iCubInterfaceMessages::SkinArmRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:a6f70eab8d035a87b5247ed50b8696e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51fa133845307d7277da10bc268baf2f"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a51fa133845307d7277da10bc268baf2f">PrepareAsyncReadSkinArm</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../df/dd1/classiCubInterfaceMessages_1_1SkinArmRequest.html">iCubInterfaceMessages::SkinArmRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:a51fa133845307d7277da10bc268baf2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4dc8c008ae8d4c3a2dbe0107c25fa11"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#af4dc8c008ae8d4c3a2dbe0107c25fa11">ReadSkinForearm</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d7/db8/classiCubInterfaceMessages_1_1SkinForearmRequest.html">iCubInterfaceMessages::SkinForearmRequest</a> &amp;request, ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> *response)=0</td></tr>
+<tr class="separator:af4dc8c008ae8d4c3a2dbe0107c25fa11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac73758d1fa305a1b4e480072d07db464"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#ac73758d1fa305a1b4e480072d07db464">AsyncReadSkinForearm</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d7/db8/classiCubInterfaceMessages_1_1SkinForearmRequest.html">iCubInterfaceMessages::SkinForearmRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:ac73758d1fa305a1b4e480072d07db464"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8210a0d5cc00cb9c137778d99216f784"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a8210a0d5cc00cb9c137778d99216f784">PrepareAsyncReadSkinForearm</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d7/db8/classiCubInterfaceMessages_1_1SkinForearmRequest.html">iCubInterfaceMessages::SkinForearmRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:a8210a0d5cc00cb9c137778d99216f784"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cf6726fc9157732267b5f7b7b29682d"><td class="memItemLeft" align="right" valign="top">virtual ::grpc::Status&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a2cf6726fc9157732267b5f7b7b29682d">ReadSkinHand</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d1/dbf/classiCubInterfaceMessages_1_1SkinHandRequest.html">iCubInterfaceMessages::SkinHandRequest</a> &amp;request, ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> *response)=0</td></tr>
+<tr class="separator:a2cf6726fc9157732267b5f7b7b29682d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e3c9b7046e0bea026ae0e02c67ee2d0"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a1e3c9b7046e0bea026ae0e02c67ee2d0">AsyncReadSkinHand</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d1/dbf/classiCubInterfaceMessages_1_1SkinHandRequest.html">iCubInterfaceMessages::SkinHandRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:a1e3c9b7046e0bea026ae0e02c67ee2d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ff16b946d38a65663ca3862e1e0745f"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a1ff16b946d38a65663ca3862e1e0745f">PrepareAsyncReadSkinHand</a> (::grpc::ClientContext *context, const ::<a class="el" href="../../d1/dbf/classiCubInterfaceMessages_1_1SkinHandRequest.html">iCubInterfaceMessages::SkinHandRequest</a> &amp;request, ::grpc::CompletionQueue *cq)</td></tr>
+<tr class="separator:a1ff16b946d38a65663ca3862e1e0745f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36c4789f53267d4d2bdd8838a07202cf"><td class="memItemLeft" align="right" valign="top">virtual class <a class="el" href="../../d0/d2f/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface_1_1experimental__async__interface.html">experimental_async_interface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html#a36c4789f53267d4d2bdd8838a07202cf">experimental_async</a> ()</td></tr>
 <tr class="separator:a36c4789f53267d4d2bdd8838a07202cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -166,8 +184,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab9f880c1a64ae6ced7b400ea731be9cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9f880c1a64ae6ced7b400ea731be9cc">&#9670;&nbsp;</a></span>AsyncReadAllJointEncoded()</h2>
+<a id="a58b1140c42ac37ee54ebcfdfcb5533b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58b1140c42ac37ee54ebcfdfcb5533b3">&#9670;&nbsp;</a></span>AsyncReadAllJoints()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -176,7 +194,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../dd/d75/classiCubInterfaceMessages_1_1AllJointEncodedResponse.html">iCubInterfaceMessages::AllJointEncodedResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::AsyncReadAllJointEncoded </td>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d3/d5a/classiCubInterfaceMessages_1_1AllJointsResponse.html">iCubInterfaceMessages::AllJointsResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::AsyncReadAllJoints </td>
           <td>(</td>
           <td class="paramtype">::grpc::ClientContext *&#160;</td>
           <td class="paramname"><em>context</em>, </td>
@@ -184,7 +202,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const ::<a class="el" href="../../d4/dde/classiCubInterfaceMessages_1_1AllJointEncodedRequest.html">iCubInterfaceMessages::AllJointEncodedRequest</a> &amp;&#160;</td>
+          <td class="paramtype">const ::<a class="el" href="../../d1/dad/classiCubInterfaceMessages_1_1AllJointsRequest.html">iCubInterfaceMessages::AllJointsRequest</a> &amp;&#160;</td>
           <td class="paramname"><em>request</em>, </td>
         </tr>
         <tr>
@@ -207,50 +225,6 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00072">72</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
-
-</div>
-</div>
-<a id="a11d040cc307393205966dde9d571a264"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11d040cc307393205966dde9d571a264">&#9670;&nbsp;</a></span>AsyncReadAllJoints()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../de/d0d/classiCubInterfaceMessages_1_1AllJointResponse.html">iCubInterfaceMessages::AllJointResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::AsyncReadAllJoints </td>
-          <td>(</td>
-          <td class="paramtype">::grpc::ClientContext *&#160;</td>
-          <td class="paramname"><em>context</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const ::<a class="el" href="../../d7/d5a/classiCubInterfaceMessages_1_1AllJointRequest.html">iCubInterfaceMessages::AllJointRequest</a> &amp;&#160;</td>
-          <td class="paramname"><em>request</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
-          <td class="paramname"><em>cq</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00064">64</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
 
 </div>
 </div>
@@ -294,7 +268,51 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00040">40</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00048">48</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+
+</div>
+</div>
+<a id="a2022ca8026b81afc621e82e90cc9ef0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2022ca8026b81afc621e82e90cc9ef0b">&#9670;&nbsp;</a></span>AsyncReadMultiJoints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d3/df3/classiCubInterfaceMessages_1_1MultiJointResponse.html">iCubInterfaceMessages::MultiJointResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::AsyncReadMultiJoints </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d9/d96/classiCubInterfaceMessages_1_1MultiJointRequest.html">iCubInterfaceMessages::MultiJointRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
+          <td class="paramname"><em>cq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00064">64</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
 
 </div>
 </div>
@@ -317,50 +335,6 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const ::<a class="el" href="../../db/d5d/classiCubInterfaceMessages_1_1SingleJointRequest.html">iCubInterfaceMessages::SingleJointRequest</a> &amp;&#160;</td>
-          <td class="paramname"><em>request</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
-          <td class="paramname"><em>cq</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00048">48</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
-
-</div>
-</div>
-<a id="a39b364b8c2c3b0aa7e19f3abce3e969e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39b364b8c2c3b0aa7e19f3abce3e969e">&#9670;&nbsp;</a></span>AsyncReadSingleJointEncoded()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d0/dca/classiCubInterfaceMessages_1_1SingleJointEncodedResponse.html">iCubInterfaceMessages::SingleJointEncodedResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::AsyncReadSingleJointEncoded </td>
-          <td>(</td>
-          <td class="paramtype">::grpc::ClientContext *&#160;</td>
-          <td class="paramname"><em>context</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const ::<a class="el" href="../../d3/d01/classiCubInterfaceMessages_1_1SingleJointEncodedRequest.html">iCubInterfaceMessages::SingleJointEncodedRequest</a> &amp;&#160;</td>
           <td class="paramname"><em>request</em>, </td>
         </tr>
         <tr>
@@ -430,6 +404,182 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a6f70eab8d035a87b5247ed50b8696e4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f70eab8d035a87b5247ed50b8696e4f">&#9670;&nbsp;</a></span>AsyncReadSkinArm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::AsyncReadSkinArm </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../df/dd1/classiCubInterfaceMessages_1_1SkinArmRequest.html">iCubInterfaceMessages::SkinArmRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
+          <td class="paramname"><em>cq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00088">88</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+
+</div>
+</div>
+<a id="ac73758d1fa305a1b4e480072d07db464"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac73758d1fa305a1b4e480072d07db464">&#9670;&nbsp;</a></span>AsyncReadSkinForearm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::AsyncReadSkinForearm </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d7/db8/classiCubInterfaceMessages_1_1SkinForearmRequest.html">iCubInterfaceMessages::SkinForearmRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
+          <td class="paramname"><em>cq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00096">96</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+
+</div>
+</div>
+<a id="a1e3c9b7046e0bea026ae0e02c67ee2d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e3c9b7046e0bea026ae0e02c67ee2d0">&#9670;&nbsp;</a></span>AsyncReadSkinHand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::AsyncReadSkinHand </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d1/dbf/classiCubInterfaceMessages_1_1SkinHandRequest.html">iCubInterfaceMessages::SkinHandRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
+          <td class="paramname"><em>cq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00104">104</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+
+</div>
+</div>
+<a id="a1b52cfb79fa9afbc6edc46616c80df37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b52cfb79fa9afbc6edc46616c80df37">&#9670;&nbsp;</a></span>AsyncReadTest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../db/d18/classiCubInterfaceMessages_1_1TestResponse.html">iCubInterfaceMessages::TestResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::AsyncReadTest </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d0/d39/classiCubInterfaceMessages_1_1TestRequest.html">iCubInterfaceMessages::TestRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
+          <td class="paramname"><em>cq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00040">40</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+
+</div>
+</div>
 <a id="a36c4789f53267d4d2bdd8838a07202cf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a36c4789f53267d4d2bdd8838a07202cf">&#9670;&nbsp;</a></span>experimental_async()</h2>
 
@@ -455,12 +605,12 @@ Public Member Functions</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#a707939be1c6cd77b6593631c9eb08bbc">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00102">102</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00132">132</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
 
 </div>
 </div>
-<a id="a46cd6ed61456cfa24e500ed0a0e14039"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46cd6ed61456cfa24e500ed0a0e14039">&#9670;&nbsp;</a></span>PrepareAsyncReadAllJointEncoded()</h2>
+<a id="a116b7a03a63310aa7d1e888081124d03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a116b7a03a63310aa7d1e888081124d03">&#9670;&nbsp;</a></span>PrepareAsyncReadAllJoints()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -469,7 +619,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../dd/d75/classiCubInterfaceMessages_1_1AllJointEncodedResponse.html">iCubInterfaceMessages::AllJointEncodedResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::PrepareAsyncReadAllJointEncoded </td>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d3/d5a/classiCubInterfaceMessages_1_1AllJointsResponse.html">iCubInterfaceMessages::AllJointsResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::PrepareAsyncReadAllJoints </td>
           <td>(</td>
           <td class="paramtype">::grpc::ClientContext *&#160;</td>
           <td class="paramname"><em>context</em>, </td>
@@ -477,7 +627,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const ::<a class="el" href="../../d4/dde/classiCubInterfaceMessages_1_1AllJointEncodedRequest.html">iCubInterfaceMessages::AllJointEncodedRequest</a> &amp;&#160;</td>
+          <td class="paramtype">const ::<a class="el" href="../../d1/dad/classiCubInterfaceMessages_1_1AllJointsRequest.html">iCubInterfaceMessages::AllJointsRequest</a> &amp;&#160;</td>
           <td class="paramname"><em>request</em>, </td>
         </tr>
         <tr>
@@ -500,50 +650,6 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00075">75</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
-
-</div>
-</div>
-<a id="ad35f392a0ab4af845bdad989c4f2318c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad35f392a0ab4af845bdad989c4f2318c">&#9670;&nbsp;</a></span>PrepareAsyncReadAllJoints()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../de/d0d/classiCubInterfaceMessages_1_1AllJointResponse.html">iCubInterfaceMessages::AllJointResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::PrepareAsyncReadAllJoints </td>
-          <td>(</td>
-          <td class="paramtype">::grpc::ClientContext *&#160;</td>
-          <td class="paramname"><em>context</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const ::<a class="el" href="../../d7/d5a/classiCubInterfaceMessages_1_1AllJointRequest.html">iCubInterfaceMessages::AllJointRequest</a> &amp;&#160;</td>
-          <td class="paramname"><em>request</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
-          <td class="paramname"><em>cq</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00067">67</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
 
 </div>
 </div>
@@ -587,7 +693,51 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00043">43</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00051">51</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+
+</div>
+</div>
+<a id="ab81708d18647a82b31e4ef0606765ed4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab81708d18647a82b31e4ef0606765ed4">&#9670;&nbsp;</a></span>PrepareAsyncReadMultiJoints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d3/df3/classiCubInterfaceMessages_1_1MultiJointResponse.html">iCubInterfaceMessages::MultiJointResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::PrepareAsyncReadMultiJoints </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d9/d96/classiCubInterfaceMessages_1_1MultiJointRequest.html">iCubInterfaceMessages::MultiJointRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
+          <td class="paramname"><em>cq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00067">67</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
 
 </div>
 </div>
@@ -610,50 +760,6 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const ::<a class="el" href="../../db/d5d/classiCubInterfaceMessages_1_1SingleJointRequest.html">iCubInterfaceMessages::SingleJointRequest</a> &amp;&#160;</td>
-          <td class="paramname"><em>request</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
-          <td class="paramname"><em>cq</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00051">51</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
-
-</div>
-</div>
-<a id="ac1ea1481be7765c74de5d07ff505681e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1ea1481be7765c74de5d07ff505681e">&#9670;&nbsp;</a></span>PrepareAsyncReadSingleJointEncoded()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d0/dca/classiCubInterfaceMessages_1_1SingleJointEncodedResponse.html">iCubInterfaceMessages::SingleJointEncodedResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::PrepareAsyncReadSingleJointEncoded </td>
-          <td>(</td>
-          <td class="paramtype">::grpc::ClientContext *&#160;</td>
-          <td class="paramname"><em>context</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const ::<a class="el" href="../../d3/d01/classiCubInterfaceMessages_1_1SingleJointEncodedRequest.html">iCubInterfaceMessages::SingleJointEncodedRequest</a> &amp;&#160;</td>
           <td class="paramname"><em>request</em>, </td>
         </tr>
         <tr>
@@ -723,8 +829,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a8ab39bdea4a53cbd57b66e582f5db6e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ab39bdea4a53cbd57b66e582f5db6e6">&#9670;&nbsp;</a></span>ReadAllJointEncoded()</h2>
+<a id="a51fa133845307d7277da10bc268baf2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51fa133845307d7277da10bc268baf2f">&#9670;&nbsp;</a></span>PrepareAsyncReadSkinArm()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -733,7 +839,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual ::grpc::Status iCubInterfaceMessages::ProvideInput::StubInterface::ReadAllJointEncoded </td>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::PrepareAsyncReadSkinArm </td>
           <td>(</td>
           <td class="paramtype">::grpc::ClientContext *&#160;</td>
           <td class="paramname"><em>context</em>, </td>
@@ -741,14 +847,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const ::<a class="el" href="../../d4/dde/classiCubInterfaceMessages_1_1AllJointEncodedRequest.html">iCubInterfaceMessages::AllJointEncodedRequest</a> &amp;&#160;</td>
+          <td class="paramtype">const ::<a class="el" href="../../df/dd1/classiCubInterfaceMessages_1_1SkinArmRequest.html">iCubInterfaceMessages::SkinArmRequest</a> &amp;&#160;</td>
           <td class="paramname"><em>request</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">::<a class="el" href="../../dd/d75/classiCubInterfaceMessages_1_1AllJointEncodedResponse.html">iCubInterfaceMessages::AllJointEncodedResponse</a> *&#160;</td>
-          <td class="paramname"><em>response</em>&#160;</td>
+          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
+          <td class="paramname"><em>cq</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -758,17 +864,149 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#a6129db8bbe97fd0a80a1fc4a534c65f0">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00091">91</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
 
 </div>
 </div>
-<a id="aca678cc08ce7ccd1e8392c81229809ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca678cc08ce7ccd1e8392c81229809ed">&#9670;&nbsp;</a></span>ReadAllJoints()</h2>
+<a id="a8210a0d5cc00cb9c137778d99216f784"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8210a0d5cc00cb9c137778d99216f784">&#9670;&nbsp;</a></span>PrepareAsyncReadSkinForearm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::PrepareAsyncReadSkinForearm </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d7/db8/classiCubInterfaceMessages_1_1SkinForearmRequest.html">iCubInterfaceMessages::SkinForearmRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
+          <td class="paramname"><em>cq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00099">99</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+
+</div>
+</div>
+<a id="a1ff16b946d38a65663ca3862e1e0745f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ff16b946d38a65663ca3862e1e0745f">&#9670;&nbsp;</a></span>PrepareAsyncReadSkinHand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::PrepareAsyncReadSkinHand </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d1/dbf/classiCubInterfaceMessages_1_1SkinHandRequest.html">iCubInterfaceMessages::SkinHandRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
+          <td class="paramname"><em>cq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00107">107</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+
+</div>
+</div>
+<a id="a7830f84b06bb294bc6451bd2e2e8ac80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7830f84b06bb294bc6451bd2e2e8ac80">&#9670;&nbsp;</a></span>PrepareAsyncReadTest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; ::grpc::ClientAsyncResponseReaderInterface&lt; ::<a class="el" href="../../db/d18/classiCubInterfaceMessages_1_1TestResponse.html">iCubInterfaceMessages::TestResponse</a>&gt; &gt; iCubInterfaceMessages::ProvideInput::StubInterface::PrepareAsyncReadTest </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d0/d39/classiCubInterfaceMessages_1_1TestRequest.html">iCubInterfaceMessages::TestRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::grpc::CompletionQueue *&#160;</td>
+          <td class="paramname"><em>cq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html#l00043">43</a> of file <a class="el" href="../../df/d5c/icub_8grpc_8pb_8h_source.html">icub.grpc.pb.h</a>.</p>
+
+</div>
+</div>
+<a id="a885fb6d8cf178779753c5471b22abe56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a885fb6d8cf178779753c5471b22abe56">&#9670;&nbsp;</a></span>ReadAllJoints()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -785,13 +1023,13 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const ::<a class="el" href="../../d7/d5a/classiCubInterfaceMessages_1_1AllJointRequest.html">iCubInterfaceMessages::AllJointRequest</a> &amp;&#160;</td>
+          <td class="paramtype">const ::<a class="el" href="../../d1/dad/classiCubInterfaceMessages_1_1AllJointsRequest.html">iCubInterfaceMessages::AllJointsRequest</a> &amp;&#160;</td>
           <td class="paramname"><em>request</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">::<a class="el" href="../../de/d0d/classiCubInterfaceMessages_1_1AllJointResponse.html">iCubInterfaceMessages::AllJointResponse</a> *&#160;</td>
+          <td class="paramtype">::<a class="el" href="../../d3/d5a/classiCubInterfaceMessages_1_1AllJointsResponse.html">iCubInterfaceMessages::AllJointsResponse</a> *&#160;</td>
           <td class="paramname"><em>response</em>&#160;</td>
         </tr>
         <tr>
@@ -807,7 +1045,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#a3a601f2a09576aee2be0581c4d2652bb">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
+<p>Implemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#a5f06503e3cab0b7d4de305e4759d6e54">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
 
 </div>
 </div>
@@ -855,6 +1093,50 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ac671fd54019a47bb0f7b78e5f4c855d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac671fd54019a47bb0f7b78e5f4c855d9">&#9670;&nbsp;</a></span>ReadMultiJoints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual ::grpc::Status iCubInterfaceMessages::ProvideInput::StubInterface::ReadMultiJoints </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d9/d96/classiCubInterfaceMessages_1_1MultiJointRequest.html">iCubInterfaceMessages::MultiJointRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::<a class="el" href="../../d3/df3/classiCubInterfaceMessages_1_1MultiJointResponse.html">iCubInterfaceMessages::MultiJointResponse</a> *&#160;</td>
+          <td class="paramname"><em>response</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#a9ae44b5ba8590dc1b053609e459df461">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
+
+</div>
+</div>
 <a id="aa9b1b5f7e47a0c8fa290a075f1a1c9b9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9b1b5f7e47a0c8fa290a075f1a1c9b9">&#9670;&nbsp;</a></span>ReadSingleJoint()</h2>
 
@@ -899,50 +1181,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa0cda1ee345a91da986029358459298b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0cda1ee345a91da986029358459298b">&#9670;&nbsp;</a></span>ReadSingleJointEncoded()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual ::grpc::Status iCubInterfaceMessages::ProvideInput::StubInterface::ReadSingleJointEncoded </td>
-          <td>(</td>
-          <td class="paramtype">::grpc::ClientContext *&#160;</td>
-          <td class="paramname"><em>context</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const ::<a class="el" href="../../d3/d01/classiCubInterfaceMessages_1_1SingleJointEncodedRequest.html">iCubInterfaceMessages::SingleJointEncodedRequest</a> &amp;&#160;</td>
-          <td class="paramname"><em>request</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">::<a class="el" href="../../d0/dca/classiCubInterfaceMessages_1_1SingleJointEncodedResponse.html">iCubInterfaceMessages::SingleJointEncodedResponse</a> *&#160;</td>
-          <td class="paramname"><em>response</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#ad0c420f664c936db4a28d8adbeb0d9bd">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
-
-</div>
-</div>
 <a id="ae7a2cce32b29d04a915a08e2502be805"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae7a2cce32b29d04a915a08e2502be805">&#9670;&nbsp;</a></span>ReadSkin()</h2>
 
@@ -984,6 +1222,182 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#a2bbd3910f1b9f4ed7ec9eeab621bc79b">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
+
+</div>
+</div>
+<a id="a4c8948312f7b05d060723f82744bb423"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c8948312f7b05d060723f82744bb423">&#9670;&nbsp;</a></span>ReadSkinArm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual ::grpc::Status iCubInterfaceMessages::ProvideInput::StubInterface::ReadSkinArm </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../df/dd1/classiCubInterfaceMessages_1_1SkinArmRequest.html">iCubInterfaceMessages::SkinArmRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> *&#160;</td>
+          <td class="paramname"><em>response</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#aea56df9daea0365245046485a5e83fd5">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
+
+</div>
+</div>
+<a id="af4dc8c008ae8d4c3a2dbe0107c25fa11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4dc8c008ae8d4c3a2dbe0107c25fa11">&#9670;&nbsp;</a></span>ReadSkinForearm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual ::grpc::Status iCubInterfaceMessages::ProvideInput::StubInterface::ReadSkinForearm </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d7/db8/classiCubInterfaceMessages_1_1SkinForearmRequest.html">iCubInterfaceMessages::SkinForearmRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> *&#160;</td>
+          <td class="paramname"><em>response</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#abba3ae1fff607c8e0b5392db5d9ce668">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
+
+</div>
+</div>
+<a id="a2cf6726fc9157732267b5f7b7b29682d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cf6726fc9157732267b5f7b7b29682d">&#9670;&nbsp;</a></span>ReadSkinHand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual ::grpc::Status iCubInterfaceMessages::ProvideInput::StubInterface::ReadSkinHand </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d1/dbf/classiCubInterfaceMessages_1_1SkinHandRequest.html">iCubInterfaceMessages::SkinHandRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::<a class="el" href="../../d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html">iCubInterfaceMessages::SkinResponse</a> *&#160;</td>
+          <td class="paramname"><em>response</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#a8c90a4a83f344b894e29c686c9126d76">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
+
+</div>
+</div>
+<a id="a95a212a3331d761778e50cee4544735e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95a212a3331d761778e50cee4544735e">&#9670;&nbsp;</a></span>ReadTest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual ::grpc::Status iCubInterfaceMessages::ProvideInput::StubInterface::ReadTest </td>
+          <td>(</td>
+          <td class="paramtype">::grpc::ClientContext *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ::<a class="el" href="../../d0/d39/classiCubInterfaceMessages_1_1TestRequest.html">iCubInterfaceMessages::TestRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">::<a class="el" href="../../db/d18/classiCubInterfaceMessages_1_1TestResponse.html">iCubInterfaceMessages::TestResponse</a> *&#160;</td>
+          <td class="paramname"><em>response</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="../../da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html#ada4cfb2aff6eb3402143488a3054f635">iCubInterfaceMessages::ProvideInput::Stub</a>.</p>
 
 </div>
 </div>
