@@ -6,6 +6,8 @@
 	],
 	"settings": {
 		"files.associations": {
+            "*.h": "cpp",
+            "*.hpp": "cpp",
             "*.tpp": "cpp",
             "array": "cpp",
             "*.tcc": "cpp",
@@ -73,7 +75,9 @@
             "random": "cpp",
             "variant": "cpp",
             "bit": "cpp",
-            "*.ipp": "cpp"
+            "*.ipp": "cpp",
+            "hash_set": "cpp",
+            "unordered_set": "cpp"
         },
 		"terminal.integrated.shell.windows": "cmd.exe",
 		"C_Cpp.workspaceParsingPriority": "medium",
@@ -87,6 +91,7 @@
         },
         "editor.formatOnPaste": true,
         "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
+        "prettier.tabWidth": 4,
 
 	}
 }
