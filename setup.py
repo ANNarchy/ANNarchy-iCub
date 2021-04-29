@@ -1,5 +1,5 @@
 """
-Created on 
+Created on
 
 @author: Torsten Fietzek, Helge Uelo Dinkelbach
 
@@ -21,7 +21,16 @@ except:
     print('Error : Python package "setuptools" is required.')
     print('You can install it from pip or: http://pypi.python.org/pypi/setuptools')
     exit(0)
-from Cython.Build import cythonize
+
+# cython
+try:
+    from Cython.Build import cythonize
+    print('Checking for Cython... OK')
+except:
+    print('Checking for Cython... NO')
+    print('Error : Python package "Cython" is required.')
+    print('You can install it from pip')
+    exit(0)
 
 # numpy
 try:
@@ -60,28 +69,21 @@ if use_grpc:
         print("Protobuf C-compiler (protoc) not found")
         grpc_avaiable = False
 
-    # try:
-    #     import grpc     # includes grpc
-    #     print('Checking for grpc ... OK')
-    # except:
-    #     print('Checking for grpc (required for mpi) ... NO')
-    #     print("You can install grpcio from pip ")
-    #     grpc_avaiable = False
-
-    # build the interface gRPC definitions
-    if grpc_avaiable:
-        grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
-        # grpc_python_plugin = subprocess.check_output(["which", "grpc_python_plugin"]).strip().decode(sys.stdout.encoding)
-        os.system("protoc -I=. --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_cpp_plugin+" iCub_ANN_Interface/grpc/icub.proto")
-        # os.system("protoc -I=. --python_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_python_plugin+" iCub_ANN_Interface/grpc/icub.proto")
+    # build grpc proto related sourcefiles to library
+    if os.path.isfile("./iCub_ANN_Interface/grpc/libiCub_ANN_grpc.so") and (not rebuild_grpc):
+        print("Skip gRPC build process")
     else:
-        print("grpcio and/or protobuf c-compiler is missing ... abort")
-        exit()
+        # build the interface gRPC definitions
+        if grpc_avaiable:
+            grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
+            os.system("protoc -I=. --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_cpp_plugin+" iCub_ANN_Interface/grpc/icub.proto")
+        else:
+            print("grpc and/or protobuf c-compiler is missing ... abort")
+            exit()
 
-    # build grpc proto related sourcefile to library
-    print("Build grpc->proto files in seperated library")
-    os.system("cd iCub_ANN_Interface/grpc/ && make EXTFLAGS=\"-I"+os.path.abspath("./")+"\"")
- 
+        print("Build grpc->proto files in seperated library")
+        os.system("cd iCub_ANN_Interface/grpc/ && make EXTFLAGS=\"-I"+os.path.abspath("./")+"\"")
+
     grpc_include_dir.append("iCub_ANN_Interface/grpc")
     grpc_libs += ["protobuf", "grpc++", "grpc++_reflection", "iCub_ANN_grpc"]
     grpc_lib_dir += [root_path+"/iCub_ANN_Interface/grpc"]
@@ -218,15 +220,23 @@ with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
     file_object.write("__version__ = \"" + version + "\"")
 
+# test if gRPC is already used -> need new cythonizing earlier build was without gRPC
+try:
+    from iCub_ANN_Interface.use_grpc import __use_grpc__ as used_grpc
+except:
+    used_grpc = False
+
 filename = './iCub_ANN_Interface/use_grpc.py'
 with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
     file_object.write("__use_grpc__ = " + str(use_grpc))
 
+print((use_grpc != used_grpc))
+
 setup(
     name="iCub_ANN_Interface",
     packages=find_packages(),
-    ext_modules=cythonize(extensions, language_level=int(sys.version_info[0])),
+    ext_modules=cythonize(extensions, language_level=int(sys.version_info[0]), force=(use_grpc != used_grpc)),
     description="Interface for iCub robot and ANNarchy neuro-simulator",
     long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.""",
     version=version,

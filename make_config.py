@@ -11,20 +11,22 @@ import sys
 
 # add compiler flags to the g++ commands
 verbose = False
-pedantic = True
+pedantic = False
 
 # Use gRPC for direct iCub to ANNarchy communication
-use_grpc = False
+use_grpc = True
 
 # select data precision for images
 double_precision = True
 
-# set the OpenCV include directory
+# set the OpenCV include directory -> only set this if the setup fails due to missing path
 cv_include = "default"
 
-# set the installation prefix of the YARP installation
+# set the prefix of the YARP installation -> only set this if the setup fails due to missing path
 yarp_prefix = "default"
 
+# build process
+rebuild_grpc = False # set to true if the grpc code changed and need a rebuild, e.g. after an update of the repository
 
 def set_yarp_prefix():
     # Yarp install direction
