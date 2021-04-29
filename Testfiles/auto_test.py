@@ -500,15 +500,13 @@ def test_visual_perception(ann_wrapper):
     visreader = Visual_Reader.PyVisualReader()
 
     # init visual reader
-    visreader.init(ann_wrapper, 'r', fov_w, fov_h, img_w, img_h)
+    visreader.init(ann_wrapper, "vision", 'r', fov_w, fov_h, img_w, img_h)
 
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
     # start the RFModule to obtain the images from the iCub
     read_imgs = []
-    visreader.start()
-    time.sleep(0.15)
     if(params.gazebo):
         # move the sphere object
         params.loc_sph[2] = 0.75
@@ -524,10 +522,10 @@ def test_visual_perception(ann_wrapper):
     t_start = time.time()
     while len(read_imgs) < params.img_count or t > 10.0:
         t = time.time() - t_start
-        read_img = visreader.read_from_buffer()
+        read_img = visreader.read_robot_eyes()
         if read_img.shape[0] > 0:
             print('Obtained new image.')
-            read_img = read_img.reshape(img_h, img_w).T
+            read_img = read_img[0].reshape(img_h, img_w).T
             read_imgs.append(read_img)
         # else:
         #     print('No buffered image!')
@@ -536,8 +534,7 @@ def test_visual_perception(ann_wrapper):
     np.save(path + 'Vision_full_size.npy', read_imgs)
 
     print('____________________________________________________________')
-    print('__ Stop and close visual reader module __')
-    visreader.stop()
+    print('__ Close visual reader module __')
     visreader.close(ann_wrapper)
 
     # remove all objects in the simulator and remove the world controller

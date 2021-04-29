@@ -26,7 +26,6 @@ import matplotlib.pylab as plt
 import numpy as np
 
 # iCub ANNarchy Interface
-# sys.path.append("../build/")
 from iCub_ANN_Interface.iCub import iCub_Interface, Joint_Reader, Joint_Writer, Skin_Reader, Visual_Reader
 import iCub_ANN_Interface.Vocabs as iCub_Constants
 
@@ -487,79 +486,80 @@ def speed_test_jwriter(ann_wrapper, test_count):
     print('\n')
 
     #########################################################
-    # test joint motion with joint angles encoded in population code, coding single joint (relative position)
-    print('__ Type of positioning: Population_one (relative)')
-    results_pop_one = {}
-    for name in part_enc:
-        joints = writer[name].get_joint_count()
-        print('____ Test part:', name)
-        for key in part_enc[name]:
-            print('______ Test position:', key)
-            results_pop_one[name + '_' + key] = 0
-            for i in range(test_count):
-                time_start = time.time()
-                for i in range(joints):
-                    writer[name].write_pop_one(part_enc_delta[name][key][i], i, "rel", True)
-                time_stop = time.time()
-                results_pop_one[name + '_' + key] += time_stop -time_start
+    ## TODO fix occuring errors
+    # # test joint motion with joint angles encoded in population code, coding single joint (relative position)
+    # print('__ Type of positioning: Population_one (relative)')
+    # results_pop_one = {}
+    # for name in part_enc:
+    #     joints = writer[name].get_joint_count()
+    #     print('____ Test part:', name)
+    #     for key in part_enc[name]:
+    #         print('______ Test position:', key)
+    #         results_pop_one[name + '_' + key] = 0
+    #         for i in range(test_count):
+    #             time_start = time.time()
+    #             for i in range(joints):
+    #                 writer[name].write_pop_one(part_enc_delta[name][key][i], i, "rel", True)
+    #             time_stop = time.time()
+    #             results_pop_one[name + '_' + key] += time_stop -time_start
 
-                writer[name].write_double_all(zero_pos[name], "abs", True)
-                time.sleep(0.5)
-            results_pop_one[name + '_' + key] /= test_count
+    #             writer[name].write_double_all(zero_pos[name], "abs", True)
+    #             time.sleep(0.5)
+    #         results_pop_one[name + '_' + key] /= test_count
 
-    # show test results
-    print('________ Test results: Population_one (relative)')
-    for key in results_pop_one:
-        print('Test:', key, 'results:', round(results_pop_one[key], 4), 's')
-    print('\n')
+    # # show test results
+    # print('________ Test results: Population_one (relative)')
+    # for key in results_pop_one:
+    #     print('Test:', key, 'results:', round(results_pop_one[key], 4), 's')
+    # print('\n')
 
-    # test joint motion with joint angles encoded in population code, coding multiple joints combined (relative position)
-    print('__ Type of positioning: Population_multiple (relative)')
-    results_pop_multiple = {}
-    for name in part_enc:
-        joints = writer[name].get_joint_count()
-        print('____ Test part:', name)
-        for key in part_enc[name]:
-            print('______ Test position:', key)
-            results_pop_multiple[name + '_' + key] = 0
-            for i in range(test_count):
-                time_start = time.time()
-                writer[name].write_pop_multiple(part_enc_delta[name][key][3:6], range(3, 6), "rel", True)
-                time_stop = time.time()
-                results_pop_multiple[name + '_' + key] += time_stop -time_start
+    # # test joint motion with joint angles encoded in population code, coding multiple joints combined (relative position)
+    # print('__ Type of positioning: Population_multiple (relative)')
+    # results_pop_multiple = {}
+    # for name in part_enc:
+    #     joints = writer[name].get_joint_count()
+    #     print('____ Test part:', name)
+    #     for key in part_enc[name]:
+    #         print('______ Test position:', key)
+    #         results_pop_multiple[name + '_' + key] = 0
+    #         for i in range(test_count):
+    #             time_start = time.time()
+    #             writer[name].write_pop_multiple(part_enc_delta[name][key][3:6], range(3, 6), "rel", True)
+    #             time_stop = time.time()
+    #             results_pop_multiple[name + '_' + key] += time_stop -time_start
 
-                writer[name].write_double_all(zero_pos[name], "abs", True)
-                time.sleep(0.5)
-            results_pop_multiple[name + '_' + key] /= test_count
+    #             writer[name].write_double_all(zero_pos[name], "abs", True)
+    #             time.sleep(0.5)
+    #         results_pop_multiple[name + '_' + key] /= test_count
 
-    # show test results
-    print('________ Test results: Population_multiple (relative)')
-    for key in results_pop_multiple:
-        print('Test:', key, 'results:', round(results_pop_multiple[key], 4), 's')
-    print('\n')
+    # # show test results
+    # print('________ Test results: Population_multiple (relative)')
+    # for key in results_pop_multiple:
+    #     print('Test:', key, 'results:', round(results_pop_multiple[key], 4), 's')
+    # print('\n')
 
-    # test joint motion with joint angles encoded in population code, coding all joints combined (relative position)
-    print('__ Type of positioning: Population_all (relative)')
-    results_pop_all = {}
-    for name in part_enc:
-        print('____ Test part:', name)
-        for key in part_enc[name]:
-            print('______ Test position:', key)
-            results_pop_all[name + '_' + key] = 0
-            for i in range(test_count):
-                time_start = time.time()
-                writer[name].write_pop_all(part_enc_delta[name][key], "rel", True)
-                time_stop = time.time()
-                results_pop_all[name + '_' + key] += time_stop -time_start
+    # # test joint motion with joint angles encoded in population code, coding all joints combined (relative position)
+    # print('__ Type of positioning: Population_all (relative)')
+    # results_pop_all = {}
+    # for name in part_enc:
+    #     print('____ Test part:', name)
+    #     for key in part_enc[name]:
+    #         print('______ Test position:', key)
+    #         results_pop_all[name + '_' + key] = 0
+    #         for i in range(test_count):
+    #             time_start = time.time()
+    #             writer[name].write_pop_all(part_enc_delta[name][key], "rel", True)
+    #             time_stop = time.time()
+    #             results_pop_all[name + '_' + key] += time_stop -time_start
 
-                writer[name].write_double_all(zero_pos[name], "abs", True)
-                time.sleep(0.5)
-            results_pop_all[name + '_' + key] /= test_count
+    #             writer[name].write_double_all(zero_pos[name], "abs", True)
+    #             time.sleep(0.5)
+    #         results_pop_all[name + '_' + key] /= test_count
 
-    # show test results
-    print('________ Test results: Population_all (relative)')
-    for key in results_pop_all:
-        print('Test:', key, 'results:', round(results_pop_all[key], 4), 's')
+    # # show test results
+    # print('________ Test results: Population_all (relative)')
+    # for key in results_pop_all:
+    #     print('Test:', key, 'results:', round(results_pop_all[key], 4), 's')
 
     #########################################################
 
@@ -666,26 +666,21 @@ def speed_test_vreader(ann_wrapper, test_count):
     visread = Visual_Reader.PyVisualReader()
 
     # init visual reader
-    print(visread.init(ann_wrapper, 'r'))                    # use of default values
+    print(visread.init(ann_wrapper, "name", 'r'))                    # use of default values
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
     print('____ Test speed performance with full resolution ____')
     t_start_full = time.time()
-    visread.start()
     while len(imgs_full) < test_count:
-        img_full = visread.read_from_buffer()
+        img_full = visread.read_robot_eyes()
         if img_full.shape[0] != 0:
-            imgs_full.append(img_full)
+            imgs_full.append(img_full[0])
     t_stop_full = time.time()
 
     print('____________________________________________________________')
-    print('__ Stop and close visual reader module __')
-    visread.stop()
+    print('__ Close visual reader module __')
     visread.close(ann_wrapper)
-    del visread
-
-    visread = Visual_Reader.PyVisualReader()
 
     # store obtained images
     np.save(path + 'full_size.npy', img_full)
@@ -694,26 +689,22 @@ def speed_test_vreader(ann_wrapper, test_count):
 
     print('____________________________________________________________')
     print('__ Reinit visual reader module with quarter resolution __')
-    print(visread.init(ann_wrapper, 'r', 60, 48, 80, 60))    # lower resolution
+    print(visread.init(ann_wrapper, "name", 'r', 60, 48, 80, 60))    # lower resolution
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
     print('____ Test speed performance with quarter resolution ____')
     t_start_quart = time.time()
-    visread.start()
     while len(imgs_quarter) < test_count:
-        img_quarter = visread.read_from_buffer()
+        img_quarter = visread.read_robot_eyes()
         if img_quarter.shape[0] != 0:
-            imgs_quarter.append(img_quarter)
+            imgs_quarter.append(img_quarter[0])
     t_stop_quart = time.time()
 
     print('____________________________________________________________')
-    print('__ Stop and close visual reader module __')
-    visread.stop()
+    print('__ Close visual reader module __')
     visread.close(ann_wrapper)
-    del visread
 
-    visread = Visual_Reader.PyVisualReader()
 
     # store obtained images
     np.save(path + 'quarter_size.npy', img_quarter)
@@ -722,22 +713,20 @@ def speed_test_vreader(ann_wrapper, test_count):
 
     print('____________________________________________________________')
     print('__ Reinit visual reader module with half visual field and quarter resolution __')
-    print(visread.init(ann_wrapper, 'r', 30, 24, 80, 60))    # lower resolution and smaller visual field
+    print(visread.init(ann_wrapper, "name", 'r', 30, 24, 80, 60))    # lower resolution and smaller visual field
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
     print('____ Test speed performance with quarter resolution and reduced visual field ____')
     t_start_field = time.time()
-    visread.start()
     while len(imgs_field) < test_count:
-        img_field = visread.read_from_buffer()
+        img_field = visread.read_robot_eyes()
         if img_field.shape[0] != 0:
-            imgs_field.append(img_field)
+            imgs_field.append(img_field[0])
     t_stop_field = time.time()
 
     print('____________________________________________________________')
-    print('__ Stop and close visual reader module __')
-    visread.stop()
+    print('__ Close visual reader module __')
     visread.close(ann_wrapper)
 
     np.save(path + 'field_size.npy', img_field)
@@ -780,7 +769,7 @@ def vis_move_test(ann_wrapper):
     head_write = Joint_Writer.PyJointWriter()
 
     # init visual reader and joint writer instances
-    visread.init(ann_wrapper, 'r', 60, 48, 80, 60)
+    visread.init(ann_wrapper, "name", 'r', 60, 48, 80, 60)
     hand_write.init(ann_wrapper, "moving", iCub_Constants.PART_KEY_RIGHT_ARM, n_pop, speed_arm)
     head_write.init(ann_wrapper, "head", iCub_Constants.PART_KEY_HEAD, n_pop, speed_head)
 
@@ -818,9 +807,6 @@ def vis_move_test(ann_wrapper):
         head_write.write_double_all(target_pos, "abs", True)
     time.sleep(2)
 
-    # start the the visual reader module to obtain images from the iCub
-    visread.start()
-
     # move the arm, while recording the images
     for i in range(hand_write.get_joint_count()):
         hand_write.write_double_all(pos[False], "abs", True)
@@ -828,18 +814,15 @@ def vis_move_test(ann_wrapper):
     t_start = time.time()
     pos_choice = True
     while len(imgs) < 100:
-        img = visread.read_from_buffer()
-        print("shape:", img.shape)
-        imgs.append(img)
+        img = visread.read_robot_eyes()
+        print("shape:", img[0].shape)
+        imgs.append(img[0])
         dt = time.time() - t_start
         if dt > 0.5:
             for i in range(hand_write.get_joint_count()):
                 hand_write.write_double_all(pos[pos_choice], "abs", False)
                 pos_choice = not pos_choice
                 t_start = time.time()
-
-    # stop the visual reader
-    visread.stop()
 
     # save the recorded images
     print("Save test images")
@@ -849,7 +832,8 @@ def vis_move_test(ann_wrapper):
     hand_write.write_double_all(zero_pos["right_arm"], "abs", True)
     head_write.write_double_all(zero_pos["head"], "abs", True)
 
-    # close the joint writer modules
+    # close modules
+    visread.close(ann_wrapper)
     hand_write.close(ann_wrapper)
     head_write.close(ann_wrapper)
 

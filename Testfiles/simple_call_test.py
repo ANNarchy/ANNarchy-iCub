@@ -24,7 +24,6 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-# sys.path.append("../build/")
 from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader
 import iCub_ANN_Interface.Vocabs as iCub_Constants
 
@@ -55,7 +54,6 @@ def call_test_jreader(iCub):
     jreader1.init(iCub, "JReader1", iCub_Constants.PART_KEY_RIGHT_ARM, -0.5, 15)      # negative sigma
     jreader1.init(iCub, "JReader1", iCub_Constants.PART_KEY_RIGHT_ARM, 0.5, 0, 2.0)   # neuron resolution
     jreader2.init(iCub, "JReader2", 'false_part_key', 0.5, 15)                     # false part key
-    jreader2.init(iCub, "JReader2", iCub_Constants.PART_KEY_LEFT_ARM, 0.5, -15)       # negative population size
     jreader2.init(iCub, "JReader2", iCub_Constants.PART_KEY_LEFT_ARM, 0.5, 0, 0.0)    # wrong population sizing
     if iCub.get_jreader_by_name("NO_NAME") == None:
         print("Not existing name!")
@@ -119,7 +117,6 @@ def call_test_jwriter(iCub):
     jwriter.init(iCub, "JointWriter", iCub_Constants.PART_KEY_HEAD, 15)               # double initialization
     jwriter1.init(iCub, "JointWriter1", 'false_part_key', 15)               # false part key
     jwriter1.init(iCub, "JointWriter1", iCub_Constants.PART_KEY_RIGHT_ARM, 0, 2.0)
-    jwriter2.init(iCub, "JointWriter2", iCub_Constants.PART_KEY_LEFT_ARM, -15)        # negative population size
 
     jwriter2.close(iCub)
 
@@ -232,7 +229,6 @@ def call_test_sreader(iCub):
     # init skin reader
     sreader.init(iCub, "SkinReader", "r", True)       # correct init
     sreader.init(iCub, "SkinReader", "r", True)       # double init
-    # iCub.tactile_reader["NO_NAME"].init(iCub, "r", True)        # non existent name
     sreader1.init(iCub, "SkinReader1", "g", False)     # wrong eye descriptor
     sreader1.init(iCub, "SkinReader1", "l", False)     # correct init; non norm
 
@@ -275,19 +271,17 @@ def call_test_vreader(iCub):
     print('\n')
 
     # init visual reader
-    print(visreader.init(iCub, 'r', 75, 48, 320, 240))  # invalid field of view width
-    print(visreader.init(iCub, 'r', 60, 56, 320, 240))  # invalid field of view height
-    print(visreader.init(iCub, 't', 60, 48, 320, 240))  # invalid eye character
-    print(visreader.init(iCub, 'r', 60, 48, 160, 120))  # output size below input size
-    print(visreader.init(iCub, 'r'))                    # use of default values; init already done
+    print(visreader.init(iCub, "name", 'r', 75, 48, 320, 240))  # invalid field of view width
+    print(visreader.init(iCub, "name", 'r', 60, 56, 320, 240))  # invalid field of view height
+    print(visreader.init(iCub, "name", 't', 60, 48, 320, 240))  # invalid eye character
+    print(visreader.init(iCub, "name", 'r', 60, 48, 160, 120))  # output size below input size
+    print(visreader.init(iCub, "name", 'r'))                    # use of default values; init already done
 
     print('finish VReader init')
     print('\n')
 
     # record images from the iCub cameras
-    visreader.start()
-    time.sleep(1.5)
-    test_img = visreader.read_from_buffer()
+    test_img = visreader.read_robot_eyes()
     print(test_img.shape)
     if test_img.shape[0] > 0:
         test_img = test_img.reshape(120, 160)
@@ -296,17 +290,16 @@ def call_test_vreader(iCub):
         plt.show()
         plt.pause(0.05)
     else:
-        print('No buffered image!')
+        print('Image reading failed!')
 
-    # stop the visual reader instance
-    visreader.stop()
-    # first remove the old visual reader instance, then add and init a new visual reader instance
-    visreader.close(iCub)
-    print(visreader.init(iCub, 'l'))                    # use of default values; reinitialization left eye
 
     # first remove the old visual reader instance, then add and init a new visual reader instance
     visreader.close(iCub)
-    print(visreader.init(iCub, 'b'))                    # use of default values; reinitialization binocular
+    print(visreader.init(iCub, "name", 'l'))                    # use of default values; reinitialization left eye
+
+    # first remove the old visual reader instance, then add and init a new visual reader instance
+    visreader.close(iCub)
+    print(visreader.init(iCub, "name", 'b'))                    # use of default values; reinitialization binocular
     visreader.close(iCub)
 
 
