@@ -26,12 +26,13 @@ class JointControl(Population):
     """
     Set the position/orientation of joints, e. g. elbow or finger.
     """
-    def __init__(self, geometry=None, ip_address="0.0.0.0", port=50010, copied=False):
+    def __init__(self, geometry=None, neuron=None, ip_address="0.0.0.0", port=50010, copied=False, name=None):
 
-        Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied )
+        Population.__init__(self, geometry=geometry, neuron=neuron, copied=copied, name=name )
 
         self._ip_address = ip_address
         self._port = port
+        self.name = name
 
     def _init_attributes(self):
 
@@ -42,7 +43,7 @@ class JointControl(Population):
 
     def _copy(self):
 
-        return JointControl(geometry=self.geometry, ip_address=self._ip_address, port=self._port, copied=True)
+        return JointControl(geometry=self.geometry, neuron=self.neuron_type, ip_address=self._ip_address, port=self._port, copied=True, name=self.name)
 
     @property
     def ip_address(self):
@@ -89,8 +90,10 @@ class JointControl(Population):
     std::thread server_thread;
 
     ~PopStruct%(id)s() {
-        joint_server->shutdown();
-        server_thread.join();
+        if (joint_server != NULL) {
+            joint_server->shutdown();
+            server_thread.join();
+            }
     }
     """ % {'id': self.id}
         self._specific_template['access_additional'] = """
@@ -151,14 +154,15 @@ class JointReadout(Population):
     """
     Get the position/orientation of joints, e. g. elbow or finger.
     """
-    def __init__(self, geometry=None, joints = None, encoded=False, ip_address="0.0.0.0", port=50005, copied=False):
+    def __init__(self, geometry=None, joints=None, encoded=False, ip_address="0.0.0.0", port=50005, copied=False, name=None):
 
-        Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied )
+        Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied, name=name )
 
         self._ip_address = ip_address
         self._port = port
         self._joints = joints
         self._encoded = encoded
+        self.name = name
 
 
     def _init_attributes(self):
@@ -172,7 +176,7 @@ class JointReadout(Population):
 
     def _copy(self):
 
-        return JointReadout(geometry=self.geometry, ip_address=self._ip_address, port=self._port, copied=True)
+        return JointReadout(geometry=self.geometry, joints=self._joints, encoded=self._encoded, ip_address=self._ip_address, port=self._port, copied=True, name=self.name)
 
     @property
     def ip_address(self):

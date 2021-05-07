@@ -24,12 +24,13 @@ from ANNarchy.core.Global import _error
 
 class VisionPopulation(Population):
 
-    def __init__(self, geometry=(320,240), ip_address="0.0.0.0", port=50000, copied=False):
+    def __init__(self, geometry=(320,240), ip_address="0.0.0.0", port=50000, copied=False, name=None):
 
-        Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied )
+        Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied, name=name )
 
         self._ip_address = ip_address
         self._port = port
+        self.name = name
 
     def _init_attributes(self):
 
@@ -40,7 +41,7 @@ class VisionPopulation(Population):
 
     def _copy(self):
 
-        return VisionPopulation(geometry=self.geometry, ip_address=self._ip_address, port=self._port, copied=True)
+        return VisionPopulation(geometry=self.geometry, ip_address=self._ip_address, port=self._port, copied=True, name=self.name)
 
     @property
     def ip_address(self):
