@@ -104,8 +104,8 @@ public:
     }
 
     void shutdown() {
-        delete _implementation;
         std::cout << "Write output server: shutdown gRPC Server." << std::endl;
+        delete _implementation;
         this->server->Shutdown();
     }
 };

@@ -87,7 +87,7 @@ if use_grpc:
     grpc_include_dir.append("iCub_ANN_Interface/grpc")
     grpc_libs += ["protobuf", "grpc++", "grpc++_reflection", "iCub_ANN_grpc"]
     grpc_lib_dir += [root_path+"/iCub_ANN_Interface/grpc"]
-    grpc_package_data = ['ANNarchy_iCub_Populations/__init__.py', 'grpc/*.so']
+    grpc_package_data = ['ANNarchy_iCub_Populations/__init__.py', 'grpc/*.so', 'grpc/*.h']
 
 # Python Version info
 py_major = sys.version_info[0]

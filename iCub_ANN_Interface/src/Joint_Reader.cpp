@@ -77,6 +77,10 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
 
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "interface_param.ini");
+        if (reader_gen.ParseError()) {
+          std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path and the ini file content!" << std::endl;
+          return false;
+        }
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         if (on_Simulator && (robot_port_prefix != "/icubSim")) {

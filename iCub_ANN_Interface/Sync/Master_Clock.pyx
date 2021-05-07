@@ -28,7 +28,6 @@ import time
 class MasterClock(object):
     def __init__(self):
         self.instances = []
-        # mp.set_start_method('fork')
 
     def add(self, instance):
         self.instances.append(instance)
@@ -52,7 +51,6 @@ class MasterClock(object):
         for proc in processes:
             proc.join()
 
-        print("Duration:", (time.time()-start))
 
 class ClockInterface(object):
     def __init__(self):

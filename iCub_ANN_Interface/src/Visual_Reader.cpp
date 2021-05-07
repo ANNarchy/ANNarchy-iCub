@@ -128,6 +128,10 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "interface_param.ini");
+        if (reader_gen.ParseError()) {
+            std::cerr << "[Visual Reader] Error in parsing the ini-file! Please check the ini-path and the ini file content!" << std::endl;
+            return false;
+        }
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
         robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         if (on_Simulator && (robot_port_prefix != "/icubSim")) {
