@@ -13,6 +13,7 @@ annarchy*
 test_*.py
 
 # results
+results/
 *.npy
 
 # application
