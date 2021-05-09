@@ -86,14 +86,14 @@ class JointControl(Population):
         self._specific_template['declare_additional'] = """
     std::string ip_address;
     unsigned int port;
-    WriteOutputServerInstance<PopStruct%(id)s>* joint_server;
+    WriteOutputServerInstance<PopStruct%(id)s>* joint_server=nullptr;
     std::thread server_thread;
 
     ~PopStruct%(id)s() {
-        if (joint_server != NULL) {
+        if (joint_server != nullptr) {
             joint_server->shutdown();
             server_thread.join();
-            }
+        }
     }
     """ % {'id': self.id}
         self._specific_template['access_additional'] = """
@@ -114,10 +114,14 @@ class JointControl(Population):
     }
 
     void connect() {
-        joint_server = new WriteOutputServerInstance<PopStruct%(id)s>(ip_address, port, new WriteOutputServiceImpl<PopStruct%(id)s>(this) );
-        this->server_thread = std::thread(&WriteOutputServerInstance<PopStruct%(id)s>::wait, this->joint_server);
+        if (joint_server == nullptr) {
+            joint_server = new WriteOutputServerInstance<PopStruct%(id)s>(ip_address, port, new WriteOutputServiceImpl<PopStruct%(id)s>(this) );
+            this->server_thread = std::thread(&WriteOutputServerInstance<PopStruct%(id)s>::wait, this->joint_server);
+        } else {
+            std::cerr << "Population %(name)s already connected" << std::endl;
+        }
     }
-    """ % {'id': self.id}
+    """ % {'id': self.id, 'name': self.name}
         self._specific_template['export_additional'] = """
         # IP Address and port
         void set_ip_address(string)
@@ -246,7 +250,7 @@ class JointReadout(Population):
         self._specific_template['declare_additional'] = """
     std::string ip_address;
     unsigned int port;
-    ClientInstance* joint_source;
+    ClientInstance* joint_source=nullptr;
     std::vector<int> joints;
     bool encoded;
         """
@@ -284,9 +288,13 @@ class JointReadout(Population):
     }
 
     void connect() {
-        joint_source = new ClientInstance(ip_address, port);
+        if (joint_source == nullptr) {
+            joint_source = new ClientInstance(ip_address, port);
+        } else {
+            std::cerr << "Population %(name)s already connected" << std::endl;
+        }
     }
-    """
+    """ % {'name': self.name}
         self._specific_template['export_additional'] = """
         # IP Address and port
         void set_ip_address(string)

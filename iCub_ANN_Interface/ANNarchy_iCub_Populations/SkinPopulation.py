@@ -86,7 +86,7 @@ class SkinPopulation(Population):
         self._specific_template['declare_additional'] = """
     std::string ip_address;
     unsigned int port;
-    ClientInstance* skin_source;
+    ClientInstance* skin_source=nullptr;
         """
         self._specific_template['access_additional'] = """
     // Skin Source ip address
@@ -106,9 +106,13 @@ class SkinPopulation(Population):
     }
 
     void connect() {
-        skin_source = new ClientInstance(ip_address, port);
+        if (skin_source == nullptr) {
+            skin_source = new ClientInstance(ip_address, port);
+        } else {
+            std::cerr << "Population %(name)s already connected" << std::endl;
+        }
     }
-    """
+    """% {'name': self.name}
         self._specific_template['export_additional'] = """
         # IP Address and port
         void set_ip_address(string)

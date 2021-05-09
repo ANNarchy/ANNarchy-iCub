@@ -83,7 +83,7 @@ class VisionPopulation(Population):
         self._specific_template['declare_additional'] = """
     std::string ip_address;
     unsigned int port;
-    ClientInstance* image_source;
+    ClientInstance* image_source=nullptr;
         """
         self._specific_template['access_additional'] = """
     // Image Source ip address
@@ -103,9 +103,13 @@ class VisionPopulation(Population):
     }
 
     void connect() {
-        image_source = new ClientInstance(ip_address, port);
+        if (image_source == nullptr) {
+            image_source = new ClientInstance(ip_address, port);
+        } else {
+            std::cerr << "Population %(name)s already connected" << std::endl;
+        }
     }
-    """
+    """ % {'name': self.name}
         self._specific_template['export_additional'] = """
         # IP Address and port
         void set_ip_address(string)
