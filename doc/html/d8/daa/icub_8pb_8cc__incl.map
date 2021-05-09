@@ -1,25 +1,13 @@
 <map id="icub.pb.cc" name="icub.pb.cc">
-<area shape="rect" id="node1" title=" " alt="" coords="1571,5,1657,32"/>
-<area shape="rect" id="node2" href="$d6/d35/icub_8pb_8h.html" title=" " alt="" coords="1154,80,1306,121"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,169,169,211"/>
-<area shape="rect" id="node5" title=" " alt="" coords="194,169,335,211"/>
-<area shape="rect" id="node17" title=" " alt="" coords="1330,87,1415,114"/>
-<area shape="rect" id="node18" title=" " alt="" coords="1440,80,1604,121"/>
-<area shape="rect" id="node19" title=" " alt="" coords="1629,80,1786,121"/>
-<area shape="rect" id="node20" title=" " alt="" coords="1811,87,2017,114"/>
-<area shape="rect" id="node21" title=" " alt="" coords="2042,80,2237,121"/>
-<area shape="rect" id="node22" title=" " alt="" coords="2261,80,2452,121"/>
-<area shape="rect" id="node23" title=" " alt="" coords="2477,80,2634,121"/>
-<area shape="rect" id="node3" title=" " alt="" coords="1674,177,1733,203"/>
-<area shape="rect" id="node6" title=" " alt="" coords="1757,177,1935,203"/>
-<area shape="rect" id="node7" title=" " alt="" coords="1960,177,2175,203"/>
-<area shape="rect" id="node8" title=" " alt="" coords="2199,169,2394,211"/>
-<area shape="rect" id="node9" title=" " alt="" coords="2418,169,2613,211"/>
-<area shape="rect" id="node10" title=" " alt="" coords="2637,169,2810,211"/>
-<area shape="rect" id="node11" title=" " alt="" coords="360,177,564,203"/>
-<area shape="rect" id="node12" title=" " alt="" coords="589,177,789,203"/>
-<area shape="rect" id="node13" title=" " alt="" coords="813,169,999,211"/>
-<area shape="rect" id="node14" title=" " alt="" coords="1024,169,1217,211"/>
-<area shape="rect" id="node15" title=" " alt="" coords="1242,169,1437,211"/>
-<area shape="rect" id="node16" title=" " alt="" coords="1461,169,1649,211"/>
+<area shape="rect" id="node1" title=" " alt="" coords="782,5,869,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,157,121"/>
+<area shape="rect" id="node3" title=" " alt="" coords="181,87,267,114"/>
+<area shape="rect" id="node4" title=" " alt="" coords="291,80,455,121"/>
+<area shape="rect" id="node5" title=" " alt="" coords="479,80,643,121"/>
+<area shape="rect" id="node6" title=" " alt="" coords="668,80,809,121"/>
+<area shape="rect" id="node7" title=" " alt="" coords="833,80,991,121"/>
+<area shape="rect" id="node8" title=" " alt="" coords="1015,87,1222,114"/>
+<area shape="rect" id="node9" title=" " alt="" coords="1247,80,1441,121"/>
+<area shape="rect" id="node10" title=" " alt="" coords="1466,80,1657,121"/>
+<area shape="rect" id="node11" title=" " alt="" coords="1681,80,1839,121"/>
 </map>

@@ -170,7 +170,7 @@ $(function() {
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">char</span>* start;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">char</span>* end;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">char</span>* <a class="code" href="../../dd/dc4/namespacesetup.html#ab3a7a0638d76a01367c5bc3cc699447f">name</a>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">char</span>* <a class="code" href="../../dd/dc5/namespaceNetwork.html#ab08817d1e6998a6cf031abe1e38105a6">name</a>;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">char</span>* value;</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">int</span> lineno = 0;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">int</span> error = 0;</div>
@@ -251,7 +251,7 @@ $(function() {
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            end = find_chars_or_comment(start, <span class="stringliteral">&quot;=:&quot;</span>);</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;            <span class="keywordflow">if</span> (*end == <span class="charliteral">&#39;=&#39;</span> || *end == <span class="charliteral">&#39;:&#39;</span>) {</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;                *end = <span class="charliteral">&#39;\0&#39;</span>;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;                <a class="code" href="../../dd/dc4/namespacesetup.html#ab3a7a0638d76a01367c5bc3cc699447f">name</a> = rstrip(start);</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;                <a class="code" href="../../dd/dc5/namespaceNetwork.html#ab08817d1e6998a6cf031abe1e38105a6">name</a> = rstrip(start);</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;                value = end + 1;</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="preprocessor">#if INI_ALLOW_INLINE_COMMENTS</span></div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;                end = find_chars_or_comment(value, NULL);</div>
@@ -262,8 +262,8 @@ $(function() {
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                rstrip(value);</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;                <span class="comment">/* Valid name[=:]value pair found, call handler */</span></div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                strncpy0(prev_name, <a class="code" href="../../dd/dc4/namespacesetup.html#ab3a7a0638d76a01367c5bc3cc699447f">name</a>, <span class="keyword">sizeof</span>(prev_name));</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;                <span class="keywordflow">if</span> (!<a class="code" href="../../d0/d1d/ini_8cpp.html#a444c6b3051cdd942c99ba2e0fea3aa38">HANDLER</a>(user, section, <a class="code" href="../../dd/dc4/namespacesetup.html#ab3a7a0638d76a01367c5bc3cc699447f">name</a>, value) &amp;&amp; !error)</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                strncpy0(prev_name, <a class="code" href="../../dd/dc5/namespaceNetwork.html#ab08817d1e6998a6cf031abe1e38105a6">name</a>, <span class="keyword">sizeof</span>(prev_name));</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;                <span class="keywordflow">if</span> (!<a class="code" href="../../d0/d1d/ini_8cpp.html#a444c6b3051cdd942c99ba2e0fea3aa38">HANDLER</a>(user, section, <a class="code" href="../../dd/dc5/namespaceNetwork.html#ab08817d1e6998a6cf031abe1e38105a6">name</a>, value) &amp;&amp; !error)</div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                    error = lineno;</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            }</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!error) {</div>
@@ -312,16 +312,16 @@ $(function() {
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* ctx_ptr = ctx-&gt;<a class="code" href="../../dd/dc7/structini__parse__string__ctx.html#af663d77366545df9b12b166831745c75">ptr</a>;</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="keywordtype">size_t</span> ctx_num_left = ctx-&gt;<a class="code" href="../../dd/dc7/structini__parse__string__ctx.html#aea48cbdd64d060c55b3b68cb01cbe69f">num_left</a>;</div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keywordtype">char</span>* strp = str;</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="keywordtype">char</span> c;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="keywordtype">char</span> <a class="code" href="../../d7/da6/namespacecreate__visualization.html#ab2861dc6f87f52bc1fa6ab0fc7cb42df">c</a>;</div>
 <div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
 <div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordflow">if</span> (ctx_num_left == 0 || num &lt; 2)</div>
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keywordflow">while</span> (num &gt; 1 &amp;&amp; ctx_num_left != 0) {</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;        c = *ctx_ptr++;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;        <a class="code" href="../../d7/da6/namespacecreate__visualization.html#ab2861dc6f87f52bc1fa6ab0fc7cb42df">c</a> = *ctx_ptr++;</div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;        ctx_num_left--;</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;        *strp++ = c;</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;        <span class="keywordflow">if</span> (c == <span class="charliteral">&#39;\n&#39;</span>)</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;        *strp++ = <a class="code" href="../../d7/da6/namespacecreate__visualization.html#ab2861dc6f87f52bc1fa6ab0fc7cb42df">c</a>;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="../../d7/da6/namespacecreate__visualization.html#ab2861dc6f87f52bc1fa6ab0fc7cb42df">c</a> == <span class="charliteral">&#39;\n&#39;</span>)</div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;        num--;</div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    }</div>
@@ -351,14 +351,15 @@ $(function() {
 <div class="ttc" id="astructini__parse__string__ctx_html"><div class="ttname"><a href="../../dd/dc7/structini__parse__string__ctx.html">ini_parse_string_ctx</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d1d/ini_8cpp_source.html#l00030">ini.cpp:30</a></div></div>
 <div class="ttc" id="aini_8h_html"><div class="ttname"><a href="../../d3/d50/ini_8h.html">ini.h</a></div></div>
 <div class="ttc" id="anamespacesetup_html_aa56d28649c6202402479532d9b048c60"><div class="ttname"><a href="../../dd/dc4/namespacesetup.html#aa56d28649c6202402479532d9b048c60">setup.filename</a></div><div class="ttdeci">string filename</div><div class="ttdef"><b>Definition:</b> <a href="../../da/dab/setup_8py_source.html#l00218">setup.py:218</a></div></div>
-<div class="ttc" id="anamespacesetup_html_ab3a7a0638d76a01367c5bc3cc699447f"><div class="ttname"><a href="../../dd/dc4/namespacesetup.html#ab3a7a0638d76a01367c5bc3cc699447f">setup.name</a></div><div class="ttdeci">name</div><div class="ttdef"><b>Definition:</b> <a href="../../da/dab/setup_8py_source.html#l00237">setup.py:237</a></div></div>
 <div class="ttc" id="aini_8h_html_a94fd267a11de14467754cd87e51a9f28"><div class="ttname"><a href="../../d3/d50/ini_8h.html#a94fd267a11de14467754cd87e51a9f28">INI_START_COMMENT_PREFIXES</a></div><div class="ttdeci">#define INI_START_COMMENT_PREFIXES</div><div class="ttdef"><b>Definition:</b> <a href="../../d3/d50/ini_8h_source.html#l00079">ini.h:79</a></div></div>
 <div class="ttc" id="aini_8h_html_a327d5a588a6a54129f768fc8dcc6f115"><div class="ttname"><a href="../../d3/d50/ini_8h.html#a327d5a588a6a54129f768fc8dcc6f115">INI_INLINE_COMMENT_PREFIXES</a></div><div class="ttdeci">#define INI_INLINE_COMMENT_PREFIXES</div><div class="ttdef"><b>Definition:</b> <a href="../../d3/d50/ini_8h_source.html#l00089">ini.h:89</a></div></div>
+<div class="ttc" id="anamespacecreate__visualization_html_ab2861dc6f87f52bc1fa6ab0fc7cb42df"><div class="ttname"><a href="../../d7/da6/namespacecreate__visualization.html#ab2861dc6f87f52bc1fa6ab0fc7cb42df">create_visualization.c</a></div><div class="ttdeci">c</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d1a/create__visualization_8py_source.html#l00082">create_visualization.py:82</a></div></div>
 <div class="ttc" id="aini_8cpp_html_aaf452164719d4d290a4766282df9d690"><div class="ttname"><a href="../../d0/d1d/ini_8cpp.html#aaf452164719d4d290a4766282df9d690">MAX_SECTION</a></div><div class="ttdeci">#define MAX_SECTION</div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d1d/ini_8cpp_source.html#l00026">ini.cpp:26</a></div></div>
 <div class="ttc" id="aini_8cpp_html_aeb90a0b5e4226351899d28ead4eed6fa"><div class="ttname"><a href="../../d0/d1d/ini_8cpp.html#aeb90a0b5e4226351899d28ead4eed6fa">ini_parse_string</a></div><div class="ttdeci">int ini_parse_string(const char *string, ini_handler handler, void *user)</div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d1d/ini_8cpp_source.html#l00264">ini.cpp:264</a></div></div>
 <div class="ttc" id="aini_8cpp_html_a876bf8b62ade275320db827b929f9289"><div class="ttname"><a href="../../d0/d1d/ini_8cpp.html#a876bf8b62ade275320db827b929f9289">ini_parse_file</a></div><div class="ttdeci">int ini_parse_file(FILE *file, ini_handler handler, void *user)</div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d1d/ini_8cpp_source.html#l00217">ini.cpp:217</a></div></div>
 <div class="ttc" id="aini_8cpp_html_ac7c0207aa5a0e10d378be03b68041350"><div class="ttname"><a href="../../d0/d1d/ini_8cpp.html#ac7c0207aa5a0e10d378be03b68041350">MAX_NAME</a></div><div class="ttdeci">#define MAX_NAME</div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d1d/ini_8cpp_source.html#l00027">ini.cpp:27</a></div></div>
 <div class="ttc" id="astructini__parse__string__ctx_html_af663d77366545df9b12b166831745c75"><div class="ttname"><a href="../../dd/dc7/structini__parse__string__ctx.html#af663d77366545df9b12b166831745c75">ini_parse_string_ctx::ptr</a></div><div class="ttdeci">const char * ptr</div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d1d/ini_8cpp_source.html#l00031">ini.cpp:31</a></div></div>
+<div class="ttc" id="anamespaceNetwork_html_ab08817d1e6998a6cf031abe1e38105a6"><div class="ttname"><a href="../../dd/dc5/namespaceNetwork.html#ab08817d1e6998a6cf031abe1e38105a6">Network.name</a></div><div class="ttdeci">name</div><div class="ttdef"><b>Definition:</b> <a href="../../d3/d17/Network_8py_source.html#l00029">Network.py:29</a></div></div>
 <div class="ttc" id="aini_8h_html_a7343d087975289e095471430150dbe59"><div class="ttname"><a href="../../d3/d50/ini_8h.html#a7343d087975289e095471430150dbe59">ini_handler</a></div><div class="ttdeci">int(* ini_handler)(void *user, const char *section, const char *name, const char *value)</div><div class="ttdef"><b>Definition:</b> <a href="../../d3/d50/ini_8h_source.html#l00026">ini.h:26</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

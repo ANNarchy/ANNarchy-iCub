@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['entries_1584',['entries',['../d5/db4/structprotobuf__iCub__5fANN__5fInterface__2fgrpc__2ficub__2eproto_1_1TableStruct.html#a3d8cb59cfe452eff938f4d6ffc43b9b2',1,'protobuf_iCub_5fANN_5fInterface_2fgrpc_2ficub_2eproto::TableStruct']]],
-  ['ext_5fmodules_1585',['ext_modules',['../dd/dc4/namespacesetup.html#a1bf56ea61d1e9865f316116dca2fbfea',1,'setup']]],
-  ['extensions_1586',['extensions',['../dd/dc4/namespacesetup.html#ab6b72d56ff85e52faea3f1487c6904f8',1,'setup']]],
-  ['extra_5fcompile_5fargs_1587',['extra_compile_args',['../dd/dc4/namespacesetup.html#ae06ccc95fcdc051223af0cefa0f492d5',1,'setup']]]
+  ['dependencies_1705',['dependencies',['../dd/dc4/namespacesetup.html#a6182166c54bb1f373025d1dd96d88b36',1,'setup']]],
+  ['description_1706',['description',['../dd/dc4/namespacesetup.html#aedf461ec52a946bda975938ba0b93ec0',1,'setup']]],
+  ['dev_5finit_1707',['dev_init',['../d9/dfd/classMod__BaseClass.html#a5eb7654d3ad98ddf2ed007dec1c36c1f',1,'Mod_BaseClass']]],
+  ['dev_5finit_5fgrpc_1708',['dev_init_grpc',['../d9/dfd/classMod__BaseClass.html#ac02d9c0aedaecd63c0483fcd62ef5a2e',1,'Mod_BaseClass']]],
+  ['directory_1709',['directory',['../dd/d91/namespaceDemo.html#a47602095d56e2afaaad6880e37bd04bd',1,'Demo']]],
+  ['double_5fprecision_1710',['double_precision',['../d6/d19/namespacemake__config.html#a4039bc5acbca8ac7ed09e593d0b9dacf',1,'make_config']]],
+  ['dt_1711',['dt',['../dd/dc5/namespaceNetwork.html#a1baf1734cea978b07148a076cb541cc5',1,'Network']]]
 ];

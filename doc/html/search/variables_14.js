@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['yarp_5fprefix_1711',['yarp_prefix',['../d6/d19/namespacemake__config.html#aa72f0e0da05e626e1996c9520374df78',1,'make_config.yarp_prefix()'],['../dd/dc4/namespacesetup.html#a0e0820b1de73eedad69abe7cbba76109',1,'setup.yarp_prefix()']]]
+  ['use_5fgrpc_1881',['use_grpc',['../d6/d19/namespacemake__config.html#a348e35c6b345bf88e35f0ee77110f701',1,'make_config']]],
+  ['used_5fgrpc_1882',['used_grpc',['../dd/dc4/namespacesetup.html#a24fc8c373de8815dd7dc2ee1ed9d5eb2',1,'setup']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['rebuild_5fgrpc_1668',['rebuild_grpc',['../d6/d19/namespacemake__config.html#a181d6122ef031d732a6833386377719d',1,'make_config']]],
-  ['root_5fpath_1669',['root_path',['../dd/dc4/namespacesetup.html#a01fc75d6bbb4547c8380efed7158be2e',1,'setup']]]
+  ['offsets_1805',['offsets',['../d5/db4/structprotobuf__iCub__5fANN__5fInterface__2fgrpc__2ficub__2eproto_1_1TableStruct.html#a438d493de5e8a464c5c66fdae64fcc80',1,'protobuf_iCub_5fANN_5fInterface_2fgrpc_2ficub_2eproto::TableStruct']]]
 ];

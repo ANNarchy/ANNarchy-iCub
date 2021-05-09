@@ -1,20 +1,6 @@
 var searchData=
 [
-  ['package_5fdata_1651',['package_data',['../dd/dc4/namespacesetup.html#a0a5ccc22976d20d42c6bb6c7651ce0be',1,'setup']]],
-  ['packages_1652',['packages',['../dd/dc4/namespacesetup.html#aff2375a361fd5865c77bd9aa093be747',1,'setup']]],
-  ['part_5fkey_5fhead_1653',['PART_KEY_HEAD',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#a0c5f9cd8b0000de046bdb0286b9c8316',1,'iCub_ANN_Interface::Vocabs']]],
-  ['part_5fkey_5fleft_5farm_1654',['PART_KEY_LEFT_ARM',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#a5c85f472272ab4aa52bec3bf5df2f764',1,'iCub_ANN_Interface::Vocabs']]],
-  ['part_5fkey_5fleft_5fleg_1655',['PART_KEY_LEFT_LEG',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#a14c252a1cb083bbd7906125e814d8761',1,'iCub_ANN_Interface::Vocabs']]],
-  ['part_5fkey_5fright_5farm_1656',['PART_KEY_RIGHT_ARM',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#a605cd2a806b09c0889d5857aff3e0ef8',1,'iCub_ANN_Interface::Vocabs']]],
-  ['part_5fkey_5fright_5fleg_1657',['PART_KEY_RIGHT_LEG',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#aa436b0253a70a8a1527f999c42e43ed1',1,'iCub_ANN_Interface::Vocabs']]],
-  ['part_5fkey_5ftorso_1658',['PART_KEY_TORSO',['../da/db5/namespaceiCub__ANN__Interface_1_1Vocabs.html#af21b91f659a432f5f08053c017062527',1,'iCub_ANN_Interface::Vocabs']]],
-  ['pedantic_1659',['pedantic',['../d6/d19/namespacemake__config.html#a6e9882c5e2d1d8b632f45b9b52184353',1,'make_config']]],
-  ['platforms_1660',['platforms',['../dd/dc4/namespacesetup.html#ae3da4d8e69fecb7fa1df37bcce24dccc',1,'setup']]],
-  ['pop_1661',['pop',['../d0/d3e/classWriteOutputServiceImpl.html#a0fd26776ea7cb84b96ec7f216de068ec',1,'WriteOutputServiceImpl']]],
-  ['prefix_5fcpp_1662',['prefix_cpp',['../dd/dc4/namespacesetup.html#a3b68891607a92cd876387236b6e79f44',1,'setup']]],
-  ['prefix_5fcy_1663',['prefix_cy',['../dd/dc4/namespacesetup.html#a9bc566088ca4e358afc9eb4e20f3de7e',1,'setup']]],
-  ['ptr_1664',['ptr',['../dd/dc7/structini__parse__string__ctx.html#af663d77366545df9b12b166831745c75',1,'ini_parse_string_ctx']]],
-  ['py_5fmajor_1665',['py_major',['../dd/dc4/namespacesetup.html#a6250383936d86ac128ad3347dd2db7e8',1,'setup']]],
-  ['py_5fminor_1666',['py_minor',['../dd/dc4/namespacesetup.html#a64d27bb373bf0fe3edd82aa687c5927e',1,'setup']]],
-  ['py_5fversion_1667',['py_version',['../dd/dc4/namespacesetup.html#ae33face1920fc1d75de71038254c429f',1,'setup']]]
+  ['name_1802',['name',['../d9/db1/classiCub__ANN__Interface_1_1ANNarchy__iCub__Populations_1_1JointPopulation_1_1JointControl.html#a19b300567abd2273eb206e0b226aee9c',1,'iCub_ANN_Interface.ANNarchy_iCub_Populations.JointPopulation.JointControl.name()'],['../df/dc0/classiCub__ANN__Interface_1_1ANNarchy__iCub__Populations_1_1JointPopulation_1_1JointReadout.html#aa12cc92d0dfc39174d996366192677cd',1,'iCub_ANN_Interface.ANNarchy_iCub_Populations.JointPopulation.JointReadout.name()'],['../d8/d74/classiCub__ANN__Interface_1_1ANNarchy__iCub__Populations_1_1SkinPopulation_1_1SkinPopulation.html#af4a6c2f538e148bd3ed9b425f2655d19',1,'iCub_ANN_Interface.ANNarchy_iCub_Populations.SkinPopulation.SkinPopulation.name()'],['../dd/d05/classiCub__ANN__Interface_1_1ANNarchy__iCub__Populations_1_1VisionPopulation_1_1VisionPopulation.html#a7759d28b0a13550365eca649738f62f0',1,'iCub_ANN_Interface.ANNarchy_iCub_Populations.VisionPopulation.VisionPopulation.name()'],['../dd/dc5/namespaceNetwork.html#ab08817d1e6998a6cf031abe1e38105a6',1,'Network.name()'],['../d9/d12/namespaceiCub__ANN__Interface_1_1ANNarchy__iCub__Populations_1_1JointPopulation.html#ab6c6a714ff6120ccb1ce54c9f21bc21f',1,'iCub_ANN_Interface.ANNarchy_iCub_Populations.JointPopulation.name()'],['../dd/dc4/namespacesetup.html#ab3a7a0638d76a01367c5bc3cc699447f',1,'setup.name()']]],
+  ['net_1803',['net',['../d3/df9/classSync__Classes_1_1ANNarchyClock.html#a18319a4c5bc6d85f75e1bcfb310f9d57',1,'Sync_Classes.ANNarchyClock.net()'],['../dd/dc5/namespaceNetwork.html#a637b9c0c25f696b1afdff3750ce28e9c',1,'Network.net()']]],
+  ['num_5fleft_1804',['num_left',['../dd/dc7/structini__parse__string__ctx.html#aea48cbdd64d060c55b3b68cb01cbe69f',1,'ini_parse_string_ctx']]]
 ];

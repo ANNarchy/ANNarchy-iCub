@@ -1,7 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,46,76,73"/>
-<area shape="rect" id="node2" href="$d7/ded/classiCubInterfaceMessages_1_1ProvideInput_1_1Service.html" title=" " alt="" coords="124,5,299,47"/>
-<area shape="rect" id="node4" href="$d0/d82/classiCubInterfaceMessages_1_1WriteOutput_1_1Service.html" title=" " alt="" coords="124,71,299,112"/>
-<area shape="rect" id="node3" href="$dd/df3/classProvideInputServiceImpl.html" title=" " alt="" coords="349,13,531,39"/>
-<area shape="rect" id="node5" href="$d0/d3e/classWriteOutputServiceImpl.html" title=" " alt="" coords="347,71,533,112"/>
+<area shape="rect" id="node1" href="$dd/dda/classiCubInterfaceMessages_1_1ProvideInput_1_1StubInterface.html" title=" " alt="" coords="5,5,212,47"/>
+<area shape="rect" id="node2" href="$da/d0d/classiCubInterfaceMessages_1_1ProvideInput_1_1Stub.html" title=" " alt="" coords="260,5,435,47"/>
 </map>

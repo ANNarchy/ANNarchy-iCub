@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zip_5fsafe_1428',['zip_safe',['../dd/dc4/namespacesetup.html#a13510753661cb74083a0c664db11dde9',1,'setup']]]
+  ['weights_1887',['weights',['../dd/dc5/namespaceNetwork.html#ae852fb74ccb4787697bfde3983867586',1,'Network']]]
 ];

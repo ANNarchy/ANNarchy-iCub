@@ -1,4 +1,31 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,64,32"/>
-<area shape="rect" id="node2" href="$d0/deb/classiCubClock.html" title="iCub interface clock" alt="" coords="112,5,199,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,895,85,922"/>
+<area shape="rect" id="node2" href="$d1/dad/classiCubInterfaceMessages_1_1AllJointsRequest.html" title=" " alt="" coords="160,5,335,47"/>
+<area shape="rect" id="node3" href="$d3/d5a/classiCubInterfaceMessages_1_1AllJointsResponse.html" title=" " alt="" coords="160,71,335,112"/>
+<area shape="rect" id="node4" href="$df/d06/classiCubInterfaceMessages_1_1AllTargetEncodedRequest.html" title=" " alt="" coords="150,136,345,177"/>
+<area shape="rect" id="node5" href="$d2/d3c/classiCubInterfaceMessages_1_1AllTargetEncodedResponse.html" title=" " alt="" coords="145,201,350,243"/>
+<area shape="rect" id="node6" href="$d0/d51/classiCubInterfaceMessages_1_1AllTargetRequest.html" title=" " alt="" coords="160,267,335,308"/>
+<area shape="rect" id="node7" href="$d7/d44/classiCubInterfaceMessages_1_1AllTargetResponse.html" title=" " alt="" coords="160,332,335,373"/>
+<area shape="rect" id="node8" href="$d0/dea/classiCubInterfaceMessages_1_1DoubleVector.html" title=" " alt="" coords="160,397,335,439"/>
+<area shape="rect" id="node9" href="$d8/d20/classiCubInterfaceMessages_1_1ImageRequest.html" title=" " alt="" coords="160,463,335,504"/>
+<area shape="rect" id="node10" href="$d6/db7/classiCubInterfaceMessages_1_1ImageResponse.html" title=" " alt="" coords="160,528,335,569"/>
+<area shape="rect" id="node11" href="$d9/d96/classiCubInterfaceMessages_1_1MultiJointRequest.html" title=" " alt="" coords="160,593,335,635"/>
+<area shape="rect" id="node12" href="$d3/df3/classiCubInterfaceMessages_1_1MultiJointResponse.html" title=" " alt="" coords="160,659,335,700"/>
+<area shape="rect" id="node13" href="$d5/d46/classiCubInterfaceMessages_1_1MultiTargetEncodedRequest.html" title=" " alt="" coords="142,724,353,765"/>
+<area shape="rect" id="node14" href="$dd/d5d/classiCubInterfaceMessages_1_1MultiTargetEncodedResponse.html" title=" " alt="" coords="137,789,358,831"/>
+<area shape="rect" id="node15" href="$de/df4/classiCubInterfaceMessages_1_1MultiTargetRequest.html" title=" " alt="" coords="160,855,335,896"/>
+<area shape="rect" id="node16" href="$df/df0/classiCubInterfaceMessages_1_1MultiTargetResponse.html" title=" " alt="" coords="160,920,335,961"/>
+<area shape="rect" id="node17" href="$db/d5d/classiCubInterfaceMessages_1_1SingleJointRequest.html" title=" " alt="" coords="160,985,335,1027"/>
+<area shape="rect" id="node18" href="$d3/d81/classiCubInterfaceMessages_1_1SingleJointResponse.html" title=" " alt="" coords="160,1051,335,1092"/>
+<area shape="rect" id="node19" href="$d7/dbb/classiCubInterfaceMessages_1_1SingleTargetEncodedRequest.html" title=" " alt="" coords="138,1116,357,1157"/>
+<area shape="rect" id="node20" href="$d1/db2/classiCubInterfaceMessages_1_1SingleTargetEncodedResponse.html" title=" " alt="" coords="133,1181,361,1223"/>
+<area shape="rect" id="node21" href="$d4/d58/classiCubInterfaceMessages_1_1SingleTargetRequest.html" title=" " alt="" coords="160,1247,335,1288"/>
+<area shape="rect" id="node22" href="$d5/d6e/classiCubInterfaceMessages_1_1SingleTargetResponse.html" title=" " alt="" coords="160,1312,335,1353"/>
+<area shape="rect" id="node23" href="$df/dd1/classiCubInterfaceMessages_1_1SkinArmRequest.html" title=" " alt="" coords="160,1377,335,1419"/>
+<area shape="rect" id="node24" href="$d7/db8/classiCubInterfaceMessages_1_1SkinForearmRequest.html" title=" " alt="" coords="160,1443,335,1484"/>
+<area shape="rect" id="node25" href="$d1/dbf/classiCubInterfaceMessages_1_1SkinHandRequest.html" title=" " alt="" coords="160,1508,335,1549"/>
+<area shape="rect" id="node26" href="$d5/df8/classiCubInterfaceMessages_1_1SkinRequest.html" title=" " alt="" coords="160,1573,335,1615"/>
+<area shape="rect" id="node27" href="$d7/da8/classiCubInterfaceMessages_1_1SkinResponse.html" title=" " alt="" coords="160,1639,335,1680"/>
+<area shape="rect" id="node28" href="$d0/d39/classiCubInterfaceMessages_1_1TestRequest.html" title=" " alt="" coords="160,1704,335,1745"/>
+<area shape="rect" id="node29" href="$db/d18/classiCubInterfaceMessages_1_1TestResponse.html" title=" " alt="" coords="160,1769,335,1811"/>
 </map>
