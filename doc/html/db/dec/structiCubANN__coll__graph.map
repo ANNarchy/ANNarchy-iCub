@@ -1,9 +1,0 @@
-<map id="iCubANN" name="iCubANN">
-<area shape="rect" id="node4" href="$df/d23/classJointWriter.html" title="Write the joint angles to the iCub robots joints to move them. " alt="" coords="820,288,905,315"/>
-<area shape="rect" id="node12" href="$d1/dc0/classJointReader.html" title="Read&#45;out of the joint angles of the iCub robot. " alt="" coords="817,607,909,633"/>
-<area shape="rect" id="node15" href="$d1/dc5/classSkinReader.html" title="Read&#45;out of the skin sensor data from the iCubs artificial skin. " alt="" coords="817,117,908,144"/>
-<area shape="rect" id="node17" href="$d4/dbf/structTaxelData.html" title="Struct for the skin taxel positiiion data per iCub part. " alt="" coords="233,77,316,104"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="235,337,315,364"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="21,330,148,371"/>
-<area shape="rect" id="node20" href="$d5/df3/classVisualReader.html" title="Read&#45;out of the camera images from the iCub robot. " alt="" coords="1106,773,1206,800"/>
-</map>

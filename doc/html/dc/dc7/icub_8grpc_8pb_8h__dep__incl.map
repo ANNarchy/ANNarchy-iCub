@@ -1,8 +1,0 @@
-<map id="icub.grpc.pb.h" name="icub.grpc.pb.h">
-<area shape="rect" id="node1" title=" " alt="" coords="349,5,463,32"/>
-<area shape="rect" id="node2" href="$d3/dc8/icub_8grpc_8pb_8cc.html" title=" " alt="" coords="5,80,124,107"/>
-<area shape="rect" id="node3" href="$d4/d64/ProvideInputClient_8h.html" title=" " alt="" coords="147,80,302,107"/>
-<area shape="rect" id="node4" href="$db/d13/ProvideInputServer_8h.html" title=" " alt="" coords="327,80,485,107"/>
-<area shape="rect" id="node5" href="$da/db5/WriteOutputClient_8h.html" title=" " alt="" coords="509,80,660,107"/>
-<area shape="rect" id="node6" href="$d7/d63/WriteOutputServer_8h.html" title=" " alt="" coords="685,80,839,107"/>
-</map>
