@@ -26,6 +26,7 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
+from libcpp.map cimport map as cmap
 
 cdef extern from "Joint_Writer.hpp":
 
@@ -102,6 +103,8 @@ cdef extern from "Joint_Writer.hpp":
 
         void Retrieve_ANNarchy_Input_AJ_enc()
         void Write_ANNarchy_Input_AJ_enc()
+
+        cmap[string, string] getParameter()
 
 cdef class PyJointWriter:
     cdef shared_ptr[JointWriter] cpp_joint_writer

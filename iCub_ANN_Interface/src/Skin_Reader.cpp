@@ -28,6 +28,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <queue>
 #include <string>
 
@@ -168,6 +169,10 @@ bool SkinReader::Init(std::string name, char arm, bool norm_data, std::string in
 
         this->type = "SkinReader";
         this->icub_part = std::string(1, arm);
+        init_param["name"] = name;
+        init_param["arm"] = std::to_string(arm);
+        init_param["norm_data"] = std::to_string(norm_data);
+        init_param["ini_path"] = ini_path;
         this->dev_init = true;
         return true;
     } else {
@@ -184,6 +189,8 @@ bool SkinReader::InitGRPC(std::string name, char arm, bool norm_data, std::strin
             this->_port = port;
             this->skin_source = new ServerInstance(ip_address, port, this);
             this->server_thread = std::thread(&ServerInstance::wait, this->skin_source);
+            init_param["ip_address"] = ip_address;
+            init_param["port"] = std::to_string(port);
             this->dev_init_grpc = true;
             return true;
         } else {

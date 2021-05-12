@@ -22,6 +22,9 @@
 #include <yarp/dev/all.h>
 #include <yarp/sig/all.h>
 
+#include <iostream>
+#include <map>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -235,7 +238,7 @@ class JointWriter : public Mod_BaseClass {
     std::vector<double> joint_deg_res_abs;    // degree per neuron for the population coding, value per joint
     std::vector<double> joint_deg_res_rel;    // degree per neuron for the population coding, value per joint
     int joints = 0;                           // number of joints
-    unsigned int pop_size = 0;                           // number of joints
+    unsigned int pop_size = 0;                // number of joints
 
     std::vector<double> joint_min;                      // minimum possible joint angles
     std::vector<double> joint_max;                      // maximum possible joint angles
@@ -249,6 +252,7 @@ class JointWriter : public Mod_BaseClass {
     yarp::dev::IPositionControl *ipos;    // iCub position control interface
     yarp::dev::IEncoders *ienc;           // iCub joint encoder interface
     yarp::dev::IControlMode *icont;       // iCub joint control mode interface
+    yarp::dev::IControlLimits *ilim;      // iCub joint limits interface
 
     /** grpc communication **/
 #ifdef _USE_GRPC
@@ -268,4 +272,7 @@ class JointWriter : public Mod_BaseClass {
     bool CheckPartKey(std::string key);
     // decode the population coded joint angle to double value
     double Decode(std::vector<double> position_pop, int joint, std::vector<std::vector<double>> neuron_deg);
+    // Auxilaries
+    template <typename T>
+    std::string vec2string(const T &vec);
 };

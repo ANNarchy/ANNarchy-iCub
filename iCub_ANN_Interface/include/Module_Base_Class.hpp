@@ -20,6 +20,7 @@
 #pragma once
 
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -37,7 +38,8 @@ class Mod_BaseClass {
     bool dev_init = false;         // variable for initialization check
     bool dev_init_grpc = false;    // variable for gRPC initialization check
     std::string type;              // Module type e.g. Joint Reader
-    std::string icub_part;         // 
+    std::string icub_part;         //
+    std::map<std::string, std::string> init_param;
 
  public:
     // Constructor
@@ -50,6 +52,7 @@ class Mod_BaseClass {
     bool getRegister();
 
     std::string get_identifier();
+    std::map<std::string, std::string> getParameter();
 
     // template function for close method
     virtual void Close() = 0;

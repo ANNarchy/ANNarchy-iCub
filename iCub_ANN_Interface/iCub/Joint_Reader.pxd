@@ -24,6 +24,7 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
+from libcpp.map cimport map as cmap
 
 cdef extern from "Joint_Reader.hpp":
 
@@ -62,6 +63,8 @@ cdef extern from "Joint_Reader.hpp":
 
         void setRegister(bint)
         bint getRegister()
+
+        cmap[string, string] getParameter()
 
 cdef class PyJointReader:
     cdef shared_ptr[JointReader] cpp_joint_reader

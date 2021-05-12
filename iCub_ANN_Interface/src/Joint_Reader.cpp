@@ -78,8 +78,8 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "interface_param.ini");
         if (reader_gen.ParseError()) {
-          std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path and the ini file content!" << std::endl;
-          return false;
+            std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path and the ini file content!" << std::endl;
+            return false;
         }
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
@@ -101,7 +101,14 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
         }
 
         if (!driver.view(ienc)) {
-            std::cerr << "[Joint Reader " << icub_part << "] Unable to open motor control interfaces!" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Unable to open motor encoder interface!" << std::endl;
+            driver.close();
+            return false;
+        }
+
+        if (!driver.view(ilim)) {
+            std::cerr << "[Joint Reader " << icub_part << "] Unable to open motor limit interface!" << std::endl;
+            driver.close();
             return false;
         }
 
@@ -110,30 +117,20 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
         neuron_deg.resize(joints);
         joint_deg_res.resize(joints);
 
-        // setup ini-Reader for joint limits
+        // Variables needed to set joint limits
         double joint_range;
-        std::string joint_path;
-        if (on_Simulator) {
-            joint_path = reader_gen.Get("motor", "sim_joint_limits_path", "");
-        } else {
-            joint_path = reader_gen.Get("motor", "robot_joint_limits_path", "");
-        }
-
-        if (joint_path == "") {
-            std::cerr << "[Joint Reader " << icub_part << "] Ini-path for joint limits is empty!" << std::endl;
-            return false;
-        }
-        INIReader reader(joint_path);
+        double min, max;
 
         for (int i = 0; i < joints; i++) {
             // read joint limits
-            joint_min.push_back(reader.GetReal(icub_part.c_str(), ("joint_" + std::to_string(i) + "_min").c_str(), 0.0));
-            joint_max.push_back(reader.GetReal(icub_part.c_str(), ("joint_" + std::to_string(i) + "_max").c_str(), 0.0));
+            ilim->getLimits(i, &min, &max);
+            joint_min.push_back(min);
+            joint_max.push_back(max);
 
             // printf("joint: %i, min: %f, max: %f \n", i, joint_min[i], joint_max[i]);
 
             if (joint_min == joint_max) {
-                std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint parameters from .ini file!" << std::endl;
+                std::cerr << "[Joint Reader " << icub_part << "] Error in reading joint limits!" << std::endl;
                 return false;
             }
 
@@ -157,13 +154,17 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
                     neuron_deg[i][j] = joint_min[i] + j * deg_per_neuron;
                 }
             } else {
-                std::cerr << "[Joint Reader " << icub_part
-                          << "] Error in population size definition. Check the values for pop_size or deg_per_neuron!" << std::endl;
+                std::cerr << "[Joint Reader " << icub_part << "] Error in population size definition. Check the values for pop_size or deg_per_neuron!" << std::endl;
                 return false;
             }
         }
 
         this->type = "JointReader";
+        init_param["part"] = part;
+        init_param["sigma"] = std::to_string(sigma);
+        init_param["pop_size"] = std::to_string(pop_size);
+        init_param["deg_per_neuron"] = std::to_string(deg_per_neuron);
+        init_param["ini_path"] = ini_path;
         this->dev_init = true;
         return true;
     } else {
@@ -173,8 +174,7 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
 }
 
 #ifdef _USE_GRPC
-bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size, double deg_per_neuron, std::string ini_path,
-                           std::string ip_address, unsigned int port) {
+bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size, double deg_per_neuron, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize the joint reader with given parameters
 
@@ -195,6 +195,8 @@ bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size
             this->joint_source = new ServerInstance(ip_address, port, this);
             this->server_thread = std::thread(&ServerInstance::wait, this->joint_source);
             this->dev_init_grpc = true;
+            init_param["ip_address"] = ip_address;
+            init_param["port"] = std::to_string(port);
             return true;
         } else {
             std::cerr << "[Joint Reader] Initialization failed!" << std::endl;
@@ -206,8 +208,7 @@ bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size
     }
 }
 #else
-bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size, double deg_per_neuron, std::string ini_path,
-                           std::string ip_address, unsigned int port) {
+bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size, double deg_per_neuron, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize the joint reader with given parameters
 
@@ -222,7 +223,7 @@ bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size
     */
     std::cerr << "[Joint Reader] gRPC is not included in the setup process!" << std::endl;
     return false;
-   }
+}
 #endif
 
 void JointReader::Close() {

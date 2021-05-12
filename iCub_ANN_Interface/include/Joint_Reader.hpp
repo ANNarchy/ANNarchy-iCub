@@ -22,6 +22,7 @@
 #include <yarp/dev/all.h>
 #include <yarp/sig/all.h>
 
+#include <map>
 #include <string>
 #include <thread>
 #include <vector>
@@ -160,9 +161,10 @@ class JointReader : public Mod_BaseClass {
     std::vector<std::vector<double>> neuron_deg;    // vector of vectors representing the degree values for the neuron populations
 
     /*** yarp data structures ***/
-    yarp::sig::Vector joint_angles;    // yarp vector for reading all joint angles
-    yarp::dev::PolyDriver driver;      // yarp driver needed for reading joint encoders
-    yarp::dev::IEncoders *ienc;        // iCub joint encoder interface
+    yarp::sig::Vector joint_angles;     // yarp vector for reading all joint angles
+    yarp::dev::PolyDriver driver;       // yarp driver needed for reading joint encoders
+    yarp::dev::IEncoders *ienc;         // iCub joint encoder interface
+    yarp::dev::IControlLimits *ilim;    // iCub joint limits interface
 
     /** grpc communication **/
 #ifdef _USE_GRPC

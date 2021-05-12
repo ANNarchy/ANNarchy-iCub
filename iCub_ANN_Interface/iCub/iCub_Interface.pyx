@@ -22,6 +22,8 @@
 
 
 from libcpp.string cimport string
+from libcpp.map cimport map as cmap
+from libcpp.memory cimport shared_ptr
 
 cimport numpy as np
 import numpy as np
@@ -41,6 +43,7 @@ from .Visual_Reader cimport VisualReader
 from .Visual_Reader cimport PyVisualReader
 
 import xml.etree.ElementTree as ET
+from xml.dom import minidom
 import os
 
 
@@ -57,7 +60,7 @@ cdef class iCubANN_wrapper:
         self.joint_writer_parts = {}
 
         self.skin_reader = {}
-        
+
         self.visual_reader = {}
 
     def __dealloc__(self):
@@ -214,7 +217,7 @@ cdef class iCubANN_wrapper:
             return False
 
     # get joint reader module by name
-    def get_jreader_by_name(self, str name):
+    def get_jreader_by_name(self, str name) -> PyJointReader:
         if (name in self.joint_reader):
             return self.joint_reader[name]
         else:
@@ -222,7 +225,7 @@ cdef class iCubANN_wrapper:
             return None
 
     # get joint reader module by part
-    def get_jreader_by_part(self, str part):
+    def get_jreader_by_part(self, str part) -> PyJointReader:
         if (part in self.joint_reader_parts):
             return self.joint_reader[self.joint_reader_parts[part]]
         else:
@@ -230,7 +233,7 @@ cdef class iCubANN_wrapper:
             return None
 
     # get joint writer module by name
-    def get_jwriter_by_name(self, str name):
+    def get_jwriter_by_name(self, str name) -> PyJointWriter:
         if (name in self.joint_writer):
             return self.joint_writer[name]
         else:
@@ -238,7 +241,7 @@ cdef class iCubANN_wrapper:
             return None
 
     # get joint writer module by part
-    def get_jwriter_by_part(self, str part):
+    def get_jwriter_by_part(self, str part) -> PyJointWriter:
         if (part in self.joint_writer_parts):
             return self.joint_writer[self.joint_writer_parts[part]]
         else:
@@ -246,7 +249,7 @@ cdef class iCubANN_wrapper:
             return None
 
     # get skin reader module by name
-    def get_skinreader_by_name(self, str name):
+    def get_skinreader_by_name(self, str name) -> PySkinReader:
         if (name in self.skin_reader):
             return self.skin_reader[name]
         else:
@@ -254,7 +257,7 @@ cdef class iCubANN_wrapper:
             return None
 
     # get visual reader module by name
-    def get_vis_reader_by_name(self, str name):
+    def get_vis_reader_by_name(self, str name) -> PyVisualReader:
         if (name in self.visual_reader):
             return self.visual_reader[name]
         else:
@@ -484,3 +487,39 @@ cdef class iCubANN_wrapper:
         else:
             print("Not a valid XML-Filepath given!")
             return False, name_dict
+
+    def save_robot_to_file(self, xml_file, description=""):
+        root = ET.Element("robot")
+        root.append(ET.Comment(description))
+
+        for name, module in self.joint_reader.items():
+            JReader = ET.SubElement(root, "JReader", attrib={"name": name})
+            jread_cast = <PyJointReader> module
+            jread_param = deref(jread_cast.cpp_joint_reader).getParameter()
+            for key, value in (<dict>jread_param).items():
+                ET.SubElement(JReader, key.decode('utf-8')).text = value.decode('utf-8')
+
+        for name, module in self.joint_writer.items():
+            JWriter = ET.SubElement(root, "JWriter", attrib={"name": name})
+            jwrite_cast = <PyJointWriter> module
+            jwrite_param = deref(jwrite_cast.cpp_joint_writer).getParameter()
+            for key, value in (<dict>jwrite_param).items():
+                ET.SubElement(JWriter, key.decode('utf-8')).text = value.decode('utf-8')
+
+        for name, module in self.visual_reader.items():
+            VReader = ET.SubElement(root, "VisReader", attrib={"name": name})
+            vread_cast = <PyVisualReader> module
+            vread_param = deref(vread_cast.cpp_visual_reader).getParameter()
+            for key, value in (<dict>vread_param).items():
+                ET.SubElement(VReader, key.decode('utf-8')).text = value.decode('utf-8')
+
+        for name, module in self.skin_reader.items():
+            SReader = ET.SubElement(root, "TacReader", attrib={"name": name})
+            sread_cast = <PySkinReader> module
+            sread_param = deref(sread_cast.cpp_skin_reader).getParameter()
+            for key, value in (<dict>sread_param).items():
+                ET.SubElement(SReader, key.decode('utf-8')).text = value.decode('utf-8')
+
+        XML_file_string = minidom.parseString(ET.tostring(root, 'utf-8')).toprettyxml(indent="    ")
+        with open (xml_file, "w") as files :
+            files.write(XML_file_string)

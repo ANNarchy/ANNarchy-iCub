@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "INI_Reader/INIReader.h"
@@ -42,7 +43,7 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
         Initialize the joint writer with given parameters
 
         params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-                unsigned int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+                unsigned int pop_size   -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
                 double speed            -- velocity for the joint motions
                 ini_path                -- Path to the "interface_param.ini"-file
@@ -94,7 +95,7 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
             return false;
         }
 
-        if (!driver.view(ipos) || !driver.view(ienc) || !driver.view(ivel) || !driver.view(icont)) {
+        if (!driver.view(ipos) || !driver.view(ienc) || !driver.view(ivel) || !driver.view(icont) || !driver.view(ilim)) {
             std::cerr << "[Joint Writer " << icub_part << "] Unable to open motor control interfaces!" << std::endl;
             driver.close();
             return false;
@@ -126,36 +127,25 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
         // set default control mode -> position
         SetJointControlMode("position", -1);
 
-        // setup ini-Reader for joint limits
+        // Variables needed to set joint limits
         double joint_range;
-        std::string joint_path;
-        if (on_Simulator) {
-            joint_path = reader_gen.Get("motor", "sim_joint_limits_path", "");
-        } else {
-            joint_path = reader_gen.Get("motor", "robot_joint_limits_path", "");
-        }
-
-        if (joint_path == "") {
-            std::cerr << "[Joint Writer " << icub_part << "] Ini-path for joint limits is empty!" << std::endl;
-            return false;
-        }
-        INIReader reader(joint_path);
+        double min, max;
 
         for (int i = 0; i < joints; i++) {
             // set joint velocity
             if (speed > 0 && speed <= velocity_max) {
                 ipos->setRefSpeed(i, speed);
             }
-
             // read joint limits
-            joint_min.push_back(reader.GetReal(icub_part.c_str(), ("joint_" + std::to_string(i) + "_min").c_str(), 0.0));
-            joint_max.push_back(reader.GetReal(icub_part.c_str(), ("joint_" + std::to_string(i) + "_max").c_str(), 0.0));
+            ilim->getLimits(i, &min, &max);
+            joint_min.push_back(min);
+            joint_max.push_back(max);
 
-            // printf("joint: %i, min: %f, max: %f\n", i, joint_min[i], joint_max[i]);
+            // printf("joint: %i, min: %f, max: %f \n", i, joint_min[i],
+            // joint_max[i]);
 
-            if (joint_min[i] == joint_max[i]) {
-                std::cerr << "[Joint Writer " << icub_part << "] Error in reading joint parameters from .ini file " << std::endl;
-                driver.close();
+            if (joint_min == joint_max) {
+                std::cerr << "[Joint Writer " << icub_part << "] Error in reading joint limits!" << std::endl;
                 return false;
             }
 
@@ -194,14 +184,18 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
                     neuron_deg_rel[i][j] = -joint_range + j * deg_per_neuron;
                 }
             } else {
-                std::cerr << "[Joint Writer " << icub_part
-                          << "] Error in population size definition. Check the values for pop_size or deg_per_neuron!" << std::endl;
+                std::cerr << "[Joint Writer " << icub_part << "] Error in population size definition. Check the values for pop_size or deg_per_neuron!" << std::endl;
                 driver.close();
                 return false;
             }
         }
 
         this->type = "JointWriter";
+        init_param["part"] = part;
+        init_param["pop_size"] = std::to_string(pop_size);
+        init_param["deg_per_neuron"] = std::to_string(deg_per_neuron);
+        init_param["speed"] = std::to_string(speed);
+        init_param["ini_path"] = ini_path;
         this->dev_init = true;
         return true;
     } else {
@@ -210,8 +204,8 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
     }
 }
 #ifdef _USE_GRPC
-bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking,
-                           double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port) {
+bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking, double deg_per_neuron, double speed, std::string ini_path,
+                           std::string ip_address, unsigned int port) {
     /*
         Initialize the joint Writer with given parameters
 
@@ -233,6 +227,11 @@ bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<
             this->_mode = mode;
             this->_joint_select = joint_select;
             this->pop_size = pop_size;
+            init_param["joint_select"] = vec2string<std::vector<int>>(joint_select);
+            init_param["mode"] = mode;
+            init_param["blocking"] = std::to_string(blocking);
+            init_param["ip_address"] = ip_address;
+            init_param["port"] = std::to_string(port);
             return true;
         } else {
             std::cerr << "[Joint Writer] Initialization failed!" << std::endl;
@@ -244,8 +243,8 @@ bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<
     }
 }
 #else
-bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking,
-                           double deg_per_neuron, double speed, std::string ini_path, std::string ip_address, unsigned int port) {
+bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking, double deg_per_neuron, double speed, std::string ini_path,
+                           std::string ip_address, unsigned int port) {
     /*
         Initialize the joint Writer with given parameters
 
@@ -421,8 +420,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
             // start motion
             start = ipos->relativeMove(position.data());
         } else {
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
-                      << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
         }
 
         // move joints blocking/non-blocking
@@ -504,8 +502,7 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
             // start motion
             start = ipos->relativeMove(joint_selection.size(), joint_selection.data(), position.data());
         } else {
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
-                      << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
         }
 
         // move joints blocking/non-blocking
@@ -555,8 +552,7 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
                 // start motion
                 start = ipos->positionMove(joint, position);
             } else {
-                std::cerr << "[Joint Writer " << icub_part
-                          << "] Motion mode does not fit with control mode! Use 'position' control mode for 'abs' motion mode" << std::endl;
+                std::cerr << "[Joint Writer " << icub_part << "] Motion mode does not fit with control mode! Use 'position' control mode for 'abs' motion mode" << std::endl;
             }
         } else if (mode == "rel") {
             if (joint_control_mode[joint] == VOCAB_CM_POSITION) {
@@ -572,8 +568,7 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
                 // start motion
                 start = ipos->relativeMove(joint, position);
             } else {
-                std::cerr << "[Joint Writer " << icub_part
-                          << "] Motion mode does not fit with control mode! Use 'position' control mode for 'rel' motion mode" << std::endl;
+                std::cerr << "[Joint Writer " << icub_part << "] Motion mode does not fit with control mode! Use 'position' control mode for 'rel' motion mode" << std::endl;
             }
         } else if (mode == "vel") {
             if (joint_control_mode[joint] == VOCAB_CM_VELOCITY) {
@@ -582,12 +577,10 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
                 // start motion
                 start = ivel->velocityMove(joint, position);
             } else {
-                std::cerr << "[Joint Writer " << icub_part
-                          << "] Motion mode does not fit with control mode! Use 'velocity' control mode for 'vel' motion mode" << std::endl;
+                std::cerr << "[Joint Writer " << icub_part << "] Motion mode does not fit with control mode! Use 'velocity' control mode for 'vel' motion mode" << std::endl;
             }
         } else {
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
-                      << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
         }
         // move joint blocking/non-blocking
         if (start) {
@@ -668,8 +661,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bo
             // start motion
             start = ipos->relativeMove(joint_angles.data());
         } else {
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
-                      << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
         }
 
         // move joints blocking/non-blocking
@@ -690,8 +682,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bo
     }
 }
 
-bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, bool blocking,
-                                   std::string mode) {
+bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, bool blocking, std::string mode) {
     /*
         Write multiple joints with joint angles encoded in populations
 
@@ -761,8 +752,7 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
             start = ipos->relativeMove(joint_selection.size(), joint_selection.data(), joint_angles.data());
 
         } else {
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
-                      << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
         }
 
         // move joints blocking/non-blocking
@@ -835,8 +825,7 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool 
             // start motion
             start = ipos->relativeMove(joint, angle);
         } else {
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !"
-                      << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
         }
 
         // move joint blocking/non-blocking
@@ -873,8 +862,7 @@ void JointWriter::Write_ANNarchy_Input_MJ() { WriteDoubleMultiple(joint_value_1d
 void JointWriter::Retrieve_ANNarchy_Input_MJ_enc() {
     joint_value_1dvector = joint_source->retrieve_multitarget_enc();
     for (unsigned int i = 0; i < joint_value_1dvector.size(); i += pop_size) {
-        joint_value_2dvector.push_back(
-            std::vector<double>((joint_value_1dvector.begin() + i), (joint_value_1dvector.begin() + i + pop_size + 1)));
+        joint_value_2dvector.push_back(std::vector<double>((joint_value_1dvector.begin() + i), (joint_value_1dvector.begin() + i + pop_size + 1)));
     }
 }
 void JointWriter::Write_ANNarchy_Input_MJ_enc() { WritePopMultiple(joint_value_2dvector, _joint_select, _blocking, _mode); }
@@ -885,8 +873,7 @@ void JointWriter::Write_ANNarchy_Input_AJ() { WriteDoubleAll(joint_value_1dvecto
 void JointWriter::Retrieve_ANNarchy_Input_AJ_enc() {
     joint_value_1dvector = joint_source->retrieve_alltarget_enc();
     for (unsigned int i = 0; i < joint_value_1dvector.size(); i += pop_size) {
-        joint_value_2dvector.push_back(
-            std::vector<double>((joint_value_1dvector.begin() + i), (joint_value_1dvector.begin() + i + pop_size + 1)));
+        joint_value_2dvector.push_back(std::vector<double>((joint_value_1dvector.begin() + i), (joint_value_1dvector.begin() + i + pop_size + 1)));
     }
 }
 void JointWriter::Write_ANNarchy_Input_AJ_enc() { WritePopAll(joint_value_2dvector, _blocking, _mode); }
@@ -894,25 +881,19 @@ void JointWriter::Write_ANNarchy_Input_AJ_enc() { WritePopAll(joint_value_2dvect
 void JointWriter::Retrieve_ANNarchy_Input_SJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 void JointWriter::Write_ANNarchy_Input_SJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 
-void JointWriter::Retrieve_ANNarchy_Input_SJ_enc() {
-    std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl;
-}
+void JointWriter::Retrieve_ANNarchy_Input_SJ_enc() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 void JointWriter::Write_ANNarchy_Input_SJ_enc() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 
 void JointWriter::Retrieve_ANNarchy_Input_MJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 void JointWriter::Write_ANNarchy_Input_MJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 
-void JointWriter::Retrieve_ANNarchy_Input_MJ_enc() {
-    std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl;
-}
+void JointWriter::Retrieve_ANNarchy_Input_MJ_enc() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 void JointWriter::Write_ANNarchy_Input_MJ_enc() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 
 void JointWriter::Retrieve_ANNarchy_Input_AJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 void JointWriter::Write_ANNarchy_Input_AJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 
-void JointWriter::Retrieve_ANNarchy_Input_AJ_enc() {
-    std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl;
-}
+void JointWriter::Retrieve_ANNarchy_Input_AJ_enc() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 void JointWriter::Write_ANNarchy_Input_AJ_enc() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 #endif
 
@@ -954,4 +935,14 @@ bool JointWriter::MotionDone() {
     bool test;
     ipos->checkMotionDone(&test);
     return test;
+}
+
+template <typename T>
+std::string JointWriter::vec2string(const T &vec) {
+    std::stringstream stream;
+    for (size_t i = 0; i < vec.size(); ++i) {
+        if (i != 0) stream << ",";
+        stream << vec[i];
+    }
+    return stream.str();
 }

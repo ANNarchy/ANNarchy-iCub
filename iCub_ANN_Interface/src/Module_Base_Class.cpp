@@ -41,6 +41,7 @@ void Mod_BaseClass::setRegister(bool value) { this->registered = value; }
 bool Mod_BaseClass::getRegister() { return registered; }
 
 std::string Mod_BaseClass::get_identifier() { return type + ": " + icub_part; }
+std::map<std::string, std::string> Mod_BaseClass::getParameter() { return init_param; }
 
 std::vector<double> Mod_BaseClass::provideData() {
     std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;

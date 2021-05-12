@@ -30,6 +30,7 @@
 #include <queue>
 #include <string>
 #include <thread>
+#include <vector>
 
 #include "INI_Reader/INIReader.h"
 #include "Module_Base_Class.hpp"
@@ -45,8 +46,7 @@ VisualReader::~VisualReader() { Close(); }
 // TODO: typing -> replace int with unsigned int, where it is useful
 // integer bilder übertragen?
 /*** public methods for the user ***/
-bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size,
-                        bool fast_filter, std::string ini_path) {
+bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size, bool fast_filter, std::string ini_path) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view and eye selection
 
@@ -177,6 +177,14 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 
         this->type = "VisualReader";
         this->icub_part = std::string(1, eye);
+        init_param["eye"] = std::to_string(eye);
+        init_param["fov_width"] = std::to_string(fov_width);
+        init_param["fov_height"] = std::to_string(fov_height);
+        init_param["img_width"] = std::to_string(img_width);
+        init_param["img_height"] = std::to_string(img_height);
+        init_param["max_buffer_size"] = std::to_string(max_buffer_size);
+        init_param["fast_filter"] = std::to_string(fast_filter);
+        init_param["ini_path"] = ini_path;
         this->dev_init = true;
         return true;
     } else {
@@ -186,8 +194,8 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 }
 
 #ifdef _USE_GRPC
-bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size,
-                            bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size, bool fast_filter, std::string ini_path, std::string ip_address,
+                            unsigned int port) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
 
@@ -210,6 +218,8 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
             this->_port = port;
             this->image_source = new ServerInstance(ip_address, port, this);
             this->server_thread = std::thread(&ServerInstance::wait, this->image_source);
+            init_param["ip_address"] = ip_address;
+            init_param["port"] = std::to_string(port);
             dev_init_grpc = true;
             return true;
         } else {
@@ -222,8 +232,8 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
     }
 }
 #else
-bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size,
-                            bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size, bool fast_filter, std::string ini_path, std::string ip_address,
+                            unsigned int port) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
 
