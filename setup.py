@@ -146,8 +146,6 @@ if use_grpc:
     extra_compile_args += ["-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/", "-D_USE_GRPC"]
 if double_precision:
     extra_compile_args.append("-D_DOUBLE_PRECISION")
-else:
-    extra_compile_args.append("-D_SINGLE_PRECISION")
 
 # define extensions for the cython-based modules
 extensions = [
@@ -248,4 +246,3 @@ setup(
     package_data={'iCub_ANN_Interface': package_data},
     install_requires=dependencies
 )
-
