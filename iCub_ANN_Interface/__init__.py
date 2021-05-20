@@ -28,6 +28,6 @@ __all__ = [
 ]
 
 # package root path -> used for grpc includes 
-__root_path__ = str(Path(__file__).resolve().parents[1])
+__root_path__ = str(Path(__file__).resolve().parents[1]) + "/"
 
 print( 'ANNarchy to iCub interface ' + __version__ + ' on ' + sys.platform + ' (' + os.name + ').' )
