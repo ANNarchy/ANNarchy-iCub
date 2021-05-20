@@ -42,6 +42,9 @@ from .Skin_Reader cimport PySkinReader
 from .Visual_Reader cimport VisualReader
 from .Visual_Reader cimport PyVisualReader
 
+from .Kinematic_Reader cimport KinReader
+from .Kinematic_Reader cimport PyKinematicReader
+
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import os
@@ -63,12 +66,16 @@ cdef class iCubANN_wrapper:
 
         self.visual_reader = {}
 
+        self.kinematic_reader = {}
+
+
     def __dealloc__(self):
         print("Close iCub Interface.")
         self.joint_reader.clear()
         self.joint_writer.clear()
         self.skin_reader.clear()
         self.visual_reader.clear()
+        self.kinematic_reader.clear()
 
 
     def clear(self):
@@ -204,7 +211,6 @@ cdef class iCubANN_wrapper:
             deref(module.cpp_visual_reader).setRegister(1)
             return True
 
-
     # unregister visual reader module
     def unregister_vis_reader(self, PyVisualReader module):
         if deref(module.cpp_visual_reader).getRegister():
@@ -214,6 +220,31 @@ cdef class iCubANN_wrapper:
             return True
         else:
             print("[Interface iCub] Visual Reader module is not yet registered!")
+            return False
+
+    # register kinematic reader module
+    def register_kin_reader(self, str name, PyKinematicReader module):
+        if deref(module.cpp_kin_reader).getRegister():
+            print("[Interface iCub] Kinematic Reader module is already registered!")
+            return False
+        else:
+            if name in self.kinematic_reader:
+                print("[Interface iCub] Kinematic Reader module name is already used!")
+                return False
+            self.kinematic_reader[name] = module
+            module.name = name
+            deref(module.cpp_kin_reader).setRegister(1)
+            return True
+
+    # unregister kinematic reader module
+    def unregister_kin_reader(self, PyKinematicReader module):
+        if deref(module.cpp_kin_reader).getRegister():
+            deref(module.cpp_kin_reader).setRegister(0)
+            self.kinematic_reader.pop(module.name, None)
+            module.name = ""
+            return True
+        else:
+            print("[Interface iCub] Kinematic Reader module is not yet registered!")
             return False
 
     # get joint reader module by name

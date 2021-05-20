@@ -75,6 +75,13 @@ class ProvideInputServiceImpl final : public iCubInterfaceMessages::ProvideInput
         response->mutable_sensor_data()->Swap(&data);
         return grpc::Status::OK;
     }
+    grpc::Status ReadKinematicHand(grpc::ServerContext *context, const iCubInterfaceMessages::KinematicRequest *request,
+                                   iCubInterfaceMessages::KinematicResponse *response) override {
+        auto position = interface_instance->provideData();
+        google::protobuf::RepeatedField<double> data(position.begin(), position.end());
+        response->mutable_position()->Swap(&data);
+        return grpc::Status::OK;
+    }
 
  public:
     Mod_BaseClass *interface_instance;

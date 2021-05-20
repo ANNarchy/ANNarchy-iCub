@@ -103,6 +103,7 @@ class ClientInstance {
             return std::vector<double>(1, 0.0);    // TODO: make dependent from Population geometry
         }
     }
+
     std::vector<double> retrieve_skin_forearm() {
         iCubInterfaceMessages::SkinForearmRequest request;
         iCubInterfaceMessages::SkinResponse response;
@@ -119,6 +120,7 @@ class ClientInstance {
             return std::vector<double>(1, 0.0);    // TODO: make dependent from Population geometry
         }
     }
+
     std::vector<double> retrieve_skin_hand() {
         iCubInterfaceMessages::SkinHandRequest request;
         iCubInterfaceMessages::SkinResponse response;
@@ -133,6 +135,23 @@ class ClientInstance {
         } else {
             std::cerr << "ClientInstance::retrieve_image() failed: " << state.error_message() << std::endl;
             return std::vector<double>(1, 0.0);    // TODO: make dependent from Population geometry
+        }
+    }
+
+    std::vector<double> retrieve_kinematic_hand() {
+        iCubInterfaceMessages::KinematicRequest request;
+        iCubInterfaceMessages::KinematicResponse response;
+
+        grpc::ClientContext context;
+
+        // auto state = stub_->ReadTest(&context, request, &response);
+        auto state = stub_->ReadKinematicHand(&context, request, &response);
+
+        if (state.ok()) {
+            return std::vector<double>(response.position().begin(), response.position().end());
+        } else {
+            std::cerr << "ClientInstance::retrieve_kinematic_hand() failed: " << state.error_message() << std::endl;
+            return std::vector<double>(3, 0.0);    // TODO: make dependent from Population geometry
         }
     }
 };

@@ -20,8 +20,6 @@
    along with this headers. If not, see [http://www.gnu.org/licenses/].
  """
 
-from .Visual_Reader cimport PyVisualReader
-
 cdef extern from "Interface_iCub.hpp":
 
     cdef cppclass iCubANN:
@@ -44,4 +42,4 @@ cdef class iCubANN_wrapper:
     cdef dict skin_reader
     cdef dict skin_reader_parts
 
-    cdef PyVisualReader visual_input
+    cdef dict visual_reader

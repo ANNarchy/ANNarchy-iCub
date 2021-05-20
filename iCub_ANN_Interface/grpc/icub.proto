@@ -135,6 +135,15 @@ message SkinForearmRequest {
 message SkinHandRequest {
 }
 
+message KinematicRequest {
+}
+
+message KinematicResponse {
+    Status status = 1;
+    repeated double position = 2;
+}
+
+
 service ProvideInput {
     // provide Camera images
     rpc ReadTest (TestRequest) returns (TestResponse) {}
@@ -154,6 +163,8 @@ service ProvideInput {
     rpc ReadSkinForearm (SkinForearmRequest) returns (SkinResponse) {}
     // provide skin sensor data
     rpc ReadSkinHand (SkinHandRequest) returns (SkinResponse) {}
+    // provide cartesian position of the iCub hand
+    rpc ReadKinematicHand (KinematicRequest) returns (KinematicResponse) {}
 }
 
 service WriteOutput {

@@ -126,7 +126,7 @@ prefix_cpp = "iCub_ANN_Interface/src/"
 
 # Sourcefiles lists
 sources = ["iCub_ANN_Interface/include/INI_Reader/INIReader.cpp", "iCub_ANN_Interface/include/INI_Reader/ini.cpp", prefix_cpp + "Module_Base_Class.cpp"]
-sources1 = [prefix_cpp + "Joint_Reader.cpp", prefix_cpp + "Joint_Writer.cpp", prefix_cpp + "Skin_Reader.cpp", prefix_cpp + "Visual_Reader.cpp"]
+sources1 = [prefix_cpp + "Joint_Reader.cpp", prefix_cpp + "Joint_Writer.cpp", prefix_cpp + "Skin_Reader.cpp", prefix_cpp + "Visual_Reader.cpp", prefix_cpp + "Kinematic_Reader.cpp"]
 
 package_data = ['__init__.py',
                 'iCub/*.pxd',
@@ -151,7 +151,7 @@ if double_precision:
 extensions = [
     Extension("iCub_ANN_Interface.iCub.Joint_Reader", [prefix_cy + "iCub/Joint_Reader.pyx", prefix_cpp + "Joint_Reader.cpp"] + sources,
         include_dirs=include_dir,
-        libraries=libs,
+        libraries=libs + ["iKin", "ctrlLib"],
         library_dirs=lib_dirs,
         language="c++",
         extra_compile_args=extra_compile_args,
@@ -185,9 +185,18 @@ extensions = [
         extra_link_args=["-L"+root_path+"/iCub_ANN_Interface/grpc", "-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/"]
         ),
 
+    Extension("iCub_ANN_Interface.iCub.Kinematic_Reader", [prefix_cy + "iCub/Kinematic_Reader.pyx", prefix_cpp + "Kinematic_Reader.cpp"] + sources,
+        include_dirs=include_dir,
+        libraries=libs + ["iKin", "ctrlLib"],
+        library_dirs=lib_dirs,
+        language="c++",
+        extra_compile_args=extra_compile_args,
+        extra_link_args=["-L"+root_path+"/iCub_ANN_Interface/grpc", "-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/"]
+        ),
+
     Extension("iCub_ANN_Interface.iCub.iCub_Interface", [prefix_cy + "iCub/iCub_Interface.pyx", prefix_cpp + "Interface_iCub.cpp"] + sources + sources1,
         include_dirs=include_dir,
-        libraries=libs,
+        libraries=libs + ["iKin", "ctrlLib"],
         library_dirs=lib_dirs,
         language="c++",
         extra_compile_args=extra_compile_args,

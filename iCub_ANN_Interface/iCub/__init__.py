@@ -2,6 +2,7 @@ from . import Joint_Reader
 from . import Joint_Writer
 from . import Skin_Reader
 from . import Visual_Reader
+from . import Kinematic_Reader
 from . import iCub_Interface
 
 __all__ = [
@@ -10,5 +11,6 @@ __all__ = [
     'Joint_Writer',
     'Skin_Reader',
     'Visual_Reader',
+    'Kinematic_Reader',
     'iCub_Interface'
 ]
