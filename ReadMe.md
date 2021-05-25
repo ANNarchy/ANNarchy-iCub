@@ -29,6 +29,8 @@ The interface consists of different parts. Clustering the different tasks of the
             This module handles the tactile data from the iCub's artificial skin. The robot is at several parts equipped with skin modules, reacting to pressure.<br>
             The sensor data for the arms can be read out with this module. The skin of the iCub arm is seperated in three modules, being the arm, forearm and hand.<br>
             The tactile data is returned as a vector with doubles in a range of 0.0 to 1.0. Where 0. is no pressure and 1.0 is the maximum sensor response.
+        5. *KinematicReader:*<br>
+            This module handles the iCub forward kinematic to receive the cartesian coordinates for specific joints or endeffectors like the hand.
 
 3. Sync
     - The Sync module provide two classes MasterClock and ClockInterface. Thereby, the MasterClock is the main synchronization handler and for the use exactly one instance of it is needed to create. To synchronize the ANNarchy and iCub simulations, for each side one derived class of the ClockInterface ahs to be created. This class provide two abstract functions, which has to be impleemnted. The first is the update method and the second is sync_input. These method are executed once for update step. The timing can be individually be set and is dependent on the usecase.<br>
@@ -60,7 +62,7 @@ The interface consists of different parts. Clustering the different tasks of the
 
 
 ## Installation
-Make sure YARP is insalled before installing the interface. AN installation guide for YARP/iCub can be found in [iCub_simulator_tools](https://ai.informatik.tu-chemnitz.de/gogs/iCub_TUC/iCub_simulator_tools.git) or direct in the github [superbuild repository](https://github.com/robotology/robotology-superbuild) of the YARP/iCub universe.
+Make sure YARP is insalled before installing the interface. An installation guide for YARP/iCub can be found in [iCub_simulator_tools](https://ai.informatik.tu-chemnitz.de/gogs/iCub_TUC/iCub_simulator_tools.git) or direct in the github [superbuild repository](https://github.com/robotology/robotology-superbuild) of the YARP/iCub universe.
 
 Then the interface can be installed with pip by executing the following line in a terminal in the interface directory.
 ```
@@ -77,7 +79,7 @@ Take a look in the testfiles for a specific implementation. More examples will f
 ### Non gRPC version
 
 ```Python
-from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader
+from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader, Kinematic_Reader
 import iCub_ANN_Interface.Vocabs as iCub_Constants
 
 
@@ -88,6 +90,7 @@ jreader = Joint_Reader.PyJointReader()
 jwriter = Joint_Writer.PyJointWriter()
 sreader = Skin_Reader.PySkinReader()
 visreader = Visual_Reader.PyVisualReader()
+kinreader = Kinematic_Reader.PyKinematicReader()
 ...
 
 # init modules (necessary for all modules before usage)
@@ -95,6 +98,7 @@ jreader.init(iCub, name , ...)
 jwriter.init(iCub, name , ...)
 sreader.init(iCub, name , ...)
 visreader.init(iCub, name, ...)
+kinreader.(iCub, name, ...)
 ...
 
 # use interface modules
@@ -102,6 +106,7 @@ jreader.method_name(...)
 jwriter.method_name(...)
 sreader.method_name(...)
 visreader.method_name(...)
+kinreader.method_name(...)
 ...
 ...
 
@@ -110,8 +115,9 @@ jreader.close(iCub)
 jwriter.close(iCub)
 sreader.close(iCub)
 visreader.close(iCub)
+kinreader.close(iCub)
 
-del jreader, jwriter, sreader, visreader
+del jreader, jwriter, sreader, visreader, kinreader
 del iCub
 ```
 
@@ -119,8 +125,8 @@ del iCub
 
 ```Python
 from iCub_ANN_Interface import __root_path__ as interface_root
-from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader
-from iCub_ANN_Interface.ANNarchy_Populations import JointReadout, JointControl, SkinPopulation, VisionPopulation
+from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader, Kinematic_Reader
+from iCub_ANN_Interface.ANNarchy_Populations import JointReadout, JointControl, SkinPopulation, VisionPopulation, KinematicPopulation
 import iCub_ANN_Interface.Vocabs as iCub_Constants
 
 # Create ANNarchy populations e.g. VisionPopulation
@@ -166,10 +172,10 @@ Wiki for the iCub robot:<br>
 http://wiki.icub.org/wiki/Manual
 
 YARP website:<br>
-http://www.yarp.it/index.html
+http://www.yarp.it/git-master/index.html
 
 git repository with helpful documents and scripts for the work with iCub:<br>
-https://ai.informatik.tu-chemnitz.de/gogs/torsten/iCub_simulator_tools.git
+https://ai.informatik.tu-chemnitz.de/gogs/iCub_TUC/iCub_simulator_tools.git
 
 
 ## Authors
