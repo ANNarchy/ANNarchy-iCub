@@ -28,7 +28,7 @@ import numpy as np
 from iCub_ANN_Interface import __root_path__ as interface_root
 import iCub_ANN_Interface.Vocabs as iCub_Constants
 from iCub_ANN_Interface.ANNarchy_iCub_Populations import *
-from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, Skin_Reader, Visual_Reader, iCub_Interface
+from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, Skin_Reader, Visual_Reader, Kinematic_Reader, iCub_Interface
 
 # ANNarchy
 from ANNarchy import *
@@ -54,6 +54,7 @@ def call_test_jreader(iCub, ann_interface_root):
     # Add ANNarchy joint input population
     pop_jread = JointReadout(geometry = (len(joints), popsize), joints=joints, encoded=True)
 
+    print("Compile ANNarchy network.")
     compile(directory='results/annarchy_jreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
     extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
 
@@ -131,7 +132,7 @@ def call_test_jwriter(iCub, ann_interface_root):
     pop_jctrl_all_double = JointControl(geometry = (len(joints_all),), port=50014)
     pop_jctrl_all_pop = JointControl(geometry = (len(joints_all), popsize), port=50015)
 
-
+    print("Compile ANNarchy network.")
     compile(directory='results/annarchy_jwriter', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
     extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
 
@@ -146,8 +147,7 @@ def call_test_jwriter(iCub, ann_interface_root):
     print('Add joint writer module')
     jointwriter = Joint_Writer.PyJointWriter()
 
-    # add joint reader instance
-    jointreader = Joint_Reader.PyJointReader()
+    # init joint reader instance
     if not jointreader.init(iCub, "name", iCub_Constants.PART_KEY_HEAD, sigma=sigma, n_pop=popsize):
         print("Init Reader failed")
         exit(0)
@@ -271,6 +271,7 @@ def call_test_sreader(iCub, ann_interface_root):
     # Add ANNarchy tactile input population
     pop_sread = SkinPopulation(geometry = (380,), skin_section="arm")
 
+    print("Compile ANNarchy network.")
     compile(directory='results/annarchy_sreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
     extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
 
@@ -321,6 +322,7 @@ def call_test_vreader(iCub, ann_interface_root):
     # Create ANNarchy visual input population
     pop_vis = VisionPopulation( geometry = (240,320) )
 
+    print("Compile ANNarchy network.")
     compile(directory='results/annarchy_vreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
     extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
 
@@ -336,7 +338,6 @@ def call_test_vreader(iCub, ann_interface_root):
 
     # init visual reader
     print('Init visual reader')
-    visreader = Visual_Reader.PyVisualReader()
     if not visreader.init_grpc(iCub, "name", 'l', ip_address="0.0.0.0", port=pop_vis.port):
         print("Init failed")
         exit(0)
@@ -356,6 +357,52 @@ def call_test_vreader(iCub, ann_interface_root):
     print('Finished Visual Reader test')
     print('\n')
 
+#########################################################
+def call_test_kreader(iCub, ann_interface_root):
+    """
+        Simple test of the grpc connection between the iCub Interface and ANNarchy.
+        -> Kinematic input
+
+        params:
+            iCub                -- iCub_ANNarchy Interface
+            ann_interface_root  -- interface root path
+    """
+
+    # Create ANNarchy visual input population
+    pop_kin = KinematicPopulation( geometry = (3,) )
+
+    print("Compile ANNarchy network.")
+    compile(directory='results/annarchy_kreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
+    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
+
+    for pop in populations():
+        print(pop.ip_address, pop.port)
+        print(pop.name, ':', pop.geometry)
+        # connect ANNarchy populations via gRPC
+        pop.connect()
+
+    # add kinematic reader instance
+    kinreader = Kinematic_Reader.PyKinematicReader()
+
+    # init kinematic reader
+    print('Init kinematic reader')
+    if not kinreader.init_grpc(iCub, "name", part="right_arm", version=2, ip_address="0.0.0.0", port=pop_kin.port):
+        print("Init failed")
+        exit(0)
+
+    print("Simulate")
+    # do something!
+    simulate(1)
+    print("Simulated")
+
+    # Show kinematic population firing rate
+    print(pop_kin.r)
+
+    # Close kinematic reader module
+    kinreader.close(iCub)
+
+    print('Finished Visual Reader test')
+    print('\n')
 
 #########################################################
 if __name__ == "__main__":
@@ -373,10 +420,12 @@ if __name__ == "__main__":
                 call_test_jwriter(iCub, ann_interface_root)
                 call_test_sreader(iCub, ann_interface_root)
                 call_test_vreader(iCub, ann_interface_root)
+                call_test_kreader(iCub, ann_interface_root)
             elif command == "noskin":
                 call_test_jreader(iCub, ann_interface_root)
                 call_test_jwriter(iCub, ann_interface_root)
                 call_test_vreader(iCub, ann_interface_root)
+                call_test_kreader(iCub, ann_interface_root)
             elif command == "jreader":
                 call_test_jreader(iCub, ann_interface_root)
             elif command == "jwriter":
@@ -385,10 +434,12 @@ if __name__ == "__main__":
                 call_test_sreader(iCub, ann_interface_root)
             elif command == "vreader":
                 call_test_vreader(iCub, ann_interface_root)
+            elif command == "kreader":
+                call_test_kreader(iCub, ann_interface_root)
             else:
-                print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader')
+                print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader, kreader')
     else:
-        print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader')
+        print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader, kreader')
 
     del iCub
     print('finished grpc tests')

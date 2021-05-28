@@ -68,11 +68,16 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 
         buffer_len = max_buffer_size;
 
-        // init YARP-Network
-        yarp::os::Network::init();
+        // check YARP-Network
         if (!yarp::os::Network::checkNetwork()) {
             std::cerr << "[Visual Reader] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
+        }
+
+        // set YARP loging level to warnings, if the respective environment variable is set
+        auto yarp_quiet = GetEnvVar("YARP_QUIET");
+        if (yarp_quiet == "on" or yarp_quiet == "1") {
+            yarp::os::Log::setMinimumPrintLevel(yarp::os::Log::WarningType);
         }
 
         // compute output field of view borders in input image

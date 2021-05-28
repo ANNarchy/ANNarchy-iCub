@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2019-2021 Torsten Fietzek; Helge Ülo Dinkelbach
  *
- *  Interface_iCub.hpp is part of the iCub ANNarchy interface
+ *  Module_Base_Class.hpp is part of the iCub ANNarchy interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@ class Mod_BaseClass {
     std::string type;              // Module type e.g. Joint Reader
     std::string icub_part;         //
     std::map<std::string, std::string> init_param;
+    std::string GetEnvVar(const std::string& var_name);
 
  public:
     // Constructor

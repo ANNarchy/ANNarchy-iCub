@@ -71,6 +71,12 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
             return false;
         }
 
+        // set YARP loging level to warnings, if the respective environment variable is set
+        auto yarp_quiet = GetEnvVar("YARP_QUIET");
+        if (yarp_quiet == "on" or yarp_quiet == "1") {
+            yarp::os::Log::setMinimumPrintLevel(yarp::os::Log::WarningType);
+        }
+
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "interface_param.ini");
         if (reader_gen.ParseError()) {

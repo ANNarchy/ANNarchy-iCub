@@ -70,9 +70,16 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
         }
         sigma_pop = sigma;
 
+        // Check Yarp-network
         if (!yarp::os::Network::checkNetwork()) {
             std::cerr << "[Joint Reader " << icub_part << "] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
+        }
+
+        // set YARP loging level to warnings, if the respective environment variable is set
+        auto yarp_quiet = GetEnvVar("YARP_QUIET");
+        if (yarp_quiet == "on" or yarp_quiet == "1") {
+            yarp::os::Log::setMinimumPrintLevel(yarp::os::Log::WarningType);
         }
 
         // read configuration data from ini file

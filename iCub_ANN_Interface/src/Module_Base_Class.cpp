@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2019-2021 Torsten Fietzek; Helge Ülo Dinkelbach
  *
- *  Interface_iCub.hpp is part of the iCub ANNarchy interface
+ *  Module_Base_Class.cpp is part of the iCub ANNarchy interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,6 +42,15 @@ bool Mod_BaseClass::getRegister() { return registered; }
 
 std::string Mod_BaseClass::get_identifier() { return type + ": " + icub_part; }
 std::map<std::string, std::string> Mod_BaseClass::getParameter() { return init_param; }
+
+std::string Mod_BaseClass::GetEnvVar(const std::string& var_name) {
+    const char* value = std::getenv(var_name.c_str());
+    if (value == nullptr) {
+        return "";
+    } else {
+        return value;
+    }
+}
 
 std::vector<double> Mod_BaseClass::provideData() {
     std::cerr << "[" << type << "] Error: provideData method not implemented!" << std::endl;
