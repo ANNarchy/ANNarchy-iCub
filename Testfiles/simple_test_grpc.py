@@ -143,6 +143,10 @@ def call_test_jwriter(iCub, ann_interface_root):
         # connect ANNarchy populations to interface via gRPC
         pop.connect()
 
+    # add joint reader instances
+    print('Add joint reader module')
+    jointreader = Joint_Reader.PyJointReader()
+
     # Add joint writer modules, one for each writer population
     print('Add joint writer module')
     jointwriter = Joint_Writer.PyJointWriter()
@@ -401,7 +405,7 @@ def call_test_kreader(iCub, ann_interface_root):
     # Close kinematic reader module
     kinreader.close(iCub)
 
-    print('Finished Visual Reader test')
+    print('Finished Kinematic Reader test')
     print('\n')
 
 #########################################################

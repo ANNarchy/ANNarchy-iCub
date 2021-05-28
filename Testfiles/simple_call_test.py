@@ -24,7 +24,7 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader
+from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader, Kinematic_Reader
 import iCub_ANN_Interface.Vocabs as iCub_Constants
 
 # Test support files
@@ -304,6 +304,36 @@ def call_test_vreader(iCub):
 
 
 #########################################################
+def call_test_kreader(iCub):
+    """
+        Call test for the kinematic reader module to check different errors.
+
+        params:
+            iCub     -- iCub_ANNarchy Interface
+    """
+    # add kinematic reader instance
+    kinreader = Kinematic_Reader.PyKinematicReader()
+
+    # init kinematic reader
+    print('Init kinematic reader')
+    print(kinreader.init(iCub, "name", part="right_hand", version=2))   # wrong part key
+    print(kinreader.init(iCub, "name", part="right_arm", version=-2))   # negative version
+    print(kinreader.init(iCub, "name", part="right_arm", version=2))    # correct init
+    print(kinreader.init(iCub, "name", part="right_arm", version=2))    # double init
+
+    # get DOF of current kinematic chain
+    print(kinreader.get_DOF())
+
+    # print cartesian position of end effector (hand)
+    print(kinreader.get_handposition())
+
+    # close kinematic reader module
+    kinreader.close(iCub)
+
+    print('Finished Kinematic Reader test')
+    print('\n')
+
+#########################################################
 if __name__ == "__main__":
     iCub = iCub_Interface.iCubANN_wrapper()
 
@@ -314,10 +344,12 @@ if __name__ == "__main__":
                 call_test_jwriter(iCub)
                 call_test_sreader(iCub)
                 call_test_vreader(iCub)
+                call_test_kreader(iCub)
             elif command == "noskin":
                 call_test_jreader(iCub)
                 call_test_jwriter(iCub)
                 call_test_vreader(iCub)
+                call_test_kreader(iCub)
             elif command == "jreader":
                 call_test_jreader(iCub)
             elif command == "jwriter":
@@ -326,10 +358,11 @@ if __name__ == "__main__":
                 call_test_sreader(iCub)
             elif command == "vreader":
                 call_test_vreader(iCub)
+            elif command == "kreader":
+                call_test_kreader(iCub)
             else:
-                print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader')
+                print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader, kreader')
     else:
-        print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader')
+        print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader, kreader')
 
-    del iCub
     print('finished call tests')
