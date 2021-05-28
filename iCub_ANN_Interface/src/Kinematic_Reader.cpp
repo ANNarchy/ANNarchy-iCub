@@ -59,6 +59,11 @@ bool KinReader::Init(std::string part, float version, std::string ini_path) {
         }
         this->icub_part = part;
 
+        if (version <= 0. or version >= 4.) {
+            std::cerr << "[Kinematic Reader] " << version << " is an invalid version number!" << std::endl;
+            return false;
+        }
+
         // Check Yarp-network
         if (!yarp::os::Network::checkNetwork()) {
             std::cerr << "[Kinematic Reader " << icub_part << "] YARP Network is not online. Check nameserver is running!" << std::endl;
@@ -85,7 +90,7 @@ bool KinReader::Init(std::string part, float version, std::string ini_path) {
             std::string::size_type i = part.find("_arm");
             std::string descriptor = part.substr(0, i);
 
-            descriptor.append("_v" + std::to_string(version));
+            descriptor.append("_v" + std::to_string(version).substr(0, 3));
             std::cout << "Descriptor: " << descriptor << std::endl;
 
             KinArm = new iCub::iKin::iCubArm(descriptor);
