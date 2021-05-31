@@ -9,6 +9,7 @@ setup file for the package compilation process
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 from make_config import *
 
@@ -52,6 +53,7 @@ except:
     exit(0)
 
 root_path = os.path.abspath("./")
+print(root_path)
 
 grpc_include_dir = []
 grpc_libs = []
@@ -69,25 +71,30 @@ if use_grpc:
         print("Protobuf C-compiler (protoc) not found")
         grpc_avaiable = False
 
+    if grpc_avaiable:
+        grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
+        grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
+
     # build grpc proto related sourcefiles to library
     if os.path.isfile("./iCub_ANN_Interface/grpc/libiCub_ANN_grpc.so") and (not rebuild_grpc):
         print("Skip gRPC build process")
     else:
         # build the interface gRPC definitions
         if grpc_avaiable:
-            grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
             os.system("protoc -I=. --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc="+grpc_cpp_plugin+" iCub_ANN_Interface/grpc/icub.proto")
         else:
             print("grpc and/or protobuf c-compiler is missing ... abort")
             exit()
 
         print("Build grpc->proto files in seperated library")
-        os.system("cd iCub_ANN_Interface/grpc/ && make EXTFLAGS=\"-I"+os.path.abspath("./")+"\"")
+        os.system("cd iCub_ANN_Interface/grpc/ && make EXTFLAGS=\"-I"+os.path.abspath("./")+" -I" + grpc_path + "include " + "-L" + grpc_path + "lib" + "\"")
 
-    grpc_include_dir.append("iCub_ANN_Interface/grpc")
+    grpc_include_dir += ["iCub_ANN_Interface/grpc", grpc_path + "include"]
     grpc_libs += ["protobuf", "grpc++", "grpc++_reflection", "iCub_ANN_grpc"]
-    grpc_lib_dir += [root_path+"/iCub_ANN_Interface/grpc"]
+    grpc_lib_dir += [root_path+"/iCub_ANN_Interface/grpc", grpc_path + "lib"]
     grpc_package_data = ['ANNarchy_iCub_Populations/__init__.py', 'grpc/*.so', 'grpc/*.h']
+    print(grpc_include_dir)
+    print(grpc_lib_dir)
 
 # Python Version info
 py_major = sys.version_info[0]
