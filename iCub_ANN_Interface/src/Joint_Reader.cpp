@@ -84,7 +84,7 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
 
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "interface_param.ini");
-        if (reader_gen.ParseError()) {
+        if (reader_gen.ParseError() != 0) {
             std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path and the ini file content!" << std::endl;
             return false;
         }

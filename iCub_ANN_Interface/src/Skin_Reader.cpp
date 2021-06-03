@@ -78,7 +78,7 @@ bool SkinReader::Init(std::string name, char arm, bool norm_data, std::string in
 
         // Open ini file
         INIReader reader_gen(ini_path + "interface_param.ini");
-        if (reader_gen.ParseError()) {
+        if (reader_gen.ParseError() != 0) {
             std::cerr << "[Skin Reader] Error in parsing the ini-file! Please check the ini-path and the ini file content!" << std::endl;
             return false;
         }
