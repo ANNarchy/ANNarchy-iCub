@@ -139,6 +139,7 @@ package_data = ['__init__.py',
                 'iCub/*.pxd',
                 'iCub/*.pyx',
                 'iCub/__init__.py',
+                'iCub/include/*hpp',
                 'Sync/*.pyx',
                 'Sync/__init__.py'
                 ] + grpc_package_data

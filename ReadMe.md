@@ -29,6 +29,7 @@ The interface consists of different parts. Clustering the different tasks of the
             This module handles the tactile data from the iCub's artificial skin. The robot is at several parts equipped with skin modules, reacting to pressure.<br>
             The sensor data for the arms can be read out with this module. The skin of the iCub arm is seperated in three modules, being the arm, forearm and hand.<br>
             The tactile data is returned as a vector with doubles in a range of 0.0 to 1.0. Where 0. is no pressure and 1.0 is the maximum sensor response.
+
         5. *KinematicReader:*<br>
             This module handles the iCub forward kinematic to receive the cartesian coordinates for specific joints or endeffectors like the hand.
 
@@ -54,20 +55,20 @@ The interface consists of different parts. Clustering the different tasks of the
     - data -> Folder capsulate the data files used by the interface.
         - sensor_positions -> This folder caontains the files from the iCub simulator installation with the position data for the tactile sensors.
         - interface_param.ini -> ini-file with several parameters for the interface
-        - joint_limits_sim.ini -> In the ini file the simulated robot joint limitations of the iCub are given.
-        - joint_limits_real.ini -> In the ini file the real robot joint limitations of the iCub are given.<br>
-                            !!! This should be checked before the usage with the real robot, to avoid damage. !!!
-    - doc -> This folder contains the doxygen generated documentation for the interface
+    - doc -> This folder contains the doxygen files for generating the documentaion
     - Testfiles -> files for interface testing
+    - Examples -> Interface implementation examples
 
 
 ## Installation
 Make sure YARP is insalled before installing the interface. An installation guide for YARP/iCub can be found in [iCub_simulator_tools](https://ai.informatik.tu-chemnitz.de/gogs/iCub_TUC/iCub_simulator_tools.git) or direct in the github [superbuild repository](https://github.com/robotology/robotology-superbuild) of the YARP/iCub universe.
 
 Then the interface can be installed with pip by executing the following line in a terminal in the interface directory.
+
+```bash
+pip3 install . --use-feature=in-tree-build
 ```
-pip install . --use-feature=in-tree-build
-```
+
 In case of missing/false include directories the make_config.py file has to be modified.
 The interface is build in a default configuration. In this case the gRPC communication with ANNarchy is disabled. To enable this part, set the use_grpc parameter in make_config.py to True. This part depends on the gRPC package and a protobuf compiler.
 The system packages should only be used at recent Linux versions. Recommended is the [installation from the repository](https://grpc.io/docs/languages/cpp/quickstart/#install-grpc) with cmake/bazel.
@@ -116,9 +117,6 @@ jwriter.close(iCub)
 sreader.close(iCub)
 visreader.close(iCub)
 kinreader.close(iCub)
-
-del jreader, jwriter, sreader, visreader, kinreader
-del iCub
 ```
 
 ### gRPC version
@@ -162,9 +160,6 @@ visreader.method_name(...)
 
 # Close modules
 visreader.close(iCub)
-
-del visreader
-del iCub
 ```
 
 ## useful links
