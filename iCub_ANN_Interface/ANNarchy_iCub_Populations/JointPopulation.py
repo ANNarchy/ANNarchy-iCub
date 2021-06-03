@@ -26,7 +26,7 @@ class JointControl(Population):
     """
     Set the position/orientation of joints, e. g. elbow or finger.
     """
-    def __init__(self, geometry=None, neuron=None, ip_address="0.0.0.0", port=50010, copied=False, name=None):
+    def __init__(self, geometry=None, neuron=Neuron(parameters="r = 0.0"), ip_address="0.0.0.0", port=50010, copied=False, name=None):
 
         Population.__init__(self, geometry=geometry, neuron=neuron, copied=copied, name=name )
 

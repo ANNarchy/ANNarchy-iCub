@@ -20,6 +20,8 @@
 
 import sys
 import time
+import subprocess
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -54,9 +56,13 @@ def call_test_jreader(iCub, ann_interface_root):
     # Add ANNarchy joint input population
     pop_jread = JointReadout(geometry = (len(joints), popsize), joints=joints, encoded=True)
 
+    grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
+    grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
+    grpc_include_path = grpc_path + "/include"
+    grpc_lib_path = grpc_path + "/lib"
     print("Compile ANNarchy network.")
-    compile(directory='results/annarchy_jreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
-    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
+    compile(directory='results/annarchy_jreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path,
+    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
 
     # fancy other stuff ...
     for pop in populations():
@@ -119,7 +125,7 @@ def call_test_jwriter(iCub, ann_interface_root):
     sigma = 1.5
 
     # Add ANNarchy joint output population
-    ## single joint motions 
+    ## single joint motions
     joints_single = [4]
     pop_jctrl_single_double = JointControl(geometry = (len(joints_single), ), port=50010)
     pop_jctrl_single_pop = JointControl(geometry = (len(joints_single), popsize), port=50011)
@@ -132,9 +138,13 @@ def call_test_jwriter(iCub, ann_interface_root):
     pop_jctrl_all_double = JointControl(geometry = (len(joints_all),), port=50014)
     pop_jctrl_all_pop = JointControl(geometry = (len(joints_all), popsize), port=50015)
 
+    grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
+    grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
+    grpc_include_path = grpc_path + "/include"
+    grpc_lib_path = grpc_path + "/lib"
     print("Compile ANNarchy network.")
-    compile(directory='results/annarchy_jwriter', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
-    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
+    compile(directory='results/annarchy_jwriter', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path,
+    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
 
     # fancy other stuff ...
     for pop in populations():
@@ -152,7 +162,7 @@ def call_test_jwriter(iCub, ann_interface_root):
     jointwriter = Joint_Writer.PyJointWriter()
 
     # init joint reader instance
-    if not jointreader.init(iCub, "name", iCub_Constants.PART_KEY_HEAD, sigma=sigma, n_pop=popsize):
+    if not jointreader.init(iCub, "name", iCub_Constants.PART_KEY_HEAD, sigma=sigma, n_pop=popsize, ini_path="../data/"):
         print("Init Reader failed")
         exit(0)
 
@@ -195,7 +205,7 @@ def call_test_jwriter(iCub, ann_interface_root):
     if not jointwriter.init_grpc(iCub, "sp", iCub_Constants.PART_KEY_HEAD, n_pop=popsize, joints=joints_single, mode="abs", port=pop_jctrl_single_pop.port):
         print("Init Writer failed")
         exit(0)
-    print("r:", pop_jctrl_single_double.r)
+    print("r:", pop_jctrl_single_pop.r)
     print(jointreader.read_double_one(joints_single[0]))
     jointwriter.retrieve_ANNarchy_input_single_enc()
     jointwriter.write_ANNarchy_input_single_enc()
@@ -208,7 +218,7 @@ def call_test_jwriter(iCub, ann_interface_root):
     if not jointwriter.init_grpc(iCub, "md", iCub_Constants.PART_KEY_HEAD, n_pop=popsize, joints=joints_multi, mode="abs", port=pop_jctrl_multi_double.port):
         print("Init Writer failed")
         exit(0)
-    print("r:", pop_jctrl_all_double.r)
+    print("r:", pop_jctrl_multi_double.r)
     print(jointreader.read_double_all())
     jointwriter.retrieve_ANNarchy_input_multi()
     jointwriter.write_ANNarchy_input_multi()
@@ -220,7 +230,7 @@ def call_test_jwriter(iCub, ann_interface_root):
     if not jointwriter.init_grpc(iCub, "mp", iCub_Constants.PART_KEY_HEAD, n_pop=popsize, joints=joints_multi, mode="abs", port=pop_jctrl_multi_pop.port):
         print("Init Writer failed")
         exit(0)
-    print("r:", pop_jctrl_all_double.r)
+    print("r:", pop_jctrl_multi_pop.r)
     print(jointreader.read_double_all())
     jointwriter.retrieve_ANNarchy_input_multi_enc()
     jointwriter.write_ANNarchy_input_multi_enc()
@@ -245,7 +255,7 @@ def call_test_jwriter(iCub, ann_interface_root):
     if not jointwriter.init_grpc(iCub, "ap", iCub_Constants.PART_KEY_HEAD, n_pop=popsize, joints=[], mode="abs", port=pop_jctrl_all_pop.port):
         print("Init Writer failed")
         exit(0)
-    print("r:", pop_jctrl_all_double.r)
+    print("r:", pop_jctrl_all_pop.r)
     print(jointreader.read_double_all())
     jointwriter.retrieve_ANNarchy_input_all_enc()
     jointwriter.write_ANNarchy_input_all_enc()
@@ -275,9 +285,16 @@ def call_test_sreader(iCub, ann_interface_root):
     # Add ANNarchy tactile input population
     pop_sread = SkinPopulation(geometry = (380,), skin_section="arm")
 
+    # gRPC paths, only needed for local gRPC installation
+    grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
+    grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
+    grpc_include_path = grpc_path + "/include"
+    grpc_lib_path = grpc_path + "/lib"
+
     print("Compile ANNarchy network.")
-    compile(directory='results/annarchy_sreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
-    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
+    # compile ANNarchy network
+    compile(directory='results/annarchy_sreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path,
+    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
 
     # fancy other stuff ...
     for pop in populations():
@@ -291,7 +308,7 @@ def call_test_sreader(iCub, ann_interface_root):
     skinreader = Skin_Reader.PySkinReader()
 
     # init skin reader
-    if not skinreader.init_grpc(iCub, "name", arm="r", ip_address="0.0.0.0", port=pop_sread.port):
+    if not skinreader.init_grpc(iCub, "name", arm="r", ini_path="../data/", ip_address="0.0.0.0", port=pop_sread.port):
         print("Init failed")
         exit(0)
 
@@ -326,9 +343,13 @@ def call_test_vreader(iCub, ann_interface_root):
     # Create ANNarchy visual input population
     pop_vis = VisionPopulation( geometry = (240,320) )
 
+    grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
+    grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
+    grpc_include_path = grpc_path + "/include"
+    grpc_lib_path = grpc_path + "/lib"
     print("Compile ANNarchy network.")
-    compile(directory='results/annarchy_vreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
-    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
+    compile(directory='results/annarchy_vreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path,
+    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
 
     # fancy other stuff ...
     for pop in populations():
@@ -342,7 +363,7 @@ def call_test_vreader(iCub, ann_interface_root):
 
     # init visual reader
     print('Init visual reader')
-    if not visreader.init_grpc(iCub, "name", 'l', ip_address="0.0.0.0", port=pop_vis.port):
+    if not visreader.init_grpc(iCub, "name", 'l', ini_path="../data/", ip_address="0.0.0.0", port=pop_vis.port):
         print("Init failed")
         exit(0)
 
@@ -375,10 +396,13 @@ def call_test_kreader(iCub, ann_interface_root):
     # Create ANNarchy visual input population
     pop_kin = KinematicPopulation( geometry = (3,) )
 
+    grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
+    grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
+    grpc_include_path = grpc_path + "/include"
+    grpc_lib_path = grpc_path + "/lib"
     print("Compile ANNarchy network.")
-    compile(directory='results/annarchy_kreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
-    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
-
+    compile(directory='results/annarchy_kreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path,
+    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
     for pop in populations():
         print(pop.ip_address, pop.port)
         print(pop.name, ':', pop.geometry)
@@ -390,7 +414,7 @@ def call_test_kreader(iCub, ann_interface_root):
 
     # init kinematic reader
     print('Init kinematic reader')
-    if not kinreader.init_grpc(iCub, "name", part="right_arm", version=2, ip_address="0.0.0.0", port=pop_kin.port):
+    if not kinreader.init_grpc(iCub, "name", part="right_arm", version=2, ini_path="../data/", ip_address="0.0.0.0", port=pop_kin.port):
         print("Init failed")
         exit(0)
 

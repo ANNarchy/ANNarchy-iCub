@@ -71,11 +71,16 @@ cdef class iCubANN_wrapper:
 
     def __dealloc__(self):
         print("Close iCub Interface.")
-        self.joint_reader.clear()
-        self.joint_writer.clear()
-        self.skin_reader.clear()
-        self.visual_reader.clear()
-        self.kinematic_reader.clear()
+        if self.joint_reader != None:
+            self.joint_reader.clear()
+        if self.joint_writer != None:
+            self.joint_writer.clear()
+        if self.skin_reader != None:
+            self.skin_reader.clear()
+        if self.visual_reader != None:
+            self.visual_reader.clear()
+        if self.kinematic_reader != None:
+            self.kinematic_reader.clear()
 
 
     def clear(self):
@@ -100,10 +105,16 @@ cdef class iCubANN_wrapper:
             self.visual_reader[list(self.visual_reader.keys())[0]].close(self)
             size = len(self.visual_reader)
 
+        size = len(self.kinematic_reader)
+        while size > 0:
+            self.kinematic_reader[list(self.kinematic_reader.keys())[0]].close(self)
+            size = len(self.kinematic_reader)
+
         self.joint_reader.clear()
         self.joint_writer.clear()
         self.skin_reader.clear()
         self.visual_reader.clear()
+        self.kinematic_reader.clear()
 
 
     ### Manage the reader/writer modules ###

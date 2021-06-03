@@ -43,3 +43,5 @@ cdef class iCubANN_wrapper:
     cdef dict skin_reader_parts
 
     cdef dict visual_reader
+
+    cdef dict kinematic_reader
