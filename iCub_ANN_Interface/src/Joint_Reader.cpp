@@ -76,16 +76,18 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
             return false;
         }
 
+#ifdef _USE_LOG_QUIET
         // set YARP loging level to warnings, if the respective environment variable is set
         auto yarp_quiet = GetEnvVar("YARP_QUIET");
         if (yarp_quiet == "on" or yarp_quiet == "1") {
             yarp::os::Log::setMinimumPrintLevel(yarp::os::Log::WarningType);
         }
+#endif
 
         // read configuration data from ini file
-        INIReader reader_gen(ini_path + "interface_param.ini");
+        INIReader reader_gen(ini_path + "/interface_param.ini");
         if (reader_gen.ParseError() != 0) {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path and the ini file content!" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path << "\" and the ini file content!" << std::endl;
             return false;
         }
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);

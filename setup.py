@@ -109,6 +109,12 @@ else:
     if not os.path.isdir(yarp_prefix + "/include/yarp"):
         sys.exit("Did not find YARP in given path! Please correct yarp_prefix in make_config.py!")
 
+yarp_version = subprocess.check_output(["yarp", "version"]).strip().decode(sys.stdout.encoding).replace("YARP version ", "")
+yarp_version_major = int(yarp_version[0])
+yarp_version_minor = int(yarp_version[2])
+log_define = ""
+if yarp_version_major >= 3 and yarp_version_minor >= 4:
+    log_define = "-D_USE_LOG_QUIET"
 
 # find OpenCV include path
 if cv_include == "default":
@@ -145,7 +151,7 @@ package_data = ['__init__.py',
                 ] + grpc_package_data
 
 # set compile arguments
-extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
+extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall", log_define] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
 if verbose:
     extra_compile_args.append("--verbose")
 if pedantic:
