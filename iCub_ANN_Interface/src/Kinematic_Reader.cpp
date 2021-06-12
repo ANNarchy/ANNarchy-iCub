@@ -77,6 +77,7 @@ bool KinReader::Init(std::string part, float version, std::string ini_path) {
             yarp::os::Log::setMinimumPrintLevel(yarp::os::Log::WarningType);
         }
 #endif
+
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "/interface_param.ini");
         if (reader_gen.ParseError() != 0) {
@@ -286,8 +287,6 @@ std::vector<double> KinReader::GetCartesianPosition(unsigned int joint) {
         KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
         yarp::sig::Vector position = KinArm->Position(joint);
         return std::vector<double>(position.begin(), position.end());
-        std::vector<double> test;
-        return test;
     }
     return joint_angles;
 }

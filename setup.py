@@ -108,7 +108,7 @@ if yarp_prefix == "default":
 else:
     if not os.path.isdir(yarp_prefix + "/include/yarp"):
         sys.exit("Did not find YARP in given path! Please correct yarp_prefix in make_config.py!")
-print("YARP:", yarp_prefix)
+
 yarp_version = subprocess.check_output(["yarp", "version"]).strip().decode(sys.stdout.encoding).replace("YARP version ", "")
 yarp_version_major = int(yarp_version[0])
 yarp_version_minor = int(yarp_version[2])
@@ -122,8 +122,6 @@ if cv_include == "default":
 else:
     if not os.path.isdir(cv_include + "/opencv2"):
         sys.exit("Did not find OpenCV in given path! Please correct cv_include in make_config.py!")
-
-print(os.system("g++ -v -E -"))
 
 # Setup lists with lib/include directories and names
 include_dir = ["/usr/include", "iCub_ANN_Interface/include", "./", yarp_prefix + "/include", cv_include, numpy.get_include()] + grpc_include_dir
@@ -257,12 +255,12 @@ with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
     file_object.write("__use_grpc__ = " + str(use_grpc))
 
-print((use_grpc != used_grpc))
+force_rebuild = (use_grpc != used_grpc) or rebuild_grpc
 
 setup(
     name="iCub_ANN_Interface",
     packages=find_packages(),
-    ext_modules=cythonize(extensions, language_level=int(sys.version_info[0]), force=True),
+    ext_modules=cythonize(extensions, language_level=int(sys.version_info[0]), force=force_rebuild),
     description="Interface for iCub robot and ANNarchy neuro-simulator",
     long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.""",
     version=version,
