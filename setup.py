@@ -108,13 +108,13 @@ if yarp_prefix == "default":
 else:
     if not os.path.isdir(yarp_prefix + "/include/yarp"):
         sys.exit("Did not find YARP in given path! Please correct yarp_prefix in make_config.py!")
-
+print("YARP:", yarp_prefix)
 yarp_version = subprocess.check_output(["yarp", "version"]).strip().decode(sys.stdout.encoding).replace("YARP version ", "")
 yarp_version_major = int(yarp_version[0])
 yarp_version_minor = int(yarp_version[2])
-log_define = ""
+log_define = False
 if yarp_version_major >= 3 and yarp_version_minor >= 4:
-    log_define = "-D_USE_LOG_QUIET"
+    log_define = True
 
 # find OpenCV include path
 if cv_include == "default":
@@ -123,6 +123,7 @@ else:
     if not os.path.isdir(cv_include + "/opencv2"):
         sys.exit("Did not find OpenCV in given path! Please correct cv_include in make_config.py!")
 
+print(os.system("g++ -v -E -"))
 
 # Setup lists with lib/include directories and names
 include_dir = ["/usr/include", "iCub_ANN_Interface/include", "./", yarp_prefix + "/include", cv_include, numpy.get_include()] + grpc_include_dir
@@ -144,14 +145,16 @@ sources1 = [prefix_cpp + "Joint_Reader.cpp", prefix_cpp + "Joint_Writer.cpp", pr
 package_data = ['__init__.py',
                 'iCub/*.pxd',
                 'iCub/*.pyx',
+                'iCub/*.cpp',
                 'iCub/__init__.py',
-                'iCub/include/*hpp',
+                'iCub/include/*.hpp',
                 'Sync/*.pyx',
-                'Sync/__init__.py'
+                'Sync/__init__.py',
+                'iCub/src/*.cpp'
                 ] + grpc_package_data
 
 # set compile arguments
-extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall", log_define] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
+extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
 if verbose:
     extra_compile_args.append("--verbose")
 if pedantic:
@@ -160,6 +163,8 @@ if use_grpc:
     extra_compile_args += ["-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/", "-D_USE_GRPC"]
 if double_precision:
     extra_compile_args.append("-D_DOUBLE_PRECISION")
+if log_define:
+    extra_compile_args.append("-D_USE_LOG_QUIET")
 
 # define extensions for the cython-based modules
 extensions = [
@@ -257,7 +262,7 @@ print((use_grpc != used_grpc))
 setup(
     name="iCub_ANN_Interface",
     packages=find_packages(),
-    ext_modules=cythonize(extensions, language_level=int(sys.version_info[0]), force=(use_grpc != used_grpc)),
+    ext_modules=cythonize(extensions, language_level=int(sys.version_info[0]), force=True),
     description="Interface for iCub robot and ANNarchy neuro-simulator",
     long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.""",
     version=version,
