@@ -33,7 +33,9 @@ def set_yarp_prefix():
     # Yarp install direction
     yarp_prefix = None
 
-    if "ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX" in os.environ:
+    if os.path.isdir("/usr/local/packages/yarp"):
+        yarp_prefix = "/usr/local/packages/yarp"
+    elif "ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX" in os.environ:
         yarp_prefix = os.environ["ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX"]
     elif "YARP_DATA_DIRS" in os.environ:
         yarp_data = os.environ['YARP_DATA_DIRS'].split(':')[0].split('/')
