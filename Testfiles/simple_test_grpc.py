@@ -162,7 +162,7 @@ def call_test_jwriter(iCub, ann_interface_root):
     jointwriter = Joint_Writer.PyJointWriter()
 
     # init joint reader instance
-    if not jointreader.init(iCub, "name", iCub_Constants.PART_KEY_HEAD, sigma=sigma, n_pop=popsize, ini_path="../data/"):
+    if not jointreader.init(iCub, "name", iCub_Constants.PART_KEY_HEAD, sigma=sigma, n_pop=popsize):
         print("Init Reader failed")
         exit(0)
 
@@ -308,7 +308,7 @@ def call_test_sreader(iCub, ann_interface_root):
     skinreader = Skin_Reader.PySkinReader()
 
     # init skin reader
-    if not skinreader.init_grpc(iCub, "name", arm="r", ini_path="../data/", ip_address="0.0.0.0", port=pop_sread.port):
+    if not skinreader.init_grpc(iCub, "name", arm="r", ip_address="0.0.0.0", port=pop_sread.port):
         print("Init failed")
         exit(0)
 
@@ -363,7 +363,7 @@ def call_test_vreader(iCub, ann_interface_root):
 
     # init visual reader
     print('Init visual reader')
-    if not visreader.init_grpc(iCub, "name", 'l', ini_path="../data/", ip_address="0.0.0.0", port=pop_vis.port):
+    if not visreader.init_grpc(iCub, "name", 'l', ip_address="0.0.0.0", port=pop_vis.port):
         print("Init failed")
         exit(0)
 
@@ -381,6 +381,7 @@ def call_test_vreader(iCub, ann_interface_root):
 
     print('Finished Visual Reader test')
     print('\n')
+
 
 #########################################################
 def call_test_kreader(iCub, ann_interface_root):
@@ -414,7 +415,7 @@ def call_test_kreader(iCub, ann_interface_root):
 
     # init kinematic reader
     print('Init kinematic reader')
-    if not kinreader.init_grpc(iCub, "name", part="right_arm", version=2, ini_path="../data/", ip_address="0.0.0.0", port=pop_kin.port):
+    if not kinreader.init_grpc(iCub, "name", part="right_arm", version=2, ip_address="0.0.0.0", port=pop_kin.port):
         print("Init failed")
         exit(0)
 
