@@ -20,7 +20,7 @@ import iCub_ANN_Interface
 
 from ANNarchy.core.Population import Population
 from ANNarchy.core.Neuron import Neuron
-from ANNarchy.core.Global import _error
+from ANNarchy.core.Global import _error, dt
 
 class VisionPopulation(Population):
 
@@ -31,6 +31,8 @@ class VisionPopulation(Population):
         self._ip_address = ip_address
         self._port = port
         self.name = name
+        self._period = 1
+        self._offset = 0
 
     def _init_attributes(self):
 
@@ -38,6 +40,8 @@ class VisionPopulation(Population):
 
         self.cyInstance.set_ip_address(self._ip_address)
         self.cyInstance.set_port(self._port)
+        self.cyInstance.set_offset(self._offset)
+        self.cyInstance.set_period(self._period)
 
     def _copy(self):
 
@@ -71,6 +75,34 @@ class VisionPopulation(Population):
         else:
             _error("Changing port is only valid after compile() or constructor.")
 
+    @property
+    def period(self):
+        if self.initialized:
+            return self.cyInstance.get_period()*dt()
+        else:
+            _error("Read-out period is only valid after compile().")
+
+    @period.setter
+    def period(self, value):
+        if self.initialized:
+            self.cyInstance.set_period(value)/dt()
+        else:
+            _error("Changing period is only valid after compile() or constructor.")
+
+    @property
+    def offset(self):
+        if self.initialized:
+            return self.cyInstance.get_offset()
+        else:
+            _error("Read-out offset is only valid after compile().")
+
+    @offset.setter
+    def offset(self, value):
+        if self.initialized:
+            self.cyInstance.set_offset(value)
+        else:
+            _error("Changing offset is only valid after compile() or constructor.")
+
     def _generate(self):
         """
         TODO: read out code for iCub through gRPC
@@ -83,6 +115,9 @@ class VisionPopulation(Population):
         self._specific_template['declare_additional'] = """
     std::string ip_address;
     unsigned int port;
+    unsigned int period;
+    unsigned int offset;
+
     ClientInstance* image_source=nullptr;
         """
         self._specific_template['access_additional'] = """
@@ -102,6 +137,22 @@ class VisionPopulation(Population):
         return port;
     }
 
+    // Image Source period
+    void set_period(unsigned int value) {
+        period = value;
+    }
+    unsigned int get_period() {
+        return period;
+    }
+
+    // Image Source offset
+    void set_offset(unsigned int value) {
+        offset = value;
+    }
+    unsigned int get_offset() {
+        return offset;
+    }
+
     void connect() {
         if (image_source == nullptr) {
             image_source = new ClientInstance(ip_address, port);
@@ -116,6 +167,12 @@ class VisionPopulation(Population):
         string get_ip_address()
         void set_port(unsigned int)
         unsigned int get_port()
+
+        void set_period(unsigned int value)
+        unsigned int get_period()
+        void set_offset(unsigned int value)
+        unsigned int get_offset()
+
         void connect()
 """
         self._specific_template['wrapper_access_additional'] = """
@@ -128,12 +185,24 @@ class VisionPopulation(Population):
         pop%(id)s.set_port(value)
     def get_port(self):
         return pop%(id)s.get_port()
+
+    def set_period(self, value):
+        pop%(id)s.set_period(value)
+    def get_period(self):
+        return pop%(id)s.get_period()
+    def set_offset(self, value):
+        pop%(id)s.set_offset(value)
+    def get_offset(self):
+        return pop%(id)s.get_offset()
+
     def connect(self):
         pop%(id)s.connect()
 """ %{'id': self.id}
 
         self._specific_template['update_variables'] = """
-        r = image_source->retrieve_image();
+        if((t%period==offset) && _active){
+            r = image_source->retrieve_image();
+        }
         """
 
     def _instantiate(self, cython_module):
