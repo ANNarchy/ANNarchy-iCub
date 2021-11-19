@@ -168,7 +168,7 @@ if log_define:
 extensions = [
     Extension("iCub_ANN_Interface.iCub.Joint_Reader", [prefix_cy + "iCub/Joint_Reader.pyx", prefix_cpp + "Joint_Reader.cpp"] + sources,
         include_dirs=include_dir,
-        libraries=libs + ["iKin", "ctrlLib"],
+        libraries=libs + ["iKin", "ctrlLib", "optimization", "ipopt"],
         library_dirs=lib_dirs,
         language="c++",
         extra_compile_args=extra_compile_args,
@@ -204,7 +204,7 @@ extensions = [
 
     Extension("iCub_ANN_Interface.iCub.Kinematic_Reader", [prefix_cy + "iCub/Kinematic_Reader.pyx", prefix_cpp + "Kinematic_Reader.cpp"] + sources,
         include_dirs=include_dir,
-        libraries=libs + ["iKin", "ctrlLib"],
+        libraries=libs + ["iKin", "ctrlLib", "optimization", "ipopt"],
         library_dirs=lib_dirs,
         language="c++",
         extra_compile_args=extra_compile_args,
@@ -213,7 +213,7 @@ extensions = [
 
     Extension("iCub_ANN_Interface.iCub.iCub_Interface", [prefix_cy + "iCub/iCub_Interface.pyx", prefix_cpp + "Interface_iCub.cpp"] + sources + sources1,
         include_dirs=include_dir,
-        libraries=libs + ["iKin", "ctrlLib"],
+        libraries=libs + ["iKin", "ctrlLib", "optimization", "ipopt"],
         library_dirs=lib_dirs,
         language="c++",
         extra_compile_args=extra_compile_args,
@@ -255,7 +255,7 @@ with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
     file_object.write("__use_grpc__ = " + str(use_grpc))
 
-force_rebuild = (use_grpc != used_grpc) or rebuild_grpc
+force_rebuild = (use_grpc != used_grpc) or rebuild_grpc or rebuild_cython
 
 setup(
     name="iCub_ANN_Interface",
