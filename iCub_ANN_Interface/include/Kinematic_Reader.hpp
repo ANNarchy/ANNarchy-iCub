@@ -20,6 +20,7 @@
 #pragma once
 
 #include <iCub/iKin/iKinFwd.h>    // iCub forward Kinematics
+#include <iCub/iKin/iKinIpOpt.h>    // iCub inverse Kinematics
 #include <yarp/dev/all.h>
 #include <yarp/sig/all.h>
 
@@ -85,6 +86,14 @@ class KinReader : public Mod_BaseClass {
     std::vector<double> GetCartesianPosition(unsigned int joint);
     std::vector<double> GetHandPosition();
 
+    /**
+     * \brief  Return number of controlled joints
+     * \param[in] position target 3D End-Effector position 
+     * \return joint angle configuration for given position
+     */
+    std::vector<double> solveInvKin(std::vector<double> position, std::vector<int> blocked_links);
+
+    void testinvKin();
     /*** gRPC functions ***/
 #ifdef _USE_GRPC
     std::vector<double> provideData(int value);
@@ -97,17 +106,17 @@ class KinReader : public Mod_BaseClass {
     // std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
 
     /*** parameter ***/
-    int joint_arm;     // number of joints arm
+    int joint_arm;      // number of joints arm
     int joint_torso;    // number of joints torso
 
     /*** yarp data structures ***/
-    yarp::dev::PolyDriver driver_arm;         // yarp driver needed for reading joint encoders
-    yarp::dev::IEncoders* encoder_arm;        // iCub joint encoder interface
+    yarp::dev::PolyDriver driver_arm;        // yarp driver needed for reading joint encoders
+    yarp::dev::IEncoders* encoder_arm;       // iCub joint encoder interface
     yarp::dev::IControlLimits* limit_arm;    // iCub joint limits interface
 
-    yarp::dev::PolyDriver driver_torso;         // yarp driver needed for reading joint encoders
-    yarp::dev::IEncoders* encoder_torso;        // iCub joint encoder interface
-    yarp::dev::IControlLimits* limit_torso;     // iCub joint limits interface
+    yarp::dev::PolyDriver driver_torso;        // yarp driver needed for reading joint encoders
+    yarp::dev::IEncoders* encoder_torso;       // iCub joint encoder interface
+    yarp::dev::IControlLimits* limit_torso;    // iCub joint limits interface
 
     std::deque<yarp::dev::IControlLimits*> limits;
 
@@ -116,16 +125,18 @@ class KinReader : public Mod_BaseClass {
     iCub::iKin::iCubTorso* KinTorso;
     iCub::iKin::iCubFinger* KinFinger;
 
+    iCub::iKin::iKinChain* KinChain;
+
     /** grpc communication **/
 #ifdef _USE_GRPC
-    std::string _ip_address = "";        // gRPC server ip address
-    unsigned int _port = -1;             // gRPC server port
-    ServerInstance *kin_source;    // gRPC server instance
-    std::thread server_thread;           // thread for running the gRPC server in parallel
+    std::string _ip_address = "";    // gRPC server ip address
+    unsigned int _port = -1;         // gRPC server port
+    ServerInstance* kin_source;      // gRPC server instance
+    std::thread server_thread;       // thread for running the gRPC server in parallel
 #endif
 
     /*** auxilary functions ***/
     // check if iCub part key is valid
     bool CheckPartKey(std::string key);
-    std::vector<double> ReadDoubleAll(yarp::dev::IEncoders *iencoder, unsigned int joint_count);
+    std::vector<double> ReadDoubleAll(yarp::dev::IEncoders* iencoder, unsigned int joint_count);
 };

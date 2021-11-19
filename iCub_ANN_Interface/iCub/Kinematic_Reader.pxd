@@ -45,7 +45,8 @@ cdef extern from "Kinematic_Reader.hpp":
 
         vector[double] GetCartesianPosition(unsigned int)
         vector[double] GetHandPosition()
-
+        vector[double] solveInvKin(vector[double], vector[int])
+        void testinvKin()
 
         void setRegister(bint)
         bint getRegister()

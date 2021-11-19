@@ -30,6 +30,7 @@ from .Visual_Reader cimport VisualReader
 from .iCub_Interface cimport iCubANN_wrapper
 
 import numpy as np
+import os
 
 cdef class PyVisualReader:
 
@@ -45,7 +46,7 @@ cdef class PyVisualReader:
 
     ### Access to visual reader member functions
     # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def init(self, iCubANN_wrapper iCub, str name, str eye, double fov_width=60, double fov_height=48, int img_width=320, int img_height=240, int max_buffer_size=10, fast_filter=True, str ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str eye, double fov_width=60, double fov_height=48, int img_width=320, int img_height=240, int max_buffer_size=10, fast_filter=True, str ini_path="../data/"):
         """
             Calls bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int max_buffer_size, int img_height)
 
@@ -64,7 +65,7 @@ cdef class PyVisualReader:
             return:
                 bool                    -- return True, if successful
         """
-
+        # ini_path = os.path.abspath(ini_path)
         self.part = eye
         # preregister module for some prechecks e.g. name already in use
         if iCub.register_vis_reader(name, self):
@@ -77,7 +78,7 @@ cdef class PyVisualReader:
             return False
 
     # init Visual reader with given parameters for image resolution, field of view and eye selection
-    def init_grpc(self, iCubANN_wrapper iCub, str name, str eye, double fov_width=60, double fov_height=48, int img_width=320, int img_height=240, int max_buffer_size=10, fast_filter=True, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50000):
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str eye, double fov_width=60, double fov_height=48, int img_width=320, int img_height=240, int max_buffer_size=10, fast_filter=True, str ini_path="../data/", str ip_address="0.0.0.0", unsigned int port=50000):
         """
             Calls bool InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, int max_buffer_size,
                             bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port)
@@ -101,6 +102,8 @@ cdef class PyVisualReader:
         """
 
         self.part = eye
+        ini_path = os.path.abspath(ini_path)
+        print(ini_path)
         # preregister module for some prechecks e.g. eye already in use
         if iCub.register_vis_reader(name, self):
             # call the interface

@@ -45,7 +45,7 @@ cdef class PyKinematicReader:
 
     ### Access to Kinematic reader member functions
     # init Kinematic reader with given parameters for image resolution, field of view and eye selection
-    def init(self, iCubANN_wrapper iCub, str name, str part, float version, str ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str part, float version, str ini_path ="../data/"):
         """
             Calls bool KinReader::Init(std::string part, float version, std::string ini_path)
 
@@ -55,7 +55,7 @@ cdef class PyKinematicReader:
             params:
                 string part     -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
                 float version   --
-                string ini_path -- 
+                string ini_path --
 
             return:
                 bool            -- return True, if successful
@@ -73,7 +73,7 @@ cdef class PyKinematicReader:
             return False
 
     # init Kinematic reader with given parameters for image resolution, field of view and eye selection
-    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, float version, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50000):
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, float version, str ini_path ="../data/", str ip_address="0.0.0.0", unsigned int port=50000):
         """
             Calls bool KinReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port)
 
@@ -85,7 +85,7 @@ cdef class PyKinematicReader:
                 string name             -- individual module name
                 string part             -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
                 float version           --
-                string ini_path         -- 
+                string ini_path         --
                 string ip_address       -- gRPC server ip address
                 unsigned int port       -- gRPC server port
 
@@ -127,7 +127,7 @@ cdef class PyKinematicReader:
             Calls void KinematicReader::GetHandPosition()
 
             function:
-                
+
             return:
 
         """
@@ -137,10 +137,10 @@ cdef class PyKinematicReader:
     #
     def get_jointposition(self, unsigned int joint):
         """
-            Calls void KinematicReader::GetHandPosition()
+            Calls void KinematicReader::GetCartesianPosition()
 
             function:
-                
+
             return:
 
         """
@@ -148,12 +148,30 @@ cdef class PyKinematicReader:
         return np.array(deref(self.cpp_kin_reader).GetCartesianPosition(joint))
 
     #
+    def solve_InvKin(self, position, blocked_links):
+        """
+            Calls void KinematicReader::solveInvKin(std::vector<double> position, std::vector<int> blocked_links)
+
+            function:
+
+            return:
+
+        """
+        # call the interface
+        return np.array(deref(self.cpp_kin_reader).solveInvKin(position, blocked_links))
+
+    #
+    def test_invKin(self):
+         # call the interface
+        return np.array(deref(self.cpp_kin_reader).testinvKin())
+
+    #
     def get_DOF(self):
         """
             Calls void KinematicReader::GetDOF()
 
             function:
-                
+
             return:
 
         """

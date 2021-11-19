@@ -45,7 +45,7 @@ cdef class PyJointWriter:
 
     ### Access to joint writer member functions
     # initialize the joint writer with given parameters
-    def init(self, iCubANN_wrapper iCub, str name, str part, unsigned int n_pop, double degr_per_neuron=0.0, double speed=10.0, str ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str part, unsigned int n_pop, double degr_per_neuron=0.0, double speed=10.0, str ini_path="../data/"):
         """
             Calls bool JointWriter::Init(std::string part, int pop_size, double deg_per_neuron, double speed)
 
@@ -82,7 +82,7 @@ cdef class PyJointWriter:
             return False
 
     # Initialize the joint writer with given parameters for use with gRPC
-    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, unsigned int n_pop, joints, str mode, blocking=True, double degr_per_neuron=0.0, double speed=10.0, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50010):
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str part, unsigned int n_pop, joints, str mode, blocking=True, double degr_per_neuron=0.0, double speed=10.0, str ini_path="../data/", str ip_address="0.0.0.0", unsigned int port=50010):
         """
             Calls bool JointWriter::Init_gRPC(std::string part, int pop_size, double deg_per_neuron, double speed)
 

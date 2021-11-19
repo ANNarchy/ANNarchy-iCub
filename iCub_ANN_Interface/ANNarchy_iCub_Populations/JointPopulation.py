@@ -331,15 +331,24 @@ class JointReadout(Population):
 
         if len(self._joints) == 0:
             self._specific_template['update_variables'] = """
+        #pragma omp single
+        {
         r  = joint_source->retrieve_alljoints(encoded);
+        }
         """
         elif len(self._joints) == 1:
             self._specific_template['update_variables'] = """
+        #pragma omp single
+        {
         r  = joint_source->retrieve_singlejoint(joints[0], encoded);
+        }
         """
         else:
             self._specific_template['update_variables'] = """
+        #pragma omp single
+        {
         r  = joint_source->retrieve_multijoints(joints, encoded);
+        }
         """
 
     def _instantiate(self, cython_module):

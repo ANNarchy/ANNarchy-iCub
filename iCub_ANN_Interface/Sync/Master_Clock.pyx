@@ -37,8 +37,9 @@ class MasterClock(object):
 
         input_proc = []
         for i, inst in enumerate(self.instances):
-            input_proc.append(mp.Thread(name="inp_instance_"+str(i), target=inst.sync_input))
-            input_proc[-1].start()
+            if inst.input:
+                input_proc.append(mp.Thread(name="inp_instance_"+str(i), target=inst.sync_input))
+                input_proc[-1].start()
 
         for proc in input_proc:
             proc.join()
@@ -54,10 +55,10 @@ class MasterClock(object):
 
 class ClockInterface(object):
     def __init__(self):
-        pass
+        self.input = True
 
     def sync_input(self):
-        print("For each Sync-class the 'sync_input' method has to be implemented!")
+        print("For each Sync-class the 'sync_input' method has to be implemented or input has to be set to 'False'!")
         raise NotImplementedError
 
     def update(self, T):
@@ -80,7 +81,7 @@ if __name__ == '__main__':
         def __init__(self, interface):
             self.iCub = interface
             pass
-        def updated(self, T):
+        def update(self, T):
             # start action -> small enough for timestep
             print(self.iCub, T)
             pass

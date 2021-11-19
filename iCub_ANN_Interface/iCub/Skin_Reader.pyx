@@ -45,7 +45,7 @@ cdef class PySkinReader:
 
     ### Access to skin reader member functions
     # init skin reader with given parameters
-    def init(self, iCubANN_wrapper iCub, str name, str arm, norm=True, str ini_path = "../data/"):
+    def init(self, iCubANN_wrapper iCub, str name, str arm, norm=True, str ini_path="../data/"):
         """
             Calls bool SkinReader::Init(char arm, bool norm_data)
 
@@ -75,7 +75,7 @@ cdef class PySkinReader:
             return False
 
     # Initialize the skin reader with given parameters for use with gRPC
-    def init_grpc(self, iCubANN_wrapper iCub, str name, str arm, norm=True, str ini_path = "../data/", str ip_address="0.0.0.0", unsigned int port=50015):
+    def init_grpc(self, iCubANN_wrapper iCub, str name, str arm, norm=True, str ini_path="../data/", str ip_address="0.0.0.0", unsigned int port=50015):
         """
             Calls bool SkinReader::Init(char arm, bool norm_data)
 
