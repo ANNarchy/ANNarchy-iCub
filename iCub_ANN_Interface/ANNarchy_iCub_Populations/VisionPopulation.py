@@ -23,6 +23,10 @@ from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import _error, dt
 
 class VisionPopulation(Population):
+    """
+        ANNarchy population class to connect with the iCub cameras.
+        Read the camera images from the iCub, preprocess the images and set it as activation for the ANNarchy population.
+    """
 
     def __init__(self, geometry=(320,240), ip_address="0.0.0.0", port=50000, copied=False, name=None):
 

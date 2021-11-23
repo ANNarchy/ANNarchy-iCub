@@ -23,6 +23,10 @@ from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import _error
 
 class KinematicPopulation(Population):
+    """
+        ANNarchy population class to connect with the iCub kinematics.
+        Readout the angles from the iCub, compute the forward kinematics and set it as population activation.
+    """
 
     def __init__(self, geometry=(3,), ip_address="0.0.0.0", port=50020, copied=False, name=None):
 

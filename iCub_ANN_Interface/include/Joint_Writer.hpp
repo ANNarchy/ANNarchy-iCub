@@ -157,7 +157,7 @@ class JointWriter : public Mod_BaseClass {
      * \param[in] position Joint angle to write to the robot joint (in degree)
      * \param[in] joint Joint number of the robot part
      * \param[in] blocking if True, function waits for end of motion
-     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+     * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: position out of joint limits; joint out of range; positioning mode not valid
@@ -169,7 +169,7 @@ class JointWriter : public Mod_BaseClass {
      * \brief Write all joints with joint angles encoded in populations
      * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part
      * \param[in] blocking if True, function waits for end of motion
-     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+     * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: joints out of range; positioning mode not valid; position_pops size does not fit joint count
@@ -183,7 +183,7 @@ class JointWriter : public Mod_BaseClass {
      * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part
      * \param[in] joint_selection Joint indizes of the joints, which should be moved (head: 3, 4, 5 -> all eye movements)
      * \param[in] blocking if True, function waits for end of motion
-     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+     * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      *          Typical errors:
      *              - arguments not valid: joints out of range; positioning mode not valid; position_pops size does not fit joint selection
@@ -198,7 +198,7 @@ class JointWriter : public Mod_BaseClass {
      * \param[in] position_pop Population encoded joint angle for writing to the robot joint
      * \param[in] joint Joint number of the robot part
      * \param[in] blocking if True, function waits for end of motion
-     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+     * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: joint out of range; positioning mode not valid
@@ -215,7 +215,7 @@ class JointWriter : public Mod_BaseClass {
      */
     double Decode_ext(std::vector<double> position_pop, int joint);
 
-    /** auxilary methods for grpc connection with ANNarchy populations **/ 
+    // auxilary methods for grpc connection with ANNarchy populations //
     void Retrieve_ANNarchy_Input_SJ();
     void Write_ANNarchy_Input_SJ();
 
@@ -245,7 +245,7 @@ class JointWriter : public Mod_BaseClass {
     std::vector<double> joint_deg_res_abs;    // degree per neuron for the population coding, value per joint
     std::vector<double> joint_deg_res_rel;    // degree per neuron for the population coding, value per joint
     int joints = 0;                           // number of joints
-    unsigned int pop_size = 0;                // number of joints
+    unsigned int pop_size = 0;                // population size for angle population coding
 
     std::vector<double> joint_min;                      // minimum possible joint angles
     std::vector<double> joint_max;                      // maximum possible joint angles

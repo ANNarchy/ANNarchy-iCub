@@ -42,7 +42,7 @@ from .Skin_Reader cimport PySkinReader
 from .Visual_Reader cimport VisualReader
 from .Visual_Reader cimport PyVisualReader
 
-from .Kinematic_Reader cimport KinReader
+from .Kinematic_Reader cimport KinematicReader
 from .Kinematic_Reader cimport PyKinematicReader
 
 import xml.etree.ElementTree as ET

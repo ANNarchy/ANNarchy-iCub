@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2019-2021 Torsten Fietzek
  *
- *  KinReader.cpp is part of the iCub ANNarchy interface
+ *  KinematicReader.cpp is part of the iCub ANNarchy interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,10 +41,10 @@
 #endif
 
 // Destructor
-KinReader::~KinReader() { Close(); }
+KinematicReader::~KinematicReader() { Close(); }
 
 /*** public methods for the user ***/
-bool KinReader::Init(std::string part, float version, std::string ini_path) {
+bool KinematicReader::Init(std::string part, float version, std::string ini_path) {
     /*
         Initialize the Kinematic Reader with given parameters
 
@@ -161,7 +161,7 @@ bool KinReader::Init(std::string part, float version, std::string ini_path) {
         }
         this->KinChain = KinArm->asChain();
 
-        this->type = "KinReader";
+        this->type = "KinematicReader";
         init_param["part"] = part;
         init_param["version"] = std::to_string(version);
         init_param["ini_path"] = ini_path;
@@ -174,7 +174,7 @@ bool KinReader::Init(std::string part, float version, std::string ini_path) {
 }
 
 #ifdef _USE_GRPC
-bool KinReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port) {
+bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize the Kinematic Reader with given parameters
 
@@ -205,7 +205,7 @@ bool KinReader::InitGRPC(std::string part, float version, std::string ini_path, 
     }
 }
 #else
-bool KinReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port) {
+bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize the Kinematic Reader with given parameters
 
@@ -220,7 +220,7 @@ bool KinReader::InitGRPC(std::string part, float version, std::string ini_path, 
 }
 #endif
 
-void KinReader::Close() {
+void KinematicReader::Close() {
     /*
         Close Kinematic Reader with cleanup
     */
@@ -244,7 +244,7 @@ void KinReader::Close() {
     this->dev_init = false;
 }
 
-int KinReader::GetDOF() {
+int KinematicReader::GetDOF() {
     /*
         Return number of controlled joints
 
@@ -263,7 +263,7 @@ int KinReader::GetDOF() {
     }
 }
 
-std::vector<double> KinReader::GetHandPosition() {
+std::vector<double> KinematicReader::GetHandPosition() {
     /*
         Return cartesian position of the iCub Hand based on iCub joint angles (online)
 
@@ -283,7 +283,7 @@ std::vector<double> KinReader::GetHandPosition() {
     return joint_angles;
 }
 
-std::vector<double> KinReader::GetCartesianPosition(unsigned int joint) {
+std::vector<double> KinematicReader::GetCartesianPosition(unsigned int joint) {
     /*
         Return cartesian position the selected iCub arm/torso joint based on iCub joint angles (online)
 
@@ -308,7 +308,7 @@ std::vector<double> KinReader::GetCartesianPosition(unsigned int joint) {
     return joint_angles;
 }
 
-std::vector<double> KinReader::solveInvKin(std::vector<double> position, std::vector<int> blocked_links) {
+std::vector<double> KinematicReader::solveInvKin(std::vector<double> position, std::vector<int> blocked_links) {
     /*
         Compute the joint configuration for a given 3D End-Effector position (Inverse Kinematics)
 
@@ -360,7 +360,7 @@ std::vector<double> KinReader::solveInvKin(std::vector<double> position, std::ve
     return joint_angles;
 }
 
-void KinReader::testinvKin(){
+void KinematicReader::testinvKin(){
 
     yarp::sig::Vector q0, qf, qhat, xf, xhat;
 
@@ -449,12 +449,12 @@ void KinReader::testinvKin(){
 /*** gRPC functions ***/
 // TODO seperated functions for different modi -> set enc/joints in init
 #ifdef _USE_GRPC
-std::vector<double> KinReader::provideData(int value) { return std::vector<double>(); }
-std::vector<double> KinReader::provideData() { return GetHandPosition(); }
+std::vector<double> KinematicReader::provideData(int value) { return std::vector<double>(); }
+std::vector<double> KinematicReader::provideData() { return GetHandPosition(); }
 #endif
 
 /*** auxilary functions ***/
-bool KinReader::CheckPartKey(std::string key) {
+bool KinematicReader::CheckPartKey(std::string key) {
     /*
         Check if iCub part key is valid
     */
@@ -468,7 +468,7 @@ bool KinReader::CheckPartKey(std::string key) {
     return inside;
 }
 
-std::vector<double> KinReader::ReadDoubleAll(yarp::dev::IEncoders* iencoder, unsigned int joint_count) {
+std::vector<double> KinematicReader::ReadDoubleAll(yarp::dev::IEncoders* iencoder, unsigned int joint_count) {
     /*
         Read all joints and return joint angles directly as double value
 

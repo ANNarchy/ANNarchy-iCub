@@ -24,8 +24,10 @@ from ANNarchy.core.Global import _error
 
 class JointControl(Population):
     """
-    Set the position/orientation of joints, e. g. elbow or finger.
+        ANNarchy population class to connect with the iCub joint control, e. g. arm or head.
+        Readout the angles from the ANNarchy Population and send it to the iCub.
     """
+
     def __init__(self, geometry=None, neuron=Neuron(parameters="r = 0.0"), ip_address="0.0.0.0", port=50010, copied=False, name=None):
 
         Population.__init__(self, geometry=geometry, neuron=neuron, copied=copied, name=name )
@@ -156,8 +158,10 @@ class JointControl(Population):
 
 class JointReadout(Population):
     """
-    Get the position/orientation of joints, e. g. elbow or finger.
+        ANNarchy population class to connect with the iCub joint readout, e. g. arm or head.
+        Readout the angles from the iCub and set it as population activation.
     """
+
     def __init__(self, geometry=None, joints=None, encoded=False, ip_address="0.0.0.0", port=50005, copied=False, name=None):
 
         Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied, name=name )

@@ -24,6 +24,10 @@ from ANNarchy.core.Global import _error
 
 
 class SkinPopulation(Population):
+    """
+        ANNarchy population class to connect with the iCub skin.
+        Readout the skin sensor data and set it as population activation.
+    """
 
     def __init__(self, geometry=None, skin_section="", ip_address="0.0.0.0", port=50015, copied=False, name=None):
 

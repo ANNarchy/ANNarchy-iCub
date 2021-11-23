@@ -37,12 +37,12 @@
 /**
  * \brief  Read-out of the joint angles of the iCub robot
  */
-class KinReader : public Mod_BaseClass {
+class KinematicReader : public Mod_BaseClass {
  public:
     // Constructor
-    KinReader() = default;
+    KinematicReader() = default;
     // Destructor
-    ~KinReader();
+    ~KinematicReader();
 
     /*** public methods for the user ***/
 

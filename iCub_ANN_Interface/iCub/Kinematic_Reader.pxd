@@ -28,8 +28,8 @@ from libcpp.map cimport map as cmap
 
 cdef extern from "Kinematic_Reader.hpp":
 
-    cdef cppclass KinReader:
-        KinReader() except +
+    cdef cppclass KinematicReader:
+        KinematicReader() except +
 
         # Initialize the joint reader with given parameters
         bool_t Init(string, float, string)
@@ -54,7 +54,7 @@ cdef extern from "Kinematic_Reader.hpp":
         cmap[string, string] getParameter()
 
 cdef class PyKinematicReader:
-    cdef shared_ptr[KinReader] cpp_kin_reader
+    cdef shared_ptr[KinematicReader] cpp_kin_reader
     cdef str name
     cdef str part
 

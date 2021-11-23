@@ -26,7 +26,7 @@ from libcpp.memory cimport shared_ptr, make_shared
 from libc.stdlib cimport malloc, free
 from cython.operator cimport dereference as deref
 
-from .Kinematic_Reader cimport KinReader
+from .Kinematic_Reader cimport KinematicReader
 from .iCub_Interface cimport iCubANN_wrapper
 
 import numpy as np
@@ -36,7 +36,7 @@ cdef class PyKinematicReader:
     # init method
     def __cinit__(self):
         print("Initialize iCub Interface: Kinematic Reader.")
-        self.cpp_kin_reader = make_shared[KinReader]()
+        self.cpp_kin_reader = make_shared[KinematicReader]()
 
     # close method
     def __dealloc__(self):
@@ -47,7 +47,7 @@ cdef class PyKinematicReader:
     # init Kinematic reader with given parameters for image resolution, field of view and eye selection
     def init(self, iCubANN_wrapper iCub, str name, str part, float version, str ini_path ="../data/"):
         """
-            Calls bool KinReader::Init(std::string part, float version, std::string ini_path)
+            Calls bool KinematicReader::Init(std::string part, float version, std::string ini_path)
 
             function:
                 Initialize the Kinematic Reader with given parameters
@@ -75,7 +75,7 @@ cdef class PyKinematicReader:
     # init Kinematic reader with given parameters for image resolution, field of view and eye selection
     def init_grpc(self, iCubANN_wrapper iCub, str name, str part, float version, str ini_path ="../data/", str ip_address="0.0.0.0", unsigned int port=50000):
         """
-            Calls bool KinReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port)
+            Calls bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port)
 
             function:
                 Initialize the Kinematic Reader with given parameters
