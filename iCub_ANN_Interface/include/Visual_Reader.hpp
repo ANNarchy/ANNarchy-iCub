@@ -89,7 +89,7 @@ class VisualReader : public Mod_BaseClass {
     bool InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size,
                   bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port);
 
-    /**
+    // /**
     //  * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
     //  * \param[in] wait2img wait for image in buffer
     //  * \param[in] trials trials for waiting to image in buffer
@@ -129,13 +129,6 @@ class VisualReader : public Mod_BaseClass {
      */
     void Close() override;
 
-    /**
-     * \brief Read image vector from the image buffer and remove it from the internal buffer. 
-     * Call twice in binocular mode (first right eye image second left eye image) 
-     * \param[in] wait2img wait for image in buffer
-     * \param[in] trials trials for waiting to image in buffer
-     * \return image as 1D-vector from the image buffer
-     */
 #ifdef _USE_GRPC
     std::vector<double> provideData();
 #endif

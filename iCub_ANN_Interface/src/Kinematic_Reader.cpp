@@ -291,12 +291,17 @@ std::vector<double> KinReader::GetCartesianPosition(unsigned int joint) {
     */
     std::vector<double> joint_angles, angles_arm;
     if (CheckInit()) {
+        // read joint angles from robot
         angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
         joint_angles = ReadDoubleAll(encoder_torso, joint_torso);
         joint_angles.insert(joint_angles.end(), angles_arm.begin(), angles_arm.begin() + 7);
         double deg2rad = M_PI / 180.;
+
+        // set joint configuration for kinematic chain
         std::transform(joint_angles.begin(), joint_angles.end(), joint_angles.begin(), [deg2rad](double& c) { return c * deg2rad; });
         KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
+
+        // compute forward kinematics
         yarp::sig::Vector position = KinArm->Position(joint);
         return std::vector<double>(position.begin(), position.end());
     }
@@ -304,6 +309,11 @@ std::vector<double> KinReader::GetCartesianPosition(unsigned int joint) {
 }
 
 std::vector<double> KinReader::solveInvKin(std::vector<double> position, std::vector<int> blocked_links) {
+    /*
+        Compute the joint configuration for a given 3D End-Effector position (Inverse Kinematics)
+
+        return: vector       -- joint angle configuration for given position (free joints)
+    */
     std::vector<double> joint_angles, angles_arm, angles_torso, angles;
     if (CheckInit()) {
         double deg2rad = M_PI / 180.;
@@ -312,28 +322,35 @@ std::vector<double> KinReader::solveInvKin(std::vector<double> position, std::ve
         iCub::iKin::iKinIpOptMin slv(*this->KinChain, IKINCTRL_POSE_XYZ, 1e-3, 1e-6, 100);
         slv.setUserScaling(true, 100.0, 100.0, 100.0);
 
+        // read joint angles
         angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
         angles_torso = ReadDoubleAll(encoder_torso, joint_torso);
         angles_torso.insert(angles_torso.end(), angles_arm.begin(), angles_arm.begin() + 7);
+
+        // block links from blocking selection
         bool value=true;
         if (blocked_links.size() > 0) {
             for (auto it = blocked_links.begin(); it != blocked_links.end(); it++) {
                 value = value & KinArm->blockLink(*it);
             }
         }
+        // strip blocked links from joint angle vector
         for (auto i = 0; i<angles_torso.size(); i++) {
             if (not (std::find(blocked_links.begin(), blocked_links.end(), i) != blocked_links.end())) {
                 angles.push_back(angles_torso[i]);
             }
         }
 
+        // set joint configuration for kinematic chain
         std::transform(angles.begin(), angles.end(), angles.begin(), [deg2rad](double& c) { return c * deg2rad; });
         KinArm->setAng(yarp::sig::Vector(angles.size(), angles.data()));
         slv.setMaxIter(5000);
 
+        // compute inverse kinematics
         jnt_angles = slv.solve(KinArm->getAng(), pos);
         joint_angles.assign(jnt_angles.begin(), jnt_angles.end());
 
+        // unblock blocked links for further computations
         if (blocked_links.size() > 0) {
             for (auto it = blocked_links.begin(); it != blocked_links.end(); it++) {
                 value = value & KinArm->releaseLink(*it);

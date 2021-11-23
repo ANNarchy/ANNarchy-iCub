@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <iCub/iKin/iKinFwd.h>    // iCub forward Kinematics
+#include <iCub/iKin/iKinFwd.h>      // iCub forward Kinematics
 #include <iCub/iKin/iKinIpOpt.h>    // iCub inverse Kinematics
 #include <yarp/dev/all.h>
 #include <yarp/sig/all.h>
@@ -49,7 +49,7 @@ class KinReader : public Mod_BaseClass {
     /**
      * \brief Initialize the joint reader with given parameters
      * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
-     * \param[in] version 
+     * \param[in] version
      * \param[in] ini_path Path to the "interface_param.ini"-file.
      * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
@@ -61,7 +61,7 @@ class KinReader : public Mod_BaseClass {
     /**
      * \brief Initialize the joint reader with given parameters
      * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
-     * \param[in] version 
+     * \param[in] version
      * \param[in] ini_path Path to the "interface_param.ini"-file.
      * \param[in] ip_address gRPC server ip address -> has to match ip address of the JointReadOut-Population
      * \param[in] port gRPC server port -> has to match port of the JointReadOut-Population
@@ -83,17 +83,30 @@ class KinReader : public Mod_BaseClass {
      */
     int GetDOF();
 
+    /**
+     * \brief Compute 3D link position for the robot joint configuration
+     * \param[in] joint selected link of the selected iCub kinematic chain
+     * \return 3D cartesian position of the selected link in robot reference frame
+     */
     std::vector<double> GetCartesianPosition(unsigned int joint);
+
+    /**
+     * \brief Compute 3D End-Effector position for the robot joint configuration
+     * \return 3D cartesian position of the end-effector in robot reference frame
+     */
     std::vector<double> GetHandPosition();
 
     /**
-     * \brief  Return number of controlled joints
-     * \param[in] position target 3D End-Effector position 
-     * \return joint angle configuration for given position
+     * \brief Compute the joint configuration for a given 3D End-Effector position (Inverse Kinematics)
+     * \param[in] position target 3D End-Effector position
+     * \param[in] blocked_links links of the kinematic chain, that should be blocked for inverse computation
+     * \return joint angle configuration for given position (free joints)
      */
     std::vector<double> solveInvKin(std::vector<double> position, std::vector<int> blocked_links);
 
+    // test method for inverse kinematic
     void testinvKin();
+
     /*** gRPC functions ***/
 #ifdef _USE_GRPC
     std::vector<double> provideData(int value);
@@ -118,14 +131,14 @@ class KinReader : public Mod_BaseClass {
     yarp::dev::IEncoders* encoder_torso;       // iCub joint encoder interface
     yarp::dev::IControlLimits* limit_torso;    // iCub joint limits interface
 
-    std::deque<yarp::dev::IControlLimits*> limits;
+    std::deque<yarp::dev::IControlLimits*> limits;    // joint limit interface
 
     /*** Kinematic Interfaces ***/
-    iCub::iKin::iCubArm* KinArm;
-    iCub::iKin::iCubTorso* KinTorso;
-    iCub::iKin::iCubFinger* KinFinger;
+    iCub::iKin::iCubArm* KinArm;          // iCub Arm kinematic chain
+    iCub::iKin::iCubTorso* KinTorso;      // iCub Torso kinematic chain
+    iCub::iKin::iCubFinger* KinFinger;    // iCub Fingers kinematic chain
 
-    iCub::iKin::iKinChain* KinChain;
+    iCub::iKin::iKinChain* KinChain;    // selected kinematic chain
 
     /** grpc communication **/
 #ifdef _USE_GRPC
@@ -138,5 +151,6 @@ class KinReader : public Mod_BaseClass {
     /*** auxilary functions ***/
     // check if iCub part key is valid
     bool CheckPartKey(std::string key);
+    // read joint angles from robot
     std::vector<double> ReadDoubleAll(yarp::dev::IEncoders* iencoder, unsigned int joint_count);
 };

@@ -207,8 +207,15 @@ class JointWriter : public Mod_BaseClass {
      */
     bool WritePopOne(std::vector<double> position_pop, int joint, bool blocking, std::string mode);
 
+    /**
+     * \brief Write all joints with double values.
+     * \param[in] position_pop Population encoded joint angle for writing to the robot joint
+     * \param[in] joint Joint number of the robot part
+     * \return Decoded joint angle as double value
+     */
     double Decode_ext(std::vector<double> position_pop, int joint);
 
+    /** auxilary methods for grpc connection with ANNarchy populations **/ 
     void Retrieve_ANNarchy_Input_SJ();
     void Write_ANNarchy_Input_SJ();
 

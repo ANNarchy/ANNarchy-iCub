@@ -35,3 +35,5 @@ use_grpc.py
 # Filesystem
 .directory
 
+# doc
+/doc/html

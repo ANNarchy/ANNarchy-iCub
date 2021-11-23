@@ -109,6 +109,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
             cut_img = false;
         }
 
+        // set OpenCV type for use in method calls
         if (typeid(precision) == typeid(double)) {
             new_type = CV_64FC1;
             std::cout << "[Visual Reader] Double precision is selected." << std::endl;
@@ -124,6 +125,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         res_scale_x = static_cast<double>(out_width) / (rov_width);
         res_scale_y = static_cast<double>(out_height) / (rov_height);
 
+        // select filter for upscaling
         if (res_scale_y > 1 || res_scale_x > 1) {
             if (fast_filter) {
                 filter_ds = cv::INTER_LINEAR;

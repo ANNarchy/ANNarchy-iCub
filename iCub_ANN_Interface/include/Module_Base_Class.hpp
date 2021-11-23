@@ -48,10 +48,11 @@ class Mod_BaseClass {
     // Destructor
     ~Mod_BaseClass();
 
-    // Set value for registered
+    // Get/Set value for registered value
     void setRegister(bool value);
     bool getRegister();
 
+    // get methods for class specific variables
     std::string get_identifier();
     std::map<std::string, std::string> getParameter();
 
