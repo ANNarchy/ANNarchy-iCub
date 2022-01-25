@@ -187,11 +187,29 @@ cdef class PyJointReader:
                 Read all joints and return joint angles directly as double values
 
             return:
-                vector[double]  -- joint angles read from the robot empty vector at error
+                vector[double]  -- joint angles read from the robot; empty vector at error
         """
 
         # call the interface
         return np.array(deref(self.cpp_joint_reader).ReadDoubleAll(), dtype=np.float64)
+
+    # read multiple joints and return joint angles directly as double values
+    def read_double_multiple(self, joints):
+        """
+            Calls double JointReader::ReadDoubleMultiple(vector[int] joints)
+
+            function:
+                Read multiple joints and return joint angles directly as double value
+
+            params:
+                vector[int] joints       -- joint numbers of the robot part
+
+            return:
+                vector[double]          -- joint angle read from the robot; empty vector at error
+        """
+
+        # call the interface
+        return np.array(deref(self.cpp_joint_reader).ReadDoubleMultiple(joints))
 
     # read one joint and return joint angle directly as double value
     def read_double_one(self, int joint):
@@ -227,6 +245,24 @@ cdef class PyJointReader:
         # call the interface
         return np.array(deref(self.cpp_joint_reader).ReadPopAll())
 
+    # read multiple joints and return the joint angles encoded in a vector (population coding)
+    def read_pop_multiple(self, joints):
+        """
+            Calls vector[vector[double]] JointReader::ReadPopMultiple(vector[int])
+
+            function:
+                Read multiple joints and return the joint angles encoded in vectors (population coding)
+
+            params:
+                vector[int] joints       -- joint numbers of the robot part
+
+            return:
+                vector[vector[double]]  -- population vectors encoding selected joint angles from associated robot part
+
+        """
+
+        # call the interface
+        return np.array(deref(self.cpp_joint_reader).ReadPopMultiple(joints))
 
     # read one joint and return the joint angle encoded in a vector (population coding)
     def read_pop_one(self, int joint):

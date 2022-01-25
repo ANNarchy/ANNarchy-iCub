@@ -340,7 +340,7 @@ std::vector<double> JointReader::ReadDoubleMultiple(std::vector<int> joint_selec
 
     if (CheckInit()) {
         const auto [min, max] = std::minmax_element(joint_select.begin(), joint_select.end());
-        if (*min > 0 && *max < joints) {
+        if (*min >= 0 && *max < joints) {
             angles.resize(joints);
             while (!ienc->getEncoders(angles.data())) {
                 yarp::os::Time::delay(0.001);
@@ -460,7 +460,7 @@ std::vector<std::vector<double>> JointReader::ReadPopMultiple(std::vector<int> j
 
     if (CheckInit()) {
         const auto [min, max] = std::minmax_element(joint_select.begin(), joint_select.end());
-        if (*min > 0 && *max < joints) {
+        if (*min >= 0 && *max < joints) {
             angles.resize(joints);
             while (!ienc->getEncoders(angles.data())) {
                 yarp::os::Time::delay(0.001);

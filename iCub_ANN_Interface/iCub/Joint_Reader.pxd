@@ -4,7 +4,7 @@
 """
    Copyright (C) 2019-2021 Torsten Fietzek; Helge Ülo Dinkelbach
 
-   Joint_Reader.pyx is part of the iCub ANNarchy interface
+   Joint_Reader.pxd is part of the iCub ANNarchy interface
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -52,14 +52,20 @@ cdef extern from "Joint_Reader.hpp":
         # Read all joints and return joint angles directly in degree as double values
         vector[double] ReadDoubleAll()
 
+        # Read multiple joints and return joint angles directly in degree as double values
+        vector[double] ReadDoubleMultiple(vector[int])
+
         # Read one joint and return joint angle directly in degree as double value
-        double ReadDoubleOne(int joint)
+        double ReadDoubleOne(int)
 
         # Read all joints and return the joint angles encoded in populations.
         vector[vector[double]] ReadPopAll()
 
+        # Read multiple joints and return the joint angles encoded in populations.
+        vector[double] ReadPopMultiple(vector[int])
+
         # Read one joint and return the joint angle encoded in a population.
-        vector[double] ReadPopOne(int joint)
+        vector[double] ReadPopOne(int)
 
         void setRegister(bint)
         bint getRegister()
