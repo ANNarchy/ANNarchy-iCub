@@ -28,7 +28,7 @@ class JointControl(Population):
         Readout the angles from the ANNarchy Population and send it to the iCub.
     """
 
-    def __init__(self, geometry=None, neuron=Neuron(parameters="r = 0.0"), ip_address="0.0.0.0", port=50010, copied=False, name=None):
+    def __init__(self, geometry=None, neuron=Neuron(equations="r = 0.0"), ip_address="0.0.0.0", port=50010, copied=False, name=None):
 
         Population.__init__(self, geometry=geometry, neuron=neuron, copied=copied, name=name )
 
@@ -164,7 +164,7 @@ class JointReadout(Population):
 
     def __init__(self, geometry=None, joints=None, encoded=False, ip_address="0.0.0.0", port=50005, copied=False, name=None):
 
-        Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied, name=name )
+        Population.__init__(self, geometry=geometry, neuron = Neuron(equations="r = 0.0"), copied=copied, name=name )
 
         self._ip_address = ip_address
         self._port = port

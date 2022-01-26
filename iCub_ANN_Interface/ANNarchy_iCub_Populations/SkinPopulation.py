@@ -31,7 +31,7 @@ class SkinPopulation(Population):
 
     def __init__(self, geometry=None, skin_section="", ip_address="0.0.0.0", port=50015, copied=False, name=None):
 
-        Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied, name=name )
+        Population.__init__(self, geometry=geometry, neuron = Neuron(equations="r = 0.0"), copied=copied, name=name )
 
         self._skin_section = skin_section
         self._ip_address = ip_address

@@ -30,7 +30,7 @@ class KinematicPopulation(Population):
 
     def __init__(self, geometry=(3,), ip_address="0.0.0.0", port=50020, copied=False, name=None):
 
-        Population.__init__(self, geometry=geometry, neuron = Neuron(parameters="r = 0.0"), copied=copied, name=name )
+        Population.__init__(self, geometry=geometry, neuron = Neuron(equations="r = 0.0"), copied=copied, name=name )
 
         self._ip_address = ip_address
         self._port = port
