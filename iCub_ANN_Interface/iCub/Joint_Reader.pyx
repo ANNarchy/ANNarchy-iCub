@@ -209,7 +209,7 @@ cdef class PyJointReader:
         """
 
         # call the interface
-        return np.array(deref(self.cpp_joint_reader).ReadDoubleMultiple(joints))
+        return np.array(deref(self.cpp_joint_reader).ReadDoubleMultiple(joints), dtype=np.float64)
 
     # read one joint and return joint angle directly as double value
     def read_double_one(self, int joint):
@@ -254,7 +254,7 @@ cdef class PyJointReader:
                 Read multiple joints and return the joint angles encoded in vectors (population coding)
 
             params:
-                vector[int] joints       -- joint numbers of the robot part
+                vector[int] joints      -- joint numbers of the robot part
 
             return:
                 vector[vector[double]]  -- population vectors encoding selected joint angles from associated robot part

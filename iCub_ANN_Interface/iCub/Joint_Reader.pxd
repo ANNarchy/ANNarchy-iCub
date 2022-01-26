@@ -62,7 +62,7 @@ cdef extern from "Joint_Reader.hpp":
         vector[vector[double]] ReadPopAll()
 
         # Read multiple joints and return the joint angles encoded in populations.
-        vector[double] ReadPopMultiple(vector[int])
+        vector[vector[double]] ReadPopMultiple(vector[int])
 
         # Read one joint and return the joint angle encoded in a population.
         vector[double] ReadPopOne(int)
