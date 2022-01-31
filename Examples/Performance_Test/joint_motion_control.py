@@ -432,11 +432,11 @@ if __name__ == "__main__":
             print("All Joints: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(intauto_mean[0], intauto_std[0]))
             print("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(intauto_mean[0], intauto_std[0]))
 
-            with open(folder + "/all.txt", "w") as f:
+            with open(folder + "/all_speed_" + str(speed) + ".txt", "w") as f:
                 f.write("Parameter:\n")
                 f.write("Count: " + str(perf_test_count) + "\n")
-                f.write("joint_select: " + str(perf_test_count) + "\n")
-                f.write("Speed: " + str(perf_test_count) + "\n\n")
+                f.write("joint_select: " + str(joint_sel) + "\n")
+                f.write("Speed: " + str(speed) + "\n\n")
 
                 f.write("Results Performance Test\n")
                 f.write("YARP:\n")
