@@ -168,7 +168,7 @@ if log_define:
 extensions = [
     Extension("iCub_ANN_Interface.iCub.Joint_Reader", [prefix_cy + "iCub/Joint_Reader.pyx", prefix_cpp + "Joint_Reader.cpp"] + sources,
         include_dirs=include_dir,
-        libraries=libs + ["iKin", "ctrlLib", "optimization", "ipopt"],
+        libraries=libs,
         library_dirs=lib_dirs,
         language="c++",
         extra_compile_args=extra_compile_args,
@@ -203,6 +203,15 @@ extensions = [
         ),
 
     Extension("iCub_ANN_Interface.iCub.Kinematic_Reader", [prefix_cy + "iCub/Kinematic_Reader.pyx", prefix_cpp + "Kinematic_Reader.cpp"] + sources,
+        include_dirs=include_dir,
+        libraries=libs + ["iKin", "ctrlLib", "optimization"],
+        library_dirs=lib_dirs,
+        language="c++",
+        extra_compile_args=extra_compile_args,
+        extra_link_args=["-L"+root_path+"/iCub_ANN_Interface/grpc", "-Wl,-rpath,"+root_path+"/iCub_ANN_Interface/grpc/"] + grpc_link_args
+        ),
+
+    Extension("iCub_ANN_Interface.iCub.Kinematic_Writer", [prefix_cy + "iCub/Kinematic_Writer.pyx", prefix_cpp + "Kinematic_Writer.cpp"] + sources,
         include_dirs=include_dir,
         libraries=libs + ["iKin", "ctrlLib", "optimization", "ipopt"],
         library_dirs=lib_dirs,
@@ -244,7 +253,7 @@ with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
     file_object.write("__version__ = \"" + version + "\"")
 
-# test if gRPC is already used -> need new cythonizing earlier build was without gRPC
+# test if gRPC is already used -> need new cythonizing if prior build was without gRPC
 try:
     from iCub_ANN_Interface.use_grpc import __use_grpc__ as used_grpc
 except:
@@ -267,7 +276,7 @@ setup(
     author="Torsten Fietzek, Helge Uelo Dinkelbach",
     author_email="torsten.fietzek@informatik.tu-chemnitz.de",
     license="GPLv2+",
-    platforms='GNU/Linux; MacOSX',
+    platforms='GNU/Linux',
     zip_safe=False,
     package_data={'iCub_ANN_Interface': package_data},
     install_requires=dependencies
