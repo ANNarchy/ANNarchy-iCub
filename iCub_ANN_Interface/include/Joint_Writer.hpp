@@ -63,6 +63,9 @@ class JointWriter : public Mod_BaseClass {
      * \brief Initialize the joint writer with given parameters
      * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
      * \param[in] pop_size Number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
+     * \param[in] joint_select joint selection for grpc
+     * \param[in] mode mode for writing joints
+     * \param[in] blocking if True, joint waits for end of motion
      * \param[in] deg_per_neuron (default = 0.0) degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
      * \param[in] speed Velocity to set for the joint motions.
      * \param[in] ini_path Path to the "interface_param.ini"-file.
@@ -106,8 +109,8 @@ class JointWriter : public Mod_BaseClass {
     bool MotionDone();
 
     /**
-     * \brief Return the size of the populations encoding the joint angles
-     * \param[in] speed Name of the selected joint writer
+     * \brief Set the joint velocity
+     * \param[in] speed velocity value to set for the selected joint/joints
      * \param[in] joint (default -1) joint number of the robot part, default -1 for all joints
      * \return True, if set was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
@@ -117,8 +120,19 @@ class JointWriter : public Mod_BaseClass {
     bool SetJointVelocity(double speed, int joint);
 
     /**
-     * \brief Return the size of the populations encoding the joint angles
-     * \param[in] control_mode Joint control mode eg. Position, Velocity
+     * \brief Set the joint acceleration
+     * \param[in] acc acceleration value to set for the selected joint/joints
+     * \param[in] joint (default -1) joint number of the robot part, default -1 for all joints
+     * \return True, if set was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
+     *          Typical errors:
+     *              - arguments not valid: e.g. joint index not valid for robot part
+     *              - missing initialization
+     */
+    bool SetJointAcceleration(double acc, int joint);
+
+    /**
+     * \brief Set the control mode for the respective joint/Joints -> e.g. position or velocity
+     * \param[in] control_mode Joint control mode e.g. Position, Velocity
      * \param[in] joint (default -1) joint number of the robot part, default -1 for all joints
      * \return True, if set was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
@@ -137,7 +151,7 @@ class JointWriter : public Mod_BaseClass {
      *              - arguments not valid: position array size does not fit joint count; positioning mode not valid
      *              - missing initialization
      */
-    bool WriteDoubleAll(std::vector<double> position, bool blocking, std::string mode);
+    bool WriteDoubleAll(std::vector<double> position, std::string mode, bool blocking);
 
     /**
      * \brief Write all joints with double values.
@@ -150,7 +164,7 @@ class JointWriter : public Mod_BaseClass {
      *              - arguments not valid: position array size does not fit joint count; positioning mode not valid
      *              - missing initialization
      */
-    bool WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, bool blocking, std::string mode);
+    bool WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, std::string mode, bool blocking);
 
     /**
      * \brief Write one joint with double value.
@@ -163,7 +177,7 @@ class JointWriter : public Mod_BaseClass {
      *              - arguments not valid: position out of joint limits; joint out of range; positioning mode not valid
      *              - missing initialization
      */
-    bool WriteDoubleOne(double position, int joint, bool blocking, std::string mode);
+    bool WriteDoubleOne(double position, int joint, std::string mode, bool blocking);
 
     /**
      * \brief Write all joints with joint angles encoded in populations
@@ -176,7 +190,7 @@ class JointWriter : public Mod_BaseClass {
      *              - position decoding returned NaN
      *              - missing initialization
      */
-    bool WritePopAll(std::vector<std::vector<double>> position_pops, bool blocking, std::string mode);
+    bool WritePopAll(std::vector<std::vector<double>> position_pops, std::string mode, bool blocking);
 
     /**
      * \brief Write all joints with joint angles encoded in populations
@@ -190,8 +204,8 @@ class JointWriter : public Mod_BaseClass {
      *              - position decoding returned NaN
      *              - missing initialization
      */
-    bool WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, bool blocking,
-                          std::string mode);
+    bool WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, std::string mode,
+                          bool blocking);
 
     /**
      * \brief Write one joint with the joint angle encoded in a population.
@@ -205,7 +219,7 @@ class JointWriter : public Mod_BaseClass {
      *              - position decoding returned NaN
      *              - missing initialization
      */
-    bool WritePopOne(std::vector<double> position_pop, int joint, bool blocking, std::string mode);
+    bool WritePopOne(std::vector<double> position_pop, int joint, std::string mode, bool blocking);
 
     /**
      * \brief Write all joints with double values.
@@ -237,6 +251,7 @@ class JointWriter : public Mod_BaseClass {
  private:
     /** configuration variables **/
     double velocity_max = 100;                  // maximum joint velocity
+    double acc_max = 100;                  // maximum joint velocity
     std::vector<int32_t> joint_control_mode;    // string describing the active control mode
 
     std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
@@ -263,15 +278,15 @@ class JointWriter : public Mod_BaseClass {
 
     /** grpc communication **/
 #ifdef _USE_GRPC
-    std::string _ip_address = "";
-    unsigned int _port = -1;
-    WriteClientInstance *joint_source;
-    std::vector<int> _joint_select;
-    bool _blocking;
-    std::string _mode;
-    double joint_value;
-    std::vector<double> joint_value_1dvector;
-    std::vector<std::vector<double>> joint_value_2dvector;
+    std::string _ip_address = "";                // ip address for gRPC connection
+    unsigned int _port = -1;                     // port for gRPC connection
+    WriteClientInstance *joint_source;           // Client instance for Server-Client gRPC connection
+    std::vector<int> _joint_select;              // joint selection for gRPC-based motion execution
+    bool _blocking;                              // blocking status for gRPC-based motion execution
+    std::string _mode;                           // mode (e.g. absolut or relative) for gRPC-based motion execution
+    double joint_value;                          // single joint positon for gRPC-based motion execution
+    std::vector<double> joint_value_1dvector;    // multi joint positon or single joint encoded position for gRPC-based motion execution
+    std::vector<std::vector<double>> joint_value_2dvector;    // multi joint encoded position for gRPC-based motion execution
 #endif
 
     /*** auxilary methods ***/

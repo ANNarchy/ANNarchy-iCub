@@ -49,6 +49,7 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
                 sigma                   -- sigma for the joints angles populations coding
                 int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+                ini_path                -- Path to the "interface_param.ini"-file
 
         return: bool                    -- return True, if successful
     */
@@ -90,31 +91,28 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
             std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path << "\" and the ini file content!" << std::endl;
             return false;
         }
-        bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
-        if (on_Simulator && (robot_port_prefix != "/icubSim")) {
-            std::cerr << "[Joint Reader " << icub_part << "] The port prefix does not match the default simulator prefix!" << std::endl;
-            return false;
-        }
         std::string client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
-        // setup iCub joint position control
+        // setup iCub joint control board
         yarp::os::Property options;
         options.put("device", "remote_controlboard");
         options.put("remote", (robot_port_prefix + "/" + icub_part).c_str());
-        options.put("local", (client_port_prefix + "/ANNarchy_read/" + icub_part).c_str());
+        options.put("local", (client_port_prefix + "/ANNarchy_Jread/" + icub_part).c_str());
 
         if (!driver.open(options)) {
             std::cerr << "[Joint Reader " << icub_part << "] Unable to open " << options.find("device").asString() << "!" << std::endl;
             return false;
         }
 
+        // Open joint encoder interface
         if (!driver.view(ienc)) {
             std::cerr << "[Joint Reader " << icub_part << "] Unable to open motor encoder interface!" << std::endl;
             driver.close();
             return false;
         }
 
+        // Open joint limits interface
         if (!driver.view(ilim)) {
             std::cerr << "[Joint Reader " << icub_part << "] Unable to open motor limit interface!" << std::endl;
             driver.close();
@@ -168,12 +166,14 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
             }
         }
 
+        // set parameter for save robot to file
         this->type = "JointReader";
         init_param["part"] = part;
         init_param["sigma"] = std::to_string(sigma);
         init_param["pop_size"] = std::to_string(pop_size);
         init_param["deg_per_neuron"] = std::to_string(deg_per_neuron);
         init_param["ini_path"] = ini_path;
+
         this->dev_init = true;
         return true;
     } else {
@@ -191,6 +191,7 @@ bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size
                 sigma                   -- sigma for the joints angles populations coding
                 int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+                ini_path                -- Path to the "interface_param.ini"-file
                 string ip_address       -- gRPC server ip address
                 unsigned int port       -- gRPC server port
 
@@ -225,6 +226,7 @@ bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size
                 sigma                   -- sigma for the joints angles populations coding
                 int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
+                ini_path                -- Path to the "interface_param.ini"-file
                 string ip_address       -- gRPC server ip address
                 unsigned int port       -- gRPC server port
 
@@ -332,6 +334,8 @@ std::vector<double> JointReader::ReadDoubleAllTime() {
 std::vector<double> JointReader::ReadDoubleMultiple(std::vector<int> joint_select) {
     /*
         Read multiple joints and return joint angles directly as double value
+        
+        params: std::vector<int> joint  -- joint selection of the robot part
 
         return: std::vector<double>     -- joint angles read from the robot
     */
@@ -451,6 +455,8 @@ std::vector<std::vector<double>> JointReader::ReadPopAll() {
 std::vector<std::vector<double>> JointReader::ReadPopMultiple(std::vector<int> joint_select) {
     /*
         Read multiple joints and return joint angles encoded in vectors
+
+        params: std::vector<int> joint  -- joint selection of the robot part
 
         return: std::vector<std::vector<double>>    -- vector of population vectors encoding every joint angle from associated robot part
     */

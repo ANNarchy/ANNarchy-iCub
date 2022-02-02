@@ -346,6 +346,37 @@ bool JointWriter::SetJointVelocity(double speed, int joint) {
     return true;
 }
 
+bool JointWriter::SetJointAcceleration(double acc, int joint) {
+    /*
+        Set acceleration for a given joint or all joints
+
+        params: double acc          -- acceleration value to be set
+                int joint           -- joint number of the robot part; -1 for all joints
+
+        return: bool                -- return True, if successful
+    */
+    if (joint >= joints || joint < -1) {
+        std::cerr << "[Joint Writer " << icub_part << "] Selected joint out of range!" << std::endl;
+        return false;
+    }
+    // set acceleration for all joints
+    if (joint < 0) {
+        for (int i = 0; i < joints; i++) {
+            // set joint acceleration
+            if (acc > 0 && acc <= acc_max) {
+                ipos->setRefAcceleration(i, acc);
+            }
+        }
+        // set acceleration for a single joint
+    } else {
+        // set joint acceleration
+        if (acc > 0 && acc < acc_max) {
+            ipos->setRefAcceleration(joint, acc);
+        }
+    }
+    return true;
+}
+
 bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
     if (joint >= joints || joint < -1) {
         std::cerr << "[Joint Writer " << icub_part << "] Selected joint out of range!" << std::endl;
@@ -385,7 +416,7 @@ bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
     return true;
 }
 
-bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, std::string mode) {
+bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode, bool blocking) {
     /*
         Write all joints with double values
 
@@ -449,7 +480,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, bool blocking, st
     }
 }
 
-bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, bool blocking, std::string mode) {
+bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, std::string mode, bool blocking) {
     /*
         Write multiple joints with double values
 
@@ -531,7 +562,7 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
     }
 }
 
-bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std::string mode) {
+bool JointWriter::WriteDoubleOne(double position, int joint, std::string mode, bool blocking) {
     /*
         Write one joint with double value
 
@@ -611,7 +642,7 @@ bool JointWriter::WriteDoubleOne(double position, int joint, bool blocking, std:
     }
 }
 
-bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bool blocking, std::string mode) {
+bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, std::string mode, bool blocking) {
     /*
         Write all joints with joint angles encoded in populations
 
@@ -690,7 +721,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, bo
     }
 }
 
-bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, bool blocking, std::string mode) {
+bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, std::string mode, bool blocking) {
     /*
         Write multiple joints with joint angles encoded in populations
 
@@ -781,7 +812,7 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
     }
 }
 
-bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, bool blocking, std::string mode) {
+bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, std::string mode, bool blocking) {
     /*
         Write one joint with the joint angle encoded in a population
 
@@ -859,13 +890,13 @@ double JointWriter::Decode_ext(std::vector<double> position_pop, int joint) { re
 /*** gRPC related functions ***/
 #ifdef _USE_GRPC
 void JointWriter::Retrieve_ANNarchy_Input_SJ() { joint_value = joint_source->retrieve_singletarget(); }
-void JointWriter::Write_ANNarchy_Input_SJ() { WriteDoubleOne(joint_value, _joint_select[0], _blocking, _mode); }
+void JointWriter::Write_ANNarchy_Input_SJ() { WriteDoubleOne(joint_value, _joint_select[0], _mode, _blocking); }
 
 void JointWriter::Retrieve_ANNarchy_Input_SJ_enc() { joint_value_1dvector = joint_source->retrieve_singletarget_enc(); }
-void JointWriter::Write_ANNarchy_Input_SJ_enc() { WritePopOne(joint_value_1dvector, _joint_select[0], _blocking, _mode); }
+void JointWriter::Write_ANNarchy_Input_SJ_enc() { WritePopOne(joint_value_1dvector, _joint_select[0], _mode, _blocking); }
 
 void JointWriter::Retrieve_ANNarchy_Input_MJ() { joint_value_1dvector = joint_source->retrieve_multitarget(); }
-void JointWriter::Write_ANNarchy_Input_MJ() { WriteDoubleMultiple(joint_value_1dvector, _joint_select, _blocking, _mode); }
+void JointWriter::Write_ANNarchy_Input_MJ() { WriteDoubleMultiple(joint_value_1dvector, _joint_select, _mode, _blocking); }
 
 void JointWriter::Retrieve_ANNarchy_Input_MJ_enc() {
     joint_value_1dvector = joint_source->retrieve_multitarget_enc();
@@ -873,10 +904,10 @@ void JointWriter::Retrieve_ANNarchy_Input_MJ_enc() {
         joint_value_2dvector.push_back(std::vector<double>((joint_value_1dvector.begin() + i), (joint_value_1dvector.begin() + i + pop_size + 1)));
     }
 }
-void JointWriter::Write_ANNarchy_Input_MJ_enc() { WritePopMultiple(joint_value_2dvector, _joint_select, _blocking, _mode); }
+void JointWriter::Write_ANNarchy_Input_MJ_enc() { WritePopMultiple(joint_value_2dvector, _joint_select, _mode, _blocking); }
 
 void JointWriter::Retrieve_ANNarchy_Input_AJ() { joint_value_1dvector = joint_source->retrieve_alltarget(); }
-void JointWriter::Write_ANNarchy_Input_AJ() { WriteDoubleAll(joint_value_1dvector, _blocking, _mode); }
+void JointWriter::Write_ANNarchy_Input_AJ() { WriteDoubleAll(joint_value_1dvector, _mode, _blocking); }
 
 void JointWriter::Retrieve_ANNarchy_Input_AJ_enc() {
     joint_value_1dvector = joint_source->retrieve_alltarget_enc();
@@ -884,7 +915,7 @@ void JointWriter::Retrieve_ANNarchy_Input_AJ_enc() {
         joint_value_2dvector.push_back(std::vector<double>((joint_value_1dvector.begin() + i), (joint_value_1dvector.begin() + i + pop_size + 1)));
     }
 }
-void JointWriter::Write_ANNarchy_Input_AJ_enc() { WritePopAll(joint_value_2dvector, _blocking, _mode); }
+void JointWriter::Write_ANNarchy_Input_AJ_enc() { WritePopAll(joint_value_2dvector, _mode, _blocking); }
 #else
 void JointWriter::Retrieve_ANNarchy_Input_SJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 void JointWriter::Write_ANNarchy_Input_SJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }

@@ -117,8 +117,8 @@ class SkinReader : public Mod_BaseClass {
     bool ReadTactile();
 
     /**
-     * \brief Return tactile data for upper arm skin.
-     * \return vector, containing the tactile data of the upper arm for the last time steps
+     * \brief Return size of tactile data for upper arm skin.
+     * \return Integer representing the vector size of the respective skin part
      */
     unsigned int GetTactileArmSize();
     unsigned int GetTactileForearmSize();

@@ -89,35 +89,6 @@ class VisualReader : public Mod_BaseClass {
     bool InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, unsigned int max_buffer_size,
                   bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port);
 
-    // /**
-    //  * \brief Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
-    //  * \param[in] wait2img wait for image in buffer
-    //  * \param[in] trials trials for waiting to image in buffer
-    //  * \return image as 1D-vector from the image buffer
-    //  */
-    //     std::vector<precision> ReadFromBuf(bool wait2img = false, int trials = 20);
-
-    //     /**
-    //  * \brief Start reading images from the iCub with YARP-RFModule.
-    //  * \param[in] argc main function inputs from program call; can be used to configure RFModule; not implemented yet
-    //  * \param[in] argv main function inputs from program call; can be used to configure RFModule; not implemented yet
-    //  * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
-    //  *          Typical errors:
-    //  *              - missing initialization
-    //  */
-    //     bool Start(int argc, char *argv[]);
-
-    //     /**
-    //  * \brief Stop reading images from the iCub, by terminating the RFModule.
-    //  */
-    //     void Stop();
-
-    //     /**
-    //  * \brief Return the image count in the image buffer.
-    //  * \return Number of images in the buffer.
-    //  */
-    //     int ImgsInBuffer();
-
     /**
      * \brief Read a set of images from the robot cameras.
      * \return camera images.
@@ -164,12 +135,12 @@ class VisualReader : public Mod_BaseClass {
     /** image data structures **/
     std::deque<std::vector<precision>> img_buffer;    // buffer to store the preprocessed iCub images
 
-    yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb;
-    yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb_r, *iEyeRgb_l;
+    yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb;                  // YARP-image structure for image handling -> single eye
+    yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb_r, *iEyeRgb_l;    // YARP-image structure for image handling -> both eyes
 
-    cv::Mat tmpMat, monoMat, ROV, tmpMat1;
-    cv::Mat tmpMat_r, tmpMat_l, monoMat_r, monoMat_l, ROV_r, ROV_l, tmpMat1_r, tmpMat1_l;
-    int new_type;
+    cv::Mat tmpMat, monoMat, ROV, tmpMat1;    // matrices for image computations -> single eye
+    cv::Mat tmpMat_r, tmpMat_l, monoMat_r, monoMat_l, ROV_r, ROV_l, tmpMat1_r, tmpMat1_l;    // matrices for image computations -> both eye
+    int new_type;    // store CV data type for images -> single/double precision
 
     /** yarp ports **/
     std::string client_port_prefix;                                                // client portame prefix
@@ -184,18 +155,6 @@ class VisualReader : public Mod_BaseClass {
     ServerInstance *image_source;    // gRPC server instance
     std::thread server_thread;       // thread for running the gRPC server in parallel
 #endif
-
-    /*** methods for the YARP-RFModule ***/
-    // // configure RFModule
-    // bool configure(yarp::os::ResourceFinder &rf) override;
-    // // RFModule update function, called when the module is running -> load images from the iCub
-    // bool updateModule() override;
-    // // called when the RFModule is interrupted
-    // bool interruptModule() override;
-    // // get calling period of updateModule
-    // double getPeriod() override;
-    // // called when the module is terminated
-    // bool close() override;
 
     /*** auxilary methods ***/
     //

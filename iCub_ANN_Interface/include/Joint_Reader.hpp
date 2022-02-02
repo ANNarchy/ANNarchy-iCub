@@ -129,6 +129,7 @@ class JointReader : public Mod_BaseClass {
 
     /**
      * \brief Read multiple joints and return the joint angles encoded in populations.
+     * \param[in] joint_select Joint number selection of the robot part
      * \return Population vectors encoding multiple joint angles from associated robot part.
      */
     std::vector<std::vector<double>> ReadPopMultiple(std::vector<int> joint_select);

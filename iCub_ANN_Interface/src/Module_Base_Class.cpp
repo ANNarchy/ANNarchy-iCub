@@ -48,7 +48,7 @@ std::string Mod_BaseClass::GetEnvVar(const std::string& var_name) {
     if (value == nullptr) {
         return "";
     } else {
-        return value;
+        return std::string(value);
     }
 }
 
