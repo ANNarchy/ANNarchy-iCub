@@ -45,3 +45,4 @@ cdef class iCubANN_wrapper:
     cdef dict visual_reader
 
     cdef dict kinematic_reader
+    cdef dict kinematic_writer

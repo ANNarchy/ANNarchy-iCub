@@ -2,9 +2,9 @@
 # cython: language_level = 3
 
 """
-   Copyright (C) 2019-2021 Torsten Fietzek; Helge Ülo Dinkelbach
+   Copyright (C) 2022 Torsten Fietzek; Helge Ülo Dinkelbach
 
-   Kinematic_Reader.pyx is part of the iCub ANNarchy interface
+   Kinematic_Writer.pyx is part of the iCub ANNarchy interface
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,35 +25,35 @@ from libcpp.vector cimport vector
 from libcpp.memory cimport shared_ptr, make_shared
 from cython.operator cimport dereference as deref
 
-from .Kinematic_Reader cimport KinematicReader
+from .Kinematic_Writer cimport KinematicWriter
 from .iCub_Interface cimport iCubANN_wrapper
 
 import numpy as np
 
-cdef class PyKinematicReader:
+cdef class PyKinematicWriter:
 
     # init method
     def __cinit__(self):
-        print("Initialize iCub Interface: Kinematic Reader.")
-        self.cpp_kin_reader = make_shared[KinematicReader]()
+        print("Initialize iCub Interface: Kinematic Writer.")
+        self.cpp_kin_writer = make_shared[KinematicWriter]()
 
     # close method
     def __dealloc__(self):
-        print("Close iCub Interface: Kinematic Reader.")
-        self.cpp_kin_reader.reset()
+        print("Close iCub Interface: Kinematic Writer.")
+        self.cpp_kin_writer.reset()
 
-    ### Access to Kinematic reader member functions
-    # init Kinematic reader with given parameters for image resolution, field of view and eye selection
+    ### Access to Kinematic writer member functions
+    # init Kinematic writer with given parameters for image resolution, field of view and eye selection
     def init(self, iCubANN_wrapper iCub, str name, str part, float version, str ini_path ="../data/"):
         """
-            Calls bool KinematicReader::Init(std::string part, float version, std::string ini_path)
+            Calls bool KinematicWriter::Init(std::string part, float version, std::string ini_path)
 
             function:
-                Initialize the Kinematic Reader with given parameters
+                Initialize the Kinematic Writer with given parameters
 
             params:
                 iCubANN_wrapper iCub    -- main interface wrapper
-                str name                -- name for the kinematic reader
+                str name                -- name for the kinematic writer
                 string part             -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
                 float version           -- version of the robot hardware
                 string ini_path         -- path to the interface ini-files
@@ -64,22 +64,22 @@ cdef class PyKinematicReader:
 
         self.part = part
         # preregister module for some prechecks e.g. name already in use
-        if iCub.register_kin_reader(name, self):
+        if iCub.register_kin_writer(name, self):
             # call the interface
-            retval = deref(self.cpp_kin_reader).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'))
+            retval = deref(self.cpp_kin_writer).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'))
             if not retval:
-                iCub.unregister_kin_reader(self)
+                iCub.unregister_kin_writer(self)
             return retval
         else:
             return False
 
-    # init Kinematic reader with given parameters for image resolution, field of view and eye selection
+    # init Kinematic writer with given parameters for image resolution, field of view and eye selection
     def init_grpc(self, iCubANN_wrapper iCub, str name, str part, float version, str ini_path ="../data/", str ip_address="0.0.0.0", unsigned int port=50000):
         """
-            Calls bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port)
+            Calls bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port)
 
             function:
-                Initialize the Kinematic Reader with given parameters
+                Initialize the Kinematic Writer with given parameters
 
             params:
                 iCubANN_wrapper iCub    -- main interface wrapper
@@ -96,11 +96,11 @@ cdef class PyKinematicReader:
 
         self.part = part
         # preregister module for some prechecks e.g. eye already in use
-        if iCub.register_kin_reader(name, self):
+        if iCub.register_kin_writer(name, self):
             # call the interface
-            retval = deref(self.cpp_kin_reader).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
+            retval = deref(self.cpp_kin_writer).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
             if not retval:
-                iCub.unregister_kin_reader(self)
+                iCub.unregister_kin_writer(self)
             return retval
         else:
             return False
@@ -108,7 +108,7 @@ cdef class PyKinematicReader:
     # deinitialize module
     def close(self, iCubANN_wrapper iCub):
         """
-            Calls void KinematicReader::Close()
+            Calls void KinematicWriter::Close()
 
             function:
                 close the module module.
@@ -117,48 +117,36 @@ cdef class PyKinematicReader:
                 iCubANN_wrapper iCub    -- main interface wrapper
         """
 
-        iCub.unregister_kin_reader(self)
+        iCub.unregister_kin_writer(self)
 
         # call the interface
-        deref(self.cpp_kin_reader).Close()
+        deref(self.cpp_kin_writer).Close()
 
-    #
-    def get_handposition(self):
+
+    # solve inverse kinematics for given position
+    def solve_InvKin(self, position, blocked_links):
         """
-            Calls void KinematicReader::GetHandPosition()
+            Calls std::vector<double> KinematicWriter::solveInvKin(std::vector<double> position, std::vector<int> blocked_links)
 
-            function:
+            function: Compute the joint configuration for a given 3D End-Effector position (Inverse Kinematics)
 
-            return:
-
-        """
-        # call the interface
-        return np.array(deref(self.cpp_kin_reader).GetHandPosition())
-
-    #
-    def get_jointposition(self, unsigned int joint):
-        """
-            Calls void KinematicReader::GetCartesianPosition()
-
-            function:
-
-            return:
+            return: active joint positions (in radians)
 
         """
         # call the interface
-        return np.array(deref(self.cpp_kin_reader).GetCartesianPosition(joint))
+        return np.array(deref(self.cpp_kin_writer).solveInvKin(position, blocked_links))
 
-    #
+    # return DOF of kinematic chain
     def get_DOF(self):
         """
-            Calls void KinematicReader::GetDOF()
+            Calls void KinematicWriter::GetDOF()
 
-            function:
+            function: Retur the DOF of the kinematic chain
 
-            return:
+            return: DOF of the kinematic chain
 
         """
         # call the interface
-        return deref(self.cpp_kin_reader).GetDOF()
+        return deref(self.cpp_kin_writer).GetDOF()
 
-    ### end access to kinematic reader member functions
+    ### end access to kinematic writer member functions

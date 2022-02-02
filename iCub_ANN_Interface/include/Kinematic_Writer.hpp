@@ -1,7 +1,7 @@
 /*
- *  Copyright (C) 2019-2021 Torsten Fietzek
+ *  Copyright (C) 2022 Torsten Fietzek
  *
- *  Joint_Reader.hpp is part of the iCub ANNarchy interface
+ *  Kinematic_Writer.hpp is part of the iCub ANNarchy interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <iCub/iKin/iKinFwd.h>      // iCub forward Kinematics
+#include <iCub/iKin/iKinIpOpt.h>    // iCub inverse Kinematics
 #include <yarp/dev/all.h>
 #include <yarp/sig/all.h>
 
@@ -36,17 +36,17 @@
 /**
  * \brief  Read-out of the joint angles of the iCub robot
  */
-class KinematicReader : public Mod_BaseClass {
+class KinematicWriter : public Mod_BaseClass {
  public:
     // Constructor
-    KinematicReader() = default;
+    KinematicWriter() = default;
     // Destructor
-    ~KinematicReader();
+    ~KinematicWriter();
 
     /*** public methods for the user ***/
 
     /**
-     * \brief Initialize the kinematic reader with given parameters
+     * \brief Initialize the kinematic writer with given parameters
      * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
      * \param[in] version iCub hardware version
      * \param[in] ini_path Path to the "interface_param.ini"-file.
@@ -58,7 +58,7 @@ class KinematicReader : public Mod_BaseClass {
     bool Init(std::string part, float version, std::string ini_path);
 
     /**
-     * \brief Initialize the kinematic reader with given parameters
+     * \brief Initialize the kinematic writer with given parameters
      * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
      * \param[in] version iCub hardware version
      * \param[in] ini_path Path to the "interface_param.ini"-file.
@@ -72,33 +72,30 @@ class KinematicReader : public Mod_BaseClass {
     bool InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port);
 
     /**
-     * \brief  Close kinematic reader with cleanup
+     * \brief  Close kinematic writer with cleanup
      */
     void Close() override;
 
     /**
      * \brief  Return number of controlled joints
-     * \return Number of joints, being controlled by the reader
+     * \return Number of joints, being controlled by the writer
      */
     int GetDOF();
 
     /**
-     * \brief Compute 3D link position for the robot joint configuration
-     * \param[in] joint selected link of the selected iCub kinematic chain
-     * \return 3D cartesian position of the selected link in robot reference frame
+     * \brief Compute the joint configuration for a given 3D End-Effector position (Inverse Kinematics)
+     * \param[in] position target 3D End-Effector position
+     * \param[in] blocked_links links of the kinematic chain, that should be blocked for inverse computation
+     * \return joint angle configuration for given position (free joints)
      */
-    std::vector<double> GetCartesianPosition(unsigned int joint);
+    std::vector<double> solveInvKin(std::vector<double> position, std::vector<int> blocked_links);
 
-    /**
-     * \brief Compute 3D End-Effector position for the robot joint configuration
-     * \return 3D cartesian position of the end-effector in robot reference frame
-     */
-    std::vector<double> GetHandPosition();
+    // test method for inverse kinematic
+    void testinvKin();
 
     /*** gRPC functions ***/
 #ifdef _USE_GRPC
     std::vector<double> provideData(int value);
-    std::vector<double> provideData();
 #endif
 
  private:
@@ -123,9 +120,10 @@ class KinematicReader : public Mod_BaseClass {
 
     /*** Kinematic Interfaces ***/
     iCub::iKin::iCubArm* KinArm;          // iCub Arm kinematic chain
-    // iCub::iKin::iCubTorso* KinTorso;      // iCub Torso kinematic chain
-    // iCub::iKin::iCubFinger* KinFinger;    // iCub Fingers kinematic chain
+    iCub::iKin::iCubTorso* KinTorso;      // iCub Torso kinematic chain
+    iCub::iKin::iCubFinger* KinFinger;    // iCub Fingers kinematic chain
 
+    iCub::iKin::iKinChain* KinChain;    // selected kinematic chain
 
     /** grpc communication **/
 #ifdef _USE_GRPC

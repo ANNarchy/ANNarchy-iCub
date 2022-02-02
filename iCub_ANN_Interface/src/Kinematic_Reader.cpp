@@ -159,7 +159,6 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
 
             KinArm->alignJointsBounds(limits);
         }
-        this->KinChain = KinArm->asChain();
 
         this->type = "KinematicReader";
         init_param["part"] = part;
@@ -253,13 +252,11 @@ int KinematicReader::GetDOF() {
     if (CheckInit()) {
         if (KinArm->isValid()) {
             return KinArm->getDOF();
-        } else if (KinTorso->isValid()) {
-            return KinTorso->getDOF();
         } else {
-            return 0;
+            return -1;
         }
     } else {
-        return 0;
+        return -1;
     }
 }
 
@@ -308,146 +305,7 @@ std::vector<double> KinematicReader::GetCartesianPosition(unsigned int joint) {
     return joint_angles;
 }
 
-std::vector<double> KinematicReader::solveInvKin(std::vector<double> position, std::vector<int> blocked_links) {
-    /*
-        Compute the joint configuration for a given 3D End-Effector position (Inverse Kinematics)
-
-        return: vector       -- joint angle configuration for given position (free joints)
-    */
-    std::vector<double> joint_angles, angles_arm, angles_torso, angles;
-    if (CheckInit()) {
-        double deg2rad = M_PI / 180.;
-        yarp::sig::Vector pos(position.size(), position.data());
-        yarp::sig::Vector jnt_angles;
-        iCub::iKin::iKinIpOptMin slv(*this->KinChain, IKINCTRL_POSE_XYZ, 1e-3, 1e-6, 100);
-        slv.setUserScaling(true, 100.0, 100.0, 100.0);
-
-        // read joint angles
-        angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
-        angles_torso = ReadDoubleAll(encoder_torso, joint_torso);
-        angles_torso.insert(angles_torso.end(), angles_arm.begin(), angles_arm.begin() + 7);
-
-        // block links from blocking selection
-        bool value=true;
-        if (blocked_links.size() > 0) {
-            for (auto it = blocked_links.begin(); it != blocked_links.end(); it++) {
-                value = value & KinArm->blockLink(*it);
-            }
-        }
-        // strip blocked links from joint angle vector
-        for (auto i = 0; i<angles_torso.size(); i++) {
-            if (not (std::find(blocked_links.begin(), blocked_links.end(), i) != blocked_links.end())) {
-                angles.push_back(angles_torso[i]);
-            }
-        }
-
-        // set joint configuration for kinematic chain
-        std::transform(angles.begin(), angles.end(), angles.begin(), [deg2rad](double& c) { return c * deg2rad; });
-        KinArm->setAng(yarp::sig::Vector(angles.size(), angles.data()));
-        slv.setMaxIter(5000);
-
-        // compute inverse kinematics
-        jnt_angles = slv.solve(KinArm->getAng(), pos);
-        joint_angles.assign(jnt_angles.begin(), jnt_angles.end());
-
-        // unblock blocked links for further computations
-        if (blocked_links.size() > 0) {
-            for (auto it = blocked_links.begin(); it != blocked_links.end(); it++) {
-                value = value & KinArm->releaseLink(*it);
-            }
-        }
-    }
-    return joint_angles;
-}
-
-void KinematicReader::testinvKin(){
-
-    yarp::sig::Vector q0, qf, qhat, xf, xhat;
-
-    KinChain->blockLink(2);
-    KinChain->blockLink(1);
-    KinChain->blockLink(0);
-
-    // get initial joints configuration
-    q0 = KinChain->getAng();
-
-    // dump DOF bounds using () operators and set
-    // a second joints configuration in the middle of the compact set.
-    // Remind that angles are expressed in radians
-    qf.resize(KinChain->getDOF());
-    for (unsigned int i = 0; i < KinChain->getDOF(); i++) {
-        double min = (*KinChain)(i).getMin();
-        double max = (*KinChain)(i).getMax();
-        qf[i] = (min + max) / 2.0;
-
-        // last joint set to 1 deg higher than the bound
-        if (i == KinChain->getDOF() - 1) qf[i] = max + 1.0 * iCub::ctrl::CTRL_DEG2RAD;
-
-        std::cout << "joint " << i << " in [" << iCub::ctrl::CTRL_RAD2DEG * min << "," << iCub::ctrl::CTRL_RAD2DEG * max << "] set to " << iCub::ctrl::CTRL_RAD2DEG * qf[i] << std::endl;
-    }
-
-    // it is not allowed to overcome the bounds...
-    // ...see the result
-    qf = KinChain->setAng(qf);
-    std::cout << "Actual joints set to " << (iCub::ctrl::CTRL_RAD2DEG * qf).toString() << std::endl;
-    // anyway user can disable the constraints checking by calling
-    // the chain method setAllConstraints(false)
-
-    // there are three links for the torso which do not belong to the
-    // DOF set since they are blocked. User can access them through [] operators
-    std::cout << "Torso blocked links at:" << std::endl;
-    for (unsigned int i = 0; i < KinChain->getN() - KinChain->getDOF(); i++)
-        std::cout << iCub::ctrl::CTRL_RAD2DEG * (*KinChain)[i].getAng() << " ";
-    std::cout << std::endl;
-
-    // retrieve the end-effector pose.
-    // Translational part is in meters.
-    // Rotational part is in axis-angle representation
-    xf = KinChain->EndEffPose();
-    std::cout << "Current arm end-effector pose: " << xf.toString() << std::endl;
-
-    // go back to the starting joints configuration
-    KinChain->setAng(q0);
-
-    // instantiate a IPOPT solver for inverse kinematic
-    // for both translational and rotational part
-    iCub::iKin::iKinIpOptMin slv(*KinChain, IKINCTRL_POSE_FULL, 1e-3, 1e-6, 100);
-
-    // In order to speed up the process, a scaling for the problem
-    // is usually required (a good scaling holds each element of the jacobian
-    // of constraints and the hessian of lagrangian in norm between 0.1 and 10.0).
-    slv.setUserScaling(true, 100.0, 100.0, 100.0);
-
-    // note how the solver called internally the chain->setAllConstraints(false)
-    // method in order to relax constraints
-    for (unsigned int i = 0; i < KinChain->getN(); i++) {
-        std::cout << "link " << i << ": " << (KinChain->getConstraint(i) ? "constrained" : "not-constrained") << std::endl;
-    }
-
-    // solve for xf starting from current configuration q0
-    double t = yarp::os::SystemClock::nowSystem();
-    qhat = slv.solve(KinChain->getAng(), xf);
-    double dt = yarp::os::SystemClock::nowSystem() - t;
-
-    // in general the solved qf is different from the initial qf
-    // due to the redundancy
-    std::cout << "qhat: " << (iCub::ctrl::CTRL_RAD2DEG * qhat).toString() << std::endl;
-
-    // check how much we achieve our goal
-    // note that the chain has been manipulated by the solver,
-    // so it's already in the final configuration
-    xhat = KinChain->EndEffPose();
-    std::cout << "Desired arm end-effector pose       xf= " << xf.toString() << std::endl;
-    std::cout << "Achieved arm end-effector pose K(qhat)= " << xhat.toString() << std::endl;
-    std::cout << "||xf-K(qhat)||=" << yarp::math::norm(xf - xhat) << std::endl;
-    std::cout << "Solved in " << dt << " [s]" << std::endl;
-    KinChain->releaseLink(2);
-    KinChain->releaseLink(1);
-    KinChain->releaseLink(0);
-}
-
 /*** gRPC functions ***/
-// TODO seperated functions for different modi -> set enc/joints in init
 #ifdef _USE_GRPC
 std::vector<double> KinematicReader::provideData(int value) { return std::vector<double>(); }
 std::vector<double> KinematicReader::provideData() { return GetHandPosition(); }

@@ -22,7 +22,6 @@
 
 
 from libcpp.string cimport string
-from libcpp.map cimport map as cmap
 from libcpp.memory cimport shared_ptr
 
 cimport numpy as np
@@ -45,6 +44,9 @@ from .Visual_Reader cimport PyVisualReader
 from .Kinematic_Reader cimport KinematicReader
 from .Kinematic_Reader cimport PyKinematicReader
 
+from .Kinematic_Writer cimport KinematicWriter
+from .Kinematic_Writer cimport PyKinematicWriter
+
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import os
@@ -52,9 +54,9 @@ import os
 
 cdef class iCubANN_wrapper:
 
+    # interface constructor
     def __cinit__(self):
         print("Initialize iCub Interface.")
-        #my_interface.init() - we need a special init?
 
         self.joint_reader = {}
         self.joint_reader_parts = {}
@@ -68,7 +70,9 @@ cdef class iCubANN_wrapper:
 
         self.kinematic_reader = {}
 
+        self.kinematic_writer = {}
 
+    # interface destructor
     def __dealloc__(self):
         print("Close iCub Interface.")
         if self.joint_reader != None:
@@ -81,8 +85,10 @@ cdef class iCubANN_wrapper:
             self.visual_reader.clear()
         if self.kinematic_reader != None:
             self.kinematic_reader.clear()
+        if self.kinematic_writer != None:
+            self.kinematic_writer.clear()
 
-
+    # close all interface modules
     def clear(self):
         print("Clear iCub interface")
         size = len(self.joint_reader)
@@ -110,11 +116,17 @@ cdef class iCubANN_wrapper:
             self.kinematic_reader[list(self.kinematic_reader.keys())[0]].close(self)
             size = len(self.kinematic_reader)
 
+        size = len(self.kinematic_writer)
+        while size > 0:
+            self.kinematic_writer[list(self.kinematic_writer.keys())[0]].close(self)
+            size = len(self.kinematic_writer)
+
         self.joint_reader.clear()
         self.joint_writer.clear()
         self.skin_reader.clear()
         self.visual_reader.clear()
         self.kinematic_reader.clear()
+        self.kinematic_writer.clear()
 
 
     ### Manage the reader/writer modules ###
@@ -256,6 +268,32 @@ cdef class iCubANN_wrapper:
             return True
         else:
             print("[Interface iCub] Kinematic Reader module is not yet registered!")
+            return False
+
+    
+    # register kinematic writer module
+    def register_kin_writer(self, str name, PyKinematicWriter module):
+        if deref(module.cpp_kin_writer).getRegister():
+            print("[Interface iCub] Kinematic Writer module is already registered!")
+            return False
+        else:
+            if name in self.kinematic_writer:
+                print("[Interface iCub] Kinematic Writer module name is already used!")
+                return False
+            self.kinematic_writer[name] = module
+            module.name = name
+            deref(module.cpp_kin_writer).setRegister(1)
+            return True
+
+    # unregister kinematic writer module
+    def unregister_kin_writer(self, PyKinematicWriter module):
+        if deref(module.cpp_kin_writer).getRegister():
+            deref(module.cpp_kin_writer).setRegister(0)
+            self.kinematic_writer.pop(module.name, None)
+            module.name = ""
+            return True
+        else:
+            print("[Interface iCub] Kinematic Writer module is not yet registered!")
             return False
 
     # get joint reader module by name
@@ -530,6 +568,7 @@ cdef class iCubANN_wrapper:
             print("Not a valid XML-Filepath given!")
             return False, name_dict
 
+    # save robot robot configuration as XML-file
     def save_robot_to_file(self, xml_file, description=""):
         root = ET.Element("robot")
         root.append(ET.Comment(description))

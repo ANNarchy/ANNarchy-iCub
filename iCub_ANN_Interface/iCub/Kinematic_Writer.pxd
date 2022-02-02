@@ -2,9 +2,9 @@
 # cython: language_level = 3
 
 """
-   Copyright (C) 2019-2021 Torsten Fietzek; Helge Ülo Dinkelbach
+   Copyright (C) 2022 Torsten Fietzek; Helge Ülo Dinkelbach
 
-   Kinematic_Reader.pyx is part of the iCub ANNarchy interface
+   Kinematic_Writer.pyx is part of the iCub ANNarchy interface
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -26,33 +26,32 @@ from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
 from libcpp.map cimport map as cmap
 
-cdef extern from "Kinematic_Reader.hpp":
+cdef extern from "Kinematic_Writer.hpp":
 
-    cdef cppclass KinematicReader:
-        KinematicReader() except +
+    cdef cppclass KinematicWriter:
+        KinematicWriter() except +
 
-        # Initialize the joint reader with given parameters
+        # Initialize the joint writer with given parameters
         bool_t Init(string, float, string)
 
-        # Initialize the joint reader with given parameters
+        # Initialize the joint writer with given parameters
         bool_t InitGRPC(string, float, string, string, unsigned int)
 
-        # Close joint reader with cleanup
+        # Close joint writer with cleanup
         void Close()
 
         # Return number of controlled joints
         int GetDOF()
 
-        vector[double] GetCartesianPosition(unsigned int)
-        vector[double] GetHandPosition()
+        vector[double] solveInvKin(vector[double], vector[int])
 
         void setRegister(bint)
         bint getRegister()
 
         cmap[string, string] getParameter()
 
-cdef class PyKinematicReader:
-    cdef shared_ptr[KinematicReader] cpp_kin_reader
+cdef class PyKinematicWriter:
+    cdef shared_ptr[KinematicWriter] cpp_kin_writer
     cdef str name
     cdef str part
 
