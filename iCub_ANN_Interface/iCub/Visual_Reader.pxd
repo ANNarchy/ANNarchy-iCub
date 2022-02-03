@@ -39,18 +39,6 @@ cdef extern from "Visual_Reader.hpp":
         # Init Visual reader with given parameters for image resolution, field of view and eye selection and grpc communication.
         bool_t InitGRPC(char, double, double, int, int, int, bool_t, string, string , unsigned int)
 
-        # Read image vector from the image buffer and remove it from the internal buffer. Call twice in binocular mode (first right eye image second left eye image)
-        vector[precision] ReadFromBuf(bool_t, int)
-
-        # Start reading images from the iCub with YARP-RFModule.
-        bool_t Start(int argc, char *[])
-
-        # Stop reading images from the iCub, by terminating the RFModule.
-        void Stop()
-
-        # Return the image count in the image buffer.
-        int ImgsInBuffer()
-
         # Read a set of images from the robot cameras.
         vector[vector[precision]] ReadRobotEyes()
 
