@@ -247,7 +247,7 @@ dependencies = [
     'sympy'
 ]
 
-version="1.0"
+version="1.0.1"
 filename = './iCub_ANN_Interface/version.py'
 with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")

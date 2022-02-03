@@ -16,7 +16,7 @@ pedantic = False
 # Use gRPC for direct iCub to ANNarchy communication
 use_grpc = False
 
-# Select typ precision for images returned by the visual reader
+# Select precision type for images returned by the visual reader
 double_precision = True
 
 # Set the OpenCV include directory -> only set this if the setup fails due to missing OpenCV path

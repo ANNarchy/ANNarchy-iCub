@@ -230,7 +230,7 @@ bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<
         if (this->Init(part, pop_size, deg_per_neuron, speed, ini_path)) {
             this->_ip_address = ip_address;
             this->_port = port;
-            this->joint_source = new WriteClientInstance(ip_address, port);
+            this->joint_source = std::make_unique<WriteClientInstance> (ip_address, port);
             this->_blocking = blocking;
             this->_mode = mode;
             this->_joint_select = joint_select;
@@ -275,6 +275,9 @@ void JointWriter::Close() {
     if (driver.isValid()) {
         driver.close();
     }
+#ifdef _USE_GRPC
+    if (this->joint_source)
+#endif
     this->dev_init = false;
 }
 

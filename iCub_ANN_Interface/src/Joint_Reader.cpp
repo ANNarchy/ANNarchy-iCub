@@ -45,11 +45,11 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
     /*
         Initialize the joint reader with given parameters
 
-        params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-                sigma                   -- sigma for the joints angles populations coding
+        params: string part             -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+                double sigma            -- sigma for the joints angles populations coding
                 int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
-                ini_path                -- Path to the "interface_param.ini"-file
+                string ini_path         -- Path to the "interface_param.ini"-file
 
         return: bool                    -- return True, if successful
     */
@@ -222,11 +222,11 @@ bool JointReader::InitGRPC(std::string part, double sigma, unsigned int pop_size
     /*
         Initialize the joint reader with given parameters
 
-        params: std::string part        -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-                sigma                   -- sigma for the joints angles populations coding
+        params: string part             -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+                double sigma            -- sigma for the joints angles populations coding
                 int pop_size            -- number of neurons per population, encoding each one joint angle; only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles; if set: population size depends on joint working range
-                ini_path                -- Path to the "interface_param.ini"-file
+                string ini_path         -- Path to the "interface_param.ini"-file
                 string ip_address       -- gRPC server ip address
                 unsigned int port       -- gRPC server port
 
@@ -386,9 +386,9 @@ double JointReader::ReadDoubleOne(int joint) {
     /*
         Read one joint and return joint angle directly as double value
 
-        params: unsigned int joint       -- joint number of the robot part
+        params: unsigned int joint      -- joint number of the robot part
 
-        return: double          -- joint angle read from the robot
+        return: double                  -- joint angle read from the robot
     */
 
     double angle = -999.;
@@ -483,7 +483,7 @@ std::vector<double> JointReader::ReadPopOne(int joint) {
     /*
         Read one joint and return the joint angle encoded in a vector
 
-        params: unsigned int joint               -- joint number of the robot part
+        params: unsigned int joint      -- joint number of the robot part
 
         return: std::vector<double>     -- population vector encoding the joint angle
     */
