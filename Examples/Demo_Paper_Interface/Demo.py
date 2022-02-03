@@ -30,7 +30,7 @@ import numpy as np
 from iCub_ANN_Interface import __root_path__ as ann_interface_root
 from iCub_ANN_Interface.iCub import (Joint_Reader, Joint_Writer,
                                      Kinematic_Reader, Skin_Reader,
-                                     iCub_Interface)
+                                     iCub_Interface, Kinematic_Writer)
 
 import retrieve_scene_img as scene_cam
 from Network import (monitors, pop_compute, pop_joint_read, pop_joint_write,
@@ -56,6 +56,7 @@ rarm_select = [0, 1, 2, 3]
 
 params = {}
 params['steps'] = 100
+params['p_obj_threshold'] = 0.3
 params['jr_rarm'] = (len(rarm_select),)
 params['jw_rarm'] = (len(rarm_select),)
 params['tr_rarm'] = (240,)
@@ -69,8 +70,11 @@ sphere = wc.create_object("ssph", [0.025], obj_rest_pos, [1,1,1])
 # Init iCub interface
 iCub = iCub_Interface.iCubANN_wrapper()
 ret_val, robot_dict = iCub.init_robot_from_file("./data/demo_robot.xml") # init robot by file
-rarm_kinread = Kinematic_Reader.PyKinematicReader() # indidual module initialization
-ret_val = ret_val & rarm_kinread.init(iCub, "kin_rA", "right_arm", 2, "./data")
+rarm_kinread = Kinematic_Reader.PyKinematicReader() # individual module initialization
+rarm_kinwrite = Kinematic_Writer.PyKinematicWriter() # individual module initialization
+
+ret_val = ret_val & rarm_kinread.init(iCub, "kinr_rA", "right_arm", 2, "./data")
+ret_val = ret_val & rarm_kinwrite.init(iCub, "kinw_rA", "right_arm", 2, "./data")
 if not ret_val:
     print("Interface initialization failed!")
     sys.exit(0)
@@ -82,8 +86,8 @@ rarm_jr = iCub.get_jreader_by_part("right_arm")
 rarm_tr = iCub.get_skinreader_by_name("TR_right_arm")
 
 rarm_home_pos = rarm_jr.read_double_all()
-rarm_start_pos = np.round(np.rad2deg(rarm_kinread.solve_InvKin(hand_start_pos, blocked_links)),2)
-rarm_target_pos = np.round(np.rad2deg(rarm_kinread.solve_InvKin(hand_target_pos, blocked_links)),2)
+rarm_start_pos = np.round(np.rad2deg(rarm_kinwrite.solve_InvKin(hand_start_pos, blocked_links)),2)
+rarm_target_pos = np.round(np.rad2deg(rarm_kinwrite.solve_InvKin(hand_target_pos, blocked_links)),2)
 
 stepwidth = np.round((rarm_target_pos - rarm_start_pos)/params['steps'],2)
 
@@ -130,7 +134,7 @@ while(out):
     switches = 0
     p_place_obj = random.uniform(0, 1)
     obj_pos = random.uniform(0, 1) * obj_diff + obj_pos0
-    if p_place_obj > 0.5:
+    if p_place_obj > params['p_obj_threshold']:
         print("Object placed")
         wc.move_object(sphere, obj_pos)
 

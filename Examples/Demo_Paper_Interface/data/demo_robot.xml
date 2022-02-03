@@ -14,7 +14,7 @@
     <JWriter name="JW_rArm">
         <part>right_arm</part>
         <popsize>10</popsize>
-        <speed>100</speed>
+        <speed>30</speed>
         <ini_path>./data/</ini_path>
         <?deg_per_neuron as alternative to popsize?>
         <ip_address>0.0.0.0</ip_address>

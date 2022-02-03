@@ -29,6 +29,7 @@ master = Master_Clock.MasterClock()
 # Implementation of ClockInterface class for iCub interface
 class iCubClock(Master_Clock.ClockInterface):
     def __init__(self, iCubInterface):
+        self.input = True
         self.iCub = iCubInterface
 
     def sync_input(self):
@@ -41,6 +42,7 @@ class iCubClock(Master_Clock.ClockInterface):
 # Implementation of ClockInterface class for ANNarchy network
 class ANNarchyClock(Master_Clock.ClockInterface):
     def __init__(self, ANNnet):
+        self.input = True
         self.net = ANNnet
 
     def sync_input(self):

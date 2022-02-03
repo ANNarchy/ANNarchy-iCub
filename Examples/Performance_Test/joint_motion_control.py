@@ -13,6 +13,7 @@ joint position control example
 
 import sys
 import time
+from pathlib import Path
 from timeit import default_timer as timer
 
 import ANNarchy as ann
@@ -25,7 +26,8 @@ pos_perf_test_all = np.load("./data/pos_perf_test_all.npy")
 
 # position control with yarp commands
 def speed_test_yarp_manual(testcount, joint, speed):
-    print("----- Python YARP performance test -----")
+    print("\n----- Python YARP performance test -----")
+    print("Speed:", speed)
 
     import yarp
 
@@ -177,16 +179,17 @@ def speed_test_yarp_manual(testcount, joint, speed):
     print('----- Close control devices and opened ports -----')
     Driver_right_arm.close()
     yarp.Network.fini()
+    ann.clear()
 
-    return (mean_time_full, mean_time_single), (std_time_single, std_time_full)
+    return (mean_time_full, mean_time_single), (std_time_full, std_time_single)
 
-# position control with iCub-ANNarchy-Interface
+# position control with iCub-ANNarchy-Interface -> manual transfer
 def speed_test_interface_manual(testcount, joint, speed):
-    print("----- Interface with manual transport performance test -----")
+    print("\n----- Interface with manual transport performance test -----")
+    print("Speed:", speed)
 
     import iCub_ANN_Interface.iCub as iCub_mod
     import iCub_ANN_Interface.Vocabs as iCub_const
-
 
     ######################################################################
     ######################## Init ANNarchy network #######################
@@ -275,16 +278,20 @@ def speed_test_interface_manual(testcount, joint, speed):
     ################### Close network and motor cotrol ###################
     print('----- Clear Interface -----')
     iCub.clear()
+    ann.clear()
 
-    return (mean_time_full, mean_time_single), (std_time_single, std_time_full)
+    return (mean_time_full, mean_time_single), (std_time_full, std_time_single)
 
-
+# position control with iCub-ANNarchy-Interface -> gRPC-based transfer
 def speed_test_interface_grpc(testcount, joint, speed):
+    print("\n----- Interface with gRPC transport performance test -----")
+    print("Speed:", speed)
     # iCub ANNarchy Interface
     import iCub_ANN_Interface.Vocabs as iCub_const
     from iCub_ANN_Interface import __root_path__ as ann_interface_root
     from iCub_ANN_Interface.ANNarchy_iCub_Populations import JointControl
-    from iCub_ANN_Interface.iCub import Joint_Writer, iCub_Interface, Joint_Reader
+    from iCub_ANN_Interface.iCub import (Joint_Reader, Joint_Writer,
+                                         iCub_Interface)
 
     ######################################################################
     ######################## Init ANNarchy network #######################
@@ -394,26 +401,35 @@ def speed_test_interface_grpc(testcount, joint, speed):
     ################### Close network and motor cotrol ###################
     print('----- Clear Interface -----')
     iCub.clear()
+    ann.clear()
 
-    return (mean_time_full, mean_time_single), (std_time_single, std_time_full)
+    return (mean_time_full, mean_time_single), (std_time_full, std_time_single)
 
 
 #########################################################
 if __name__ == "__main__":
     perf_test_count = 5
     joint_sel = 3
-    speed = 50
+    speed = 100
     folder = "./results/motion"
     Path(folder).mkdir(parents=True, exist_ok=True)
 
     if len(sys.argv) > 1:
         if sys.argv[1] == "yarp":
+            if len(sys.argv) == 3:
+                speed = float(sys.argv[2])
             speed_test_yarp_manual(perf_test_count, joint_sel, speed)
         elif sys.argv[1] == "int_manual":
+            if len(sys.argv) == 3:
+                speed = float(sys.argv[2])
             speed_test_interface_manual(perf_test_count, joint_sel, speed)
         elif sys.argv[1] == "int_auto":
+            if len(sys.argv) == 3:
+                speed = float(sys.argv[2])
             speed_test_interface_grpc(perf_test_count, joint_sel, speed)
         elif sys.argv[1] == "all":
+            if len(sys.argv) == 3:
+                speed = float(sys.argv[2])
             yarp_mean, yarp_std = speed_test_yarp_manual(perf_test_count, joint_sel, speed)
             ann.clear()
             intman_mean, intman_std = speed_test_interface_manual(perf_test_count, joint_sel, speed)
@@ -422,15 +438,15 @@ if __name__ == "__main__":
             print("Results Performance Test")
             print("YARP:")
             print("All Joints: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(yarp_mean[0], yarp_std[0]))
-            print("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(yarp_mean[0], yarp_std[0]))
+            print("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(yarp_mean[1], yarp_std[1]))
 
-            print("Interface_manual:")
+            print("\nInterface_manual:")
             print("All Joints: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(intman_mean[0], intman_std[0]))
-            print("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(intman_mean[0], intman_std[0]))
+            print("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(intman_mean[1], intman_std[1]))
 
-            print("Interface_auto:")
+            print("\nInterface_auto:")
             print("All Joints: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(intauto_mean[0], intauto_std[0]))
-            print("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(intauto_mean[0], intauto_std[0]))
+            print("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}".format(intauto_mean[1], intauto_std[1]))
 
             with open(folder + "/all_speed_" + str(speed) + ".txt", "w") as f:
                 f.write("Parameter:\n")
@@ -441,15 +457,15 @@ if __name__ == "__main__":
                 f.write("Results Performance Test\n")
                 f.write("YARP:\n")
                 f.write("All Joints: \nMean: {:2.2f} \nSTD:  {:2.2f}\n".format(yarp_mean[0], yarp_std[0]))
-                f.write("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}\n".format(yarp_mean[0], yarp_std[0]))
+                f.write("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}\n".format(yarp_mean[1], yarp_std[1]))
 
-                f.write("Interface_manual:\n")
+                f.write("\nInterface_manual:\n")
                 f.write("All Joints: \nMean: {:2.2f} \nSTD:  {:2.2f}\n".format(intman_mean[0], intman_std[0]))
-                f.write("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}\n".format(intman_mean[0], intman_std[0]))
+                f.write("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}\n".format(intman_mean[1], intman_std[1]))
 
-                f.write("Interface_auto:\n")
+                f.write("\nInterface_auto:\n")
                 f.write("All Joints: \nMean: {:2.2f} \nSTD:  {:2.2f}\n".format(intauto_mean[0], intauto_std[0]))
-                f.write("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}\n".format(intauto_mean[0], intauto_std[0]))
+                f.write("Single Joint: \nMean: {:2.2f} \nSTD:  {:2.2f}\n".format(intauto_mean[1], intauto_std[1]))
 
         else:
             print("No correct option given! yarp, int_manual, int_auto, all")
