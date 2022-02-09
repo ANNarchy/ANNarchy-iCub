@@ -11,7 +11,9 @@ joint position control example
 ########################## Import modules  ###########################
 ######################################################################
 
+import os
 import sys
+import subprocess
 import time
 from pathlib import Path
 from timeit import default_timer as timer
@@ -310,9 +312,16 @@ def speed_test_interface_grpc(testcount, joint, speed):
 
     joint_ctrl_pop_all = JointControl(geometry=(7,), neuron=neuron, ip_address="0.0.0.0", port=50005)
     joint_ctrl_pop_single = JointControl(geometry=(1,), neuron=neuron, ip_address="0.0.0.0", port=50006)
-    compiler_flags = "-march=native -O2" + " -I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/"
-    extra_libs = "-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -liCub_ANN_grpc"
-    ann.compile(directory='annarchy_iCub_paper_demo', clean=False, compiler_flags=compiler_flags, extra_libs=extra_libs)
+
+    # Compile network
+    # gRPC paths, only needed for local gRPC installation
+    grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
+    grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
+    grpc_include_path = grpc_path + "/include"
+    grpc_lib_path = grpc_path + "/lib"
+    compiler_flags = "-march=native -O2" + " -I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path
+    extra_libs = "-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -liCub_ANN_grpc -L" + grpc_lib_path
+    ann.compile(directory='annarchy_jwriter', compiler_flags=compiler_flags, extra_libs=extra_libs)
 
     for pop in ann.populations():
         try:

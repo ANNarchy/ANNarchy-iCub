@@ -61,6 +61,8 @@ params['jr_rarm'] = (len(rarm_select),)
 params['jw_rarm'] = (len(rarm_select),)
 params['tr_rarm'] = (240,)
 
+plot_on = False
+
 folder = datetime.now().strftime("./results/%Y-%m-%d_%H:%M/")
 Path(folder).mkdir(parents=True, exist_ok=True)
 
@@ -187,46 +189,49 @@ while(out):
     prop_data = monitors['m_prop'].get()['r']
 
     # save data
-    np.save(folder_trial + "/skin_data.png", skin_data)
-    np.save(folder_trial + "/compute_data.png", compute_data)
-    np.save(folder_trial + "/prop_data.png", prop_data)
-    np.save(folder_trial + "/scene_imgs.png", scene)
+    np.save(folder_trial + "/skin_data.npy", skin_data)
+    np.save(folder_trial + "/compute_data.npy", compute_data)
+    np.save(folder_trial + "/prop_data.npy", prop_data)
+    np.save(folder_trial + "/scene_imgs.npy", scene)
+    with open(folder_trial + "/detect.txt", 'w') as f:
+        f.write(str(detect))
 
     # plot data
-    fig = plt.figure(layout="constrained", figsize=(12, 8))
-    subfigs = fig.subfigures(2, 1, hspace=0.125, height_ratios=[3,2])
+    if plot_on:
+        fig = plt.figure(layout="constrained", figsize=(12, 8))
+        subfigs = fig.subfigures(2, 1, hspace=0.125, height_ratios=[3,2])
 
-    axes = subfigs[0].subplots(1, 4, gridspec_kw={"wspace":0.075}) #, sharey=True
-    subfigs[0].suptitle("Joint angles from iCub arm joints 0-3")
-    # per joint subplots
-    for j in range(4):
-        ax = axes[j]
-        ax.set_title("Joint " + str(j))
+        axes = subfigs[0].subplots(1, 4, gridspec_kw={"wspace":0.075}) #, sharey=True
+        subfigs[0].suptitle("Joint angles from iCub arm joints 0-3")
+        # per joint subplots
+        for j in range(4):
+            ax = axes[j]
+            ax.set_title("Joint " + str(j))
+            if detect >=0:
+                line_obs = ax.axvline(x=detect, color='darkgray', linestyle='--', label='time of obstacle detection by skin sensors')
+            line_prop, = ax.plot(prop_data[:, j], color='tab:blue', label="joint angle (proprioception)")
+            line_comp, = ax.plot(compute_data[:, j], color='tab:orange', label="target joint angle (internally computed)")
+            if j == 0:
+                ax.set(xlabel='simulation time [ms]', ylabel='joint angle [deg]')
+            else:
+                ax.set(xlabel='simulation time [ms]')
+
+        # one legend for all subplots
         if detect >=0:
-            line_obs = ax.axvline(x=detect, color='darkgray', linestyle='--', label='time of obstacle detection by skin sensors')
-        line_prop, = ax.plot(prop_data[:, j], color='tab:blue', label="joint angle (proprioception)")
-        line_comp, = ax.plot(compute_data[:, j], color='tab:orange', label="target joint angle (internally computed)")
-        if j == 0:
-            ax.set(xlabel='simulation time [ms]', ylabel='joint angle [deg]')
+            subfigs[0].legend(handles=[line_obs, line_prop, line_comp], bbox_to_anchor=(0., -.08, 1., 0.), loc=8, ncol=3, borderaxespad=0.)
         else:
-            ax.set(xlabel='simulation time [ms]')
+            subfigs[0].legend(handles=[line_prop, line_comp], bbox_to_anchor=(0., -.08, 1., 0.), loc=8, ncol=2, borderaxespad=0.)
 
-    # one legend for all subplots
-    if detect >=0:
-        subfigs[0].legend(handles=[line_obs, line_prop, line_comp], bbox_to_anchor=(0., -.08, 1., 0.), loc=8, ncol=3, borderaxespad=0.)
-    else:
-        subfigs[0].legend(handles=[line_prop, line_comp], bbox_to_anchor=(0., -.08, 1., 0.), loc=8, ncol=2, borderaxespad=0.)
+        # skin data plot
+        subfigs[1].suptitle("iCub skin sensor values from right forearm patch")
+        ax_fig1 = subfigs[1].subplots()
+        if detect >=0:
+            ax_fig1.axvline(x=detect, color='darkgray', linestyle='--', label='time of obstacle detection by skin sensors')
+        ax_fig1.plot(skin_data, color="tab:green")
+        ax_fig1.set(xlabel='simulation time [ms]', ylabel='maximum skin sensor value []')
 
-    # skin data plot
-    subfigs[1].suptitle("iCub skin sensor values from right forearm patch")
-    ax_fig1 = subfigs[1].subplots()
-    if detect >=0:
-        ax_fig1.axvline(x=detect, color='darkgray', linestyle='--', label='time of obstacle detection by skin sensors')
-    ax_fig1.plot(skin_data, color="tab:green")
-    ax_fig1.set(xlabel='simulation time [ms]', ylabel='maximum skin sensor value []')
-
-    plt.savefig(folder_trial + "/fig_data.png")
-    plt.show()
+        plt.savefig(folder_trial + "/fig_data.png")
+        plt.show()
 
     r = input()
     if r == "exit":

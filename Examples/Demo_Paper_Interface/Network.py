@@ -18,6 +18,7 @@
 """
 
 import os
+import sys
 import subprocess
 from pathlib import Path
 
@@ -81,13 +82,13 @@ monitors['m_skin'] = ann.Monitor(pop_sread_forearm, 'r', start=False)
 
 # Compile network
 # gRPC paths, only needed for local gRPC installation
-# grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
-# grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
-# grpc_include_path = grpc_path + "/include"
-# grpc_lib_path = grpc_path + "/lib"
-compiler_flags = "-march=native -O2" + " -I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/"
-extra_libs = "-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -liCub_ANN_grpc"
-ann.compile(directory='annarchy_iCub_paper_demo', clean=False, compiler_flags=compiler_flags, extra_libs=extra_libs)
+grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
+grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
+grpc_include_path = grpc_path + "/include"
+grpc_lib_path = grpc_path + "/lib"
+compiler_flags = "-march=native -O2" + " -I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path
+extra_libs = "-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -liCub_ANN_grpc -L" + grpc_lib_path
+ann.compile(directory='annarchy_iCub_paper_demo', compiler_flags=compiler_flags, extra_libs=extra_libs)
 
 # Connect input populations to gRPC service
 for pop in ann.populations():
