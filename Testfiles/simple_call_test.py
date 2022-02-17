@@ -1,14 +1,14 @@
 """
- *  Copyright (C) 2019-2021 Torsten Fietzek
+ *  Copyright (C) 2019-2022 Torsten Fietzek
  *
- *  simple_call_test.py is part of the iCub ANNarchy interface
+ *  simple_call_test.py is part of the ANNarchy iCub interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  The ANNarchy iCub interface is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -24,8 +24,8 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader, Kinematic_Reader
-import iCub_ANN_Interface.Vocabs as iCub_Constants
+from ANN_iCub_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader, Kinematic_Reader, Kinematic_Writer
+import ANN_iCub_Interface.Vocabs as iCub_Constants
 
 # Test support files
 from supplementary.auxilary_methods import encode
@@ -333,9 +333,45 @@ def call_test_kreader(iCub):
     print('Finished Kinematic Reader test')
     print('\n')
 
+
 #########################################################
+def call_test_kwriter(iCub):
+    """
+        Call test for the kinematic writer module to check different errors.
+
+        params:
+            iCub     -- iCub_ANNarchy Interface
+    """
+    # add kinematic writer instance
+    kinwriter = Kinematic_Writer.PyKinematicWriter()
+
+    # init kinematic writer
+    print('Init kinematic writer')
+    print(kinwriter.init(iCub, "name", part="right_hand", version=2))   # wrong part key
+    print(kinwriter.init(iCub, "name", part="right_arm", version=-2))   # negative version
+    print(kinwriter.init(iCub, "name", part="right_arm", version=2))    # correct init
+    print(kinwriter.init(iCub, "name", part="right_arm", version=2))    # double init
+
+    # get DOF of current kinematic chain
+    print(kinwriter.get_DOF())
+
+    # print joint position for given position
+    position = [-0.3, 0.0, 0.05 ]
+    blocked = [0, 1, 2, 7, 8, 9]
+    print(np.round(np.rad2deg(kinwriter.solve_InvKin(position, blocked)), 2))
+
+    # close kinematic writer module
+    kinwriter.close(iCub)
+
+    print('Finished Kinematic Writer test')
+    print('\n')
+
+
+#########################################################
+
+
 if __name__ == "__main__":
-    iCub = iCub_Interface.iCubANN_wrapper()
+    iCub = iCub_Interface.ANNiCub_wrapper()
 
     if len(sys.argv) > 1:
         for command in sys.argv[1:]:
@@ -345,11 +381,13 @@ if __name__ == "__main__":
                 call_test_sreader(iCub)
                 call_test_vreader(iCub)
                 call_test_kreader(iCub)
+                call_test_kwriter(iCub)
             elif command == "noskin":
                 call_test_jreader(iCub)
                 call_test_jwriter(iCub)
                 call_test_vreader(iCub)
                 call_test_kreader(iCub)
+                call_test_kwriter(iCub)
             elif command == "jreader":
                 call_test_jreader(iCub)
             elif command == "jwriter":
@@ -360,9 +398,11 @@ if __name__ == "__main__":
                 call_test_vreader(iCub)
             elif command == "kreader":
                 call_test_kreader(iCub)
+            elif command == "kwriter":
+                call_test_kwriter(iCub)
             else:
-                print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader, kreader')
+                print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader, kreader, kwriter')
     else:
-        print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader, kreader')
+        print('No valid test command! Valid are: all, noskin, jreader, jwriter, sreader, vreader, kreader, kwriter')
 
     print('finished call tests')

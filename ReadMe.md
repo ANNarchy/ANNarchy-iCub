@@ -1,4 +1,4 @@
-## iCub ANNarchy Interface
+## ANNarchy iCub Interface
 This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.
 
 
@@ -32,6 +32,10 @@ The interface consists of different parts. Clustering the different tasks of the
 
         5. *KinematicReader:*<br>
             This module handles the iCub forward kinematic to receive the cartesian coordinates for specific joints or endeffectors like the hand.
+
+        6. *KinematicWriter:*<br>
+            This module handles the iCub inverse kinematics.
+
 
 3. Sync
     - The Sync module provide two classes MasterClock and ClockInterface. Thereby, the MasterClock is the main synchronization handler and for the use exactly one instance of it is needed to create. To synchronize the ANNarchy and iCub simulations, for each side one derived class of the ClockInterface ahs to be created. This class provide two abstract functions, which has to be impleemnted. The first is the update method and the second is sync_input. These method are executed once for update step. The timing can be individually be set and is dependent on the usecase.<br>
@@ -80,11 +84,11 @@ Take a look in the testfiles for a specific implementation. More examples will f
 ### Non gRPC version
 
 ```Python
-from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader, Kinematic_Reader
-import iCub_ANN_Interface.Vocabs as iCub_Constants
+from ANN_iCub_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader, Kinematic_Reader
+import ANN_iCub_Interface.Vocabs as iCub_Constants
 
 
-iCub = iCub_Interface.iCubANN_wrapper()
+iCub = iCub_Interface.ANNiCub_wrapper()
 ...
 # add necessary instances
 jreader = Joint_Reader.PyJointReader()
@@ -122,10 +126,10 @@ kinreader.close(iCub)
 ### gRPC version
 
 ```Python
-from iCub_ANN_Interface import __root_path__ as interface_root
-from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader, Kinematic_Reader
-from iCub_ANN_Interface.ANNarchy_Populations import JointReadout, JointControl, SkinPopulation, VisionPopulation, KinematicPopulation
-import iCub_ANN_Interface.Vocabs as iCub_Constants
+from ANN_iCub_Interface import __root_path__ as interface_root
+from ANN_iCub_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader, Kinematic_Reader
+from ANN_iCub_Interface.ANNarchy_Populations import JointReadout, JointControl, SkinPopulation, VisionPopulation, KinematicPopulation
+import ANN_iCub_Interface.Vocabs as iCub_Constants
 
 # Create ANNarchy populations e.g. VisionPopulation
 pop_vis = VisionPopulation( geometry = (240,320) )
@@ -136,14 +140,14 @@ pop_vis = VisionPopulation( geometry = (240,320) )
 
 # Compile ANNarchy network
 ann_interface_root = interface_root + "/"
-compile(directory='results/annarchy_vreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/", extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc")
+compile(directory='results/annarchy_vreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/", extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"ANN_iCub_Interface/grpc/ -liCub_ANN_grpc")
 
 # Connect ANNarchy interface populations to gRPC service
 pop_vis.connect()
 ...
 
 # Instanciate main iCub wrapper
-iCub = iCub_Interface.iCubANN_wrapper()
+iCub = iCub_Interface.ANNiCub_wrapper()
 
 # Add necessary module instances
 visreader = Visual_Reader.PyVisualReader()
@@ -175,7 +179,7 @@ https://ai.informatik.tu-chemnitz.de/gogs/iCub_TUC/iCub_simulator_tools.git
 
 ## Authors
 Torsten Fietzek (<torsten.fietzek@informatik.tu-chemnitz.de>)<br>
-Helge Ülo Dinkelbach<br>
+Helge Ülo Dinkelbach (<helge.dinkelbach@gmail.com>)<br>
 
 
 ## Dependencies

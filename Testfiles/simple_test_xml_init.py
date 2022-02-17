@@ -1,18 +1,18 @@
 
-import iCub_ANN_Interface
-import iCub_ANN_Interface.Vocabs as iCub_Constants
+import ANN_iCub_Interface
+import ANN_iCub_Interface.Vocabs as iCub_Constants
 import matplotlib.pyplot as plt
 import numpy as np
 from ANNarchy import *
-from iCub_ANN_Interface.ANNarchy_iCub_Populations import *
-from iCub_ANN_Interface.iCub import (Joint_Reader, Joint_Writer, Skin_Reader,
+from ANN_iCub_Interface.ANNarchy_iCub_Populations import *
+from ANN_iCub_Interface.iCub import (Joint_Reader, Joint_Writer, Skin_Reader,
                                      Visual_Reader, iCub_Interface)
 
 import iCub_Python_Lib.plot_image_processing as plot
 import supplementary.auxilary_methods as aux
 
 # prepare iCub Interface
-iCub = iCub_Interface.iCubANN_wrapper()
+iCub = iCub_Interface.ANNiCub_wrapper()
 iCub.init_robot_from_file("../data/default_robot.xml")
 
 joints_head = [3, 4, 5]
@@ -32,10 +32,10 @@ pop_sread = SkinPopulation(geometry = (380,), skin_section="arm", port=50015)
 pop_vis = VisionPopulation( geometry = (240,320), port=50010)
 
 
-ann_interface_root = iCub_ANN_Interface.__root_path__ + "/"
+ann_interface_root = ANN_iCub_Interface.__root_path__ + "/"
 compile(
-    compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/",
-    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",
+    compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/",
+    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"ANN_iCub_Interface/grpc/ -liCub_ANN_grpc",
 )
 
 # fancy other stuff ...

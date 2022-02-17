@@ -1,14 +1,14 @@
 """
- *  Copyright (C) 2021 Torsten Fietzek
+ *  Copyright (C) 2022 Torsten Fietzek
  *
- *  Demo.py is part of the iCub ANNarchy interface
+ *  Demo.py is part of the ANNarchy iCub interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  The ANNarchy iCub interface is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -27,8 +27,8 @@ from pathlib import Path
 import ANNarchy as ann
 import matplotlib.pylab as plt
 import numpy as np
-from iCub_ANN_Interface import __root_path__ as ann_interface_root
-from iCub_ANN_Interface.iCub import (Joint_Reader, Joint_Writer,
+from ANN_iCub_Interface import __root_path__ as ann_interface_root
+from ANN_iCub_Interface.iCub import (Joint_Reader, Joint_Writer,
                                      Kinematic_Reader, Skin_Reader,
                                      iCub_Interface, Kinematic_Writer)
 
@@ -55,15 +55,15 @@ blocked_links = [0, 1, 2, 7, 8, 9]
 rarm_select = [0, 1, 2, 3]
 
 params = {}
-params['steps'] = 100
-params['p_obj_threshold'] = 0.3
+params['steps'] = 90
+params['p_obj_threshold'] = 1.
 params['jr_rarm'] = (len(rarm_select),)
 params['jw_rarm'] = (len(rarm_select),)
 params['tr_rarm'] = (240,)
 
-plot_on = False
+plot_on = True
 
-folder = datetime.now().strftime("./results/%Y-%m-%d_%H:%M/")
+folder = datetime.now().strftime("./results/%Y-%m-%d_%H-%M/")
 Path(folder).mkdir(parents=True, exist_ok=True)
 
 wc = Sim_world.WorldController()
@@ -106,8 +106,6 @@ for i in range(rarm_start_pos.shape[0]):
 
 pop_compute.lower = lower
 pop_compute.upper = upper
-pop_compute.start = rarm_start_pos
-
 pop_compute.step = stepwidth
 
 print("start:", rarm_start_pos)
@@ -143,6 +141,9 @@ while(out):
     step = 0
     no_hit = True
     scene = []
+    supp = []
+    dsupp = []
+
     detect = -1
     while(simulate):
         if step%5 == 0:
@@ -150,6 +151,8 @@ while(out):
             scene.append(scene_cam.read_image(scenecam))
 
         ann.simulate(1)
+        supp.append(pop_compute.supp)
+        dsupp.append(pop_compute.dsupp)
 
         if np.allclose(pop_joint_read.r, rarm_target_pos, atol=0.05) and target_dir:
             pop_compute.step = pop_compute.step*-1
@@ -229,6 +232,9 @@ while(out):
             ax_fig1.axvline(x=detect, color='darkgray', linestyle='--', label='time of obstacle detection by skin sensors')
         ax_fig1.plot(skin_data, color="tab:green")
         ax_fig1.set(xlabel='simulation time [ms]', ylabel='maximum skin sensor value []')
+        # ax_fig1.plot(dsupp, color="b")
+        # ax_fig1.plot(supp, color="r")
+
 
         plt.savefig(folder_trial + "/fig_data.png")
         plt.show()

@@ -1,14 +1,14 @@
 """
- *  Copyright (C) 2019-2021 Torsten Fietzek
+ *  Copyright (C) 2019-2022 Torsten Fietzek
  *
- *  performance_test.py is part of the iCub ANNarchy interface
+ *  performance_test.py is part of the ANNarchy iCub interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  The ANNarchy iCub interface is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -25,9 +25,9 @@ import time
 import matplotlib.pylab as plt
 import numpy as np
 
-# iCub ANNarchy Interface
-from iCub_ANN_Interface.iCub import iCub_Interface, Joint_Reader, Joint_Writer, Skin_Reader, Visual_Reader
-import iCub_ANN_Interface.Vocabs as iCub_Constants
+# ANNarchy iCub Interface
+from ANN_iCub_Interface.iCub import iCub_Interface, Joint_Reader, Joint_Writer, Skin_Reader, Visual_Reader
+import ANN_iCub_Interface.Vocabs as iCub_Constants
 
 # Python libraries for simulator control
 import iCub_Python_Lib.iCubSim_world_controller as iSim_wc
@@ -840,7 +840,7 @@ def vis_move_test(ann_wrapper):
 
 #########################################################
 if __name__ == "__main__":
-    wrapper = iCub_Interface.iCubANN_wrapper()
+    wrapper = iCub_Interface.ANNiCub_wrapper()
     test_cnt = params.test_count
 
     if len(sys.argv) > 1:

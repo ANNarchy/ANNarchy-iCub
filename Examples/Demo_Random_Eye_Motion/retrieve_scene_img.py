@@ -1,14 +1,14 @@
 """
  *  Copyright (C) 2021 Torsten Fietzek
  *
- *  retrieve_scene_img.py is part of the iCub ANNarchy interface
+ *  retrieve_scene_img.py is part of the ANNarchy iCub interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  The ANNarchy iCub interface is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.

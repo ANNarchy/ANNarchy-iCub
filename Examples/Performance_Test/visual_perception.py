@@ -141,18 +141,18 @@ def speed_test_yarp_manual(test_count):
 #########################################################
 def speed_test_interface_manual(test_count):
     """
-        Test the performance of the visual persception with the iCub-ANNarchy-Interface and a manual transfer to ANNarchy.
+        Test the performance of the visual persception with the ANNarchy-iCub-Interface and a manual transfer to ANNarchy.
 
     """
     print("----- Interface with manual transport performance test -----")
 
-    # iCub ANNarchy Interface
-    import iCub_ANN_Interface.Vocabs as iCub_Constants
-    from iCub_ANN_Interface.iCub import Visual_Reader, iCub_Interface
+    # ANNarchy iCub Interface
+    import ANN_iCub_Interface.Vocabs as iCub_Constants
+    from ANN_iCub_Interface.iCub import Visual_Reader, iCub_Interface
 
     ######################################################################
     ######################### Init iCub Interface ########################
-    print('----- Init iCub-ANNarchy-Interface -----')
+    print('----- Init ANNarchy-iCub-Interface -----')
 
     ann_wrapper = iCub_Interface.iCubANN_wrapper()
 
@@ -215,19 +215,19 @@ def speed_test_interface_manual(test_count):
 #########################################################
 def speed_test_interface_grpc(test_count):
     """
-        Test the performance of the visual persception with the iCub-ANNarchy-Interface and an automatic transfer to ANNarchy.
+        Test the performance of the visual persception with the ANNarchy-iCub-Interface and an automatic transfer to ANNarchy.
 
     """
 
-    # iCub ANNarchy Interface
-    import iCub_ANN_Interface.Vocabs as iCub_Constants
-    from iCub_ANN_Interface import __root_path__ as interface_root
-    from iCub_ANN_Interface.ANNarchy_iCub_Populations import VisionPopulation
-    from iCub_ANN_Interface.iCub import Visual_Reader, iCub_Interface
+    # ANNarchy iCub Interface
+    import ANN_iCub_Interface.Vocabs as iCub_Constants
+    from ANN_iCub_Interface import __root_path__ as interface_root
+    from ANN_iCub_Interface.ANNarchy_iCub_Populations import VisionPopulation
+    from ANN_iCub_Interface.iCub import Visual_Reader, iCub_Interface
 
     ######################################################################
     ######################### Init iCub Interface ########################
-    print('----- Init iCub-ANNarchy-Interface -----')
+    print('----- Init ANNarchy-iCub-Interface -----')
 
     iCub = iCub_Interface.iCubANN_wrapper()
 
@@ -253,8 +253,8 @@ def speed_test_interface_grpc(test_count):
     grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
     grpc_include_path = grpc_path + "/include"
     grpc_lib_path = grpc_path + "/lib"
-    compiler_flags = "-march=native -O2" + " -I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path
-    extra_libs = "-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -liCub_ANN_grpc -L" + grpc_lib_path
+    compiler_flags = "-march=native -O2" + " -I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/ -I" + grpc_include_path
+    extra_libs = "-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"/ANN_iCub_Interface/grpc/ -liCub_ANN_grpc -L" + grpc_lib_path
     ann.compile(directory='annarchy_vreader', compiler_flags=compiler_flags, extra_libs=extra_libs)
 
     for pop in ann.populations():

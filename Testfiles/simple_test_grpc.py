@@ -1,15 +1,15 @@
 
 """
- *  Copyright (C) 2019-2021 Helge Uelo Dinkelbach, Torsten Fietzek
+ *  Copyright (C) 2019-2022 Helge Uelo Dinkelbach, Torsten Fietzek
  *
- *  simple_test_grpc.py is part of the iCub ANNarchy interface
+ *  simple_test_grpc.py is part of the ANNarchy iCub interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  The ANNarchy iCub interface is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -26,11 +26,11 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
-# iCub ANNarchy Interface
-from iCub_ANN_Interface import __root_path__ as interface_root
-import iCub_ANN_Interface.Vocabs as iCub_Constants
-from iCub_ANN_Interface.ANNarchy_iCub_Populations import *
-from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, Skin_Reader, Visual_Reader, Kinematic_Reader, iCub_Interface
+# ANNarchy iCub interface
+from ANN_iCub_Interface import __root_path__ as interface_root
+import ANN_iCub_Interface.Vocabs as iCub_Constants
+from ANN_iCub_Interface.ANNarchy_iCub_Populations import *
+from ANN_iCub_Interface.iCub import Joint_Reader, Joint_Writer, Skin_Reader, Visual_Reader, Kinematic_Reader, iCub_Interface
 
 # ANNarchy
 from ANNarchy import *
@@ -61,8 +61,8 @@ def call_test_jreader(iCub, ann_interface_root):
     grpc_include_path = grpc_path + "/include"
     grpc_lib_path = grpc_path + "/lib"
     print("Compile ANNarchy network.")
-    compile(directory='results/annarchy_jreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path,
-    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
+    compile(directory='results/annarchy_jreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/ -I" + grpc_include_path,
+    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"ANN_iCub_Interface/grpc/ -liCub_ANN_grpc",)
 
     # fancy other stuff ...
     for pop in populations():
@@ -106,6 +106,8 @@ def call_test_jreader(iCub, ann_interface_root):
     jointreader.close(iCub)
     jointwriter.close(iCub)
 
+    clear()
+
     print('Finished Joint Reader test')
     print('\n')
 
@@ -143,8 +145,8 @@ def call_test_jwriter(iCub, ann_interface_root):
     grpc_include_path = grpc_path + "/include"
     grpc_lib_path = grpc_path + "/lib"
     print("Compile ANNarchy network.")
-    compile(directory='results/annarchy_jwriter', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path,
-    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
+    compile(directory='results/annarchy_jwriter', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/ -I" + grpc_include_path,
+    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"ANN_iCub_Interface/grpc/ -liCub_ANN_grpc",)
 
     # fancy other stuff ...
     for pop in populations():
@@ -267,6 +269,8 @@ def call_test_jwriter(iCub, ann_interface_root):
     jointwriter.close(iCub)
     jointreader.close(iCub)
 
+    clear()
+
     print('Finished Joint Writer test')
     print('\n')
 
@@ -283,7 +287,8 @@ def call_test_sreader(iCub, ann_interface_root):
     """
 
     # Add ANNarchy tactile input population
-    pop_sread = SkinPopulation(geometry = (380,), skin_section="arm")
+    pop_sread_arm = SkinPopulation(geometry = (380,), skin_section="arm")
+    pop_sread_forearm = SkinPopulation(geometry = (240,), skin_section="forearm")
 
     # gRPC paths, only needed for local gRPC installation
     grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
@@ -293,8 +298,8 @@ def call_test_sreader(iCub, ann_interface_root):
 
     print("Compile ANNarchy network.")
     # compile ANNarchy network
-    compile(directory='results/annarchy_sreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path,
-    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
+    compile(directory='results/annarchy_sreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/ -I" + grpc_include_path,
+    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"ANN_iCub_Interface/grpc/ -liCub_ANN_grpc",)
 
     # fancy other stuff ...
     for pop in populations():
@@ -308,11 +313,12 @@ def call_test_sreader(iCub, ann_interface_root):
     skinreader = Skin_Reader.PySkinReader()
 
     # init skin reader
-    if not skinreader.init_grpc(iCub, "name", arm="r", ip_address="0.0.0.0", port=pop_sread.port):
+    if not skinreader.init_grpc(iCub, "name", arm="r", ip_address="0.0.0.0", port=pop_sread_arm.port):
         print("Init failed")
         exit(0)
 
     print("Skin arm size:", skinreader.get_tactile_arm_size())
+    print("Skin forearm size:", skinreader.get_tactile_forearm_size())
 
     print("Simulate")
     # do something!
@@ -320,10 +326,14 @@ def call_test_sreader(iCub, ann_interface_root):
     print("Simulated")
 
     # Show skin population firing rate
-    print(pop_sread.r)
+    print("arm:", pop_sread_arm.r)
+    print("forearm:", pop_sread_forearm.r)
+
 
     # close skin reader
     skinreader.close(iCub)
+
+    clear()
 
     print('Finished Skin Reader test')
     print('\n')
@@ -348,8 +358,8 @@ def call_test_vreader(iCub, ann_interface_root):
     grpc_include_path = grpc_path + "/include"
     grpc_lib_path = grpc_path + "/lib"
     print("Compile ANNarchy network.")
-    compile(directory='results/annarchy_vreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path,
-    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
+    compile(directory='results/annarchy_vreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/ -I" + grpc_include_path,
+    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"ANN_iCub_Interface/grpc/ -liCub_ANN_grpc",)
 
     # fancy other stuff ...
     for pop in populations():
@@ -357,6 +367,9 @@ def call_test_vreader(iCub, ann_interface_root):
         print(pop.name, ':', pop.geometry)
         # connect ANNarchy populations via gRPC
         pop.connect()
+
+    print("offset", pop_vis.offset)
+    print("period", pop_vis.period)
 
     # add visual reader instance
     visreader = Visual_Reader.PyVisualReader()
@@ -379,6 +392,8 @@ def call_test_vreader(iCub, ann_interface_root):
     # Close visual reader module
     visreader.close(iCub)
 
+    clear()
+
     print('Finished Visual Reader test')
     print('\n')
 
@@ -394,16 +409,16 @@ def call_test_kreader(iCub, ann_interface_root):
             ann_interface_root  -- interface root path
     """
 
-    # Create ANNarchy visual input population
-    pop_kin = KinematicPopulation( geometry = (3,) )
+    # Create ANNarchy kinematic input population
+    pop_kin = KinematicForward(geometry = (3,) )
 
     grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
     grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
     grpc_include_path = grpc_path + "/include"
     grpc_lib_path = grpc_path + "/lib"
     print("Compile ANNarchy network.")
-    compile(directory='results/annarchy_kreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path,
-    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"iCub_ANN_Interface/grpc/ -liCub_ANN_grpc",)
+    compile(directory='results/annarchy_kreader', compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/ -I" + grpc_include_path,
+    extra_libs="-L" + grpc_lib_path + " -lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"ANN_iCub_Interface/grpc/ -liCub_ANN_grpc",)
     for pop in populations():
         print(pop.ip_address, pop.port)
         print(pop.name, ':', pop.geometry)
@@ -430,13 +445,15 @@ def call_test_kreader(iCub, ann_interface_root):
     # Close kinematic reader module
     kinreader.close(iCub)
 
+    clear()
+
     print('Finished Kinematic Reader test')
     print('\n')
 
 #########################################################
 if __name__ == "__main__":
     # prepare iCub Interface
-    iCub = iCub_Interface.iCubANN_wrapper()
+    iCub = iCub_Interface.ANNiCub_wrapper()
     ann_interface_root = interface_root + "/"
 
     if not os.path.isdir("./results"):

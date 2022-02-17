@@ -1,14 +1,14 @@
 """
- *  Copyright (C) 2019-2021 Torsten Fietzek
+ *  Copyright (C) 2019-2022 Torsten Fietzek
  *
- *  auto_test.py is part of the iCub ANNarchy interface
+ *  auto_test.py is part of the ANNarchy iCub interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  The ANNarchy iCub interface is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -25,8 +25,8 @@ import matplotlib.pylab as plt
 import numpy as np
 
 # sys.path.append("../build/")
-from iCub_ANN_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader
-import iCub_ANN_Interface.Vocabs as iCub_Constants
+from ANN_iCub_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface, Visual_Reader, Skin_Reader
+import ANN_iCub_Interface.Vocabs as iCub_Constants
 
 # Python libraries for simulator control
 import iCub_Python_Lib.iCubSim_world_controller as iSim_wc
@@ -304,9 +304,9 @@ def test_joint_positioning(ann_wrapper):
     jnts['head'] = writer["head"].get_joint_count()
 
     jnt_sel = {}
-    jnt_sel['right_arm'] = np.array([0, 1, 2, 3, 4], dtype=np.int)
-    jnt_sel['left_arm'] = np.array([0, 1, 2, 3, 4], dtype=np.int)
-    jnt_sel['head'] = np.array([0, 1, 2], dtype=np.int)
+    jnt_sel['right_arm'] = np.array([0, 1, 2, 3, 4], dtype=int)
+    jnt_sel['left_arm'] = np.array([0, 1, 2, 3, 4], dtype=int)
+    jnt_sel['head'] = np.array([0, 1, 2], dtype=int)
 
     # test the positioning with double values for a motion of per single, multiple and all joints
     for name in part_enc:
@@ -544,7 +544,7 @@ def test_visual_perception(ann_wrapper):
 
 #########################################################
 if __name__ == "__main__":
-    wrapper = iCub_Interface.iCubANN_wrapper()
+    wrapper = iCub_Interface.ANNiCub_wrapper()
 
     if len(sys.argv) > 1:
         for command in sys.argv[1:]:

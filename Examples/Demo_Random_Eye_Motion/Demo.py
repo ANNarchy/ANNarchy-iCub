@@ -1,14 +1,14 @@
 """
  *  Copyright (C) 2021 Torsten Fietzek
  *
- *  Demo.py is part of the iCub ANNarchy interface
+ *  Demo.py is part of the ANNarchy iCub interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  The ANNarchy iCub interface is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -23,8 +23,8 @@ import time
 import ANNarchy as ann
 import matplotlib.pylab as plt
 import numpy as np
-from iCub_ANN_Interface import __root_path__ as ann_interface_root
-from iCub_ANN_Interface.iCub import iCub_Interface
+from ANN_iCub_Interface import __root_path__ as ann_interface_root
+from ANN_iCub_Interface.iCub import iCub_Interface
 
 from Network import (m_joint_ctrl, m_joint_read, m_left_eye,  # , m_rand, m_sum
                      m_right_eye, net)
@@ -32,8 +32,8 @@ from retrieve_scene_img import visual_input_yarp
 from Sync_Classes import ANNarchyClock, iCubClock, master
 
 # Compile network
-compiler_flags = "-march=native -O2" + " -I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/"
-extra_libs = "-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -liCub_ANN_grpc"
+compiler_flags = "-march=native -O2" + " -I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/"
+extra_libs = "-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"/ANN_iCub_Interface/grpc/ -liCub_ANN_grpc"
 net.compile(directory='annarchy_iCub_demo', clean=False, compiler_flags=compiler_flags, extra_libs=extra_libs)
 
 # Connect input populations to gRPC service

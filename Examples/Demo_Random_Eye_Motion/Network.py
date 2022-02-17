@@ -1,14 +1,14 @@
 """
  *  Copyright (C) 2021 Torsten Fietzek
  *
- *  Network.py is part of the iCub ANNarchy interface
+ *  Network.py is part of the ANNarchy iCub interface
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  The iCub ANNarchy interface is distributed in the hope that it will be useful,
+ *  The ANNarchy iCub interface is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -20,7 +20,7 @@
 import os
 
 import ANNarchy as ann
-import iCub_ANN_Interface.ANNarchy_iCub_Populations as iCub_pop
+import ANN_iCub_Interface.ANNarchy_iCub_Populations as iCub_pop
 
 ann.setup(dt=10)
 

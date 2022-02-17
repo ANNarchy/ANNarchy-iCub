@@ -185,13 +185,13 @@ def speed_test_yarp_manual(testcount, joint, speed):
 
     return (mean_time_full, mean_time_single), (std_time_full, std_time_single)
 
-# position control with iCub-ANNarchy-Interface -> manual transfer
+# position control with ANNarchy-iCub-Interface -> manual transfer
 def speed_test_interface_manual(testcount, joint, speed):
     print("\n----- Interface with manual transport performance test -----")
     print("Speed:", speed)
 
-    import iCub_ANN_Interface.iCub as iCub_mod
-    import iCub_ANN_Interface.Vocabs as iCub_const
+    import ANN_iCub_Interface.iCub as iCub_mod
+    import ANN_iCub_Interface.Vocabs as iCub_const
 
     ######################################################################
     ######################## Init ANNarchy network #######################
@@ -214,7 +214,7 @@ def speed_test_interface_manual(testcount, joint, speed):
 
     ######################################################################
     ######################### Init iCub Interface ########################
-    print('----- Init iCub-ANNarchy-Interface -----')
+    print('----- Init ANNarchy-iCub-Interface -----')
 
     # top module
     iCub = iCub_mod.iCub_Interface.iCubANN_wrapper()
@@ -284,15 +284,15 @@ def speed_test_interface_manual(testcount, joint, speed):
 
     return (mean_time_full, mean_time_single), (std_time_full, std_time_single)
 
-# position control with iCub-ANNarchy-Interface -> gRPC-based transfer
+# position control with ANNarchy-iCub-Interface -> gRPC-based transfer
 def speed_test_interface_grpc(testcount, joint, speed):
     print("\n----- Interface with gRPC transport performance test -----")
     print("Speed:", speed)
-    # iCub ANNarchy Interface
-    import iCub_ANN_Interface.Vocabs as iCub_const
-    from iCub_ANN_Interface import __root_path__ as ann_interface_root
-    from iCub_ANN_Interface.ANNarchy_iCub_Populations import JointControl
-    from iCub_ANN_Interface.iCub import (Joint_Reader, Joint_Writer,
+    # ANNarchy iCub interface
+    import ANN_iCub_Interface.Vocabs as iCub_const
+    from ANN_iCub_Interface import __root_path__ as ann_interface_root
+    from ANN_iCub_Interface.ANNarchy_iCub_Populations import JointControl
+    from ANN_iCub_Interface.iCub import (Joint_Reader, Joint_Writer,
                                          iCub_Interface)
 
     ######################################################################
@@ -319,8 +319,8 @@ def speed_test_interface_grpc(testcount, joint, speed):
     grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
     grpc_include_path = grpc_path + "/include"
     grpc_lib_path = grpc_path + "/lib"
-    compiler_flags = "-march=native -O2" + " -I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -I" + grpc_include_path
-    extra_libs = "-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"/iCub_ANN_Interface/grpc/ -liCub_ANN_grpc -L" + grpc_lib_path
+    compiler_flags = "-march=native -O2" + " -I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/ -I" + grpc_include_path
+    extra_libs = "-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"/ANN_iCub_Interface/grpc/ -liCub_ANN_grpc -L" + grpc_lib_path
     ann.compile(directory='annarchy_jwriter', compiler_flags=compiler_flags, extra_libs=extra_libs)
 
     for pop in ann.populations():
@@ -332,7 +332,7 @@ def speed_test_interface_grpc(testcount, joint, speed):
 
     ######################################################################
     ######################### Init iCub Interface ########################
-    print('----- Init iCub-ANNarchy-Interface -----')
+    print('----- Init ANNarchy-iCub-Interface -----')
 
     # top module
     iCub = iCub_Interface.iCubANN_wrapper()
@@ -375,7 +375,7 @@ def speed_test_interface_grpc(testcount, joint, speed):
 
     ######################################################################
     ######################### Init iCub Interface ########################
-    print('----- Reinit iCub-ANNarchy-Interface Jwriter for single joint conection -----')
+    print('----- Reinit ANNarchy-iCub-Interface Jwriter for single joint conection -----')
 
     # initialization
     writer.close(iCub)
