@@ -14,7 +14,7 @@ verbose = False
 pedantic = False
 
 # Use gRPC for direct iCub to ANNarchy communication
-use_grpc = False
+use_grpc = True
 
 # Select precision type for images returned by the visual reader
 double_precision = True
@@ -26,8 +26,8 @@ cv_include = "default"
 yarp_prefix = "default"
 
 # Build process
-rebuild_grpc = False    # set to true if the grpc code changed and need a rebuild, e.g. after an update of the repository
-rebuild_cython = False  # set to true if the cython code changed and need a forced rebuild, e.g. after an update of the repository
+rebuild_grpc = True    # set to true if the grpc code changed and need a rebuild, e.g. after an update of the repository
+rebuild_cython = True  # set to true if the cython code changed and need a forced rebuild, e.g. after an update of the repository
 
 ## Helper functions to determine the OpenCV and YARP include paths
 def set_yarp_prefix():

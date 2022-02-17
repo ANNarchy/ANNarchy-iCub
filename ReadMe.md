@@ -48,7 +48,7 @@ The interface consists of different parts. Clustering the different tasks of the
 ## Folder structure
 
 - Interface_ANNarchy_iCub -> Main folder containing the whole interface
-    - Interface_ANN_iCub
+  - ANN_iCub_Interface
         - ANNarchy_iCub_Populations -> ANNarchy population source files for the iCub input/output populations
         - grpc-> gRPC communication source files
         - iCub -> Contains the Cython files (pyx, pxd) for wrapping the C++ code for the use in Python (iCub interaction modules)
