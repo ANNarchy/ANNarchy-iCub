@@ -217,7 +217,7 @@ def speed_test_interface_manual(testcount, joint, speed):
     print('----- Init ANNarchy-iCub-Interface -----')
 
     # top module
-    iCub = iCub_mod.iCub_Interface.iCubANN_wrapper()
+    iCub = iCub_mod.iCub_Interface.ANNiCub_wrapper()
 
     # Reader/Writer instances
     reader = iCub_mod.Joint_Reader.PyJointReader()
@@ -335,7 +335,7 @@ def speed_test_interface_grpc(testcount, joint, speed):
     print('----- Init ANNarchy-iCub-Interface -----')
 
     # top module
-    iCub = iCub_Interface.iCubANN_wrapper()
+    iCub = iCub_Interface.ANNiCub_wrapper()
 
     # Reader/Writer instances
     reader = Joint_Reader.PyJointReader()

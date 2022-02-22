@@ -492,7 +492,6 @@ std::vector<uint8_t> VisualReader::Mat3D2Vec(cv::Mat matrix) {
     std::vector<uint8_t> vec;
 
     if (matrix.isContinuous()) {    // faster, only possible when data is continous in memory
-        std::cout << "total: " << matrix.total() << " channels: " << matrix.channels() << " capa: " << vec.capacity() << std::endl;
         vec.assign(matrix.data, matrix.data + matrix.total() * matrix.channels());
     }
     else {    // slower, but is always possible

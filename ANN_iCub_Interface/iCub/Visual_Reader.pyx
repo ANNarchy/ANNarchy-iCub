@@ -140,11 +140,12 @@ cdef class PyVisualReader:
                 The return type depends on the selected precision (float/double).
 
             return:
-                std::vector<std::vector<precision>>     -- image (1D-vector) from the camera image
+                <std::vector<precision>     -- image (1D-vector) from the camera image
         """
 
         # call the interface
-        return np.array(deref(self.cpp_visual_reader).RetrieveRobotEye(), dtype=np.uint8)
+        # return np.array(deref(self.cpp_visual_reader).RetrieveRobotEye(), dtype=np.uint8)
+        return deref(self.cpp_visual_reader).RetrieveRobotEye()
 
     # deinitialize module
     def close(self, ANNiCub_wrapper iCub):

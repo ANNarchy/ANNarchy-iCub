@@ -102,8 +102,8 @@ def speed_test_yarp_manual(test_count):
 
         if right_eye_yarp_image.getRawImage().__int__() != right_eye_img_array.__array_interface__['data'][0]:
             print("read() reallocated my right_eye_yarp_image!")
-        vis_pop.baseline = cv2.cvtColor(right_eye_img_array, cv2.COLOR_RGB2GRAY) * norm
-        ann.simulate(1)
+        # vis_pop.baseline = cv2.cvtColor(right_eye_img_array, cv2.COLOR_RGB2GRAY) * norm
+        # ann.simulate(1)
         duration[i] = timer() - start
         if np.amax(right_eye_img_array) == 0:
             print("Read failed!")
@@ -114,8 +114,9 @@ def speed_test_yarp_manual(test_count):
     print("----- Performance Test Finished -----")
     mean_time = round(np.mean(duration)*1000, 2)
     std_time = round(np.std(duration)*1000, 2)
-    print("Mean", mean_time)
-    print("STD", std_time)
+    print("Mean:", mean_time)
+    print("STD:", std_time)
+    print("Mean FPS:", round(1./(mean_time/1000), 2))
 
 
     ######################################################################
@@ -189,16 +190,20 @@ def speed_test_interface_manual(test_count):
     print("----- Start Performance Test -----")
     for i in range(test_count):
         start = timer()
-        vis_pop.baseline = visread.read_robot_eyes()
-        ann.simulate(1)
-        duration[i] = timer() -start
-        np.amax(vis_pop.r)
+        img = visread.retrieve_robot_eye()
+        vis_pop.baseline = img
+
+        # vis_pop.baseline = visread.read_robot_eyes()
+        # ann.simulate(1)
+        duration[i] = timer() - start
+    print(len(img), np.amax(img))
 
     print("----- Performance Test Finished -----")
     mean_time = round(np.mean(duration)*1000, 2)
     std_time = round(np.std(duration)*1000, 2)
-    print("Mean", mean_time)
-    print("STD", std_time)
+    print("Mean:", mean_time)
+    print("STD:", std_time)
+    print("Mean FPS:", 1./(mean_time/1000))
 
 
     ######################################################################
