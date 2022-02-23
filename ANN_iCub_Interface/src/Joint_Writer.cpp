@@ -273,6 +273,7 @@ void JointWriter::Close() {
         Close joint writer with cleanup
     */
     if (driver.isValid()) {
+        SetJointControlMode("position", -1);
         driver.close();
     }
 #ifdef _USE_GRPC
@@ -390,6 +391,9 @@ bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
             // set control modes
             std::transform(control_mode.begin(), control_mode.end(), control_mode.begin(), [](unsigned char c) { return std::tolower(c); });
             if (control_mode == "position") {
+                if (joint_control_mode[i] == VOCAB_CM_VELOCITY) {
+                    ivel->stop(i);
+                }
                 icont->setControlMode(i, VOCAB_CM_POSITION);
                 joint_control_mode[i] = static_cast<int32_t>(VOCAB_CM_POSITION);
             } else if (control_mode == "velocity") {
@@ -405,6 +409,9 @@ bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
         // set control modes
         std::transform(control_mode.begin(), control_mode.end(), control_mode.begin(), [](unsigned char c) { return std::tolower(c); });
         if (control_mode == "position") {
+            if (joint_control_mode[joint] == VOCAB_CM_VELOCITY) {
+                ivel->stop(joint);
+            }
             icont->setControlMode(joint, VOCAB_CM_POSITION);
             joint_control_mode[joint] = static_cast<int32_t>(VOCAB_CM_POSITION);
         } else if (control_mode == "velocity") {
@@ -467,7 +474,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
             bool check_ctrl = true;
             // clamp to joint limits
             for (unsigned int i = 0; i < joints; i++) {
-                check_ctrl = check_ctrl & (joint_control_mode[i] == VOCAB_CM_VELOCITY);
+                check_ctrl = check_ctrl && (joint_control_mode[i] == VOCAB_CM_VELOCITY);
                 position[i] = std::clamp(position[i], -velocity_max, velocity_max);
             }
             if (check_ctrl) {
@@ -563,8 +570,8 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
         } else if (mode == "vel") {
             bool check_ctrl = true;
             // clamp to joint limits
-            for (unsigned int i = joint_selection[0]; i < joint_selection[position.size()-1]; i++) {
-                check_ctrl = check_ctrl & (joint_control_mode[joint_selection[i]] == VOCAB_CM_VELOCITY);
+            for (unsigned int i = 0; i < joint_selection.size(); i++) {
+                check_ctrl = check_ctrl && (joint_control_mode[joint_selection[i]] == VOCAB_CM_VELOCITY);
                 position[i] = std::clamp(position[i], -velocity_max, velocity_max);
             }
             if (check_ctrl) {
