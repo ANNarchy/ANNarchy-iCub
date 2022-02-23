@@ -23,10 +23,10 @@
 #include <yarp/sig/all.h>
 
 #include <iostream>
-#include <map>
 #include <memory>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "Module_Base_Class.hpp"
@@ -145,8 +145,8 @@ class JointWriter : public Mod_BaseClass {
     /**
      * \brief Write all joints with double values.
      * \param[in] position Joint angles to write to the robot joints
+     * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \param[in] blocking if True, function waits for end of motion
-     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: position array size does not fit joint count; positioning mode not valid
@@ -158,8 +158,8 @@ class JointWriter : public Mod_BaseClass {
      * \brief Write all joints with double values.
      * \param[in] position Joint angles to write to the robot joints
      * \param[in] joint_selection Joint indizes of the joints, which should be moved (head: 3, 4, 5 -> all eye movements)
+     * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \param[in] blocking if True, function waits for end of motion
-     * \param[in] string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: position array size does not fit joint count; positioning mode not valid
@@ -171,8 +171,8 @@ class JointWriter : public Mod_BaseClass {
      * \brief Write one joint with double value.
      * \param[in] position Joint angle to write to the robot joint (in degree)
      * \param[in] joint Joint number of the robot part
-     * \param[in] blocking if True, function waits for end of motion
      * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+     * \param[in] blocking if True, function waits for end of motion
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: position out of joint limits; joint out of range; positioning mode not valid
@@ -183,8 +183,8 @@ class JointWriter : public Mod_BaseClass {
     /**
      * \brief Write all joints with joint angles encoded in populations
      * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part
-     * \param[in] blocking if True, function waits for end of motion
      * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+     * \param[in] blocking if True, function waits for end of motion
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: joints out of range; positioning mode not valid; position_pops size does not fit joint count
@@ -197,8 +197,8 @@ class JointWriter : public Mod_BaseClass {
      * \brief Write all joints with joint angles encoded in populations
      * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part
      * \param[in] joint_selection Joint indizes of the joints, which should be moved (head: 3, 4, 5 -> all eye movements)
-     * \param[in] blocking if True, function waits for end of motion
      * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+     * \param[in] blocking if True, function waits for end of motion
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      *          Typical errors:
      *              - arguments not valid: joints out of range; positioning mode not valid; position_pops size does not fit joint selection
@@ -212,8 +212,8 @@ class JointWriter : public Mod_BaseClass {
      * \brief Write one joint with the joint angle encoded in a population.
      * \param[in] position_pop Population encoded joint angle for writing to the robot joint
      * \param[in] joint Joint number of the robot part
-     * \param[in] blocking if True, function waits for end of motion
      * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
+     * \param[in] blocking if True, function waits for end of motion
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: joint out of range; positioning mode not valid
@@ -252,7 +252,7 @@ class JointWriter : public Mod_BaseClass {
  private:
     /** configuration variables **/
     double velocity_max = 100;                  // maximum joint velocity
-    double acc_max = 100;                       // maximum joint velocity
+    double acc_max = 100;                       // maximum joint acceleration
     std::vector<int32_t> joint_control_mode;    // string describing the active control mode
 
     std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys

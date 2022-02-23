@@ -423,11 +423,11 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
     /*
         Write all joints with double values
 
-        params: double position     -- joint angles to write to the robot joints
-                bool blocking       -- if True, function waits for end of motion
-                string mode         -- motion mode: absolute or relative
+        params: std::vector<double> position    -- joint angles to write to the robot joints
+                string mode                     -- motion mode: absolute or relative
+                bool blocking                   -- if True, function waits for end of motion
 
-        return: bool                -- return True, if successful
+        return: bool                            -- return True, if successful
     */
 
     if (CheckInit()) {
@@ -447,6 +447,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
             }
             // start motion
             start = ipos->positionMove(position.data());
+
         } else if (mode == "rel") {
             // clamp to joint limits
             ienc->getEncoders(act_pos.data());
@@ -461,8 +462,23 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
             }
             // start motion
             start = ipos->relativeMove(position.data());
+
+        } else if (mode == "vel") {
+            bool check_ctrl = true;
+            // clamp to joint limits
+            for (unsigned int i = 0; i < joints; i++) {
+                check_ctrl = check_ctrl & (joint_control_mode[i] == VOCAB_CM_VELOCITY);
+                position[i] = std::clamp(position[i], -velocity_max, velocity_max);
+            }
+            if (check_ctrl) {
+                // start motion
+                start = ivel->velocityMove(position.data());
+            } else {
+                std::cerr << "[Joint Writer " << icub_part << "] Motion mode does not fit with control mode! Use 'velocity' control mode for 'vel' motion mode" << std::endl;
+            }
+
         } else {
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs', 'rel' or 'vel' !" << std::endl;
         }
 
         // move joints blocking/non-blocking
@@ -487,11 +503,12 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
     /*
         Write multiple joints with double values
 
-        params: double position     -- joint angles to write to the robot joints
-                bool blocking       -- if True, function waits for end of motion
-                string mode         -- motion mode: absolute or relative
+        params: std::vector<double> position    -- joint angles to write to the robot joints
+                std::vector<int> joint          -- joint selection of the robot part
+                string mode                     -- motion mode: absolute or relative
+                bool blocking                   -- if True, function waits for end of motion
 
-        return: bool                -- return True, if successful
+        return: bool                            -- return True, if successful
     */
 
     if (CheckInit()) {
@@ -543,8 +560,21 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
             }
             // start motion
             start = ipos->relativeMove(joint_selection.size(), joint_selection.data(), position.data());
+        } else if (mode == "vel") {
+            bool check_ctrl = true;
+            // clamp to joint limits
+            for (unsigned int i = joint_selection[0]; i < joint_selection[position.size()-1]; i++) {
+                check_ctrl = check_ctrl & (joint_control_mode[joint_selection[i]] == VOCAB_CM_VELOCITY);
+                position[i] = std::clamp(position[i], -velocity_max, velocity_max);
+            }
+            if (check_ctrl) {
+                // start motion
+                start = ivel->velocityMove(joint_selection.size(), joint_selection.data(), position.data());
+            } else {
+                std::cerr << "[Joint Writer " << icub_part << "] Motion mode does not fit with control mode! Use 'velocity' control mode for 'vel' motion mode" << std::endl;
+            }
         } else {
-            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs', 'rel' or 'vel !" << std::endl;
         }
 
         // move joints blocking/non-blocking
@@ -571,8 +601,8 @@ bool JointWriter::WriteDoubleOne(double position, int joint, std::string mode, b
 
         params: double position     -- joint angle or velocity to write to the robot joint
                 int joint           -- joint number of the robot part
-                bool blocking       -- if True, function waits for end of motion
                 string mode         -- motion mode: absolute, relative or velocity
+                bool blocking       -- if True, function waits for end of motion
 
         return: bool                -- return True, if successful
     */
@@ -584,9 +614,9 @@ bool JointWriter::WriteDoubleOne(double position, int joint, std::string mode, b
             return false;
         }
         double act_pos;
+        bool start = false;
 
         // execute motion dependent on selected mode
-        bool start = false;
         if (mode == "abs") {
             if (joint_control_mode[joint] == VOCAB_CM_POSITION) {
                 // clamp to joint limits
@@ -615,7 +645,7 @@ bool JointWriter::WriteDoubleOne(double position, int joint, std::string mode, b
         } else if (mode == "vel") {
             if (joint_control_mode[joint] == VOCAB_CM_VELOCITY) {
                 // clamp to joint limits
-                position = std::clamp(position, -50., 50.);
+                position = std::clamp(position, -velocity_max, velocity_max);
                 // start motion
                 start = ivel->velocityMove(joint, position);
             } else {
@@ -650,8 +680,8 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, st
         Write all joints with joint angles encoded in populations
 
         params: std::vector<std::vector<double>>    -- populations encoding every joint angle for writing them to the associated robot part
-                bool blocking                       -- if True, function waits for end of motion
                 string mode                         -- motion mode: absolute or relative
+                bool blocking                       -- if True, function waits for end of motion
 
         return: bool                                -- return True, if successful
     */
@@ -729,8 +759,9 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
         Write multiple joints with joint angles encoded in populations
 
         params: std::vector<std::vector<double>>    -- populations encoding every joint angle for writing them to the associated robot part
-                bool blocking                       -- if True, function waits for end of motion
+                std::vector<int> joint              -- joint selection of the robot part
                 string mode                         -- motion mode: absolute or relative
+                bool blocking                       -- if True, function waits for end of motion
 
         return: bool                                -- return True, if successful
     */
@@ -821,8 +852,8 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, std::
 
         params: std::vector<double>     -- population encoded joint angle for writing to the robot joint
                 int joint               -- joint number of the robot part
-                bool blocking           -- if True, function waits for end of motion
                 string mode             -- motion mode: absolute or relative
+                bool blocking           -- if True, function waits for end of motion
 
         return: bool                    -- return True, if successful
     */
