@@ -24,7 +24,8 @@ class WriteOutputServiceImpl final : public iCubInterfaceMessages::WriteOutput::
     grpc::Status WriteSingleTargetEncoded(grpc::ServerContext *context, const iCubInterfaceMessages::SingleTargetEncodedRequest *request,
                                           iCubInterfaceMessages::SingleTargetEncodedResponse *response) override {
 
-        response->mutable_angle()->Swap(&google::protobuf::RepeatedField<double> (pop->r.begin(), pop->r.end()));
+        google::protobuf::RepeatedField<double> data(pop->r.begin(), pop->r.end());
+        response->mutable_angle()->Swap(&data);
         response->set_status(iCubInterfaceMessages::Status::SUCCESS);
 
         return grpc::Status::OK;
@@ -33,7 +34,8 @@ class WriteOutputServiceImpl final : public iCubInterfaceMessages::WriteOutput::
     grpc::Status WriteMultiTargets(grpc::ServerContext *context, const iCubInterfaceMessages::MultiTargetRequest *request,
                                    iCubInterfaceMessages::MultiTargetResponse *response) override {
 
-        response->mutable_angle()->Swap(&google::protobuf::RepeatedField<double> (pop->r.begin(), pop->r.end()));
+        google::protobuf::RepeatedField<double> data(pop->r.begin(), pop->r.end());
+        response->mutable_angle()->Swap(&data);
         response->set_status(iCubInterfaceMessages::Status::SUCCESS);
 
         return grpc::Status::OK;
@@ -42,7 +44,8 @@ class WriteOutputServiceImpl final : public iCubInterfaceMessages::WriteOutput::
     grpc::Status WriteMultiTargetsEncoded(grpc::ServerContext *context, const iCubInterfaceMessages::MultiTargetEncodedRequest *request,
                                           iCubInterfaceMessages::MultiTargetEncodedResponse *response) override {
 
-        response->mutable_angle()->Swap(&google::protobuf::RepeatedField<double> (pop->r.begin(), pop->r.end()));
+        google::protobuf::RepeatedField<double> data(pop->r.begin(), pop->r.end());
+        response->mutable_angle()->Swap(&data);
         response->set_status(iCubInterfaceMessages::Status::SUCCESS);
 
         return grpc::Status::OK;
@@ -51,7 +54,8 @@ class WriteOutputServiceImpl final : public iCubInterfaceMessages::WriteOutput::
     grpc::Status WriteAllTargets(grpc::ServerContext *context, const iCubInterfaceMessages::AllTargetRequest *request,
                                    iCubInterfaceMessages::AllTargetResponse *response) override {
 
-        response->mutable_angle()->Swap(&google::protobuf::RepeatedField<double> (pop->r.begin(), pop->r.end()));
+        google::protobuf::RepeatedField<double> data(pop->r.begin(), pop->r.end());
+        response->mutable_angle()->Swap(&data);
         response->set_status(iCubInterfaceMessages::Status::SUCCESS);
 
         return grpc::Status::OK;
@@ -60,7 +64,8 @@ class WriteOutputServiceImpl final : public iCubInterfaceMessages::WriteOutput::
     grpc::Status WriteAllTargetsEncoded(grpc::ServerContext *context, const iCubInterfaceMessages::AllTargetEncodedRequest *request,
                                         iCubInterfaceMessages::AllTargetEncodedResponse *response) override {
 
-        response->mutable_angle()->Swap(&google::protobuf::RepeatedField<double> (pop->r.begin(), pop->r.end()));
+        google::protobuf::RepeatedField<double> data(pop->r.begin(), pop->r.end());
+        response->mutable_angle()->Swap(&data);
         response->set_status(iCubInterfaceMessages::Status::SUCCESS);
 
         return grpc::Status::OK;

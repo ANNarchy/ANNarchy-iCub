@@ -72,7 +72,8 @@ class ClientInstance {
     std::vector<double> retrieve_multijoints(std::vector<int> joints, bool encode) {
         iCubInterfaceMessages::MultiJointRequest request;
         request.set_encode(encode);
-        request.mutable_joint()->Swap(&google::protobuf::RepeatedField<int>(joints.begin(), joints.end()));
+        google::protobuf::RepeatedField<int> data(joints.begin(), joints.end());
+        request.mutable_joint()->Swap(&data);
         iCubInterfaceMessages::MultiJointResponse response;
 
         grpc::ClientContext context;
