@@ -23,6 +23,59 @@ import matplotlib.pylab as plt
 import matplotlib.image as plt_img
 import numpy as np
 
+
+def generate_data_figure(data, parameter, save_folder, save_postfix=""):
+    # plot data
+    fig = plt.figure(layout="constrained", figsize=(12, 8))
+    subfigs = fig.subfigures(2, 1, hspace=0.125, height_ratios=[3,2])
+
+    axes = subfigs[0].subplots(1, 4, gridspec_kw={"wspace":0.075}, sharey=True) #, sharey=True
+    subfigs[0].suptitle("Joint angles from iCub arm joints 0-3", fontsize=parameter['suptitlesize'])
+    # per joint subplots
+    for j in range(4):
+        ax = axes[j]
+        ax.tick_params(labelsize=parameter['ticksize'])
+        ax.set_ylim(parameter['y_lim_joints'])
+        ax.set_xlim(parameter['x_lim'])
+
+        ax.set_title("Joint " + str(j), fontsize=parameter['titlesize'])
+        if data['detect'] >=0:
+            line_obs = ax.axvline(x=data['detect'], color='darkgray', linestyle='--', label='obstacle detected by skin')
+        line_prop, = ax.plot(data['prop_data'][:, j], color='tab:blue', label="joint angle (proprioception)")
+        line_comp, = ax.plot(data['compute_data'][:, j], color='tab:orange', label="target joint angle (internally computed)")
+        if j == 0:
+            ax.set(xlabel='simulation time [ms]', ylabel='joint angle [deg]')
+        else:
+            ax.set(xlabel='simulation time [ms]')
+        ax.xaxis.label.set_size(parameter['labelsize'])
+        ax.yaxis.label.set_size(parameter['labelsize'])
+
+    # one legend for all subplots
+    if data['detect'] >=0:
+        subfigs[0].legend(handles=[line_obs, line_prop, line_comp], bbox_to_anchor=(0., -.08, 1., 0.), loc=8, ncol=3, borderaxespad=0., fontsize=parameter['legendsize'])
+    else:
+        subfigs[0].legend(handles=[line_prop, line_comp], bbox_to_anchor=(0., -.08, 1., 0.), loc=8, ncol=2, borderaxespad=0., fontsize=parameter['legendsize'])
+
+    # skin data plot
+    subfigs[1].suptitle("iCub skin sensor values from right forearm patch", fontsize=parameter['suptitlesize'])
+    ax_fig1 = subfigs[1].subplots()
+    ax_fig1.tick_params(labelsize=parameter['ticksize'])
+    ax_fig1.set_ylim(parameter['y_lim_skin'])
+    ax_fig1.set_xlim(parameter['x_lim'])
+
+    if data['detect'] >=0:
+        ax_fig1.axvline(x=data['detect'], color='darkgray', linestyle='--', label='obstacle detected by skin')
+    ax_fig1.plot(data['skin_data'], color="tab:green")
+    ax_fig1.set(xlabel='simulation time [ms]', ylabel='max. skin sensor value []')
+    ax_fig1.xaxis.label.set_size(parameter['labelsize'])
+    ax_fig1.yaxis.label.set_size(parameter['labelsize'])
+
+    plt.savefig(save_folder + "/fig_data_trial" + save_postfix + ".png")
+    # plt.show()
+    plt.close(fig=fig)
+
+
+
 # folder = "/home/toto/Schreibtisch/iCub_General_Repos/Interface_ANNarchy_iCub/Examples/Demo_Paper_Interface/results/disparity/"
 # folder = "/home/toto/Schreibtisch/iCub_General_Repos/Interface_ANNarchy_iCub/Examples/Demo_Paper_Interface/results/2022-02-16_14-10/"
 # folder = "/home/toto/Schreibtisch/iCub_General_Repos/Interface_ANNarchy_iCub/Examples/Demo_Paper_Interface/results/2022-02-16_17-05/"
@@ -33,64 +86,69 @@ folder = "/home/toto/Schreibtisch/iCub_General_Repos/Interface_ANNarchy_iCub/Exa
 # folder_prefix = "/Run2/"
 folder_prefix = ""
 
-trials = 1
+parameter = {}
+parameter['ticksize'] = 13
+parameter['legendsize'] = 14
+parameter['suptitlesize'] = 18
+parameter['titlesize'] = 16
+parameter['labelsize'] = 14
 
-save_folder = folder + "/plot_data/" + folder_prefix
+parameter['y_lim_joints'] = [-70., 70.]
+parameter['y_lim_skin'] = [-0.05, 1.1]
+parameter['x_lim'] = [-3, 740]
+
+trials = 1
+figure_video = True
+scene_video = True
+
+save_folder = folder + "/plot_data2/" + folder_prefix
 Path(save_folder).mkdir(parents=True, exist_ok=True)
 
 for i in range(trials):
     folder_trial = folder + folder_prefix + "trial_" + str(i) + "/"
-    save_folder_scene = save_folder + "/scene_" + str(i) + "/"
-    Path(save_folder_scene).mkdir(parents=True, exist_ok=True)
+    if scene_video:
+        save_folder_scene = save_folder + "/scene_" + str(i) + "/"
+        Path(save_folder_scene).mkdir(parents=True, exist_ok=True)
+    if figure_video:
+        save_folder_figures = save_folder + "/fig_video/"
+        Path(save_folder_figures).mkdir(parents=True, exist_ok=True)
+
 
     # load data
-    skin_data = np.load(folder_trial + "/skin_data.npy")
-    compute_data = np.load(folder_trial + "/compute_data.npy")
-    prop_data = np.load(folder_trial + "/prop_data.npy")
-    scene = np.load(folder_trial + "/scene_imgs.npy")
+    data = {}
+    data['skin_data'] = np.load(folder_trial + "/skin_data.npy")
+    data['compute_data'] = np.load(folder_trial + "/compute_data.npy")
+    data['prop_data'] = np.load(folder_trial + "/prop_data.npy")
+    if scene_video:
+        scene = np.load(folder_trial + "/scene_imgs.npy")
 
     with open(folder_trial + "/detect.txt", 'r') as f:
         detect_str = f.read()
     if len(detect_str) == 0:
-        detect = -1
+        data['detect'] = -1
     else:
-        detect = int(detect_str)
+        data['detect'] = int(detect_str)
 
-    # plot data
-    fig = plt.figure(layout="constrained", figsize=(12, 8))
-    subfigs = fig.subfigures(2, 1, hspace=0.125, height_ratios=[3,2])
+    # plot
+    generate_data_figure(data, parameter, save_folder, save_postfix=str(i))
+    step = 0
+    if figure_video:
+        for k in range(data['skin_data'].shape[0]):
+            if (k%5) == 0:
+                data1 = {}
+                data1['skin_data'] = data['skin_data'][:k]
+                data1['compute_data'] = data['compute_data'][:k]
+                data1['prop_data'] = data['prop_data'][:k]
+                if k >= data['detect']:
+                    data1['detect'] = data['detect']
+                else:
+                    data1['detect'] = -1
+                
 
-    axes = subfigs[0].subplots(1, 4, gridspec_kw={"wspace":0.075}) #, sharey=True
-    subfigs[0].suptitle("Joint angles from iCub arm joints 0-3")
-    # per joint subplots
-    for j in range(4):
-        ax = axes[j]
-        ax.set_title("Joint " + str(j))
-        if detect >=0:
-            line_obs = ax.axvline(x=detect, color='darkgray', linestyle='--', label='time of obstacle detection by skin sensors')
-        line_prop, = ax.plot(prop_data[:, j], color='tab:blue', label="joint angle (proprioception)")
-        line_comp, = ax.plot(compute_data[:, j], color='tab:orange', label="target joint angle (internally computed)")
-        if j == 0:
-            ax.set(xlabel='simulation time [ms]', ylabel='joint angle [deg]')
-        else:
-            ax.set(xlabel='simulation time [ms]')
+                generate_data_figure(data1, parameter, save_folder_figures, save_postfix="_" + str(step))
+                step += 1
 
-    # one legend for all subplots
-    if detect >=0:
-        subfigs[0].legend(handles=[line_obs, line_prop, line_comp], bbox_to_anchor=(0., -.08, 1., 0.), loc=8, ncol=3, borderaxespad=0.)
-    else:
-        subfigs[0].legend(handles=[line_prop, line_comp], bbox_to_anchor=(0., -.08, 1., 0.), loc=8, ncol=2, borderaxespad=0.)
 
-    # skin data plot
-    subfigs[1].suptitle("iCub skin sensor values from right forearm patch")
-    ax_fig1 = subfigs[1].subplots()
-    if detect >=0:
-        ax_fig1.axvline(x=detect, color='darkgray', linestyle='--', label='time of obstacle detection by skin sensors')
-    ax_fig1.plot(skin_data, color="tab:green")
-    ax_fig1.set(xlabel='simulation time [ms]', ylabel='maximum skin sensor value []')
-
-    plt.savefig(save_folder + "/fig_data_trial" + str(i) + ".png")
-    # plt.show()
-
-    for j in range(scene.shape[0]):
-        plt_img.imsave(save_folder_scene + "/scene_" + str(j) + ".png", scene[j])
+    if scene_video:
+        for j in range(scene.shape[0]):
+            plt_img.imsave(save_folder_scene + "/scene_" + str(j) + ".png", scene[j])

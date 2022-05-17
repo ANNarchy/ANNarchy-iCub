@@ -75,15 +75,15 @@ def speed_test_yarp_manual(test_count):
     neuron = ann.Neuron(
         parameters=
             """
-                baseline = 0.
+                baseline = 0 :int
             """,
         equations=
             """
-                r = baseline
+                r = baseline :int
             """
     )
 
-    vis_pop = ann.Population(geometry=(240, 320), neuron=neuron)
+    vis_pop = ann.Population(geometry=(240, 320,3), neuron=neuron)
     ann.compile()
 
 
@@ -102,6 +102,7 @@ def speed_test_yarp_manual(test_count):
 
         if right_eye_yarp_image.getRawImage().__int__() != right_eye_img_array.__array_interface__['data'][0]:
             print("read() reallocated my right_eye_yarp_image!")
+        # vis_pop.baseline = right_eye_img_array
         # vis_pop.baseline = cv2.cvtColor(right_eye_img_array, cv2.COLOR_RGB2GRAY) * norm
         # ann.simulate(1)
         duration[i] = timer() - start
@@ -171,32 +172,34 @@ def speed_test_interface_manual(test_count):
     neuron = ann.Neuron(
         parameters=
             """
-                baseline = 0.
+                baseline = 0: int
             """,
         equations=
             """
-                r = baseline
+                r = baseline :int
             """
     )
 
-    vis_pop = ann.Population(geometry=(240, 320), neuron=neuron)
+    vis_pop = ann.Population(geometry=(240, 320, 3), neuron=neuron)
     ann.compile()
 
 
     ######################################################################
     ################ Performance test for reading images #################
-
+    test_count = 1
     duration = np.zeros((test_count,))
     print("----- Start Performance Test -----")
     for i in range(test_count):
         start = timer()
         img = visread.retrieve_robot_eye()
-        vis_pop.baseline = img
+        # vis_pop.baseline = img
 
-        # vis_pop.baseline = visread.read_robot_eyes()
+        plt.imshow(np.reshape(img, (240,320,3)))
+        plt.show()
+
         # ann.simulate(1)
         duration[i] = timer() - start
-    print(len(img), np.amax(img))
+    print(np.amax(vis_pop.r))
 
     print("----- Performance Test Finished -----")
     mean_time = round(np.mean(duration)*1000, 2)
