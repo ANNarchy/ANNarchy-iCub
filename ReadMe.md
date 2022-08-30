@@ -168,18 +168,22 @@ visreader.close(iCub)
 
 ## useful links
 Wiki for the iCub robot:<br>
-http://wiki.icub.org/wiki/Manual
+<http://wiki.icub.org/wiki/Manual>
 
 YARP website:<br>
-http://www.yarp.it/git-master/index.html
+<http://www.yarp.it/git-master/index.html>
 
 git repository with helpful documents and scripts for the work with iCub:<br>
-https://ai.informatik.tu-chemnitz.de/gogs/iCub_TUC/iCub_simulator_tools.git
+<https://ai.informatik.tu-chemnitz.de/gogs/iCub_TUC/iCub_simulator_tools.git>
 
 
 ## Authors
 Torsten Fietzek (<torsten.fietzek@informatik.tu-chemnitz.de>)<br>
 Helge Ülo Dinkelbach (<helge.dinkelbach@gmail.com>)<br>
+
+
+## Publications
+Fietzek, T., Dinkelbach, H. Ü., & Hamker, F. H. (2022). ANNarchy - iCub: An Interface for Easy Interaction between Neural Network Models and the iCub Robot. 2022 IEEE 9th International Conference on Computational Intelligence and Virtual Environments for Measurement Systems and Applications (CIVEMSA), 1–6. <https://doi.org/10.1109/CIVEMSA53371.2022.9853699>
 
 
 ## Dependencies
