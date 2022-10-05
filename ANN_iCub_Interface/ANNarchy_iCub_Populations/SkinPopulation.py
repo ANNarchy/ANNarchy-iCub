@@ -1,7 +1,7 @@
 """
    Copyright (C) 2021-2022 Torsten Fietzek; Helge Ülo Dinkelbach
 
-   iCubCPP.pxd is part of the ANNarchy iCub interface
+   SkinPopulation.py is part of the ANNarchy iCub interface
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ class SkinPopulation(SpecificPopulation):
 
     def _generate(self):
         """
-        TODO: read out code for iCub through gRPC
+            read out code for iCub through gRPC
         """
         include_paths = ANN_iCub_Interface.__path__[0]+"/grpc/"
 
