@@ -59,7 +59,7 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
         }
         this->icub_part = part;
 
-        if (version <= 0. or version >= 4.) {
+        if (version <= 0. || version >= 4.) {
             std::cerr << "[Kinematic Writer] " << version << " is an invalid version number!" << std::endl;
             return false;
         }
@@ -71,9 +71,9 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
         }
 
 #ifdef _USE_LOG_QUIET
-        // set YARP loging level to warnings, if the respective environment variable is set
+        // set YARP logging level to warnings, if the respective environment variable is set
         auto yarp_quiet = GetEnvVar("YARP_QUIET");
-        if (yarp_quiet == "on" or yarp_quiet == "1") {
+        if (yarp_quiet == "on" || yarp_quiet == "1") {
             yarp::os::Log::setMinimumPrintLevel(yarp::os::Log::WarningType);
         }
 #endif
@@ -285,7 +285,7 @@ std::vector<double> KinematicWriter::solveInvKin(std::vector<double> position, s
 
         // strip blocked links from joint angle vector
         for (auto i = 0; i < angles_torso.size(); i++) {
-            if (not(std::find(blocked_links.begin(), blocked_links.end(), i) != blocked_links.end())) {
+            if (!(std::find(blocked_links.begin(), blocked_links.end(), i) != blocked_links.end())) {
                 angles.push_back(angles_torso[i]);
             }
         }

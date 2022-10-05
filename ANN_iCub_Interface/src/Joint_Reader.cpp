@@ -80,7 +80,7 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
 #ifdef _USE_LOG_QUIET
         // set YARP loging level to warnings, if the respective environment variable is set
         auto yarp_quiet = GetEnvVar("YARP_QUIET");
-        if (yarp_quiet == "on" or yarp_quiet == "1") {
+        if (yarp_quiet == "on" || yarp_quiet == "1") {
             yarp::os::Log::setMinimumPrintLevel(yarp::os::Log::WarningType);
         }
 #endif

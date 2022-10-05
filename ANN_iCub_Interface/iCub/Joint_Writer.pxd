@@ -51,7 +51,19 @@ cdef extern from "Joint_Writer.hpp":
         # Return the size of the populations encoding the joint angles
         vector[unsigned int] GetNeuronsPerJoint()
 
-        # brief Set the joint velocity
+
+        # Return the limits of joint angles in degree.
+        vector[vector[double]] GetJointLimits()
+
+
+        # Return the lower limits of joint angles in degree.
+        vector[double] GetJointLimitsMin()
+
+
+        # Return the upper limits of joint angles in degree.
+        vector[double] GetJointLimitsMax()
+
+        # Set the joint velocity
         bool_t SetJointVelocity(double, int)
 
         # Set the joint acceleration

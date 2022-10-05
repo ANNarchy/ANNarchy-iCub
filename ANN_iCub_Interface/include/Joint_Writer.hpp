@@ -104,6 +104,24 @@ class JointWriter : public Mod_BaseClass {
     std::vector<unsigned int> GetNeuronsPerJoint();
 
     /**
+     * \brief  Return the limits of joint angles in degree.
+     * \return Return a vector of double, 
+     */
+    std::vector<std::vector<double>> GetJointLimits();
+
+    /**
+     * \brief  Return the limits of joint angles in degree.
+     * \return Return a vector of double, 
+     */
+    std::vector<double> GetJointLimitsMin();
+
+    /**
+     * \brief  Return the limits of joint angles in degree.
+     * \return Return a vector of double, 
+     */
+    std::vector<double> GetJointLimitsMax();
+
+    /**
      * \brief Check if a joint of the robot part is in motion
      * \return True, if joint is in motion. False if no joint is in motion.
      */

@@ -34,8 +34,6 @@ class ANNiCub {
     ANNiCub() = default;
     // Destructor
     ~ANNiCub();
-
-
 };
 
 extern ANNiCub my_interface;

@@ -23,6 +23,7 @@
 #include <yarp/dev/all.h>
 #include <yarp/sig/all.h>
 
+#include <deque>
 #include <map>
 #include <string>
 #include <thread>

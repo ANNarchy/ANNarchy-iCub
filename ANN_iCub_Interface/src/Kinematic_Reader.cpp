@@ -60,7 +60,7 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
         }
         this->icub_part = part;
 
-        if (version <= 0. or version >= 4.) {
+        if (version <= 0. || version >= 4.) {
             std::cerr << "[Kinematic Reader] " << version << " is an invalid version number!" << std::endl;
             return false;
         }
@@ -74,7 +74,7 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
 #ifdef _USE_LOG_QUIET
         // set YARP loging level to warnings, if the respective environment variable is set
         auto yarp_quiet = GetEnvVar("YARP_QUIET");
-        if (yarp_quiet == "on" or yarp_quiet == "1") {
+        if (yarp_quiet == "on" || yarp_quiet == "1") {
             yarp::os::Log::setMinimumPrintLevel(yarp::os::Log::WarningType);
         }
 #endif

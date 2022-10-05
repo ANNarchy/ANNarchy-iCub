@@ -19,10 +19,11 @@
 
 #pragma once
 
-#include <iCub/iKin/iKinFwd.h>      // iCub forward Kinematics
+#include <iCub/iKin/iKinFwd.h>    // iCub forward Kinematics
 #include <yarp/dev/all.h>
 #include <yarp/sig/all.h>
 
+#include <deque>
 #include <map>
 #include <string>
 #include <thread>
@@ -122,10 +123,9 @@ class KinematicReader : public Mod_BaseClass {
     std::deque<yarp::dev::IControlLimits*> limits;    // joint limit interface
 
     /*** Kinematic Interfaces ***/
-    iCub::iKin::iCubArm* KinArm;          // iCub Arm kinematic chain
+    iCub::iKin::iCubArm* KinArm;    // iCub Arm kinematic chain
     // iCub::iKin::iCubTorso* KinTorso;      // iCub Torso kinematic chain
     // iCub::iKin::iCubFinger* KinFinger;    // iCub Fingers kinematic chain
-
 
     /** grpc communication **/
 #ifdef _USE_GRPC

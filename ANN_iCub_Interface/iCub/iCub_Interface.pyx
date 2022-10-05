@@ -440,7 +440,7 @@ cdef class ANNiCub_wrapper:
                                 if(not (jwrite.find('mode') == None)):
                                     args['mode'] = jwrite.find('mode').text
                                     if(not (jwrite.find('blocking') == None)):
-                                        args['blocking'] = bool(jwrite.find('blocking').text)
+                                        args['blocking'] = eval(jwrite.find('blocking').text.capitalize())
                                         grpc=True
                     if(jwrite.find('deg_per_neuron') == None):
                         if(no_error_jwrite):
@@ -492,7 +492,7 @@ cdef class ANNiCub_wrapper:
                         print("Element fast_filter is missing")
                         no_error_vread = False
                     else:
-                        args['fast_filter'] = bool(vread.find('fast_filter').text)
+                        args['fast_filter'] = eval(vread.find('fast_filter').text.capitalize())
                     if(vread.find('ini_path') == None):
                         print("Element ini_path is missing")
                         no_error_vread = False
@@ -528,7 +528,7 @@ cdef class ANNiCub_wrapper:
                         print("Element norm is missing")
                         no_error_sread = False
                     else:
-                        args['norm'] = bool(sread.find('normalize').text)
+                        args['norm'] = eval(sread.find('normalize').text.capitalize())
                     if(sread.find('ini_path') == None):
                         print("Element ini_path is missing")
                         no_error_sread = False

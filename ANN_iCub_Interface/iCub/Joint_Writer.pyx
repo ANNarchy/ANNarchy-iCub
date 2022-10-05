@@ -96,7 +96,7 @@ cdef class PyJointWriter:
                                             {left_(arm/leg), right_(arm/leg), head, torso}<br>
                 int pop_size            -- number of neurons per population, encoding each one joint angle;<br>
                                             only works if parameter "deg_per_neuron" is not set<br>
-                double joint_select     -- joint selection for grpc
+                std::vector<int> joint_select     -- joint selection for grpc -> empty vector for all joints
                 str mode                -- mode for writing joints
                 bool blocking           -- if True, joint waits for end of motion
                 double deg_per_neuron   -- degree per neuron in the populationencoding the joints angles;<br>
@@ -180,10 +180,51 @@ cdef class PyJointWriter:
             return:
                 std::vector<int>        -- return vector, containing the population size for every joint
         """
-        # we need to transform py-string to c++ compatible string
 
         # call the interface
         return np.array(deref(self.cpp_joint_writer).GetNeuronsPerJoint())
+
+    # Return the limits of joint angles in degree.
+    def get_joint_limits(self):
+        """
+            Calls std::vector<std::vector<double>> GetJointLimits()
+
+            function:
+                Return the limits of joint angles in degree
+
+            return:
+                std::vector<std::vector<double>>        -- return vector, containing the limits of joint angles in degree
+        """
+        # call the interface
+        return np.array(deref(self.cpp_joint_writer).GetJointLimits())
+
+    # Return the lower limits of joint angles in degree.
+    def get_joint_limits_min(self):
+        """
+            Calls std::vector<double> GetJointLimitsMin()
+
+            function:
+                Return the lower limits of joint angles in degree
+
+            return:
+                std::vector<double>      -- return vector, containing the lower limits of joint angles in degree
+        """
+        # call the interface
+        return np.array(deref(self.cpp_joint_writer).GetJointLimitsMin())
+
+    # Return the upper limits of joint angles in degree.
+    def get_joint_limits_max(self):
+        """
+            Calls std::vector<double> GetJointLimitsMax()
+
+            function:
+                Return the upper limits of joint angles in degree
+
+            return:
+                std::vector<double>      -- return vector, containing the upper limits of joint angles in degree
+        """
+        # call the interface
+        return np.array(deref(self.cpp_joint_writer).GetJointLimitsMax())
 
     # set joint velocity
     def set_joint_velocity(self, double speed, int joint=(-1)):
