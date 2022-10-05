@@ -13,6 +13,9 @@ from . import Sync
 #   - iCub part strings 
 from . import Vocabs
 
+# create python file with instance creation and initilization
+from .Special_Features import create_robot_interface_file
+
 # iCub specific ANNarchy Populations
 from . import ANNarchy_iCub_Populations
 
