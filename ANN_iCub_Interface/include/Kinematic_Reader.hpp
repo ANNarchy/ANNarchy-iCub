@@ -51,12 +51,13 @@ class KinematicReader : public Mod_BaseClass {
      * \param[in] part A string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}.
      * \param[in] version iCub hardware version
      * \param[in] ini_path Path to the "interface_param.ini"-file.
+     * \param[in] offline_mode flag if limits are retrieved from running iCub -> if true no running iCub is necessary
      * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: e.g. part string not correct or ini file not in given path \n
      *              - YARP-Server not running
      */
-    bool Init(std::string part, float version, std::string ini_path);
+    bool Init(std::string part, float version, std::string ini_path, bool offline_mode);
 
     /**
      * \brief Initialize the kinematic reader with given parameters
@@ -70,7 +71,7 @@ class KinematicReader : public Mod_BaseClass {
      *              - arguments not valid: e.g. part string not correct or ini file not in given path \n
      *              - YARP-Server not running
      */
-    bool InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port);
+    bool InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode);
 
     /**
      * \brief  Close kinematic reader with cleanup
@@ -96,6 +97,42 @@ class KinematicReader : public Mod_BaseClass {
      */
     std::vector<double> GetHandPosition();
 
+    /**
+     * \brief Get joint angles
+     * \return return joint angles of free links -> radians
+     */
+    std::vector<double> GetJointAngles();
+
+    /**
+     * \brief Set joint angles for forward kinematic in offline mode
+     * \param[in] joint_angles joint angles to set for forward kinematic
+     */
+    void SetJointAngles(std::vector<double> joint_angles);
+
+    /**
+     * \brief Get blocked links
+     * \return blocked links
+     */
+    std::vector<int> GetBlockedLinks();
+
+    /**
+     * \brief Set blocked links
+     * \param[in] joints links to block in kinematic chain
+     */
+    void BlockLinks(std::vector<int> joints);
+
+    /**
+     * \brief Get joints being part of active kinematic chain
+     * \return links of active kinematic chain
+     */
+    std::vector<int> GetDOFLinks();
+
+    /**
+     * \brief Set released links of kinematic chain
+     * \param[in] joints
+     */
+    void ReleaseLinks(std::vector<int> joints);
+
     /*** gRPC functions ***/
 #ifdef _USE_GRPC
     std::vector<double> provideData(int value);
@@ -110,6 +147,7 @@ class KinematicReader : public Mod_BaseClass {
     /*** parameter ***/
     int joint_arm;      // number of joints arm
     int joint_torso;    // number of joints torso
+    bool offlinemode;   // flag for offline mode
 
     /*** yarp data structures ***/
     yarp::dev::PolyDriver driver_arm;        // yarp driver needed for reading joint encoders

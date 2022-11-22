@@ -278,20 +278,25 @@ def create_robot_interface_file(filename_config, filename_interface="./robot_int
                 grpc = False
                 no_error_kread = True
                 if(kread.find('part') == None):
-                    print(args['name'], "Element part is missing")
+                    print(args['name'], "Element part is missing!")
                     no_error_kread = False
                 else:
                     args['part'] = kread.find('part').text
                 if(kread.find('version') == None):
-                    print(args['name'], "Element version is missing")
+                    print(args['name'], "Element version is missing!")
                     no_error_kread = False
                 else:
                     args['version'] = float(kread.find('version').text)
                 if(kread.find('ini_path') == None):
-                    print(args['name'], "Element ini_path is missing")
+                    print(args['name'], "Element ini_path is missing!")
                     no_error_kread = False
                 else:
                     args['ini_path'] = kread.find('ini_path').text
+                if(kread.find('offline_mode') == None):
+                    print(args['name'], "Standard value for element 'offline_mode' is used.")
+                    args['offline_mode'] = False
+                else:
+                    args['offline_mode'] = eval(kread.find('offline_mode').text.capitalize())
                 if(not (kread.find('ip_address') == None)):
                     args['ip_address'] = kread.find('ip_address').text
                     if(not (kread.find('port') == None)):

@@ -44,7 +44,7 @@
 KinematicReader::~KinematicReader() { Close(); }
 
 /*** public methods for the user ***/
-bool KinematicReader::Init(std::string part, float version, std::string ini_path) {
+bool KinematicReader::Init(std::string part, float version, std::string ini_path, bool offline_mode) {
     /*
         Initialize the Kinematic Reader with given parameters
 
@@ -66,7 +66,7 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
         }
 
         // Check Yarp-network
-        if (!yarp::os::Network::checkNetwork()) {
+        if (!yarp::os::Network::checkNetwork() && !offline_mode) {
             std::cerr << "[Kinematic Reader " << icub_part << "] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
         }
@@ -94,7 +94,6 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
             std::string descriptor = part.substr(0, i);
 
             descriptor.append("_v" + std::to_string(version).substr(0, 3));
-            std::cout << "Descriptor: " << descriptor << std::endl;
 
             KinArm = new iCub::iKin::iCubArm(descriptor);
             if (!KinArm->isValid()) {
@@ -105,65 +104,69 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
             KinArm->releaseLink(1);
             KinArm->releaseLink(2);
 
-            // setup iCub joint position control
-            yarp::os::Property options_torso;
-            options_torso.put("device", "remote_controlboard");
-            options_torso.put("remote", (robot_port_prefix + "/torso").c_str());
-            options_torso.put("local", (client_port_prefix + "/ANNarchy_Kin_read/torso").c_str());
+            if (!offline_mode) {
+                // setup iCub joint position control
+                yarp::os::Property options_torso;
+                options_torso.put("device", "remote_controlboard");
+                options_torso.put("remote", (robot_port_prefix + "/torso").c_str());
+                options_torso.put("local", (client_port_prefix + "/ANNarchy_Kin_read/torso").c_str());
 
-            if (!driver_torso.open(options_torso)) {
-                std::cerr << "[Kinematic Reader torso] Unable to open " << options_torso.find("device").asString() << "!" << std::endl;
-                return false;
+                if (!driver_torso.open(options_torso)) {
+                    std::cerr << "[Kinematic Reader torso] Unable to open " << options_torso.find("device").asString() << "!" << std::endl;
+                    return false;
+                }
+
+                if (!driver_torso.view(encoder_torso)) {
+                    std::cerr << "[Kinematic Reader torso] Unable to open motor encoder interface!" << std::endl;
+                    Close();
+                    return false;
+                }
+
+                if (!driver_torso.view(limit_torso)) {
+                    std::cerr << "[Kinematic Reader torso] Unable to open motor limit interface!" << std::endl;
+                    Close();
+                    return false;
+                }
+
+                encoder_torso->getAxes(&joint_torso);
+                limits.push_back(limit_torso);
+
+                // setup iCub joint position control
+                yarp::os::Property options_arm;
+                options_arm.put("device", "remote_controlboard");
+                options_arm.put("remote", (robot_port_prefix + "/" + part).c_str());
+                options_arm.put("local", (client_port_prefix + "/ANNarchy_Kin_read/" + part).c_str());
+
+                if (!driver_arm.open(options_arm)) {
+                    std::cerr << "[Kinematic Reader " << part << "] Unable to open " << options_arm.find("device").asString() << "!" << std::endl;
+                    return false;
+                }
+
+                if (!driver_arm.view(encoder_arm)) {
+                    std::cerr << "[Kinematic Reader " << part << "] Unable to open motor encoder interface!" << std::endl;
+                    Close();
+                    return false;
+                }
+
+                if (!driver_arm.view(limit_arm)) {
+                    std::cerr << "[Kinematic Reader " << part << "] Unable to open motor limit interface!" << std::endl;
+                    Close();
+                    return false;
+                }
+
+                encoder_arm->getAxes(&joint_arm);
+                limits.push_back(limit_arm);
+
+                KinArm->alignJointsBounds(limits);
             }
-
-            if (!driver_torso.view(encoder_torso)) {
-                std::cerr << "[Kinematic Reader torso] Unable to open motor encoder interface!" << std::endl;
-                Close();
-                return false;
-            }
-
-            if (!driver_torso.view(limit_torso)) {
-                std::cerr << "[Kinematic Reader torso] Unable to open motor limit interface!" << std::endl;
-                Close();
-                return false;
-            }
-
-            encoder_torso->getAxes(&joint_torso);
-            limits.push_back(limit_torso);
-
-            // setup iCub joint position control
-            yarp::os::Property options_arm;
-            options_arm.put("device", "remote_controlboard");
-            options_arm.put("remote", (robot_port_prefix + "/" + part).c_str());
-            options_arm.put("local", (client_port_prefix + "/ANNarchy_Kin_read/" + part).c_str());
-
-            if (!driver_arm.open(options_arm)) {
-                std::cerr << "[Kinematic Reader " << part << "] Unable to open " << options_arm.find("device").asString() << "!" << std::endl;
-                return false;
-            }
-
-            if (!driver_arm.view(encoder_arm)) {
-                std::cerr << "[Kinematic Reader " << part << "] Unable to open motor encoder interface!" << std::endl;
-                Close();
-                return false;
-            }
-
-            if (!driver_arm.view(limit_arm)) {
-                std::cerr << "[Kinematic Reader " << part << "] Unable to open motor limit interface!" << std::endl;
-                Close();
-                return false;
-            }
-
-            encoder_arm->getAxes(&joint_arm);
-            limits.push_back(limit_arm);
-
-            KinArm->alignJointsBounds(limits);
         }
 
         this->type = "KinematicReader";
+        offlinemode = offline_mode;
         init_param["part"] = part;
         init_param["version"] = std::to_string(version);
         init_param["ini_path"] = ini_path;
+        init_param["offline_mode"] = offline_mode;
         this->dev_init = true;
         return true;
     } else {
@@ -173,7 +176,7 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
 }
 
 #ifdef _USE_GRPC
-bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port) {
+bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode) {
     /*
         Initialize the Kinematic Reader with given parameters
 
@@ -185,7 +188,7 @@ bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_
     */
 
     if (!this->dev_init) {
-        if (this->Init(part, version, ini_path)) {
+        if (this->Init(part, version, ini_path, offline_mode)) {
             this->_ip_address = ip_address;
             this->_port = port;
             this->kin_source = new ServerInstance(ip_address, port, this);
@@ -204,7 +207,7 @@ bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_
     }
 }
 #else
-bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port) {
+bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode) {
     /*
         Initialize the Kinematic Reader with given parameters
 
@@ -214,6 +217,7 @@ bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_
 
         return: bool                    -- return True, if successful
     */
+
     std::cerr << "[Kinematic Reader] gRPC is not included in the setup process!" << std::endl;
     return false;
 }
@@ -223,6 +227,7 @@ void KinematicReader::Close() {
     /*
         Close Kinematic Reader with cleanup
     */
+
     if (driver_torso.isValid()) {
         driver_torso.close();
     }
@@ -249,6 +254,7 @@ int KinematicReader::GetDOF() {
 
         return: int       -- return number of controlled joints
     */
+
     if (CheckInit()) {
         if (KinArm->isValid()) {
             return KinArm->getDOF();
@@ -266,14 +272,20 @@ std::vector<double> KinematicReader::GetHandPosition() {
 
         return: vector       -- return cartesian position of the iCub Hand
     */
+
     std::vector<double> joint_angles, angles_arm;
     if (CheckInit()) {
-        angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
-        joint_angles = ReadDoubleAll(encoder_torso, joint_torso);
-        joint_angles.insert(joint_angles.end(), angles_arm.begin(), angles_arm.begin() + 7);
-        double deg2rad = M_PI / 180.;
-        std::transform(joint_angles.begin(), joint_angles.end(), joint_angles.begin(), [deg2rad](double& c) { return c * deg2rad; });
-        KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
+        if (!offlinemode) {
+            // read joint angles from robot
+            angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
+            joint_angles = ReadDoubleAll(encoder_torso, joint_torso);
+            joint_angles.insert(joint_angles.end(), angles_arm.begin(), angles_arm.begin() + 7);
+            double deg2rad = M_PI / 180.;
+
+            // set joint configuration for kinematic chain
+            std::transform(joint_angles.begin(), joint_angles.end(), joint_angles.begin(), [deg2rad](double& c) { return c * deg2rad; });
+            KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
+        }
         yarp::sig::Vector position = KinArm->EndEffPosition();
         return std::vector<double>(position.begin(), position.end());
     }
@@ -286,23 +298,86 @@ std::vector<double> KinematicReader::GetCartesianPosition(unsigned int joint) {
 
         return: vector       -- return cartesian position the selected iCub arm/torso joint
     */
+
     std::vector<double> joint_angles, angles_arm;
     if (CheckInit()) {
-        // read joint angles from robot
-        angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
-        joint_angles = ReadDoubleAll(encoder_torso, joint_torso);
-        joint_angles.insert(joint_angles.end(), angles_arm.begin(), angles_arm.begin() + 7);
-        double deg2rad = M_PI / 180.;
+        if (!offlinemode) {
+            // read joint angles from robot
+            angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
+            joint_angles = ReadDoubleAll(encoder_torso, joint_torso);
+            joint_angles.insert(joint_angles.end(), angles_arm.begin(), angles_arm.begin() + 7);
+            double deg2rad = M_PI / 180.;
 
-        // set joint configuration for kinematic chain
-        std::transform(joint_angles.begin(), joint_angles.end(), joint_angles.begin(), [deg2rad](double& c) { return c * deg2rad; });
-        KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
-
+            // set joint configuration for kinematic chain
+            std::transform(joint_angles.begin(), joint_angles.end(), joint_angles.begin(), [deg2rad](double& c) { return c * deg2rad; });
+            KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
+        }
         // compute forward kinematics
         yarp::sig::Vector position = KinArm->Position(joint);
         return std::vector<double>(position.begin(), position.end());
     }
     return joint_angles;
+}
+
+// Get joint angles in radians
+std::vector<double> KinematicReader::GetJointAngles() {
+    if (CheckInit() and offlinemode) {
+        auto angles = KinArm->getAng();
+        return std::vector<double>(angles.begin(), angles.end());
+    } else {
+        return std::vector<double> ();
+    }
+}
+
+// Set joint angles for forward kinematic in offline mode
+void KinematicReader::SetJointAngles(std::vector<double> joint_angles) {
+    if (CheckInit() and offlinemode) {
+        KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
+    }
+}
+
+// Get blocked links
+std::vector<int> KinematicReader::GetBlockedLinks() {
+    std::vector<int> blocked;
+    if (CheckInit() and offlinemode) {
+        for (int i = 0; i < KinArm->getN(); i++) {
+            if (KinArm->isLinkBlocked(i)) {
+                blocked.push_back(i);
+            }
+        }
+    }
+    return blocked;
+}
+
+// Block given links
+void KinematicReader::BlockLinks(std::vector<int> joints) {
+    if (CheckInit() and offlinemode) {
+        for (auto it = joints.begin(); it != joints.end(); ++it) {
+            KinArm->blockLink(*it);
+        }
+    }
+}
+
+// Get joints being part of active kinematic chain
+std::vector<int> KinematicReader::GetDOFLinks() {
+    std::vector<int> dof;
+    if (CheckInit() and offlinemode) {
+        for (int i = 0; i < KinArm->getN(); i++) {
+            if (!KinArm->isLinkBlocked(i)) {
+                dof.push_back(i);
+            }
+        }
+    }
+    return dof;
+}
+
+// Set released links of kinematic chain
+void KinematicReader::ReleaseLinks(std::vector<int> joints) {
+    if (CheckInit() and offlinemode) {
+        for (auto it = joints.begin(); it != joints.end(); ++it) {
+            KinArm->releaseLink(*it);
+        }
+    }
 }
 
 /*** gRPC functions ***/

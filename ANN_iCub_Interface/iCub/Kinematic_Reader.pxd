@@ -2,7 +2,7 @@
 # cython: language_level = 3
 
 """
-   Copyright (C) 2019-2022 Torsten Fietzek; Helge Ülo Dinkelbach
+   Copyright (C) 2019-2022 Torsten Fietzek Helge Ülo Dinkelbach
 
    Kinematic_Reader.pyx is part of the ANNarchy iCub interface
 
@@ -32,10 +32,10 @@ cdef extern from "Kinematic_Reader.hpp":
         KinematicReader() except +
 
         # Initialize the joint reader with given parameters
-        bool_t Init(string, float, string)
+        bool_t Init(string, float, string, bool_t)
 
         # Initialize the joint reader with given parameters
-        bool_t InitGRPC(string, float, string, string, unsigned int)
+        bool_t InitGRPC(string, float, string, string, unsigned int, bool_t)
 
         # Close joint reader with cleanup
         void Close()
@@ -43,12 +43,34 @@ cdef extern from "Kinematic_Reader.hpp":
         # Return number of controlled joints
         int GetDOF()
 
+        # Get Cartesian position either for given joint or for end-effector
         vector[double] GetCartesianPosition(unsigned int)
         vector[double] GetHandPosition()
 
+        # Get joint angles
+        vector[double] GetJointAngles()
+
+        # Set joint angles for forward kinematic in offline mode
+        void SetJointAngles(vector[double])
+
+        # Get blocked links
+        vector[int] GetBlockedLinks()
+
+        # Set blocked links
+        void BlockLinks(vector[int])
+
+        # Get joints being part of active kinematic chain
+        vector[int] GetDOFLinks()
+
+        # Set released links of kinematic chain
+        void ReleaseLinks(vector[int])
+
+        ## For internal use only ##
+        # Set/get register functions
         void setRegister(bint)
         bint getRegister()
 
+        # Return init parameter
         cmap[string, string] getParameter()
 
 cdef class PyKinematicReader:

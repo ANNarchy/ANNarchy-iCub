@@ -32,19 +32,19 @@ import numpy as np
 
 cdef class PyKinematicReader:
 
-    # init method
+    # constructor method
     def __cinit__(self):
         print("Initialize iCub Interface: Kinematic Reader.")
         self.cpp_kin_reader = make_shared[KinematicReader]()
 
-    # close method
+    # destructor method
     def __dealloc__(self):
         print("Close iCub Interface: Kinematic Reader.")
         self.cpp_kin_reader.reset()
 
     ### Access to Kinematic reader member functions
-    # init Kinematic reader with given parameters for image resolution, field of view and eye selection
-    def init(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path ="../data/"):
+    # Init Kinematic reader with given parameters for image resolution, field of view and eye selection
+    def init(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path ="../data/", offline_mode=False):
         """
             Calls bool KinematicReader::Init(std::string part, float version, std::string ini_path)
 
@@ -57,6 +57,7 @@ cdef class PyKinematicReader:
                 string part             -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
                 float version           -- version of the robot hardware
                 string ini_path         -- path to the interface ini-files
+                bool offline_mode       -- Flag, if iCub network is offline
 
             return:
                 bool            -- return True, if successful
@@ -66,15 +67,15 @@ cdef class PyKinematicReader:
         # preregister module for some prechecks e.g. name already in use
         if iCub.register_kin_reader(name, self):
             # call the interface
-            retval = deref(self.cpp_kin_reader).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'))
+            retval = deref(self.cpp_kin_reader).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), offline_mode.__int__())
             if not retval:
                 iCub.unregister_kin_reader(self)
             return retval
         else:
             return False
 
-    # init Kinematic reader with given parameters for image resolution, field of view and eye selection
-    def init_grpc(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path ="../data/", str ip_address="0.0.0.0", unsigned int port=50000):
+    # Init Kinematic reader with given parameters for image resolution, field of view and eye selection
+    def init_grpc(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path ="../data/", str ip_address="0.0.0.0", unsigned int port=50000, offline_mode=False):
         """
             Calls bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port)
 
@@ -89,6 +90,7 @@ cdef class PyKinematicReader:
                 string ini_path         -- path to the interface ini-files
                 string ip_address       -- gRPC server ip address
                 unsigned int port       -- gRPC server port
+                bool offline_mode       -- Flag, if iCub network is offline
 
             return:
                 bool                    -- return True, if successful
@@ -98,14 +100,14 @@ cdef class PyKinematicReader:
         # preregister module for some prechecks e.g. eye already in use
         if iCub.register_kin_reader(name, self):
             # call the interface
-            retval = deref(self.cpp_kin_reader).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
+            retval = deref(self.cpp_kin_reader).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port, offline_mode.__int__())
             if not retval:
                 iCub.unregister_kin_reader(self)
             return retval
         else:
             return False
 
-    # deinitialize module
+    # Close module
     def close(self, ANNiCub_wrapper iCub):
         """
             Calls void KinematicReader::Close()
@@ -122,7 +124,7 @@ cdef class PyKinematicReader:
         # call the interface
         deref(self.cpp_kin_reader).Close()
 
-    #
+    # Get End-Effector cartesian position
     def get_handposition(self):
         """
             Calls void KinematicReader::GetHandPosition()
@@ -135,7 +137,7 @@ cdef class PyKinematicReader:
         # call the interface
         return np.array(deref(self.cpp_kin_reader).GetHandPosition())
 
-    #
+    # Get cartesian position of given joint
     def get_jointposition(self, unsigned int joint):
         """
             Calls void KinematicReader::GetCartesianPosition()
@@ -148,7 +150,7 @@ cdef class PyKinematicReader:
         # call the interface
         return np.array(deref(self.cpp_kin_reader).GetCartesianPosition(joint))
 
-    #
+    # Return number of DOF
     def get_DOF(self):
         """
             Calls void KinematicReader::GetDOF()
@@ -160,5 +162,83 @@ cdef class PyKinematicReader:
         """
         # call the interface
         return deref(self.cpp_kin_reader).GetDOF()
+
+    # Get current joint angles
+    def get_jointangles(self):
+        """
+            Calls std::vector<double> KinematicReader::GetJointAngles()
+
+            function: Get current joint angles of active kinematic chain -> radians
+
+            return:
+
+        """
+        # call the interface
+        return np.array(deref(self.cpp_kin_reader).GetJointAngles())
+
+    # Set joint angles for forward kinematic in offline mode
+    def set_jointangles(self, joint_angles):
+        """
+            Calls void KinematicReader::SetJointAngles(std::vector<double> joint_angles)
+
+            function: Set joint angles for forward kinematic in offline mode
+
+            return: void
+
+        """
+        # call the interface
+        deref(self.cpp_kin_reader).SetJointAngles(joint_angles)
+
+    # Get blocked links
+    def get_blocked_links(self):
+        """
+            Calls std::vector<int>  KinematicReader::GetBlockedLinks()
+
+            function: get blocked links
+
+            return:
+
+        """
+        # call the interface
+        return np.array(deref(self.cpp_kin_reader).GetBlockedLinks())
+
+    # Block links
+    def block_links(self, blocked_joints):
+        """
+            Calls void KinematicReader::BlockLinks(std::vector<int> blocked_joints)
+
+            function: Set
+
+            return:
+
+        """
+        # call the interface
+        deref(self.cpp_kin_reader).BlockLinks(blocked_joints)
+
+    # Get joints being part of active kinematic chain
+    def get_DOF_links(self):
+        """
+            Calls std::vector<int>  KinematicReader::GetDOFLinks()
+
+            function: Get
+
+            return:
+
+        """
+        # call the interface
+        return np.array(deref(self.cpp_kin_reader).GetDOFLinks())
+
+    # Release links of kinematic chain
+    def release_links(self, release_joints):
+        """
+            Calls void KinematicReader::ReleaseLinks(std::vector<int> release_joints)
+
+            function: Set
+
+            return:
+
+        """
+        # call the interface
+        deref(self.cpp_kin_reader).ReleaseLinks(release_joints)
 
     ### end access to kinematic reader member functions
