@@ -87,6 +87,7 @@ if use_grpc:
         grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"
         grpc_include_path = grpc_path + "include/"
         grpc_lib_path = grpc_path + "lib/"
+        grpc_bin_path = grpc_path + "bin/"
 
         grpc_include_dir += ["ANN_iCub_Interface/grpc", grpc_include_path]
         grpc_libs += ["protobuf", "grpc++", "grpc++_reflection", "iCub_ANN_grpc"]
@@ -163,7 +164,7 @@ package_data = ['__init__.py',
                 ] + grpc_package_data
 
 # set compile arguments
-extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
+extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall", "-pthread"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
 if verbose:
     extra_compile_args.append("--verbose")
 if pedantic:
@@ -252,13 +253,11 @@ extensions = [
 # python dependencies
 dependencies = [
     'numpy',
-    'scipy',
     'matplotlib',
-    'cython',
-    'sympy'
+    'cython'
 ]
 
-version="1.0.1"
+version="1.0.2"
 filename = './ANN_iCub_Interface/version.py'
 with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
@@ -282,7 +281,7 @@ setup(
     packages=find_packages(),
     ext_modules=cythonize(extensions, language_level=int(sys.version_info[0]), force=force_rebuild),
     description="Interface for iCub robot and ANNarchy neuro-simulator",
-    long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and partly with gazebo). It is written in C++ with a Cython wrapping to Python.""",
+    long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and with gazebo (except SkinReader since skin not implemented)). It is written in C++ with a Cython wrapping to Python.""",
     version=version,
     author="Torsten Fietzek; Helge Uelo Dinkelbach",
     author_email="torsten.fietzek@informatik.tu-chemnitz.de; helge.dinkelbach@gmail.com",
