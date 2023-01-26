@@ -102,8 +102,6 @@ cdef class PyVisualReader:
         """
 
         self.part = eye
-        ini_path = os.path.abspath(ini_path)
-        print(ini_path)
         # preregister module for some prechecks e.g. eye already in use
         if iCub.register_vis_reader(name, self):
             # call the interface
@@ -128,7 +126,7 @@ cdef class PyVisualReader:
         """
 
         # call the interface
-        return np.array(deref(self.cpp_visual_reader).ReadRobotEyes(), dtype=np.float32)
+        return np.array(deref(self.cpp_visual_reader).ReadRobotEyes(), dtype=np.float64)
 
     # return image vector from the image buffer and remove it from the buffer
     def retrieve_robot_eye(self):

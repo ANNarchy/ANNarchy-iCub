@@ -69,16 +69,16 @@ class VisualReader : public Mod_BaseClass {
     bool Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path);
 
     /**
-     * \brief Init Visual reader with given parameters for image resolution, field of view and eye selection. 
-     * \param[in] eye character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer) 
-     * \param[in] fov_width output field of view width in degree [0, 60] (input fov width: 60°) 
+     * \brief Init Visual reader with given parameters for image resolution, field of view and eye selection.
+     * \param[in] eye character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer)
+     * \param[in] fov_width output field of view width in degree [0, 60] (input fov width: 60°)
      * \param[in] fov_height * output field of view height in degree [0, 48] (input fov height: 48°)
      * \param[in] img_width output image width in pixel (input width: 320px)
      * \param[in] img_height output image height in pixel (input height: 240px)
-     * \param[in] fast_filter flag to select the filter for image upscaling; True for a faster filter 
+     * \param[in] fast_filter flag to select the filter for image upscaling; True for a faster filter
      * \param[in] ip_address gRPC server ip address -> has to match ip address of the Vision-Population
      * \param[in] port gRPC server port -> has to match port of the Vision-Population
-     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n 
+     * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: e.g. eye character not valid
      *              - YARP-Server not running
@@ -87,14 +87,14 @@ class VisualReader : public Mod_BaseClass {
                   std::string ip_address, unsigned int port);
 
     /**
-     * \brief Read a set of images from the robot cameras.
-     * \return camera images.
+     * \brief Read a set of images from the robot cameras -> dependent on init selection.
+     * \return camera images -> grayscale, [0., 1.]
      */
     std::vector<std::vector<precision>> ReadRobotEyes();
 
     /**
-     * \brief Read a set of images from the robot cameras.
-     * \return camera images.
+     * \brief Read an image from the robot camera -> dependent on init selection.
+     * \return camera image -> RGB, [0, 255]
      */
     std::vector<uint8_t> RetrieveRobotEye();
 
@@ -132,6 +132,8 @@ class VisualReader : public Mod_BaseClass {
     double res_scale_x;    // scaling factor in x direction to scale ROV to ouput image width
     double res_scale_y;    // scaling factor in y direction to scale ROV to ouput image height
 
+    int colorcode;
+
     /** image data structures **/
     yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb;                  // YARP-image structure for image handling -> single eye
     yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb_r, *iEyeRgb_l;    // YARP-image structure for image handling -> both eyes
@@ -164,5 +166,6 @@ class VisualReader : public Mod_BaseClass {
     double FovY2PixelY(double fy);
     // convert a 2D-matrix to 1D-vector
     std::vector<precision> Mat2Vec(cv::Mat matrix);
+    std::vector<precision> MatC2Vec(cv::Mat matrix);
     std::vector<uint8_t> Mat3D2Vec(cv::Mat matrix);
 };

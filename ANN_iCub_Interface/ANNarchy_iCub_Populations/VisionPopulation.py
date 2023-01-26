@@ -89,7 +89,7 @@ class VisionPopulation(SpecificPopulation):
     @period.setter
     def period(self, value):
         if self.initialized:
-            self.cyInstance.set_period(value)/dt()
+            self.cyInstance.set_period(value/dt())
         else:
             _error("Changing period is only valid after compile() or constructor.")
 

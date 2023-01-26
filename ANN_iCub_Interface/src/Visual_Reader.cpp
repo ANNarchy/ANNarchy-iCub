@@ -25,7 +25,6 @@
 #include <yarp/sig/all.h>
 
 #include <chrono>
-// #include <filesystem>
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <queue>
@@ -44,7 +43,7 @@ typedef std::chrono::high_resolution_clock Clock;
 // Destructor
 VisualReader::~VisualReader() { Close(); }
 
-// TODO: typing -> replace int with unsigned int, where it is useful
+// TODO(tofie): typing -> replace int with unsigned int, where it is useful
 // integer bilder übertragen?
 /*** public methods for the user ***/
 bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path) {
@@ -75,7 +74,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 #ifdef _USE_LOG_QUIET
         // set YARP loging level to warnings, if the respective environment variable is set
         auto yarp_quiet = GetEnvVar("YARP_QUIET");
-        if (yarp_quiet == "on" or yarp_quiet == "1") {
+        if (yarp_quiet == "on" || yarp_quiet == "1") {
             yarp::os::Log::setMinimumPrintLevel(yarp::os::Log::WarningType);
         }
 #endif
@@ -146,34 +145,75 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         }
         client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
+        bool gray = reader_gen.GetBoolean("vision", "gray", true);
+        if (gray) {
+            colorcode = cv::COLOR_RGB2GRAY;
+        } else {
+            colorcode = cv::COLOR_RGB2BGR;
+        }
+
         // open and connect YARP port for the chosen eye
         if (eye == 'r' || eye == 'R') {    // right eye chosen
             act_eye = 'R';
-            std::string port_name = client_port_prefix + "/V_Reader/image/right:i";
+            std::string port_name = client_port_prefix + "/V_Reader/image_" + eye + "/right:i";
+            std::string robot_port_name = robot_port_prefix + "/cam/right";
+            std::string robot_port_postfix = "/rgbImage:o";
+
+            if (yarp::os::Network::exists(robot_port_name)) {
+            } else if (yarp::os::Network::exists(robot_port_name + robot_port_postfix)) {
+                robot_port_name = robot_port_name + robot_port_postfix;
+            }
+
             port_right.open(port_name);
-            if (!yarp::os::Network::connect(robot_port_prefix + "/cam/right", port_name.c_str())) {
+            if (!yarp::os::Network::connect(robot_port_name.c_str(), port_name.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to right eye camera port!" << std::endl;
                 return false;
             }
         } else if (eye == 'l' || eye == 'L') {    // left eye chosen
             act_eye = 'L';
-            std::string port_name = client_port_prefix + "/V_Reader/image/left:i";
+            std::string robot_port_name = robot_port_prefix + "/cam/left";
+            std::string robot_port_postfix = "/rgbImage:o";
+
+            if (yarp::os::Network::exists(robot_port_name)) {
+            } else if (yarp::os::Network::exists(robot_port_name + robot_port_postfix)) {
+                robot_port_name = robot_port_name + robot_port_postfix;
+            }
+
+            std::string port_name = client_port_prefix + "/V_Reader/image_" + eye + "/left:i";
             port_left.open(port_name);
-            if (!yarp::os::Network::connect(robot_port_prefix + "/cam/left", port_name.c_str())) {
+            if (!yarp::os::Network::connect(robot_port_name.c_str(), port_name.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to left eye camera port!" << std::endl;
                 return false;
             }
         } else if (eye == 'b' || eye == 'B') {    // both eyes chosen
             act_eye = 'B';
-            std::string port_name_l = client_port_prefix + "/V_Reader/image/left:i";
+
+            std::string robot_port_name_l = robot_port_prefix + "/cam/left";
+            std::string robot_port_postfix_l = "/rgbImage:o";
+
+            if (yarp::os::Network::exists(robot_port_name_l)) {
+            } else if (yarp::os::Network::exists(robot_port_name_l + robot_port_postfix_l)) {
+                robot_port_name_l = robot_port_name_l + robot_port_postfix_l;
+            }
+
+            std::string port_name_l = client_port_prefix + "/V_Reader/image_" + eye + "/left:i";
             port_left.open(port_name_l);
-            if (!yarp::os::Network::connect(robot_port_prefix + "/cam/left", port_name_l.c_str())) {
+            if (!yarp::os::Network::connect(robot_port_name_l.c_str(), port_name_l.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to left eye camera port!" << std::endl;
                 return false;
             }
-            std::string port_name_r = client_port_prefix + "/V_Reader/image/right:i";
+
+            std::string robot_port_name_r = robot_port_prefix + "/cam/right";
+            std::string robot_port_postfix_r = "/rgbImage:o";
+
+            if (yarp::os::Network::exists(robot_port_name_r)) {
+            } else if (yarp::os::Network::exists(robot_port_name_r + robot_port_postfix_r)) {
+                robot_port_name_r = robot_port_name_r + robot_port_postfix_r;
+            }
+
+            std::string port_name_r = client_port_prefix + "/V_Reader/image_" + eye + "/right:i";
             port_right.open(port_name_r);
-            if (!yarp::os::Network::connect(robot_port_prefix + "/cam/right", port_name_r.c_str())) {
+            if (!yarp::os::Network::connect(robot_port_name_r.c_str(), port_name_r.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to right eye camera port!" << std::endl;
                 return false;
             }
@@ -184,7 +224,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 
         this->type = "VisualReader";
         this->icub_part = std::string(1, eye);
-        init_param["eye"] = std::to_string(eye);
+        init_param["eye"] = std::to_string(act_eye);
         init_param["fov_width"] = std::to_string(fov_width);
         init_param["fov_height"] = std::to_string(fov_height);
         init_param["img_width"] = std::to_string(img_width);
@@ -200,8 +240,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 }
 
 #ifdef _USE_GRPC
-bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address,
-                            unsigned int port) {
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
 
@@ -237,8 +276,7 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
     }
 }
 #else
-bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address,
-                            unsigned int port) {
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
 
@@ -258,7 +296,6 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
 }
 #endif
 
-
 std::vector<std::vector<VisualReader::precision>> VisualReader::ReadRobotEyes() {
     std::vector<std::vector<VisualReader::precision>> imgs;
     if (CheckInit()) {
@@ -273,9 +310,8 @@ std::vector<std::vector<VisualReader::precision>> VisualReader::ReadRobotEyes() 
             cv::Mat RgbMat_r = yarp::cv::toCvMat(*iEyeRgb_r);
             cv::Mat RgbMat_l = yarp::cv::toCvMat(*iEyeRgb_l);
 
-            // convert rgb image to grayscale image
-            cv::cvtColor(RgbMat_r, tmpMat_r, cv::COLOR_RGB2GRAY);
-            cv::cvtColor(RgbMat_l, tmpMat_l, cv::COLOR_RGB2GRAY);
+            cv::cvtColor(RgbMat_r, tmpMat_r, colorcode);
+            cv::cvtColor(RgbMat_l, tmpMat_l, colorcode);
 
             // extracting the output part of the field of view
             if (!cut_img) {
@@ -305,8 +341,8 @@ std::vector<std::vector<VisualReader::precision>> VisualReader::ReadRobotEyes() 
             monoMat_l.convertTo(tmpMat1_l, new_type, norm_fact);
 
             // flat the image matrix to 1D-vector
-            std::vector<precision> img_vec_norm_r = Mat2Vec(tmpMat1_r);
-            std::vector<precision> img_vec_norm_l = Mat2Vec(tmpMat1_l);
+            std::vector<precision> img_vec_norm_r = MatC2Vec(tmpMat1_r);
+            std::vector<precision> img_vec_norm_l = MatC2Vec(tmpMat1_l);
 
             // store image in the buffer
             imgs.push_back(img_vec_norm_r);
@@ -343,15 +379,16 @@ std::vector<uint8_t> VisualReader::RetrieveRobotEye() {
         if (iEyeRgb == nullptr) {
             return std::vector<uint8_t>();
         }
-        RgbMat = yarp::cv::toCvMat(*iEyeRgb);
-        return Mat3D2Vec(RgbMat);
+        // convert a 3D-matrix to 1D-vector, distinguish two cases with different methods
+        std::vector<uint8_t> vec(iEyeRgb->getRawImage(), iEyeRgb->getRawImage() + iEyeRgb->getRawImageSize());
+        return vec;
     }
     return std::vector<uint8_t>();
 }
 
 void VisualReader::Close() {
     /*
-        Stop reading images from the iCub, by terminating the RFModule and close the Ports
+        Close module by closing the ports and shutdown gRPC connection
     */
 
 #ifdef _USE_GRPC
@@ -402,8 +439,7 @@ std::vector<double> VisualReader::provideData() {
 std::vector<VisualReader::precision> VisualReader::ProcessRead() {
     cv::Mat RgbMat = yarp::cv::toCvMat(*iEyeRgb);
 
-    // convert rgb image to grayscale image
-    cv::cvtColor(RgbMat, tmpMat, cv::COLOR_RGB2GRAY);
+    cv::cvtColor(RgbMat, tmpMat, colorcode);
 
     // extracting the output part of the field of view
     if (!cut_img) {
@@ -425,7 +461,7 @@ std::vector<VisualReader::precision> VisualReader::ProcessRead() {
     monoMat.convertTo(tmpMat1, new_type, norm_fact);
 
     // flat the image matrix to 1D-vector
-    return Mat2Vec(tmpMat1);
+    return MatC2Vec(tmpMat1);
 }
 
 double VisualReader::FovX2PixelX(double fx) {
@@ -479,6 +515,28 @@ std::vector<VisualReader::precision> VisualReader::Mat2Vec(cv::Mat matrix) {
     return vec;
 }
 
+std::vector<VisualReader::precision> VisualReader::MatC2Vec(cv::Mat matrix) {
+    /*
+        Convert a multi dimensional matrix to 1D-vector
+
+        params: cv::Mat matrix        -- image as matrix
+
+        return: std::vector<VisualReader::precision>    -- image as 1D-vector
+    */
+
+    // convert a multi dimensional matrix to 1D-vector, distinguish two cases with different methods
+    std::vector<precision> vec;
+
+    if (matrix.isContinuous()) {    // faster, only possible when data is continous in memory
+        vec.assign(reinterpret_cast<precision *>(matrix.data), reinterpret_cast<precision *>(matrix.data) + matrix.total() * matrix.channels());
+    } else {    // slower, but is always possible
+        for (int i = 0; i < matrix.rows; ++i) {
+            vec.insert(vec.begin(), matrix.ptr<precision>(i), matrix.ptr<precision>(i) + matrix.cols * matrix.channels());
+        }
+    }
+    return vec;
+}
+
 std::vector<uint8_t> VisualReader::Mat3D2Vec(cv::Mat matrix) {
     /*
         Convert a 3D-matrix to 1D-vector
@@ -488,13 +546,12 @@ std::vector<uint8_t> VisualReader::Mat3D2Vec(cv::Mat matrix) {
         return: std::vector<uint8_t>    -- image as 1D-vector
     */
 
-    // convert a 23-matrix to 1D-vector, distinguish two cases with different methods
+    // convert a 3D-matrix to 1D-vector, distinguish two cases with different methods
     std::vector<uint8_t> vec;
 
     if (matrix.isContinuous()) {    // faster, only possible when data is continous in memory
         vec.assign(matrix.data, matrix.data + matrix.total() * matrix.channels());
-    }
-    else {    // slower, but is always possible
+    } else {    // slower, but is always possible
         for (int i = 0; i < matrix.rows; ++i) {
             vec.insert(vec.begin(), matrix.ptr<uint8_t>(i), matrix.ptr<uint8_t>(i) + matrix.cols * matrix.channels());
         }
