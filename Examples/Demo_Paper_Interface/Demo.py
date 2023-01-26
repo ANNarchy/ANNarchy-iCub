@@ -70,7 +70,7 @@ wc = Sim_world.WorldController()
 sphere = wc.create_object("ssph", [0.025], obj_rest_pos, [1,1,1])
 
 # Init iCub interface
-iCub = iCub_Interface.iCubANN_wrapper()
+iCub = iCub_Interface.ANNiCub_wrapper()
 ret_val, robot_dict = iCub.init_robot_from_file("./data/demo_robot.xml") # init robot by file
 rarm_kinread = Kinematic_Reader.PyKinematicReader() # individual module initialization
 rarm_kinwrite = Kinematic_Writer.PyKinematicWriter() # individual module initialization
