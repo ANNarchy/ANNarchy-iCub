@@ -19,7 +19,6 @@
 
 import os
 import xml.etree.ElementTree as ET
-from xml.dom import minidom
 
 
 def create_robot_interface_file(filename_config, filename_interface="./robot_interface.py"):
@@ -194,8 +193,8 @@ def create_robot_interface_file(filename_config, filename_interface="./robot_int
                     print(args['name'], "Element img_width or img_height is missing")
                     no_error_vread = False
                 else:
-                    args['img_width'] = float(vread.find('img_width').text)
-                    args['img_height'] = float(vread.find('img_height').text)
+                    args['img_width'] = int(vread.find('img_width').text)
+                    args['img_height'] = int(vread.find('img_height').text)
                 if(vread.find('fast_filter') == None):
                     print(args['name'], "Element fast_filter is missing")
                     no_error_vread = False
