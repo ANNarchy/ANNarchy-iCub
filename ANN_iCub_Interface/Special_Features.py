@@ -20,6 +20,12 @@
 import os
 import xml.etree.ElementTree as ET
 
+def textToList(liststring):
+    l_x =  liststring.strip('[]').replace('\'', '').replace(' ', '')
+    if len(l_x) == 0:
+        return list(l_x)
+    else:
+        return [int(x) for x in l_x.split(",")]
 
 def create_robot_interface_file(filename_config, filename_interface="./robot_interface.py"):
     """
@@ -149,10 +155,10 @@ def create_robot_interface_file(filename_config, filename_interface="./robot_int
                             if(not (jwrite.find('blocking') == None)):
                                 args['blocking'] = eval(jwrite.find('blocking').text.capitalize())
                                 if(not (jwrite.find('joint_select') == None)):
-                                    args['joints'] = [int(x) for x in jwrite.find('joint_select').text.split(",")]
+                                    args['joints'] = textToList(jwrite.find('joint_select').text)
                                     grpc=True
                                 elif(not (jwrite.find('joints') == None)):
-                                    args['joints'] = [int(x) for x in jwrite.find('joints').text.split(",")]
+                                    args['joints'] = textToList(jwrite.find('joints').text)
                                     grpc=True
                 if(jwrite.find('deg_per_neuron') != None):
                     args['degr_per_neuron'] = float(jwrite.find('deg_per_neuron').text)

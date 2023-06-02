@@ -153,14 +153,9 @@ sources = ["ANN_iCub_Interface/include/INI_Reader/INIReader.cpp", "ANN_iCub_Inte
 sources1 = [prefix_cpp + "Joint_Reader.cpp", prefix_cpp + "Joint_Writer.cpp", prefix_cpp + "Skin_Reader.cpp", prefix_cpp + "Visual_Reader.cpp", prefix_cpp + "Kinematic_Reader.cpp"]
 
 package_data = ['__init__.py',
-                'iCub/*.pxd',
-                'iCub/*.pyx',
-                'iCub/*.cpp',
                 'iCub/__init__.py',
                 'iCub/include/*.hpp',
-                'Sync/*.pyx',
                 'Sync/__init__.py',
-                'iCub/src/*.cpp'
                 ] + grpc_package_data
 
 # set compile arguments
@@ -253,11 +248,10 @@ extensions = [
 # python dependencies
 dependencies = [
     'numpy',
-    'matplotlib',
     'cython'
 ]
 
-version="1.0.3"
+version="1.0.4"
 filename = './ANN_iCub_Interface/version.py'
 with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")

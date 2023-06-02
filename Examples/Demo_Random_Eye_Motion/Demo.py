@@ -59,7 +59,7 @@ net.get_population("rand").min_val = [-12.5, -15.]
 net.get_population("rand").max_val = [10., 15.]
 
 # Init iCub interface
-iCub = iCub_Interface.iCubANN_wrapper()
+iCub = iCub_Interface.ANNiCub_wrapper()
 ret_val, robot_dict = iCub.init_robot_from_file("./data/demo_robot.xml")
 if not ret_val:
     print("Interface initialization failed!")
