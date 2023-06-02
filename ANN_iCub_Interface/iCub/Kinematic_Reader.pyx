@@ -1,5 +1,6 @@
 # distutils: language = c++
 # cython: language_level = 3
+# cython: binding=True
 
 """
    Copyright (C) 2019-2022 Torsten Fietzek; Helge Ülo Dinkelbach

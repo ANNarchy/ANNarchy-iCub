@@ -1,5 +1,8 @@
 # distutils: language = c++
 # cython: language_level = 3
+# cython: binding=True
+# cython: embedsignature=True
+# cython: embedsignature.format=python
 
 """
    Copyright (C) 2019-2022 Torsten Fietzek; Helge Ülo Dinkelbach
@@ -51,6 +54,12 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import os
 
+def textToList(liststring):
+    l_x =  liststring.strip('[]').replace('\'', '').replace(' ', '')
+    if len(l_x) == 0:
+        return list(l_x)
+    else:
+        return [int(x) for x in l_x.split(",")]
 
 cdef class ANNiCub_wrapper:
 
@@ -345,6 +354,7 @@ cdef class ANNiCub_wrapper:
             return None
 
     # initialize interface for a robot configuration defined in a XML-file
+    # TODO: extend for kinematic modules
     def init_robot_from_file(self, xml_file):
         name_dict = {}
         if os.path.isfile(xml_file):
@@ -354,7 +364,7 @@ cdef class ANNiCub_wrapper:
             if not robot == None:
                 # init joint reader
                 for jread in robot.iter('JReader'):
-                    args = {}
+                    args = {'name': jread.attrib['name']}
                     grpc = False
                     no_error_jread = True
                     if(jread.find('part') == None):
@@ -368,10 +378,13 @@ cdef class ANNiCub_wrapper:
                     else:
                         args['sigma'] = float(jread.find('sigma').text)
                     if(jread.find('popsize') == None):
-                        print("Element popsize is missing")
-                        no_error_jread = False
+                        if(jread.find('n_pop') == None):
+                            print("Element popsize is missing")
+                            no_error_jread = False
+                        else:
+                            args['n_pop'] = int(jread.find('n_pop').text)
                     else:
-                        args['popsize'] = int(jread.find('popsize').text)
+                        args['n_pop'] = int(jread.find('popsize').text)
                     if(jread.find('ini_path') == None):
                         print("Element ini_path is missing")
                         no_error_jread = False
@@ -382,29 +395,19 @@ cdef class ANNiCub_wrapper:
                         if(not (jread.find('port') == None)):
                             args['port'] = int(jread.find('port').text)
                             grpc=True
-                    if(jread.find('deg_per_neuron') == None):
-                        if(no_error_jread):
-                            reader = PyJointReader()
-                            if grpc:
-                                if not reader.init_grpc(self, jread.attrib['name'], args['part'], args['sigma'], args['popsize'], ini_path=args['ini_path'], ip_address=args['ip_address'] , port=args['port']):
-                                    print("Init Joint Reader '" + jread.attrib['name'] + "' failed!")
-                            else:
-                                if not reader.init(self, jread.attrib['name'], args['part'], args['sigma'], args['popsize'], ini_path=args['ini_path']):
-                                    print("Init Joint Reader '" + jread.attrib['name'] + "' failed!")
-                        else:
-                            print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
-                    else:
+                    if(jread.find('deg_per_neuron') != None):
                         deg_per_neuron = float(jread.find('deg_per_neuron').text)
-                        if(no_error_jread):
-                            reader = PyJointReader()
-                            if grpc:
-                                if not reader.init_grpc(self, jread.attrib['name'], args['part'], args['sigma'], args['popsize'], deg_per_neuron=deg_per_neuron, ini_path=args['ini_path'], ip_address=args['ip_address'] , port=args['port']):
-                                    print("Init Joint Reader '" + jread.attrib['name'] + "' failed!")
-                            else:
-                                if not reader.init(self, jread.attrib['name'], args['part'], args['sigma'], args['popsize'], deg_per_neuron=deg_per_neuron, ini_path=args['ini_path']):
-                                    print("Init Joint Reader '" + jread.attrib['name'] + "' failed!")
+
+                    if(no_error_jread):
+                        reader = PyJointReader()
+                        if grpc:
+                            if not reader.init_grpc(self, **args):
+                                print("Init Joint Reader '" + jread.attrib['name'] + "' failed!")
                         else:
-                            print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
+                            if not reader.init(self, **args):
+                                print("Init Joint Reader '" + jread.attrib['name'] + "' failed!")
+                    else:
+                        print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
 
                 # init joint writer
                 for jwrite in robot.iter('JWriter'):
@@ -417,10 +420,13 @@ cdef class ANNiCub_wrapper:
                     else:
                         args['part'] = jwrite.find('part').text
                     if(jwrite.find('popsize') == None):
-                        print("Element popsize is missing")
-                        no_error_jwrite = False
+                        if(jwrite.find('n_pop') == None):
+                            print("Element popsize is missing")
+                            no_error_jwrite = False
+                        else:
+                            args['n_pop'] = int(jwrite.find('n_pop').text)
                     else:
-                        args['popsize'] = int(jwrite.find('popsize').text)
+                        args['n_pop'] = int(jwrite.find('popsize').text)
                     if(jwrite.find('speed') == None):
                         print("Element speed is missing")
                         no_error_jwrite = False
@@ -435,36 +441,29 @@ cdef class ANNiCub_wrapper:
                         args['ip_address'] = jwrite.find('ip_address').text
                         if(not (jwrite.find('port') == None)):
                             args['port'] = int(jwrite.find('port').text)
-                            if(not (jwrite.find('joint_select') == None)):
-                                args['joint_select'] = [int(x) for x in jwrite.find('joint_select').text.split(",")]
-                                if(not (jwrite.find('mode') == None)):
-                                    args['mode'] = jwrite.find('mode').text
-                                    if(not (jwrite.find('blocking') == None)):
-                                        args['blocking'] = eval(jwrite.find('blocking').text.capitalize())
+                            if(not (jwrite.find('mode') == None)):
+                                args['mode'] = jwrite.find('mode').text
+                                if(not (jwrite.find('blocking') == None)):
+                                    args['blocking'] = eval(jwrite.find('blocking').text.capitalize())
+                                    if(not (jwrite.find('joint_select') == None)):
+                                        args['joints'] = textToList(jwrite.find('joint_select').text)
                                         grpc=True
-                    if(jwrite.find('deg_per_neuron') == None):
-                        if(no_error_jwrite):
-                            writer = PyJointWriter()
-                            if grpc:
-                                if not writer.init_grpc(self, jwrite.attrib['name'], args['part'], args['popsize'], args['joint_select'], args['mode'], blocking=args['blocking'], speed=args['speed'], ini_path=args['ini_path'], ip_address=args['ip_address'] , port=args['port']):
-                                    print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
-                            else:
-                                if not writer.init(self, jwrite.attrib['name'], args['part'], args['popsize'], args['speed'], ini_path=args['ini_path']):
-                                    print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
-                        else:
-                            print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
-                    else:
+                                    elif(not (jwrite.find('joints') == None)):
+                                        args['joints'] = textToList(jwrite.find('joints').text)
+                                        grpc=True
+                    if(jwrite.find('deg_per_neuron') != None):
                         deg_per_neuron = float(jwrite.find('deg_per_neuron').text)
-                        if(no_error_jwrite):
-                            writer = PyJointWriter()
-                            if grpc:
-                                if not writer.init_grpc(self, jwrite.attrib['name'], args['part'], args['popsize'], args['joint_select'], args['mode'], blocking=args['blocking'], speed=args['speed'], deg_per_neuron=deg_per_neuron, ini_path=args['ini_path'], ip_address=args['ip_address'] , port=args['port']):
-                                    print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
-                            else:
-                                if not writer.init(self, jwrite.attrib['name'], args['part'], args['sigma'], args['popsize'], deg_per_neuron=deg_per_neuron, ini_path=args['ini_path']):
-                                    print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
+
+                    if(no_error_jwrite):
+                        writer = PyJointWriter()
+                        if grpc:
+                            if not writer.init_grpc(self, jwrite.attrib['name'], **args):
+                                print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
                         else:
-                            print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
+                            if not writer.init(self, jwrite.attrib['name'], **args):
+                                print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
+                    else:
+                        print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
 
                 # init visual reader
                 for vread in robot.iter('VisReader'):

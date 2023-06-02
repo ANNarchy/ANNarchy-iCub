@@ -1,6 +1,7 @@
 # distutils: language = c++
 # cython: language_level = 3
-# cython: profile=True
+# cython: binding=True
+# cython: embedsignature=True
 
 """
    Copyright (C) 2019-2022 Torsten Fietzek; Helge Ülo Dinkelbach
@@ -57,7 +58,7 @@ cdef class PyJointWriter:
                 str name                -- name for the joint writer module
                 std::string part        -- string representing the robot part, has to match iCub part naming<br>
                                             {left_(arm/leg), right_(arm/leg), head, torso}<br>
-                int pop_size            -- number of neurons per population, encoding each one joint angle;<br>
+                int n_pop            -- number of neurons per population, encoding each one joint angle;<br>
                                             only works if parameter "deg_per_neuron" is not set<br>
                 double deg_per_neuron   -- degree per neuron in the populationencoding the joints angles;<br>
                                             if set: population size depends on joint working range<br>
@@ -94,9 +95,9 @@ cdef class PyJointWriter:
                 str name                -- name for the joint writer module
                 std::string part        -- string representing the robot part, has to match iCub part naming<br>
                                             {left_(arm/leg), right_(arm/leg), head, torso}<br>
-                int pop_size            -- number of neurons per population, encoding each one joint angle;<br>
+                int pop_n            -- number of neurons per population, encoding each one joint angle;<br>
                                             only works if parameter "deg_per_neuron" is not set<br>
-                std::vector<int> joint_select     -- joint selection for grpc -> empty vector for all joints
+                std::vector<int> joints     -- joint selection for grpc -> empty vector for all joints
                 str mode                -- mode for writing joints
                 bool blocking           -- if True, joint waits for end of motion
                 double deg_per_neuron   -- degree per neuron in the populationencoding the joints angles;<br>

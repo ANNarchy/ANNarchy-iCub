@@ -1,5 +1,7 @@
 # distutils: language = c++
 # cython: language_level = 3
+# cython: binding=True
+# cython: embedsignature=True
 
 """
    Copyright (C) 2019-2022 Torsten Fietzek; Helge Ülo Dinkelbach
@@ -82,7 +84,7 @@ cdef class PyJointReader:
     # Initialize the joint reader with given parameters for use with gRPC
     def init_grpc(self, ANNiCub_wrapper iCub, str name, str part, double sigma, unsigned int n_pop, double degr_per_neuron=0.0, str ini_path="../data/", str ip_address="0.0.0.0", unsigned int port=50005):
         """
-            Calls bool InitGRPC(string part, double sigma, int pop_n, double deg_per_neuron, std::string ini_path, std::string ip_address, unsigned int port)
+            Calls bool InitGRPC(string part, double sigma, int popsize, double deg_per_neuron, std::string ini_path, std::string ip_address, unsigned int port)
 
             function:
                 Initialize the joint reader with given parameters
@@ -93,7 +95,7 @@ cdef class PyJointReader:
                 string part             -- string representing the robot part, has to match iCub part naming
                                             {left_(arm/leg), right_(arm/leg), head, torso}
                 sigma                   -- sigma for the joints angles populations coding
-                unsigned int pop_size   -- number of neurons per population, encoding each one joint angle
+                unsigned int n_pop   -- number of neurons per population, encoding each one joint angle
                                             only works if parameter "deg_per_neuron" is not set
                 double deg_per_neuron   -- degree per neuron in the populations, encoding the joints angles
                                             if set: population size depends on joint working range

@@ -43,8 +43,8 @@
         <mode>"abs"</mode>
         <blocking>True</blocking>
     </JWriter>
-    <VisReader name="VR_both">
-        <eye>r</eye>
+    <VisReader name="VR_right">
+        <eye>R</eye>
         <fov_width>60</fov_width>
         <fov_height>48</fov_height>
         <img_width>320</img_width>
@@ -54,6 +54,18 @@
         <ini_path>../data/</ini_path>
         <ip_address>0.0.0.0</ip_address>
         <port>50010</port>
+    </VisReader>
+    <VisReader name="VR_left">
+        <eye>L</eye>
+        <fov_width>60</fov_width>
+        <fov_height>48</fov_height>
+        <img_width>320</img_width>
+        <img_height>240</img_height>
+        <max_buffer_size>6</max_buffer_size>
+        <fast_filter>1</fast_filter>
+        <ini_path>../data/</ini_path>
+        <ip_address>0.0.0.0</ip_address>
+        <port>50011</port>
     </VisReader>
     <TacReader name="TR_right_arm">
         <arm>R</arm>
