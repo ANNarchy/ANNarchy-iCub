@@ -156,6 +156,8 @@ package_data = ['__init__.py',
                 'iCub/__init__.py',
                 'iCub/include/*.hpp',
                 'Sync/__init__.py',
+                '*/*.pyi',
+                'py.typed'
                 ] + grpc_package_data
 
 # set compile arguments
