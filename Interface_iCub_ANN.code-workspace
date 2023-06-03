@@ -1,11 +1,11 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"files.associations": {
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "files.associations": {
             "*.h": "cpp",
             "*.hpp": "cpp",
             "*.tpp": "cpp",
@@ -78,10 +78,17 @@
             "*.ipp": "cpp",
             "hash_set": "cpp",
             "unordered_set": "cpp",
-            "queue": "cpp"
+            "queue": "cpp",
+            "csignal": "cpp",
+            "compare": "cpp",
+            "concepts": "cpp",
+            "regex": "cpp",
+            "numbers": "cpp",
+            "semaphore": "cpp",
+            "stop_token": "cpp"
         },
-		"C_Cpp.workspaceParsingPriority": "medium",
-		"C_Cpp.default.includePath": [
+        "C_Cpp.workspaceParsingPriority": "medium",
+        "C_Cpp.default.includePath": [
             "./ANN_iCub_Interface/include",
             "/usr/include/opencv4",
             "./",
@@ -90,12 +97,13 @@
         "editor.detectIndentation": false,
         "editor.tabCompletion": "on",
         "files.exclude": {
-            "**/doc": true
+            "**/doc/html": true,
+            "**/doc/latex": true
         },
-        "editor.formatOnPaste": true,
+        "editor.formatOnPaste": false,
         "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
         "prettier.tabWidth": 4,
         "C_Cpp.default.cppStandard": "c++17",
-
-	}
+        "editor.formatOnSave": false,
+    }
 }

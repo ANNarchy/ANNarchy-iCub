@@ -31,7 +31,7 @@ The interface consists of different parts. Clustering the different tasks of the
             The tactile data is returned as a vector with doubles in a range of 0.0 to 1.0. Where 0. is no pressure and 1.0 is the maximum sensor response.
 
         5. *KinematicReader:*<br>
-            This module handles the iCub forward kinematic to receive the cartesian coordinates for specific joints or end-effectors like the hand. This module could also be used online, using the running iCub or offline with given joint angles. 
+            This module handles the iCub forward kinematic to receive the cartesian coordinates for specific joints or end-effectors like the hand. This module could also be used online, using the running iCub or offline with given joint angles.
 
         6. *KinematicWriter:*<br>
             This module handles the iCub inverse kinematics.
@@ -67,19 +67,22 @@ The interface consists of different parts. Clustering the different tasks of the
 ## Installation
 Make sure YARP is installed before installing the interface. An installation guide for YARP/iCub can be found in [iCub_simulator_tools](https://ai.informatik.tu-chemnitz.de/gogs/iCub_TUC/iCub_simulator_tools.git) or direct in the github [superbuild repository](https://github.com/robotology/robotology-superbuild) of the YARP/iCub universe.
 
+### Default Installation
 Then the interface can be installed with pip by executing the following line in a terminal in the interface directory.
 
 ```bash
 pip3 install .
 ```
 
-In case of missing/false include directories the make_config.py file has to be modified.
-The interface is build in a default configuration. In this case the gRPC communication with ANNarchy is disabled. To enable this part, set the use_grpc parameter in make_config.py to True. This part depends on the gRPC package and a protobuf compiler.
-The system packages should only be used at recent Linux versions. Install the following apt packages: protobuf-compiler-grpc, libgrpc++-dev
+In case of missing/false include directories the make_config.py file has to be modified.<br>
+
+### Enable Low-Level gRPC communication
+The interface is build in a default configuration. In this case the gRPC communication with ANNarchy is disabled. To enable this part, set the use_grpc parameter in make_config.py to True. This part depends on the gRPC package and the protobuf compiler.
+The system packages are recommended especially for recent Linux versions (>Ubuntu 18.XX). Install the following apt packages: protobuf-compiler-grpc, libgrpc++-dev
 ```bash
     sudo apt install protobuf-compiler-grpc libgrpc++-dev
 ```
-Not recommended is the [installation from the repository](https://grpc.io/docs/languages/cpp/quickstart/#install-grpc) with cmake/bazel.
+For the source installation of gRPC ([installation from the repository](https://grpc.io/docs/languages/cpp/quickstart/#install-grpc) with cmake or bazel) you need to take of other packages, using protobuf like gazebo to handle the needed versions. Since this can lead to a lot of trouble, the use of the system packages is recommended.
 
 
 ## Generic Python Examples
