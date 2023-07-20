@@ -22,9 +22,7 @@
    along with this headers. If not, see <http://www.gnu.org/licenses/>.
  """
 
-from libcpp.string cimport string
-from libcpp.vector cimport vector
-from libcpp.memory cimport shared_ptr, make_shared
+from libcpp.memory cimport make_shared
 from cython.operator cimport dereference as deref
 
 from .Kinematic_Reader cimport KinematicReader
@@ -33,76 +31,71 @@ from .iCub_Interface cimport ANNiCub_wrapper
 import numpy as np
 
 cdef class PyKinematicReader:
+    """Wrapper class for Kinematic Reader module."""
 
     # constructor method
     def __cinit__(self):
         print("Initialize iCub Interface: Kinematic Reader.")
-        self.cpp_kin_reader = make_shared[KinematicReader]()
+        self._cpp_kin_reader = make_shared[KinematicReader]()
 
     # destructor method
     def __dealloc__(self):
         print("Close iCub Interface: Kinematic Reader.")
-        self.cpp_kin_reader.reset()
+        self._cpp_kin_reader.reset()
 
-    ### Access to Kinematic reader member functions
-    # Init Kinematic reader with given parameters for image resolution, field of view and eye selection
+    '''
+    # Access to kinematic reader member functions
+    '''
+
+    # Init Kinematic reader with given parameters
     def init(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path ="../data/", offline_mode=False):
+        """Initialize the Kinematic Reader with given parameters
+
+        Args:
+            iCub (ANNiCub_wrapper): main interface wrapper
+            name (str): individual name for the kinematic reader
+            part (str): string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+            version (float): version of the robot hardware
+            ini_path (str, optional): path to the interface ini-file. Defaults to "../data/".
+            offline_mode (bool, optional): flag, if iCub network is offline. Defaults to False.
+
+        Returns:
+            bool: return True/False, indicating success/failure
         """
-            Calls bool KinematicReader::Init(std::string part, float version, std::string ini_path)
-
-            function:
-                Initialize the Kinematic Reader with given parameters
-
-            params:
-                ANNiCub_wrapper iCub    -- main interface wrapper
-                str name                -- name for the kinematic reader
-                string part             -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-                float version           -- version of the robot hardware
-                string ini_path         -- path to the interface ini-files
-                bool offline_mode       -- Flag, if iCub network is offline
-
-            return:
-                bool            -- return True, if successful
-        """
-
-        self.part = part
+        self._part = part
         # preregister module for some prechecks e.g. name already in use
         if iCub.register_kin_reader(name, self):
             # call the interface
-            retval = deref(self.cpp_kin_reader).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), offline_mode.__int__())
+            retval = deref(self._cpp_kin_reader).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), offline_mode.__int__())
             if not retval:
                 iCub.unregister_kin_reader(self)
             return retval
         else:
             return False
 
-    # Init Kinematic reader with given parameters for image resolution, field of view and eye selection
-    def init_grpc(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path ="../data/", str ip_address="0.0.0.0", unsigned int port=50000, offline_mode=False):
+    # Init Kinematic reader with given parameters, including the gRPC based connection
+    def init_grpc(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path ="../data/", str ip_address="0.0.0.0",
+                  unsigned int port=50020, offline_mode=False):
+        """Initialize the Kinematic Reader with given parameters, including the gRPC based connection.
+
+        Args:
+            iCub (ANNiCub_wrapper): main interface wrapper
+            name (str): individual name for the kinematic reader
+            part (str): string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+            version (float): version of the robot hardware
+            ini_path (str, optional): path to the interface ini-file. Defaults to "../data/".
+            ip_address (str, optional): gRPC server ip address. Defaults to "0.0.0.0".
+            port (unsigned int, optional): gRPC server port. Defaults to 50000.
+            offline_mode (bool, optional): flag, if iCub network is offline. Defaults to False.
+
+        Returns:
+            bool: return True/False, indicating success/failure
         """
-            Calls bool KinematicReader::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port)
-
-            function:
-                Initialize the Kinematic Reader with given parameters
-
-            params:
-                ANNiCub_wrapper iCub    -- main interface wrapper
-                string name             -- individual module name
-                string part             -- string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-                float version           -- version of the robot hardware
-                string ini_path         -- path to the interface ini-files
-                string ip_address       -- gRPC server ip address
-                unsigned int port       -- gRPC server port
-                bool offline_mode       -- Flag, if iCub network is offline
-
-            return:
-                bool                    -- return True, if successful
-        """
-
-        self.part = part
+        self._part = part
         # preregister module for some prechecks e.g. eye already in use
         if iCub.register_kin_reader(name, self):
             # call the interface
-            retval = deref(self.cpp_kin_reader).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port, offline_mode.__int__())
+            retval = deref(self._cpp_kin_reader).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port, offline_mode.__int__())
             if not retval:
                 iCub.unregister_kin_reader(self)
             return retval
@@ -111,136 +104,95 @@ cdef class PyKinematicReader:
 
     # Close module
     def close(self, ANNiCub_wrapper iCub):
+        """Close the module
+
+        Args:
+            iCub (ANNiCub_wrapper): main interface wrapper
         """
-            Calls void KinematicReader::Close()
-
-            function:
-                close the module module.
-
-            params:
-                ANNiCub_wrapper iCub    -- main interface wrapper
-        """
-
         iCub.unregister_kin_reader(self)
-
-        # call the interface
-        deref(self.cpp_kin_reader).Close()
+        self._part = ""
+        deref(self._cpp_kin_reader).Close()
 
     # Get End-Effector cartesian position
     def get_handposition(self):
+        """Get End-Effector cartesian position.
+
+        Returns:
+            NDarray: Cartesian position of the end-effector in robot reference frame
         """
-            Calls void KinematicReader::GetHandPosition()
-
-            function:
-
-            return:
-
-        """
-        # call the interface
-        return np.array(deref(self.cpp_kin_reader).GetHandPosition())
+        return np.array(deref(self._cpp_kin_reader).GetHandPosition())
 
     # Get cartesian position of given joint
     def get_jointposition(self, unsigned int joint):
+        """Get cartesian position for the given joint.
+
+        Args:
+            joint (unsigned int): joint number of the robot part
+
+        Returns:
+            NDarray: Cartesian position of the joint in robot reference frame
         """
-            Calls void KinematicReader::GetCartesianPosition()
+        return np.array(deref(self._cpp_kin_reader).GetCartesianPosition(joint))
 
-            function:
-
-            return:
-
-        """
-        # call the interface
-        return np.array(deref(self.cpp_kin_reader).GetCartesianPosition(joint))
-
-    # Return number of DOF
+    # Return DOF of the kinematic chain
     def get_DOF(self):
+        """Return the DOF of the kinematic chain
+
+        Returns:
+            int: degree of freedom (DOF) of the kinematic chain
         """
-            Calls void KinematicReader::GetDOF()
-
-            function:
-
-            return:
-
-        """
-        # call the interface
-        return deref(self.cpp_kin_reader).GetDOF()
+        return deref(self._cpp_kin_reader).GetDOF()
 
     # Get current joint angles
     def get_jointangles(self):
+        """Get current joint angles of active kinematic chain -> radians.
+
+        Returns:
+            NDarray: joint angles in radians
         """
-            Calls std::vector<double> KinematicReader::GetJointAngles()
-
-            function: Get current joint angles of active kinematic chain -> radians
-
-            return:
-
-        """
-        # call the interface
-        return np.array(deref(self.cpp_kin_reader).GetJointAngles())
+        return np.array(deref(self._cpp_kin_reader).GetJointAngles())
 
     # Set joint angles for forward kinematic in offline mode
     def set_jointangles(self, joint_angles):
+        """Set joint angles for forward kinematic in offline mode.
+
+        Args:
+            joint_angles (list/NDarray): joint angles
         """
-            Calls void KinematicReader::SetJointAngles(std::vector<double> joint_angles)
-
-            function: Set joint angles for forward kinematic in offline mode
-
-            return: void
-
-        """
-        # call the interface
-        deref(self.cpp_kin_reader).SetJointAngles(joint_angles)
+        deref(self._cpp_kin_reader).SetJointAngles(joint_angles)
 
     # Get blocked links
     def get_blocked_links(self):
+        """Get blocked links.
+
+        Returns:
+            NDarray: vector containing the blocked links
         """
-            Calls std::vector<int>  KinematicReader::GetBlockedLinks()
-
-            function: get blocked links
-
-            return:
-
-        """
-        # call the interface
-        return np.array(deref(self.cpp_kin_reader).GetBlockedLinks())
+        return np.array(deref(self._cpp_kin_reader).GetBlockedLinks())
 
     # Block links
     def block_links(self, blocked_joints):
+        """Block specific set of joints in the kinematic chain.
+
+        Args:
+            blocked_joints (list): joints that should be blocked
         """
-            Calls void KinematicReader::BlockLinks(std::vector<int> blocked_joints)
-
-            function: Set
-
-            return:
-
-        """
-        # call the interface
-        deref(self.cpp_kin_reader).BlockLinks(blocked_joints)
+        deref(self._cpp_kin_reader).BlockLinks(blocked_joints)
 
     # Get joints being part of active kinematic chain
     def get_DOF_links(self):
+        """Get joints being part of active kinematic chain.
+
+        Returns:
+            NDarray: vector with the active joints
         """
-            Calls std::vector<int>  KinematicReader::GetDOFLinks()
-
-            function: Get
-
-            return:
-
-        """
-        # call the interface
-        return np.array(deref(self.cpp_kin_reader).GetDOFLinks())
+        return np.array(deref(self._cpp_kin_reader).GetDOFLinks())
 
     # Release links of kinematic chain
     def release_links(self, release_joints):
+        """Release links of kinematic chain
+
+        Args:
+            release_joints (list): joints that should be released
         """
-            Calls void KinematicReader::ReleaseLinks(std::vector<int> release_joints)
-
-            function: Set
-
-            return:
-
-        """
-        # call the interface
-        deref(self.cpp_kin_reader).ReleaseLinks(release_joints)
-
-    ### end access to kinematic reader member functions
+        deref(self._cpp_kin_reader).ReleaseLinks(release_joints)

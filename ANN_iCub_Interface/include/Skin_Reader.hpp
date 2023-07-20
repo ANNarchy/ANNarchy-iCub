@@ -96,7 +96,7 @@ class SkinReader : public Mod_BaseClass {
 
     /**
      * \brief Return tactile data for hand skin.
-     * \return vector, containing the tactile data of the upper arm for the last time steps
+     * \return vector, containing the tactile data of the hand for the last time steps
      */
     std::vector<std::vector<double>> GetTactileHand();
 
@@ -117,11 +117,39 @@ class SkinReader : public Mod_BaseClass {
     bool ReadTactile();
 
     /**
+     * \brief Read tactile data for upper arm skin.
+     * \return vector, containing the tactile data of the upper arm
+     */
+    std::vector<double> ReadSkinArm();
+
+    /**
+     * \brief Read tactile data for forearm skin.
+     * \return vector, containing the tactile data of the upper arm
+     */
+    std::vector<double> ReadSkinForearm();
+
+    /**
+     * \brief Read tactile data for hand skin.
+     * \return vector, containing the tactile data of the hand
+     */
+    std::vector<double> ReadSkinHand();
+
+    /**
      * \brief Return size of tactile data for upper arm skin.
      * \return Integer representing the vector size of the respective skin part
      */
     unsigned int GetTactileArmSize();
+
+    /**
+     * \brief Return size of tactile data for forearm skin.
+     * \return Integer representing the vector size of the respective skin part
+     */
     unsigned int GetTactileForearmSize();
+
+    /**
+     * \brief Return size of tactile data for hand skin.
+     * \return Integer representing the vector size of the respective skin part
+     */
     unsigned int GetTactileHandSize();
 
 #ifdef _USE_GRPC

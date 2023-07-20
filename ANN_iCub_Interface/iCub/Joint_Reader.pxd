@@ -75,8 +75,8 @@ cdef extern from "Joint_Reader.hpp":
         cmap[string, string] getParameter()
 
 cdef class PyJointReader:
-    cdef shared_ptr[JointReader] cpp_joint_reader
-    cdef str name
-    cdef str part
+    cdef shared_ptr[JointReader] _cpp_joint_reader
+    cdef str _name
+    cdef str _part
 
 

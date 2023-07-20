@@ -1,30 +1,105 @@
-from typing import Any
+from typing import NoReturn, Tuple
 
-textToList: cython_function_or_method
+# from .Kinematic_Writer import PyKinematicWriter
+# from .Kinematic_Reader import PyKinematicReader
+from .Visual_Reader import PyVisualReader
+from .Skin_Reader import PySkinReader
+from .Joint_Writer import PyJointWriter
+from .Joint_Reader import PyJointReader
+
+import typing
+Tuple: typing._TupleType
+
 
 class ANNiCub_wrapper:
     @classmethod
     def __init__(cls, *args, **kwargs) -> None: ...
-    def clear(self) -> Any: ...
-    def get_jreader_by_name(self, unicodename) -> PyJointReader: ...
-    def get_jreader_by_part(self, unicodepart) -> PyJointReader: ...
-    def get_jwriter_by_name(self, unicodename) -> PyJointWriter: ...
-    def get_jwriter_by_part(self, unicodepart) -> PyJointWriter: ...
-    def get_skinreader_by_name(self, unicodename) -> PySkinReader: ...
-    def get_vis_reader_by_name(self, unicodename) -> PyVisualReader: ...
-    def init_robot_from_file(self, xml_file) -> Any: ...
-    def register_jreader(self, unicodename, PyJointReadermodule) -> Any: ...
-    def register_jwriter(self, unicodename, PyJointWritermodule) -> Any: ...
-    def register_kin_reader(self, unicodename, PyKinematicReadermodule) -> Any: ...
-    def register_kin_writer(self, unicodename, PyKinematicWritermodule) -> Any: ...
-    def register_skin_reader(self, unicodename, PySkinReadermodule) -> Any: ...
-    def register_vis_reader(self, unicodename, PyVisualReadermodule) -> Any: ...
-    def save_robot_to_file(self, xml_file, description = ...) -> Any: ...
-    def unregister_jreader(self, PyJointReadermodule) -> Any: ...
-    def unregister_jwriter(self, PyJointWritermodule) -> Any: ...
-    def unregister_kin_reader(self, PyKinematicReadermodule) -> Any: ...
-    def unregister_kin_writer(self, PyKinematicWritermodule) -> Any: ...
-    def unregister_skin_reader(self, PySkinReadermodule) -> Any: ...
-    def unregister_vis_reader(self, PyVisualReadermodule) -> Any: ...
-    def __reduce__(self) -> Any: ...
-    def __setstate__(self, state) -> Any: ...
+    def clear(self) -> NoReturn:
+        """Clean-up all initialized interface instances"""
+        ...
+
+    def get_jreader_by_name(self, name: str) -> PyJointReader:
+        """Returns the Joint Reader instance with the given name.
+
+        Args:
+            name (str): Name of the Joint Reader instance.
+
+        Returns:
+            PyJointReader: Joint Reader instance
+        """
+        ...
+
+    def get_jreader_by_part(self, part: str) -> PyJointReader:
+        """Returns the Joint Reader instance with the given part.
+
+        Args:
+            part (str): The robot part which is controlled by the Joint Reader.
+
+        Returns:
+            PyJointReader: Joint Reader instance
+        """
+        ...
+
+    def get_jwriter_by_name(self, name: str) -> PyJointWriter:
+        """Returns the Joint Writer instance with the given name.
+
+        Args:
+            name (str): Name of the Joint Writer instance.
+
+        Returns:
+            PyJointWriter: Joint Writer instance
+        """
+        ...
+
+    def get_jwriter_by_part(self, part: str) -> PyJointWriter:
+        """Returns the Joint Writer instance with the given part.
+
+        Args:
+            part (str): The robot part which is controlled by the Joint Writer.
+
+        Returns:
+            PyJointWriter: Joint Writer instance
+        """
+        ...
+
+    def get_skinreader_by_name(self, name: str) -> PySkinReader:
+        """Returns the Skin Reader instance with the given name.
+
+        Args:
+            name (str): Name of the Skin Reader instance.
+
+        Returns:
+            PySkinReader: Skin Reader instance
+        """
+        ...
+
+    def get_vis_reader_by_name(self, name: str) -> PyVisualReader:
+        """Returns the Visual Reader instance with the given name.
+
+        Args:
+            name (str): Name of the Visual Reader instance.
+
+        Returns:
+            PyVisualReader: Visual Reader instance
+        """
+        ...
+
+    def init_robot_from_file(self, xml_file: str) -> Tuple[bool, str]:
+        """Init iCub interface with the modules given in the xml-file
+
+        Args:
+            xml_file (str): filename of the xml-config-file
+
+        Returns:
+            Tuple[bool, str]: Returns a bool value representing the success of the init and a dicionary containing the module names for each module type
+        """
+        ...
+
+    def save_robot_to_file(self, xml_file: str, description: str = ...) -> NoReturn:
+        """Save robot configuration to xml-config file
+
+        Args:
+            xml_file (str): filename for the xml-config-file
+            description (str, optional): optional description added as comment in the robot section. Defaults to "".
+        """
+        ...

@@ -375,6 +375,78 @@ unsigned int SkinReader::GetTactileArmSize() { return taxel_pos_data["arm"].idx.
 unsigned int SkinReader::GetTactileForearmSize() { return taxel_pos_data["forearm"].idx.size(); }
 unsigned int SkinReader::GetTactileHandSize() { return taxel_pos_data["hand"].idx.size(); }
 
+std::vector<double> SkinReader::ReadSkinArm() {
+    /*
+        Read sensor data from iCub YARP ports
+
+    */
+    std::vector<double> sensor_data;
+
+    if (CheckInit()) {
+        tactile_arm = port_arm.read();
+
+        // Arm
+        if (tactile_arm != NULL) {
+            std::string skin_part_h = "arm";
+            auto idx_arr_h = taxel_pos_data[skin_part_h].idx;
+            for (unsigned int i = 0; i < idx_arr_h.size(); i++) {
+                if (idx_arr_h[i] > 0) sensor_data.push_back(tactile_arm->data()[i] * norm_fac);
+            }
+        } else {
+            std::cerr << "[Skin Reader " + side + "] Error in reading arm tactile data from the iCub!" << std::endl;
+        }
+    }
+    return sensor_data;
+}
+
+std::vector<double> SkinReader::ReadSkinForearm() {
+    /*
+        Read sensor data from iCub YARP ports
+
+    */
+    std::vector<double> sensor_data;
+
+    if (CheckInit()) {
+        tactile_forearm = port_forearm.read();
+
+        // Forearm
+        if (tactile_forearm != NULL) {
+            std::string skin_part_h = "forearm";
+            auto idx_arr_h = taxel_pos_data[skin_part_h].idx;
+            for (unsigned int i = 0; i < idx_arr_h.size(); i++) {
+                if (idx_arr_h[i] > 0) sensor_data.push_back(tactile_forearm->data()[i] * norm_fac);
+            }
+        } else {
+            std::cerr << "[Skin Reader " + side + "] Error in reading forearm tactile data from the iCub!" << std::endl;
+        }
+    }
+    return sensor_data;
+}
+
+std::vector<double> SkinReader::ReadSkinHand() {
+    /*
+        Read sensor data from iCub YARP ports
+
+    */
+    std::vector<double> sensor_data;
+
+    if (CheckInit()) {
+        tactile_hand = port_hand.read();
+
+        // HAND
+        if (tactile_hand != NULL) {
+            std::string skin_part_h = "hand";
+            auto idx_arr_h = taxel_pos_data[skin_part_h].idx;
+            for (unsigned int i = 0; i < idx_arr_h.size(); i++) {
+                if (idx_arr_h[i] > 0) sensor_data.push_back(tactile_hand->data()[i] * norm_fac);
+            }
+        } else {
+            std::cerr << "[Skin Reader " + side + "] Error in reading hand tactile data from the iCub!" << std::endl;
+        }
+    }
+    return sensor_data;
+}
+
 /*** gRPC related functions ***/
 // TODO seperated functions for different sections
 #ifdef _USE_GRPC

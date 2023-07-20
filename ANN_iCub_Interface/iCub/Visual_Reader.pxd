@@ -56,7 +56,7 @@ cdef extern from "Visual_Reader.hpp":
         cmap[string, string] getParameter()
 
 cdef class PyVisualReader:
-    cdef shared_ptr[VisualReader] cpp_visual_reader
-    cdef str name
-    cdef str part
+    cdef shared_ptr[VisualReader] _cpp_visual_reader
+    cdef str _name
+    cdef str _part
 

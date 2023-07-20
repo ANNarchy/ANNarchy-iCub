@@ -57,6 +57,15 @@ cdef extern from "Skin_Reader.hpp":
         # The sensor data is read and buffered inside. It can be accessed through GetTactileArm, GetTactileForearm and GetTactileHand.
         bool_t ReadTactile()
 
+        # Read tactile data for upper arm skin.
+        vector[double] ReadSkinArm()
+
+        # Read tactile data for forearm skin.
+        vector[double] ReadSkinForearm()
+
+        # Read tactile data for hand skin.
+        vector[double] ReadSkinHand()
+
         # Return size of tactile data for upper arm  skin.
         unsigned int GetTactileArmSize()
         # Return size of tactile data for forearm skin.
@@ -71,6 +80,6 @@ cdef extern from "Skin_Reader.hpp":
 
 
 cdef class PySkinReader:
-    cdef shared_ptr[SkinReader] cpp_skin_reader
-    cdef str name
-    cdef str part
+    cdef shared_ptr[SkinReader] _cpp_skin_reader
+    cdef str _name
+    cdef str _part

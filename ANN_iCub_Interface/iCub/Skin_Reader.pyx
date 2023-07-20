@@ -23,8 +23,7 @@
    along with this headers. If not, see <http://www.gnu.org/licenses/>.
  """
 from libcpp.string cimport string
-from libcpp.vector cimport vector
-from libcpp.memory cimport shared_ptr, make_shared
+from libcpp.memory cimport make_shared
 from cython.operator cimport dereference as deref
 
 from .Skin_Reader cimport SkinReader
@@ -37,216 +36,179 @@ cdef class PySkinReader:
     # init method
     def __cinit__(self):
         print("Initialize iCub Interface: Skin Reader.")
-        self.cpp_skin_reader = make_shared[SkinReader]()
+        self._cpp_skin_reader = make_shared[SkinReader]()
 
     # close method
     def __dealloc__(self):
         print("Close iCub Interface: Skin Reader.")
-        self.cpp_skin_reader.reset()
+        self._cpp_skin_reader.reset()
 
+    '''
+    # Access to skin reader member functions
+    '''
 
-    ### Access to skin reader member functions
     # init skin reader with given parameters
     def init(self, ANNiCub_wrapper iCub, str name, str arm, norm=True, str ini_path="../data/"):
+        """Initialize skin reader with given parameters.
+
+        Args:
+            iCub (ANNiCub_wrapper): main interface wrapper
+            name (str): individual name for the skin reader module
+            arm (str): character to choose the arm side (r/R for right; l/L for left)
+            norm (bool, optional): if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1]). Defaults to True.
+            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
+
+        Returns:
+            bool: return True/False, indicating success/failure
         """
-            Calls bool SkinReader::Init(char arm, bool norm_data)
-
-            function:
-                Initialize skin reader with given parameters
-
-            params:
-                ANNiCub_wrapper iCub    -- main interface wrapper
-                str name                -- name for the skin reader module
-                char arm                -- character to choose the arm side (r/R for right; l/L for left)
-                bool norm_data          -- if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1])
-                ini_path                -- Path to the "interface_param.ini"-file
-
-            return:
-                bool                    -- return True, if successful
-        """
-
-        self.part = arm
+        self._part = arm
         # preregister module for some prechecks e.g. arm already in use
         if iCub.register_skin_reader(name, self):
-            # call the interface
-            retval = deref(self.cpp_skin_reader).Init(name.encode('UTF-8'), arm.encode('UTF-8')[0], norm.__int__(), ini_path.encode('UTF-8'))
+            retval = deref(self._cpp_skin_reader).Init(name.encode('UTF-8'), arm.encode('UTF-8')[0], norm.__int__(), ini_path.encode('UTF-8'))
             if not retval:
                 iCub.unregister_skin_reader(self)
             return retval
         else:
             return False
 
-    # Initialize the skin reader with given parameters for use with gRPC
+    # initialize the skin reader with given parameters, including the gRPC based connection
     def init_grpc(self, ANNiCub_wrapper iCub, str name, str arm, norm=True, str ini_path="../data/", str ip_address="0.0.0.0", unsigned int port=50015):
-        """
-            Calls bool SkinReader::Init(char arm, bool norm_data)
+        """Initialize the skin reader with given parameters, including the gRPC based connection.
 
-            function:
-                Initialize skin reader with given parameters
+        Args:
+            iCub (ANNiCub_wrapper): main interface wrapper
+            name (str): individual name for the skin reader module
+            arm (str): character to choose the arm side (r/R for right; l/L for left)
+            norm (bool, optional): if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1]). Defaults to True.
+            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
+            ip_address (str, optional): gRPC server ip address. Defaults to "0.0.0.0".
+            port (unsigned int, optional): gRPC server port. Defaults to 50015.
 
-            params:
-                ANNiCub_wrapper iCub    -- main interface wrapper
-                str name                -- name for the skin reader module
-                char arm                -- character to choose the arm side (r/R for right; l/L for left)
-                bool norm_data          -- if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1])
-                ini_path                -- Path to the "interface_param.ini"-file
-                string ip_address       -- gRPC server ip address
-                unsigned int port       -- gRPC server port
-
-            return:
-                bool                    -- return True, if successful
+        Returns:
+            bool: return True/False, indicating success/failure
         """
         # we need to transform py-string to c++ compatible string
-        self.part = arm
+        self._part = arm
         # preregister module for some prechecks e.g. arm already in use
         if iCub.register_skin_reader(name, self):
-            # call the interface
-            retval = deref(self.cpp_skin_reader).InitGRPC(name.encode('UTF-8'), arm.encode('UTF-8')[0], norm.__int__(), ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
+            retval = deref(self._cpp_skin_reader).InitGRPC(name.encode('UTF-8'), arm.encode('UTF-8')[0], norm.__int__(), ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
             if not retval:
                 iCub.unregister_skin_reader(self)
             return retval
         else:
             return False
-
 
     # close and clean skin reader
     def close(self, ANNiCub_wrapper iCub):
+        """Close and clean skin reader.
+
+        Args:
+            iCub (ANNiCub_wrapper): main interface wrapper
         """
-            Calls void SkinReader::Close()
-
-            function:
-                Close and clean skin reader
-
-            params:
-                ANNiCub_wrapper iCub    -- main interface wrapper
-        """
-
         iCub.unregister_skin_reader(self)
-
-        # call the interface
-        deref(self.cpp_skin_reader).Close()
+        self._part = ""
+        deref(self._cpp_skin_reader).Close()
 
     # return tactile data for upper arm skin
     def get_tactile_arm(self):
+        """Return tactile data for the upper arm skin.
+
+        Returns:
+            NDarray (vector[vector[double]]): tactile data of the arm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
-            Calls std::vector<std::vector<double>> SkinReader::GetTactileArm()
-
-            function:
-                Return tactile data for the upper arm skin
-
-            return:
-                std::vector<std::vector<double>>     -- tactile data of the arm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
-        """
-
-        # call the interface
-        return np.array(deref(self.cpp_skin_reader).GetTactileArm())
+        return np.array(deref(self._cpp_skin_reader).GetTactileArm())
 
     # return size of tactile data for upper arm skin
     def get_tactile_arm_size(self):
+        """Return size of tactile data for the upper arm skin.
+
+        Returns:
+            unsigned int: size of sensor data vector -> upper arm section
         """
-            Calls unsigned int SkinReader::GetTactileArmSize()
-
-            function:
-                Return size of tactile data for the arm skin
-
-            return:
-                unsigned int     -- size of sensor data vector -> arm section
-        """
-
-        # call the interface
-        return deref(self.cpp_skin_reader).GetTactileArmSize()
+        return deref(self._cpp_skin_reader).GetTactileArmSize()
 
     # return tactile data for forearm skin
     def get_tactile_forearm(self):
-        """
-            Calls std::vector<std::vector<double>> SkinReader::GetTactileForearm()
+        """Return tactile data for the forearm skin.
 
-            function:
-                Return tactile data for the forearm skin
-
-            return:
-                std::vector<std::vector<double>>     -- tactile data of the forearm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
+        Returns:
+            NDarray (vector[vector[double]]): tactile data of the forearm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
-        # call the interface
-        return np.array(deref(self.cpp_skin_reader).GetTactileForearm())
+        return np.array(deref(self._cpp_skin_reader).GetTactileForearm())
 
     # return size of tactile data for forearm skin
     def get_tactile_forearm_size(self):
-        """
-            Calls unsigned int SkinReader::GetTactileForearmSize()
+        """Return size of tactile data for the forearm skin
 
-            function:
-                Return size of tactile data for the forearm skin
-
-            return:
-                unsigned int     -- size of sensor data vector -> forearm section
+        Returns:
+            unsigned int: size of sensor data vector -> forearm section
         """
-        # call the interface
-        return deref(self.cpp_skin_reader).GetTactileForearmSize()
+        return deref(self._cpp_skin_reader).GetTactileForearmSize()
 
     # return tactile data for hand skin
     def get_tactile_hand(self):
+        """Return tactile data for the hand skin.
+
+        Returns:
+            NDarray (vector[vector[double]]): tactile data of the hand part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
-            Calls std::vector<std::vector<double>> SkinReader::GetTactileHand()
-
-            function:
-                Return tactile data for the hand skin
-
-            return:
-                std::vector<std::vector<double>>     -- tactile data of the hand part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
-        """
-
-        # call the interface
-        return np.array(deref(self.cpp_skin_reader).GetTactileHand())
+        return np.array(deref(self._cpp_skin_reader).GetTactileHand())
 
     # return size of tactile data for hand skin
     def get_tactile_hand_size(self):
+        """Return size of tactile data for the hand skin.
+
+        Returns:
+            unsigned int: size of sensor data vector -> hand section
         """
-            Calls unsigned int SkinReader::GetTactileHandSize()
-
-            function:
-                Return size of tactile data for the hand skin
-
-            return:
-                unsigned int     -- size of sensor data vector -> hand section
-        """
-
-        # call the interface
-        return deref(self.cpp_skin_reader).GetTactileHandSize()
+        return deref(self._cpp_skin_reader).GetTactileHandSize()
 
     # return the taxel positions given by the ini files
     def get_taxel_pos(self, str skin_part):
-        """
-            Calls std::vector<std::vector<double>> SkinReader::GetTaxelPos(std::string skin_part)
+        """Return the taxel positions given by the ini files from the icub-main repo.
 
-            function:
-                Return the taxel positions given by the ini files from the iCub-simulator
+        Args:
+            skin_part (str): skin part to load the data for ("arm", "forearm", "hand")
 
-            params:
-                std::string skin_part               -- skin part to load the data for ("arm", "forearm", "hand")
-
-            return:
-                std::vector<std::vector<double>>    -- Vector containing taxel positions -> reference frame depending on skin part
+        Returns:
+            NDarray (vector[vector[double]]): Vector containing taxel positions -> reference frame depending on skin part
         """
         # we need to transform py-string to c++ compatible string
         cdef string s1 = skin_part.encode('UTF-8')
-
-        # call the interface
-        return np.array(deref(self.cpp_skin_reader).GetTaxelPos(s1))
+        return np.array(deref(self._cpp_skin_reader).GetTaxelPos(s1))
 
     # read sensor data
     def read_tactile(self):
+        """Read sensor data for one step
+
+        Returns:
+            bool: return True/False, indicating success/failure
+        """        
+        return deref(self._cpp_skin_reader).ReadTactile()
+
+    # read tactile data for upper arm skin
+    def read_skin_arm(self):
+        """Read tactile data for upper arm skin.
+
+        Returns:
+            NDarray (vector[double]): tactile data of the arm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
-            Calls bool SkinReader::ReadTactile()
+        return np.array(deref(self._cpp_skin_reader).ReadSkinArm())
 
-            function:
-                Read sensor data for one step
+    # read tactile data for forearm skin
+    def read_skin_forearm(self):
+        """Read tactile data for forearm skin.
 
+        Returns:
+            NDarray (vector[double]): tactile data of the forearm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
+        return np.array(deref(self._cpp_skin_reader).ReadSkinForearm())
 
-        # call the interface
-        return deref(self.cpp_skin_reader).ReadTactile()
+    # read tactile data for hand skin
+    def read_skin_hand(self):
+        """Read tactile data for hand skin.
 
-
-
-    ### end access to skin reader member functions
+        Returns:
+            NDarray (vector[double]): tactile data of the hand part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
+        """
+        return np.array(deref(self._cpp_skin_reader).ReadSkinHand())

@@ -118,6 +118,6 @@ cdef extern from "Joint_Writer.hpp":
         cmap[string, string] getParameter()
 
 cdef class PyJointWriter:
-    cdef shared_ptr[JointWriter] cpp_joint_writer
-    cdef str name
-    cdef str part
+    cdef shared_ptr[JointWriter] _cpp_joint_writer
+    cdef str _name
+    cdef str _part

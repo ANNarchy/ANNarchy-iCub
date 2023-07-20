@@ -379,7 +379,7 @@ std::vector<uint8_t> VisualReader::RetrieveRobotEye() {
         if (iEyeRgb == nullptr) {
             return std::vector<uint8_t>();
         }
-        // convert a 3D-matrix to 1D-vector, distinguish two cases with different methods
+        // convert yarp image to vector
         std::vector<uint8_t> vec(iEyeRgb->getRawImage(), iEyeRgb->getRawImage() + iEyeRgb->getRawImageSize());
         return vec;
     }

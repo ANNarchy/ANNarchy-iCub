@@ -76,7 +76,7 @@ cdef extern from "Kinematic_Reader.hpp":
         cmap[string, string] getParameter()
 
 cdef class PyKinematicReader:
-    cdef shared_ptr[KinematicReader] cpp_kin_reader
-    cdef str name
-    cdef str part
+    cdef shared_ptr[KinematicReader] _cpp_kin_reader
+    cdef str _name
+    cdef str _part
 

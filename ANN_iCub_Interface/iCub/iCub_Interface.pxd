@@ -36,16 +36,16 @@ cdef class ANNiCub_wrapper:
 
     cdef dict __dict__
 
-    cdef dict joint_reader
-    cdef dict joint_reader_parts
+    cdef dict _joint_reader
+    cdef dict _joint_reader_parts
 
-    cdef dict joint_writer
-    cdef dict joint_writer_parts
+    cdef dict _joint_writer
+    cdef dict _joint_writer_parts
 
-    cdef dict skin_reader
-    cdef dict skin_reader_parts
+    cdef dict _skin_reader
+    cdef dict _skin_reader_parts
 
-    cdef dict visual_reader
+    cdef dict _visual_reader
 
-    cdef dict kinematic_reader
-    cdef dict kinematic_writer
+    cdef dict _kinematic_reader
+    cdef dict _kinematic_writer
