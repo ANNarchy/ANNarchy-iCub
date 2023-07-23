@@ -254,28 +254,28 @@ dependencies = [
 ]
 
 version="1.0.4"
-filename = './ANN_iCub_Interface/version.py'
+filename = './ANN_iCub_Interface/_version.py'
 with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
-    file_object.write("__version__ = \"" + version + "\"")
+    file_object.write("__version__ = \"" + version + "\"\n")
 
 # test if gRPC is already used -> need new cythonizing if prior build was without gRPC
 try:
-    from ANN_iCub_Interface.use_grpc import __use_grpc__ as used_grpc
+    from ANN_iCub_Interface._use_grpc import __use_grpc__ as used_grpc
 except:
     used_grpc = False
 
-filename = './ANN_iCub_Interface/use_grpc.py'
+filename = './ANN_iCub_Interface/_use_grpc.py'
 with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
-    file_object.write("__use_grpc__ = " + str(use_grpc))
+    file_object.write("__use_grpc__ = " + str(use_grpc) + "\n")
 
 force_rebuild = (use_grpc != used_grpc) or rebuild_grpc or rebuild_cython
 
 setup(
     name="ANN_iCub_Interface",
     packages=find_packages(),
-    ext_modules=cythonize(extensions, language_level=int(sys.version_info[0]), force=force_rebuild),
+    ext_modules=cythonize(extensions, nthreads=num_threads, language_level=int(sys.version_info[0]), force=force_rebuild),
     description="Interface for iCub robot and ANNarchy neuro-simulator",
     long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and with gazebo (except SkinReader since skin not implemented)). It is written in C++ with a Cython wrapping to Python.""",
     version=version,

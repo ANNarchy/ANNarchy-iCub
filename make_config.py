@@ -28,6 +28,7 @@ yarp_prefix = "default"
 # Build process
 rebuild_grpc = False    # set to true if the grpc code changed and need a rebuild, e.g. after an update of the repository
 rebuild_cython = False  # set to true if the cython code changed and need a forced rebuild, e.g. after an update of the repository
+num_threads = 0 # activate multi-thread build process by setting to a value >0
 
 ## Helper functions to determine the OpenCV and YARP include paths
 def set_yarp_prefix():
