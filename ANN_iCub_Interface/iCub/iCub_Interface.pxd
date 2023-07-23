@@ -29,7 +29,7 @@ cdef extern from "Interface_iCub.hpp":
         ANNiCub() except +
 
     # Instances:
-    ANNiCub my_interface # defined in Interface_iCub.cpp
+    ANNiCub my_interface    # defined in Interface_iCub.cpp
 
 
 cdef class ANNiCub_wrapper:

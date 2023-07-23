@@ -22,6 +22,7 @@ from ANNarchy.core.SpecificPopulation import SpecificPopulation
 from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import _error, dt
 
+
 class VisionPopulation(SpecificPopulation):
     """
         ANNarchy population class to connect with the iCub cameras.
@@ -29,7 +30,15 @@ class VisionPopulation(SpecificPopulation):
     """
 
     def __init__(self, geometry=(320,240), ip_address="0.0.0.0", port=50000, copied=False, name=None):
+        """Init the VisionPopulation.
 
+        Args:
+            geometry (tuple, optional): ANNarchy population geometry. Defaults to (320,240).
+            ip_address (str, optional): ip-address of the gRPC connection. Need to fit with the respective visual reader module. Defaults to "0.0.0.0".
+            port (int, optional): port of the gRPC connection. Need to fit with the respective visual reader module. Defaults to 50000.
+            copied (bool, optional): ANNarchy specific parameter. Defaults to False.
+            name (str, optional): individiual name for the population. Defaults to None.
+        """
         SpecificPopulation.__init__(self, geometry=geometry, neuron = Neuron(equations="r = 0.0"), copied=copied, name=name )
 
         self._ip_address = ip_address
@@ -215,6 +224,7 @@ class VisionPopulation(SpecificPopulation):
         SpecificPopulation._instantiate(self, cython_module)
 
     def connect(self):
+        """Connect the population to the gRPC socket. Need to be called once after compile."""
         # create socket and connect
         if self.initialized:
             self.cyInstance.connect()

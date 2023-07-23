@@ -22,6 +22,7 @@ from ANNarchy.core.SpecificPopulation import SpecificPopulation
 from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import _error
 
+
 class JointControl(SpecificPopulation):
     """
         ANNarchy population class to connect with the iCub joint control, e. g. arm or head.
@@ -29,7 +30,16 @@ class JointControl(SpecificPopulation):
     """
 
     def __init__(self, geometry=None, neuron=Neuron(equations="r = 0.0"), ip_address="0.0.0.0", port=50010, copied=False, name=None):
+        """Init the JointControl population.
 
+        Args:
+            geometry (tuple, optional): ANNarchy population geometry. Defaults to None.
+            neuron (Neuron, optional): ANNarchy Neuron, being used in the population. Defaults to Neuron(equations="r = 0.0").
+            ip_address (str, optional): ip-address of the gRPC connection. Need to fit with the respective joint writer module. Defaults to "0.0.0.0".
+            port (int, optional): port of the gRPC connection. Need to fit with the respective joint reader module. Defaults to 50010.
+            copied (bool, optional): ANNarchy specific parameter. Defaults to False.
+            name (str, optional): individiual name for the population. Defaults to None.
+        """
         SpecificPopulation.__init__(self, geometry=geometry, neuron=neuron, copied=copied, name=name )
 
         self._ip_address = ip_address
@@ -152,9 +162,11 @@ class JointControl(SpecificPopulation):
         SpecificPopulation._instantiate(self, cython_module)
 
     def connect(self):
+        """Connect the population to the gRPC socket. Need to be called once after compile."""
         # create socket and connect
         if self.initialized:
             self.cyInstance.connect()
+
 
 class JointReadout(SpecificPopulation):
     """
@@ -163,7 +175,17 @@ class JointReadout(SpecificPopulation):
     """
 
     def __init__(self, geometry=None, joints=None, encoded=False, ip_address="0.0.0.0", port=50005, copied=False, name=None):
+        """Init the JointReadout population.
 
+        Args:
+            geometry (tuple, optional): ANNarchy population geometry. Defaults to None.
+            joints (list, optional): Specify the joints, which should be accessed. Defaults to None.
+            encoded (bool, optional): Specify if the joint angles should be encoded with a population coding. Defaults to False.
+            ip_address (str, optional): ip-address of the gRPC connection. Need to fit with the respective joint reader module. Defaults to "0.0.0.0".
+            port (int, optional): port of the gRPC connection. Need to fit with the respective joint reader module. Defaults to 50005.
+            copied (bool, optional): ANNarchy specific parameter. Defaults to False.
+            name (str, optional): individiual name for the population. Defaults to None.
+        """
         SpecificPopulation.__init__(self, geometry=geometry, neuron = Neuron(equations="r = 0.0"), copied=copied, name=name )
 
         self._ip_address = ip_address
@@ -361,6 +383,7 @@ class JointReadout(SpecificPopulation):
         SpecificPopulation._instantiate(self, cython_module)
 
     def connect(self):
+        """Connect the population to the gRPC socket. Need to be called once after compile."""
         # create socket and connect
         if self.initialized:
             self.cyInstance.connect()

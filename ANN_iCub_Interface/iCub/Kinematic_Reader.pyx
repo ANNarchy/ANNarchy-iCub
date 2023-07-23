@@ -51,16 +51,25 @@ cdef class PyKinematicReader:
     def init(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path ="../data/", offline_mode=False):
         """Initialize the Kinematic Reader with given parameters
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
-            name (str): individual name for the kinematic reader
-            part (str): string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-            version (float): version of the robot hardware
-            ini_path (str, optional): path to the interface ini-file. Defaults to "../data/".
-            offline_mode (bool, optional): flag, if iCub network is offline. Defaults to False.
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+        name : str
+            individual name for the kinematic reader
+        part : str
+            string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+        version : float
+            version of the robot hardware
+        ini_path : str
+            path to the interface ini-file. (Default value = "../data/")
+        offline_mode : bool
+            flag, if iCub network is offline. (Default value = False)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         self._part = part
         # preregister module for some prechecks e.g. name already in use
@@ -78,18 +87,29 @@ cdef class PyKinematicReader:
                   unsigned int port=50020, offline_mode=False):
         """Initialize the Kinematic Reader with given parameters, including the gRPC based connection.
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
-            name (str): individual name for the kinematic reader
-            part (str): string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-            version (float): version of the robot hardware
-            ini_path (str, optional): path to the interface ini-file. Defaults to "../data/".
-            ip_address (str, optional): gRPC server ip address. Defaults to "0.0.0.0".
-            port (unsigned int, optional): gRPC server port. Defaults to 50000.
-            offline_mode (bool, optional): flag, if iCub network is offline. Defaults to False.
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+        name : str
+            individual name for the kinematic reader
+        part : str
+            string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+        version : float
+            version of the robot hardware
+        ini_path : str
+            path to the interface ini-file. (Default value = "../data/")
+        ip_address : str
+            gRPC server ip address. (Default value = "0.0.0.0")
+        port : unsigned int
+            gRPC server port. (Default value = 50020)
+        offline_mode : bool
+            flag, if iCub network is offline. (Default value = False)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         self._part = part
         # preregister module for some prechecks e.g. eye already in use
@@ -106,8 +126,14 @@ cdef class PyKinematicReader:
     def close(self, ANNiCub_wrapper iCub):
         """Close the module
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+
         """
         iCub.unregister_kin_reader(self)
         self._part = ""
@@ -117,8 +143,13 @@ cdef class PyKinematicReader:
     def get_handposition(self):
         """Get End-Effector cartesian position.
 
-        Returns:
-            NDarray: Cartesian position of the end-effector in robot reference frame
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray
+            Cartesian position of the end-effector in robot reference frame
         """
         return np.array(deref(self._cpp_kin_reader).GetHandPosition())
 
@@ -126,11 +157,15 @@ cdef class PyKinematicReader:
     def get_jointposition(self, unsigned int joint):
         """Get cartesian position for the given joint.
 
-        Args:
-            joint (unsigned int): joint number of the robot part
+        Parameters
+        ----------
+        joint : unsigned int
+            joint number of the robot part
 
-        Returns:
-            NDarray: Cartesian position of the joint in robot reference frame
+        Returns
+        -------
+        NDarray
+            Cartesian position of the joint in robot reference frame
         """
         return np.array(deref(self._cpp_kin_reader).GetCartesianPosition(joint))
 
@@ -138,7 +173,12 @@ cdef class PyKinematicReader:
     def get_DOF(self):
         """Return the DOF of the kinematic chain
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             int: degree of freedom (DOF) of the kinematic chain
         """
         return deref(self._cpp_kin_reader).GetDOF()
@@ -147,8 +187,13 @@ cdef class PyKinematicReader:
     def get_jointangles(self):
         """Get current joint angles of active kinematic chain -> radians.
 
-        Returns:
-            NDarray: joint angles in radians
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray
+            joint angles in radians
         """
         return np.array(deref(self._cpp_kin_reader).GetJointAngles())
 
@@ -156,8 +201,14 @@ cdef class PyKinematicReader:
     def set_jointangles(self, joint_angles):
         """Set joint angles for forward kinematic in offline mode.
 
-        Args:
-            joint_angles (list/NDarray): joint angles
+        Parameters
+        ----------
+        joint_angles : list/NDarray
+            joint angles
+
+        Returns
+        -------
+
         """
         deref(self._cpp_kin_reader).SetJointAngles(joint_angles)
 
@@ -165,8 +216,13 @@ cdef class PyKinematicReader:
     def get_blocked_links(self):
         """Get blocked links.
 
-        Returns:
-            NDarray: vector containing the blocked links
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray
+            vector containing the blocked links
         """
         return np.array(deref(self._cpp_kin_reader).GetBlockedLinks())
 
@@ -174,8 +230,14 @@ cdef class PyKinematicReader:
     def block_links(self, blocked_joints):
         """Block specific set of joints in the kinematic chain.
 
-        Args:
-            blocked_joints (list): joints that should be blocked
+        Parameters
+        ----------
+        blocked_joints : list
+            joints that should be blocked
+
+        Returns
+        -------
+
         """
         deref(self._cpp_kin_reader).BlockLinks(blocked_joints)
 
@@ -183,8 +245,13 @@ cdef class PyKinematicReader:
     def get_DOF_links(self):
         """Get joints being part of active kinematic chain.
 
-        Returns:
-            NDarray: vector with the active joints
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray
+            vector with the active joints
         """
         return np.array(deref(self._cpp_kin_reader).GetDOFLinks())
 
@@ -192,7 +259,13 @@ cdef class PyKinematicReader:
     def release_links(self, release_joints):
         """Release links of kinematic chain
 
-        Args:
-            release_joints (list): joints that should be released
+        Parameters
+        ----------
+        release_joints : list
+            joints that should be released
+
+        Returns
+        -------
+
         """
         deref(self._cpp_kin_reader).ReleaseLinks(release_joints)

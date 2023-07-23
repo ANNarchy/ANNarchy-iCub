@@ -129,12 +129,17 @@ cdef class ANNiCub_wrapper:
         """Register Joint Reader module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            name (str): name given to the Joint Reader
-            module (PyJointReader): Joint Reader instance
+        Parameters
+        ----------
+        name : str
+            name given to the Joint Reader
+        module : PyJointReader
+            Joint Reader instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_joint_reader).getRegister():
             print("[Interface iCub] Joint Reader module is already registered!")
@@ -159,11 +164,15 @@ cdef class ANNiCub_wrapper:
         """Unregister Joint Reader module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            module (PyJointReader): Joint Reader instance
+        Parameters
+        ----------
+        module : PyJointReader
+            Joint Reader instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_joint_reader).getRegister():
             deref(module._cpp_joint_reader).setRegister(0)
@@ -180,12 +189,17 @@ cdef class ANNiCub_wrapper:
         """Register Joint Writer module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            name (str): name given to the Joint Writer
-            module (PyJointWriter): Joint Writer instance
+        Parameters
+        ----------
+        name : str
+            name given to the Joint Writer
+        module : PyJointWriter
+            Joint Writer instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_joint_writer).getRegister():
             print("[Interface iCub] Joint Writer module is already registered!")
@@ -210,11 +224,15 @@ cdef class ANNiCub_wrapper:
         """Unregister Joint Writer module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            module (PyJointWriter): Joint Writer instance
+        Parameters
+        ----------
+        module : PyJointWriter
+            Joint Writer instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_joint_writer).getRegister():
             deref(module._cpp_joint_writer).setRegister(0)
@@ -227,16 +245,21 @@ cdef class ANNiCub_wrapper:
             return False
 
     # register skin reader module
-    def register_skin_reader(self, name: str, PySkinReader module):
+    def register_skin_reader(self, name: str, module: PySkinReader):
         """Register Skin Reader module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            name (str): name given to the Skin Reader
-            module (PySkinReader): Skin Reader instance
+        Parameters
+        ----------
+        name : str
+            name given to the Skin Reader
+        module : PySkinReader
+            Skin Reader instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_skin_reader).getRegister():
             print("[Interface iCub] Skin Reader module is already registered!")
@@ -252,15 +275,19 @@ cdef class ANNiCub_wrapper:
                 return True
 
     # unregister skin reader module
-    def unregister_skin_reader(self, PySkinReader module):
+    def unregister_skin_reader(self, module: PySkinReader):
         """Unregister Skin Reader module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            module (PySkinReader): Skin Reader instance
+        Parameters
+        ----------
+        module : PySkinReader
+            Skin Reader instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_skin_reader).getRegister():
             deref(module._cpp_skin_reader).setRegister(0)
@@ -272,16 +299,21 @@ cdef class ANNiCub_wrapper:
             return False
 
     # register visual reader module
-    def register_vis_reader(self, str name, PyVisualReader module):
+    def register_vis_reader(self, name: str, module: PyVisualReader):
         """Register Visual Reader module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            name (str): name given to the Visual Reader
-            module (PyVisualReader): Visual Reader instance
+        Parameters
+        ----------
+        name : str
+            name given to the Visual Reader
+        module : PyVisualReader
+            Visual Reader instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_visual_reader).getRegister():
             print("[Interface iCub] Visual Reader module is already registered!")
@@ -296,15 +328,19 @@ cdef class ANNiCub_wrapper:
             return True
 
     # unregister visual reader module
-    def unregister_vis_reader(self, PyVisualReader module):
+    def unregister_vis_reader(self, module: PyVisualReader):
         """Unregister Visual Reader module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            module (PyVisualReader): Visual Reader instance
+        Parameters
+        ----------
+        module : PyVisualReader
+            Visual Reader instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_visual_reader).getRegister():
             deref(module._cpp_visual_reader).setRegister(0)
@@ -316,16 +352,21 @@ cdef class ANNiCub_wrapper:
             return False
 
     # register kinematic reader module
-    def register_kin_reader(self, str name, PyKinematicReader module):
+    def register_kin_reader(self, name: str, module: PyKinematicReader):
         """Register Kinematic Reader module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            name (str): name given to the Kinematic Reader
-            module (PyKinematicReader): Kinematic Reader instance
+        Parameters
+        ----------
+        name : str
+            name given to the Kinematic Reader
+        module : PyKinematicReader
+            Kinematic Reader instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_kin_reader).getRegister():
             print("[Interface iCub] Kinematic Reader module is already registered!")
@@ -340,15 +381,19 @@ cdef class ANNiCub_wrapper:
             return True
 
     # unregister kinematic reader module
-    def unregister_kin_reader(self, PyKinematicReader module):
+    def unregister_kin_reader(self, module: PyKinematicReader):
         """Unregister Kinematic Reader module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            module (PyKinematicReader): Kinematic Reader instance
+        Parameters
+        ----------
+        module : PyKinematicReader
+            Kinematic Reader instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_kin_reader).getRegister():
             deref(module._cpp_kin_reader).setRegister(0)
@@ -360,16 +405,21 @@ cdef class ANNiCub_wrapper:
             return False
 
     # register kinematic writer module
-    def register_kin_writer(self, str name, PyKinematicWriter module):
+    def register_kin_writer(self, name: str, module: PyKinematicWriter):
         """Register Kinematic Writer module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            name (str): name given to the Kinematic Writer
-            module (PyKinematicWriter): Kinematic Writer instance
+        Parameters
+        ----------
+        name : str
+            name given to the Kinematic Writer
+        module : PyKinematicWriter
+            Kinematic Writer instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_kin_writer).getRegister():
             print("[Interface iCub] Kinematic Writer module is already registered!")
@@ -384,15 +434,19 @@ cdef class ANNiCub_wrapper:
             return True
 
     # unregister kinematic writer module
-    def unregister_kin_writer(self, PyKinematicWriter module):
+    def unregister_kin_writer(self, module: PyKinematicWriter):
         """Unregister Kinematic Writer module at the main wrapper.
             -> For internal use only.
 
-        Args:
-            module (PyKinematicWriter): Kinematic Writer instance
+        Parameters
+        ----------
+        module : PyKinematicWriter
+            Kinematic Writer instance
 
-        Returns:
-            bool: True/False on Success/Failure
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
         """
         if deref(module._cpp_kin_writer).getRegister():
             deref(module._cpp_kin_writer).setRegister(0)
@@ -409,14 +463,18 @@ cdef class ANNiCub_wrapper:
     '''
 
     # get joint reader module by name
-    def get_jreader_by_name(self, str name) -> PyJointReader:
+    def get_jreader_by_name(self, name: str) -> PyJointReader:
         """Returns the Joint Reader instance with the given name.
 
-        Args:
-            name (str): Name of the Joint Reader instance.
+        Parameters
+        ----------
+        name : str
+            Name of the Joint Reader instance.
 
-        Returns:
-            PyJointReader: Joint Reader instance
+        Returns
+        -------
+        PyJointReader
+            Joint Reader instance
         """
         if (name in self._joint_reader):
             return self._joint_reader[name]
@@ -425,14 +483,18 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get joint reader module by part
-    def get_jreader_by_part(self, str part) -> PyJointReader:
+    def get_jreader_by_part(self, part: str) -> PyJointReader:
         """Returns the Joint Reader instance with the given part.
 
-        Args:
-            part (str): The robot part which is controlled by the Joint Reader.
+        Parameters
+        ----------
+        part : str
+            The robot part which is controlled by the Joint Reader.
 
-        Returns:
-            PyJointReader: Joint Reader instance
+        Returns
+        -------
+        PyJointReader
+            Joint Reader instance
         """
         if (part in self._joint_reader_parts):
             return self._joint_reader[self._joint_reader_parts[part]]
@@ -441,14 +503,18 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get joint writer module by name
-    def get_jwriter_by_name(self, str name) -> PyJointWriter:
+    def get_jwriter_by_name(self, name: str) -> PyJointWriter:
         """Returns the Joint Writer instance with the given name.
 
-        Args:
-            name (str): Name of the Joint Writer instance.
+        Parameters
+        ----------
+        name : str
+            Name of the Joint Writer instance.
 
-        Returns:
-            PyJointWriter: Joint Writer instance
+        Returns
+        -------
+        PyJointWriter
+            Joint Writer instance
         """
         if (name in self._joint_writer):
             return self._joint_writer[name]
@@ -457,14 +523,18 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get joint writer module by part
-    def get_jwriter_by_part(self, str part) -> PyJointWriter:
+    def get_jwriter_by_part(self, part: str) -> PyJointWriter:
         """Returns the Joint Writer instance with the given part.
 
-        Args:
-            part (str): The robot part which is controlled by the Joint Writer.
+        Parameters
+        ----------
+        part : str
+            The robot part which is controlled by the Joint Writer.
 
-        Returns:
-            PyJointWriter: Joint Writer instance
+        Returns
+        -------
+        PyJointWriter
+            Joint Writer instance
         """
         if (part in self._joint_writer_parts):
             return self._joint_writer[self._joint_writer_parts[part]]
@@ -473,14 +543,18 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get skin reader module by name
-    def get_skinreader_by_name(self, str name) -> PySkinReader:
+    def get_skinreader_by_name(self, name: str) -> PySkinReader:
         """Returns the Skin Reader instance with the given name.
 
-        Args:
-            name (str): Name of the Skin Reader instance.
+        Parameters
+        ----------
+        name : str
+            Name of the Skin Reader instance.
 
-        Returns:
-            PySkinReader: Skin Reader instance
+        Returns
+        -------
+        PySkinReader
+            Skin Reader instance
         """
         if (name in self._skin_reader):
             return self._skin_reader[name]
@@ -489,14 +563,18 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get visual reader module by name
-    def get_vis_reader_by_name(self, str name) -> PyVisualReader:
+    def get_vis_reader_by_name(self, name: str) -> PyVisualReader:
         """Returns the Visual Reader instance with the given name.
 
-        Args:
-            name (str): Name of the Visual Reader instance.
+        Parameters
+        ----------
+        name : str
+            Name of the Visual Reader instance.
 
-        Returns:
-            PyVisualReader: Visual Reader instance
+        Returns
+        -------
+        PyVisualReader
+            Visual Reader instance
         """
         if (name in self._visual_reader):
             return self._visual_reader[name]
@@ -510,14 +588,18 @@ cdef class ANNiCub_wrapper:
     '''
 
     # initialize interface for a robot configuration defined in a XML-file
-    def init_robot_from_file(self, str xml_file) -> Tuple[bool, str]:
+    def init_robot_from_file(self, xml_file: str) -> Tuple[bool, str]:
         """Init iCub interface with the modules given in the xml-file
 
-        Args:
-            xml_file (str): filename of the xml-config-file
+        Parameters
+        ----------
+        xml_file : str
+            filename of the xml-config-file
 
-        Returns:
-            Tuple[bool, str]: Returns a bool value representing the success of the init and a dicionary containing the module names for each module type
+        Returns
+        -------
+        Tuple[bool, str]
+            Returns a bool value representing the success of the init and a dicionary containing the module names for each module type
         """
         name_dict = {}
         if os.path.isfile(xml_file):
@@ -728,12 +810,19 @@ cdef class ANNiCub_wrapper:
             return False, name_dict
 
     # save robot robot configuration as XML-file
-    def save_robot_to_file(self, xml_file, description=""):
+    def save_robot_to_file(self, xml_file: str, description: str = ""):
         """Save robot configuration to xml-config file
 
-        Args:
-            xml_file (str): filename for the xml-config-file
-            description (str, optional): optional description added as comment in the robot section. Defaults to "".
+        Parameters
+        ----------
+        xml_file : str
+            filename for the xml-config-file
+        description : str
+            optional description added as comment in the robot section. Defaults to "".
+
+        Returns
+        -------
+
         """
         root = ET.Element("robot")
         root.append(ET.Comment(description))

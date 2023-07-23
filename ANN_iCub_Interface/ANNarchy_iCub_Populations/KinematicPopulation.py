@@ -22,14 +22,23 @@ from ANNarchy.core.SpecificPopulation import SpecificPopulation
 from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import _error
 
+
 class KinematicForward(SpecificPopulation):
     """
-        ANNarchy population class to connect with the iCub kinematics.
+        ANNarchy population class to connect with the iCub forward kinematics.
         Readout the angles from the iCub, compute the forward kinematics and set it as population activation.
     """
 
     def __init__(self, geometry=(3,), ip_address="0.0.0.0", port=50020, copied=False, name=None):
+        """Init the KinematicForward Population.
 
+        Args:
+            geometry (tuple, optional): ANNarchy population geometry. Defaults to (3,).
+            ip_address (str, optional): ip-address of the gRPC connection. Need to fit with the respective kinematic reader module. Defaults to "0.0.0.0".
+            port (int, optional): port of the gRPC connection. Need to fit with the respective kinematic reader module. Defaults to 50020.
+            copied (bool, optional): ANNarchy specific parameter. Defaults to False.
+            name (str, optional): individiual name for the population. Defaults to None.
+        """
         SpecificPopulation.__init__(self, geometry=geometry, neuron = Neuron(equations="r = 0.0"), copied=copied, name=name )
 
         self._ip_address = ip_address
@@ -146,6 +155,7 @@ class KinematicForward(SpecificPopulation):
         SpecificPopulation._instantiate(self, cython_module)
 
     def connect(self):
+        """Connect the population to the gRPC socket. Need to be called once after compile."""
         # create socket and connect
         if self.initialized:
             self.cyInstance.connect()

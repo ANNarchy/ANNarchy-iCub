@@ -21,18 +21,43 @@
 """
 
 import threading as mp
-import time
+
 
 class MasterClock(object):
+    """
+        Main Class for synchronisation, needs to be instantiated only once.
+    """
     def __init__(self):
         self.instances = []
 
     def add(self, instance):
-        self.instances.append(instance)
+        """
+        Add instance of class inherited from "ClockInterface" for synchronisation.
+
+        Parameters
+        ----------
+        instance : sublass of ClockInterface
+            Class instance which is derived from ClockInterface (need to be implemented serperately).
+
+        Raises
+        ------
+        TypeError
+            Raises TypeError, if instances is not a sublass of ClockInterface.
+        """
+        if isinstance(instance, ClockInterface):
+            self.instances.append(instance)
+        else:
+            raise TypeError
 
     def update(self, T):
-        start = time.time()
+        """
+        Perform an update for each registered instance in parallel. Contains an input retrieval step and the actual update.
 
+        Parameters
+        ----------
+        T : int
+            number of timesteps for the update -> e.g. simulation time for ANNarchy
+        """
         input_proc = []
         for i, inst in enumerate(self.instances):
             if inst.input:
@@ -52,46 +77,37 @@ class MasterClock(object):
 
 
 class ClockInterface(object):
+    """
+        Base-Class for synchronisation parts. A subclass need to be implemented for each part (e.g. iCub interaction; ANNarchy simulation)
+    """
     def __init__(self):
         self.input = True
 
     def sync_input(self):
+        """
+        Need to be implemented. Should contain necessary input retrieval.
+
+        Raises
+        ------
+        NotImplementedError
+            Raises NotImplementedError as default. Need to be overwritten in the actual implementation.
+        """
         print("For each Sync-class the 'sync_input' method has to be implemented or input has to be set to 'False'!")
         raise NotImplementedError
 
     def update(self, T):
+        """
+        Need to be implemented. Should contain necessary update steps -> e.g. ANNarchy simulation.
+
+        Parameters
+        ----------
+        T : int
+            number of timesteps for the update -> e.g. simulation time for ANNarchy
+
+        Raises
+        ------
+        NotImplementedError
+            Raises NotImplementedError as default. Need to be overwritten in the actual implementation.
+        """
         print("For each Sync-class the 'update' method has to be implemented!")
         raise NotImplementedError
-
-
-if __name__ == '__main__':
-    ## user has to implement these classes
-    class ANNInterface(ClockInterface):
-        def __init__(self, network):
-            self.net = network
-            pass
-        def update(self, T):
-            # simulate
-            print(self.net, T)
-            pass
-
-    class iCubInterface(ClockInterface):
-        def __init__(self, interface):
-            self.iCub = interface
-            pass
-        def update(self, T):
-            # start action -> small enough for timestep
-            print(self.iCub, T)
-            pass
-
-    mc = MasterClock()
-    ANNnet = "TEST ANNarchy"
-    ann_clock = ANNInterface(ANNnet)
-    iCub = "TEST iCub"
-    icub_clock = iCubInterface(iCub)
-    mc.add(ann_clock)
-    mc.add(icub_clock)
-    for i in range(20):
-        print("read sensors")
-        mc.update(i) #(bearbeitet)
-        print("post sync")

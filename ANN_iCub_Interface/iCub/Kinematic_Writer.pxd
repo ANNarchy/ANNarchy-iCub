@@ -56,4 +56,3 @@ cdef class PyKinematicWriter:
     cdef shared_ptr[KinematicWriter] _cpp_kin_writer
     cdef str _name
     cdef str _part
-

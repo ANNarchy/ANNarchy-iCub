@@ -4,21 +4,32 @@ from .iCub_Interface import ANNiCub_wrapper
 
 
 class PyJointWriter:
+    """ """
     @classmethod
     def __init__(cls, *args, **kwargs) -> None: ...
 
     def close(self, iCub: ANNiCub_wrapper) -> NoReturn:
         """Close joint writer with cleanup
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
         """
         ...
 
     def get_joint_count(self) -> int:
         """Return number of controlled joints
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             int: return number of joints being controlled by the joint writer
         """
         ...
@@ -26,7 +37,12 @@ class PyJointWriter:
     def get_joint_limits(self) -> ndarray:
         """Return the limits of joint angles in degree
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[vector[double]]): return array, containing the limits of joint angles in degree (joint, (max, min))
         """
         ...
@@ -34,7 +50,12 @@ class PyJointWriter:
     def get_joint_limits_max(self) -> ndarray:
         """Return the upper limits of joint angles in degree
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[double]): return vector, containing the upper limits of joint angles in degree (joint, max)
         """
         ...
@@ -42,7 +63,12 @@ class PyJointWriter:
     def get_joint_limits_min(self) -> ndarray:
         """Return the lower limits of joint angles in degree
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[double]): return vector, containing the lower limits of joint angles in degree (joint, min)
         """
         ...
@@ -50,7 +76,12 @@ class PyJointWriter:
     def get_joints_deg_res(self) -> ndarray:
         """Return the resolution in degree of the populations encoding the joint angles
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vetor[double]): return vector, containing the resolution for every joints population codimg in degree
         """
         ...
@@ -58,7 +89,12 @@ class PyJointWriter:
     def get_neurons_per_joint(self) -> ndarray:
         """Return the size of the populations encoding the joint angles
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[int]): return vector, containing the population size for every joint
         """
         ...
@@ -66,47 +102,72 @@ class PyJointWriter:
     def init(self, iCub: ANNiCub_wrapper, name: str, part: str, n_pop: int, degr_per_neuron: float = ..., speed: float = ..., ini_path: str = ...) -> bool:
         """Initialize the joint writer with given parameters.
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
-            name (str): name for the joint writer module
-            part (str): string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-            n_pop (unsigned int): number of neurons per population, encoding each one joint angle;
-                                  only works if parameter "deg_per_neuron" is not set
-            degr_per_neuron (double, optional): degree per neuron in the populationencoding the joints angles;
-                                                if set: population size depends on joint working range. Defaults to 0.0.
-            speed (double, optional): velocity for the joint movements. Defaults to 10.0.
-            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+        name : str
+            name for the joint writer module
+        part : str
+            string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+        n_pop : unsigned int
+            number of neurons per population, encoding each one joint angle;
+            only works if parameter "deg_per_neuron" is not set
+        degr_per_neuron : double
+            degree per neuron in the populationencoding the joints angles;
+            if set: population size depends on joint working range. (Default value = 0.0)
+        speed : double
+            velocity for the joint movements. (Default value = 10.0)
+        ini_path : str
+            Path to the "interface_param.ini"-file. (Default value = "../data/")
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...
 
-    def init_grpc(self, iCub: ANNiCub_wrapper, name: str, part: str, n_pop: int, joints, mode: str, blocking=..., degr_per_neuron: float = ..., speed: float = ..., 
+    def init_grpc(self, iCub: ANNiCub_wrapper, name: str, part: str, n_pop: int, joints, mode: str, blocking=..., degr_per_neuron: float = ..., speed: float = ...,
                   ini_path: str = ..., ip_address: str = ..., port: int = ...) -> bool:
         """Initialize the joint writer with given parameters, including the gRPC based connection.
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
-            name (str): name for the joint writer module
-            part (str): string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-            n_pop (unsigned int): number of neurons per population, encoding each one joint angle;
-                                  only works if parameter "deg_per_neuron" is not set
-            joints (list (vector[int])): joint selection for grpc -> empty vector for all joints
-            mode (str): mode for writing joints:
-                            - 'abs' for absolute joint angle positions
-                            - 'rel' for relative joint angles
-                            - 'vel' for velocity values -> DO NOT USE "VEL" AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
-            degr_per_neuron (double, optional): degree per neuron in the populationencoding the joints angles;
-                                                if set: population size depends on joint working range. Defaults to 0.0.
-            speed (double, optional): velocity for the joint movements. Defaults to 10.0.
-            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
-            ip_address (str, optional): gRPC server ip address. Defaults to "0.0.0.0".
-            port (unsigned int, optional): gRPC server port. Defaults to 50010.
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+        name : str
+            name for the joint writer module
+        part : str
+            string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+        n_pop : unsigned int
+            number of neurons per population, encoding each one joint angle;
+            only works if parameter "deg_per_neuron" is not set
+        joints : list (vector[int]
+            joint selection for grpc -> empty vector for all joints
+        mode : str
+            mode for writing joints:
+            - 'abs' for absolute joint angle positions
+            - 'rel' for relative joint angles
+            - 'vel' for velocity values -> DO NOT USE "VEL" AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
+        degr_per_neuron : double
+            degree per neuron in the populationencoding the joints angles;
+            if set: population size depends on joint working range. (Default value = 0.0)
+        speed : double
+            velocity for the joint movements. (Default value = 10.0)
+        ini_path : str
+            Path to the "interface_param.ini"-file. (Default value = "../data/")
+        ip_address : str
+            gRPC server ip address. (Default value = "0.0.0.0")
+        port : unsigned int
+            gRPC server port. (Default value = 50010)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...
 
@@ -137,36 +198,51 @@ class PyJointWriter:
     def set_joint_acceleration(self, acc: float, joint: int = ...) -> bool:
         """Set joint acceleration.
 
-        Args:
-            acc (double): acceleration value to be set
-            joint (int, optional): joint number of the robot part or -1 for all joints. Defaults to -1.
+        Parameters
+        ----------
+        acc : double
+            acceleration value to be set
+        joint : int
+            joint number of the robot part or -1 for all joints. (Default value = -1)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...
 
     def set_joint_controlmode(self, control_mode: str, joint: int = ...) -> bool:
         """Set joint control mode
 
-        Args:
-            control_mode (str): control mode for the joint. currently implemented are: "velocity" and "position"
-            joint (int, optional): joint number of the robot part or -1 for all joints. Defaults to -1.
+        Parameters
+        ----------
+        control_mode : str
+            control mode for the joint. currently implemented are: "velocity" and "position"
+        joint : int
+            joint number of the robot part or -1 for all joints. (Default value = -1)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...
 
     def set_joint_velocity(self, speed: float, joint: int = ...) -> bool:
         """Set joint velocity.
 
-        Args:
-            speed (double): velocity value to be set
-            joint (int, optional): joint number of the robot part or -1 for all joints. Defaults to -1.
+        Parameters
+        ----------
+        speed : float
+            velocity value to be set
+        joint : int
+            joint number of the robot part or -1 for all joints. (Default value = -1)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...
 
@@ -197,81 +273,121 @@ class PyJointWriter:
     def write_double_all(self, position, mode: str, blocking=...) -> bool:
         """Move all joints to the given positiion (joint angles/velocities).
 
-        Args:
-            position (list/NDarray (vector[double])): joint angles/velocities to write to the robot joints
-            mode (str): string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position : list/NDarray (vector[double]
+            joint angles/velocities to write to the robot joints
+        mode : str
+            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...
 
     def write_double_multiple(self, position, joints, mode: str, blocking=...) -> bool:
         """Move multiple joints to the given positiion (joint angles/velocities).
 
-        Args:
-            position (list/NDarray (vector[double])): joint angles/velocities to write to the robot joints
-            joints (list/NDarray (vector[int])): joint indizes of the joints, which should be moved (e.g. head: [3, 4, 5] -> all eye movements)
-            mode (str): string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position : list/NDarray (vector[double]
+            joint angles/velocities to write to the robot joints
+        joints : list/NDarray (vector[int]
+            joint indizes of the joints, which should be moved (e.g. head: [3, 4, 5] -> all eye movements)
+        mode : str
+            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...
 
     def write_double_one(self, position: float, joint: int, mode: str, blocking=...) -> bool:
         """Move single joint to the given positiion (joint angle/velocity).
 
-        Args:
-            position (double): joint angle/velocity to write to the robot joint
-            joint (int): joint number of the robot part
-            mode (str): string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position : float
+            joint angle/velocity to write to the robot joint
+        joint : int
+            joint number of the robot part
+        mode : str
+            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...
 
     def write_pop_all(self, position_pops, mode: str, blocking=...) -> bool:
         """Move all joints to the joint angles/velocities encoded in the given vector of populations.
 
-        Args:
-            position_pops (NDarray (vector[vector[double]])): vector of populations, each encoding the angle/velocity for a single joint
-            mode (str): string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position_pops : NDarray (vector[vector[double]]
+            vector of populations, each encoding the angle/velocity for a single joint
+        mode : str
+            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...
 
     def write_pop_multiple(self, position_pops, joints, mode: str, blocking=...) -> bool:
         """Move multiple joints to the joint angles/velocities encoded in the given vector of populations.
 
-        Args:
-            position_pops (NDarray (vector[vector[double]])): vector of populations, each encoding the angle/velocity for a single joint
-            joints (list/NDarray (vector[int])): Joint indizes of the joints, which should be moved (head: [3, 4, 5] -> all eye movements)
-            mode (str): string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position_pops : NDarray (vector[vector[double]]
+            vector of populations, each encoding the angle/velocity for a single joint
+        joints : list/NDarray (vector[int]
+            Joint indizes of the joints, which should be moved (head: [3, 4, 5] -> all eye movements)
+        mode : str
+            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...
 
     def write_pop_one(self, position_pop, joint: int, mode: str, blocking=...) -> bool:
         """Move a single joint to the joint angle/velocity encoded in the given population.
 
-        Args:
-            position_pop (NDarray (vector[double])): population encoding the joint angle/velocity
-            joint (int): joint number of the robot part
-            mode (str): string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position_pop : NDarray (vector[double]
+            population encoding the joint angle/velocity
+        joint : int
+            joint number of the robot part
+        mode : str
+            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         ...

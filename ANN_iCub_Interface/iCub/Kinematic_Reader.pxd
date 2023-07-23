@@ -67,7 +67,7 @@ cdef extern from "Kinematic_Reader.hpp":
         # Set released links of kinematic chain
         void ReleaseLinks(vector[int])
 
-        ## For internal use only ##
+        # For internal use only ##
         # Set/get register functions
         void setRegister(bint)
         bint getRegister()
@@ -79,4 +79,3 @@ cdef class PyKinematicReader:
     cdef shared_ptr[KinematicReader] _cpp_kin_reader
     cdef str _name
     cdef str _part
-

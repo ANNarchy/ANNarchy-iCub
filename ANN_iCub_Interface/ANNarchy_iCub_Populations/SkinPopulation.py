@@ -30,7 +30,16 @@ class SkinPopulation(SpecificPopulation):
     """
 
     def __init__(self, geometry=None, skin_section="", ip_address="0.0.0.0", port=50015, copied=False, name=None):
+        """Init the SkinPopulation.
 
+        Args:
+            geometry (tuple, optional): ANNarchy population geometry. Defaults to None.
+            skin_section (str, optional): Specify the respective skin section of the used arm. Defaults to "".
+            ip_address (str, optional): ip-address of the gRPC connection. Need to fit with the respective kinematic reader module. Defaults to "0.0.0.0".
+            port (int, optional): port of the gRPC connection. Need to fit with the respective kinematic reader module. Defaults to 50015.
+            copied (bool, optional): ANNarchy specific parameter. Defaults to False.
+            name (str, optional): individiual name for the population. Defaults to None.
+        """
         SpecificPopulation.__init__(self, geometry=geometry, neuron = Neuron(equations="r = 0.0"), copied=copied, name=name )
 
         self._skin_section = skin_section
@@ -159,6 +168,7 @@ class SkinPopulation(SpecificPopulation):
         SpecificPopulation._instantiate(self, cython_module)
 
     def connect(self):
+        """Connect the population to the gRPC socket. Need to be called once after compile."""
         # create socket and connect
         if self.initialized:
             self.cyInstance.connect()

@@ -53,19 +53,29 @@ cdef class PyJointWriter:
     def init(self, ANNiCub_wrapper iCub, str name, str part, unsigned int n_pop, double degr_per_neuron=0.0, double speed=10.0, str ini_path="../data/"):
         """Initialize the joint writer with given parameters.
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
-            name (str): name for the joint writer module
-            part (str): string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-            n_pop (unsigned int): number of neurons per population, encoding each one joint angle;
-                                  only works if parameter "deg_per_neuron" is not set
-            degr_per_neuron (double, optional): degree per neuron in the populationencoding the joints angles;
-                                                if set: population size depends on joint working range. Defaults to 0.0.
-            speed (double, optional): velocity for the joint movements. Defaults to 10.0.
-            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+        name : str
+            name for the joint writer module
+        part : str
+            string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+        n_pop : unsigned int
+            number of neurons per population, encoding each one joint angle;
+            only works if parameter "deg_per_neuron" is not set
+        degr_per_neuron : double
+            degree per neuron in the populationencoding the joints angles;
+            if set: population size depends on joint working range. (Default value = 0.0)
+        speed : double
+            velocity for the joint movements. (Default value = 10.0)
+        ini_path : str
+            Path to the "interface_param.ini"-file. (Default value = "../data/")
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         # we need to transform py-string to c++ compatible string
         cdef string key = part.encode('UTF-8')
@@ -86,33 +96,48 @@ cdef class PyJointWriter:
                   double speed=10.0, str ini_path="../data/", str ip_address="0.0.0.0", unsigned int port=50010):
         """Initialize the joint writer with given parameters, including the gRPC based connection.
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
-            name (str): name for the joint writer module
-            part (str): string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-            n_pop (unsigned int): number of neurons per population, encoding each one joint angle;
-                                  only works if parameter "deg_per_neuron" is not set
-            joints (list (vector[int])): joint selection for grpc -> empty vector for all joints
-            mode (str): mode for writing joints:
-                            - 'abs' for absolute joint angle positions
-                            - 'rel' for relative joint angles
-                            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
-            degr_per_neuron (double, optional): degree per neuron in the populationencoding the joints angles;
-                                                if set: population size depends on joint working range. Defaults to 0.0.
-            speed (double, optional): velocity for the joint movements. Defaults to 10.0.
-            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
-            ip_address (str, optional): gRPC server ip address. Defaults to "0.0.0.0".
-            port (unsigned int, optional): gRPC server port. Defaults to 50010.
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+        name : str
+            name for the joint writer module
+        part : str
+            string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+        n_pop : unsigned int
+            number of neurons per population, encoding each one joint angle;
+            only works if parameter "deg_per_neuron" is not set
+        joints : list (vector[int]
+            joint selection for grpc -> empty vector for all joints
+        mode : str
+            mode for writing joints:
+            - 'abs' for absolute joint angle positions
+            - 'rel' for relative joint angles
+            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
+        degr_per_neuron : double
+            degree per neuron in the populationencoding the joints angles;
+            if set: population size depends on joint working range. (Default value = 0.0)
+        speed : double
+            velocity for the joint movements. (Default value = 10.0)
+        ini_path : str
+            Path to the "interface_param.ini"-file. (Default value = "../data/")
+        ip_address : str
+            gRPC server ip address. (Default value = "0.0.0.0")
+        port : unsigned int
+            gRPC server port. (Default value = 50010)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         self._part = part
         # preregister module for some prechecks e.g. part already in use
         if iCub.register_jwriter(name, self):
             retval = deref(self._cpp_joint_writer).InitGRPC(part.encode('UTF-8'), n_pop, joints, mode.encode('UTF-8'), blocking.__int__(), degr_per_neuron,
-                                                           speed, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
+                                                            speed, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
             if not retval:
                 iCub.unregister_jwriter(self)
             return retval
@@ -123,8 +148,14 @@ cdef class PyJointWriter:
     def close(self, ANNiCub_wrapper iCub):
         """Close joint writer with cleanup
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+
         """
         iCub.unregister_jwriter(self)
         self._part = ""
@@ -134,7 +165,12 @@ cdef class PyJointWriter:
     def get_joint_count(self):
         """Return number of controlled joints
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             int: return number of joints being controlled by the joint writer
         """
         return deref(self._cpp_joint_writer).GetJointCount()
@@ -143,7 +179,12 @@ cdef class PyJointWriter:
     def get_joints_deg_res(self):
         """Return the resolution in degree of the populations encoding the joint angles
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vetor[double]): return vector, containing the resolution for every joints population codimg in degree
         """
         return np.array(deref(self._cpp_joint_writer).GetJointsDegRes())
@@ -152,7 +193,12 @@ cdef class PyJointWriter:
     def get_neurons_per_joint(self):
         """Return the size of the populations encoding the joint angles
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[int]): return vector, containing the population size for every joint
         """
         return np.array(deref(self._cpp_joint_writer).GetNeuronsPerJoint())
@@ -161,7 +207,12 @@ cdef class PyJointWriter:
     def get_joint_limits(self):
         """Return the limits of joint angles in degree
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[vector[double]]): return array, containing the limits of joint angles in degree (joint, (max, min))
         """
         return np.array(deref(self._cpp_joint_writer).GetJointLimits())
@@ -170,7 +221,12 @@ cdef class PyJointWriter:
     def get_joint_limits_max(self):
         """Return the upper limits of joint angles in degree
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[double]): return vector, containing the upper limits of joint angles in degree (joint, max)
         """
         return np.array(deref(self._cpp_joint_writer).GetJointLimitsMax())
@@ -179,7 +235,12 @@ cdef class PyJointWriter:
     def get_joint_limits_min(self):
         """Return the lower limits of joint angles in degree
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[double]): return vector, containing the lower limits of joint angles in degree (joint, min)
         """
         return np.array(deref(self._cpp_joint_writer).GetJointLimitsMin())
@@ -188,12 +249,17 @@ cdef class PyJointWriter:
     def set_joint_velocity(self, double speed, int joint=-1):
         """Set joint velocity.
 
-        Args:
-            speed (double): velocity value to be set
-            joint (int, optional): joint number of the robot part or -1 for all joints. Defaults to -1.
+        Parameters
+        ----------
+        speed : double
+            velocity value to be set
+        joint : int
+            joint number of the robot part or -1 for all joints. (Default value = -1)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         return deref(self._cpp_joint_writer).SetJointVelocity(speed, joint)
 
@@ -201,12 +267,17 @@ cdef class PyJointWriter:
     def set_joint_acceleration(self, double acc, int joint=-1):
         """Set joint acceleration.
 
-        Args:
-            acc (double): acceleration value to be set
-            joint (int, optional): joint number of the robot part or -1 for all joints. Defaults to -1.
+        Parameters
+        ----------
+        acc : double
+            acceleration value to be set
+        joint : int
+            joint number of the robot part or -1 for all joints. (Default value = -1)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         return deref(self._cpp_joint_writer).SetJointAcceleration(acc, joint)
 
@@ -214,12 +285,17 @@ cdef class PyJointWriter:
     def set_joint_controlmode(self, str control_mode, int joint=-1):
         """Set joint control mode
 
-        Args:
-            control_mode (str): control mode for the joint. currently implemented are: "velocity" and "position"
-            joint (int, optional): joint number of the robot part or -1 for all joints. Defaults to -1.
+        Parameters
+        ----------
+        control_mode : str
+            control mode for the joint. currently implemented are: "velocity" and "position"
+        joint : int
+            joint number of the robot part or -1 for all joints. (Default value = -1)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         # we need to transform py-string to c++ compatible string
         cdef string s1 = control_mode.encode('UTF-8')
@@ -229,16 +305,22 @@ cdef class PyJointWriter:
     def write_double_all(self, position, str mode, blocking=True):
         """Move all joints to the given positiion (joint angles/velocities).
 
-        Args:
-            position (list/NDarray (vector[double])): joint angles/velocities to write to the robot joints
-            mode (str): string to select the motion mode:
-                            - 'abs' for absolute joint angle positions
-                            - 'rel' for relative joint angles
-                            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position : list/NDarray (vector[double]
+            joint angles/velocities to write to the robot joints
+        mode : str
+            string to select the motion mode:
+            - 'abs' for absolute joint angle positions
+            - 'rel' for relative joint angles
+            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         # we need to transform py-string to c++ compatible string
         cdef string s1 = mode.encode('UTF-8')
@@ -250,17 +332,24 @@ cdef class PyJointWriter:
     def write_double_multiple(self, position, joints, str mode, blocking=True):
         """Move multiple joints to the given positiion (joint angles/velocities).
 
-        Args:
-            position (list/NDarray (vector[double])): joint angles/velocities to write to the robot joints
-            joints (list/NDarray (vector[int])): joint indizes of the joints, which should be moved (e.g. head: [3, 4, 5] -> all eye movements)
-            mode (str): string to select the motion mode:
-                            - 'abs' for absolute joint angle positions
-                            - 'rel' for relative joint angles
-                            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position : list/NDarray (vector[double]
+            joint angles/velocities to write to the robot joints
+        joints : list/NDarray (vector[int]
+            joint indizes of the joints, which should be moved (e.g. head: [3, 4, 5] -> all eye movements)
+        mode : str
+            string to select the motion mode:
+            - 'abs' for absolute joint angle positions
+            - 'rel' for relative joint angles
+            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         # we need to transform py-string to c++ compatible string
         cdef string s1 = mode.encode('UTF-8')
@@ -272,17 +361,24 @@ cdef class PyJointWriter:
     def write_double_one(self, double position, int joint, str mode, blocking=True):
         """Move single joint to the given positiion (joint angle/velocity).
 
-        Args:
-            position (double): joint angle/velocity to write to the robot joint
-            joint (int): joint number of the robot part
-            mode (str): string to select the motion mode:
-                            - 'abs' for absolute joint angle positions
-                            - 'rel' for relative joint angles
-                            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position : double
+            joint angle/velocity to write to the robot joint
+        joint : int
+            joint number of the robot part
+        mode : str
+            string to select the motion mode:
+            - 'abs' for absolute joint angle positions
+            - 'rel' for relative joint angles
+            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         # we need to transform py-string to c++ compatible string
         cdef string s1 = mode.encode('UTF-8')
@@ -294,16 +390,22 @@ cdef class PyJointWriter:
     def write_pop_all(self, position_pops, str mode, blocking=True):
         """Move all joints to the joint angles/velocities encoded in the given vector of populations.
 
-        Args:
-            position_pops (NDarray (vector[vector[double]])): vector of populations, each encoding the angle/velocity for a single joint
-            mode (str): string to select the motion mode:
-                            - 'abs' for absolute joint angle positions
-                            - 'rel' for relative joint angles
-                            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position_pops : NDarray (vector[vector[double]]
+            vector of populations, each encoding the angle/velocity for a single joint
+        mode : str
+            string to select the motion mode:
+            - 'abs' for absolute joint angle positions
+            - 'rel' for relative joint angles
+            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         # we need to transform py-string to c++ compatible string
         cdef string s1 = mode.encode('UTF-8')
@@ -315,17 +417,24 @@ cdef class PyJointWriter:
     def write_pop_multiple(self, position_pops, joints, str mode, blocking=True):
         """Move multiple joints to the joint angles/velocities encoded in the given vector of populations.
 
-        Args:
-            position_pops (NDarray (vector[vector[double]])): vector of populations, each encoding the angle/velocity for a single joint
-            joints (list/NDarray (vector[int])): Joint indizes of the joints, which should be moved (head: [3, 4, 5] -> all eye movements)
-            mode (str): string to select the motion mode:
-                            - 'abs' for absolute joint angle positions
-                            - 'rel' for relative joint angles
-                            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position_pops : NDarray (vector[vector[double]]
+            vector of populations, each encoding the angle/velocity for a single joint
+        joints : list/NDarray (vector[int]
+            Joint indizes of the joints, which should be moved (head: [3, 4, 5] -> all eye movements)
+        mode : str
+            string to select the motion mode:
+            - 'abs' for absolute joint angle positions
+            - 'rel' for relative joint angles
+            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         # we need to transform py-string to c++ compatible string
         cdef string s1 = mode.encode('UTF-8')
@@ -337,17 +446,24 @@ cdef class PyJointWriter:
     def write_pop_one(self, position_pop, int joint, str mode, blocking=True):
         """Move a single joint to the joint angle/velocity encoded in the given population.
 
-        Args:
-            position_pop (NDarray (vector[double])): population encoding the joint angle/velocity
-            joint (int): joint number of the robot part
-            mode (str): string to select the motion mode:
-                            - 'abs' for absolute joint angle positions
-                            - 'rel' for relative joint angles
-                            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
-            blocking (bool, optional): if True, complete motion before continuation. Defaults to True.
+        Parameters
+        ----------
+        position_pop : NDarray (vector[double]
+            population encoding the joint angle/velocity
+        joint : int
+            joint number of the robot part
+        mode : str
+            string to select the motion mode:
+            - 'abs' for absolute joint angle positions
+            - 'rel' for relative joint angles
+            - 'vel' for velocity values -> DO NOT USE AS BLOCKING MOTION!!!
+        blocking : bool
+            if True, complete motion before continuation. (Default value = True)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         # we need to transform py-string to c++ compatible string
         cdef string s1 = mode.encode('UTF-8')

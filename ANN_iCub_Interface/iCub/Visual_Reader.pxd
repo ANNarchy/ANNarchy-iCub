@@ -59,4 +59,3 @@ cdef class PyVisualReader:
     cdef shared_ptr[VisualReader] _cpp_visual_reader
     cdef str _name
     cdef str _part
-

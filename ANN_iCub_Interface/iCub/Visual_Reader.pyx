@@ -51,19 +51,31 @@ cdef class PyVisualReader:
              str ini_path="../data/"):
         """Initialize Visual reader with given parameters.
 
-        Args:
-            ANNiCub_wrapperiCub (_type_): main interface wrapper
-            name (str): name for the visual reader module
-            eye (str): character representing the selected eye (l/L; r/R; b/B)
-            fov_width (double, optional): output field of view width in degree [0, 60] (input fov width: 60°). Defaults to 60.
-            fov_height (double, optional): output field of view height in degree [0, 48] (input fov height: 48°). Defaults to 48.
-            img_width (int, optional): output image width in pixel (input width: 320px). Defaults to 320.
-            img_height (int, optional): output image height in pixel (input height: 240px). Defaults to 240.
-            fast_filter (bool, optional): flag to select the filter for image upscaling; True for a faster filter. Defaults to True.
-            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
+        Parameters
+        ----------
+        ANNiCub_wrapperiCub : _type_
+            main interface wrapper
+        name : str
+            name for the visual reader module
+        eye : str
+            character representing the selected eye (l/L; r/R; b/B)
+        fov_width : double
+            output field of view width in degree [0, 60] (input fov width: 60°). (Default value = 60)
+        fov_height : double
+            output field of view height in degree [0, 48] (input fov height: 48°). (Default value = 48)
+        img_width : int
+            output image width in pixel (input width: 320px). (Default value = 320)
+        img_height : int
+            output image height in pixel (input height: 240px). (Default value = 240)
+        fast_filter : bool
+            flag to select the filter for image upscaling; True for a faster filter. (Default value = True)
+        ini_path : str
+            Path to the "interface_param.ini"-file. (Default value = "../data/")
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         # ini_path = os.path.abspath(ini_path)
         self._part = eye
@@ -82,27 +94,41 @@ cdef class PyVisualReader:
                   str ini_path="../data/", str ip_address="0.0.0.0", unsigned int port=50000):
         """Initialize the visual reader with given parameters, including the gRPC based connection.
 
-        Args:
-            ANNiCub_wrapperiCub (_type_): main interface wrapper
-            name (str): name for the visual reader module
-            eye (str): character representing the selected eye (l/L; r/R; b/B)
-            fov_width (double, optional): output field of view width in degree [0, 60] (input fov width: 60°). Defaults to 60.
-            fov_height (double, optional): output field of view height in degree [0, 48] (input fov height: 48°). Defaults to 48.
-            img_width (int, optional): output image width in pixel (input width: 320px). Defaults to 320.
-            img_height (int, optional): output image height in pixel (input height: 240px). Defaults to 240.
-            fast_filter (bool, optional): flag to select the filter for image upscaling; True for a faster filter. Defaults to True.
-            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
-            strip_address (str, optional): gRPC server ip address. Defaults to "0.0.0.0".
-            unsignedintport (int, optional): gRPC server port. Defaults to 50000.
+        Parameters
+        ----------
+        ANNiCub_wrapperiCub : _type_
+            main interface wrapper
+        name : str
+            name for the visual reader module
+        eye : str
+            character representing the selected eye (l/L; r/R; b/B)
+        fov_width : double
+            output field of view width in degree [0, 60] (input fov width: 60°). (Default value = 60)
+        fov_height : double
+            output field of view height in degree [0, 48] (input fov height: 48°). (Default value = 48)
+        img_width : int
+            output image width in pixel (input width: 320px). (Default value = 320)
+        img_height : int
+            output image height in pixel (input height: 240px). (Default value = 240)
+        fast_filter : bool
+            flag to select the filter for image upscaling; True for a faster filter. (Default value = True)
+        ini_path : str
+            Path to the "interface_param.ini"-file. (Default value = "../data/")
+        strip_address : str
+            gRPC server ip address. (Default value = "0.0.0.0")
+        unsignedintport : int
+            gRPC server port. (Default value = 50000)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         self._part = eye
         # preregister module for some prechecks e.g. eye already in use
         if iCub.register_vis_reader(name, self):
             retval = deref(self._cpp_visual_reader).InitGRPC(eye.encode('UTF-8')[0], fov_width, fov_height, img_width, img_height, fast_filter, ini_path.encode('UTF-8'),
-                                                            ip_address.encode('UTF-8'), port)
+                                                             ip_address.encode('UTF-8'), port)
             if not retval:
                 iCub.unregister_vis_reader(self)
             return retval
@@ -113,7 +139,12 @@ cdef class PyVisualReader:
     def read_robot_eyes(self):
         """Return image_s from the iCub camera_s. The return type depends on the selected precision (float/double).
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[vector[precision]]): image_s from the camera_s in the form vector of image_s and as flattened image
         """
         # return np.array(deref(self._cpp_visual_reader).ReadRobotEyes(), dtype=np.float64)
@@ -123,7 +154,12 @@ cdef class PyVisualReader:
     def retrieve_robot_eye(self):
         """Return RGB-image from one of the iCub cameras. Does not work in 'B' mode.
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarrray (vector[int]): RGB-camera image flattened
         """
         return np.array(deref(self._cpp_visual_reader).RetrieveRobotEye(), dtype=np.uint8)
@@ -133,8 +169,14 @@ cdef class PyVisualReader:
     def close(self, ANNiCub_wrapper iCub):
         """Close the visual reader module
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+
         """
         iCub.unregister_vis_reader(self)
         self._part = ""

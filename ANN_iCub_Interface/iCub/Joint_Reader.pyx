@@ -53,18 +53,28 @@ cdef class PyJointReader:
     def init(self, ANNiCub_wrapper iCub, str name, str part, double sigma, unsigned int n_pop, double degr_per_neuron=0.0, str ini_path="../data/"):
         """Initialize the joint reader with given parameters.
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
-            name (str): name for the joint reader module
-            part (str): string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-            sigma (double): sigma for the joints angles populations coding
-            n_pop (unsigned int): number of neurons per population, encoding each one joint angle only works if parameter "deg_per_neuron" is not set
-            degr_per_neuron (double, optional): degree per neuron in the populations, encoding the joints angles
-                                                if set: population size depends on joint working range. Defaults to 0.0.
-            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+        name : str
+            name for the joint reader module
+        part : str
+            string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+        sigma : double
+            sigma for the joints angles populations coding
+        n_pop : unsigned int
+            number of neurons per population, encoding each one joint angle only works if parameter "deg_per_neuron" is not set
+        degr_per_neuron : double
+            degree per neuron in the populations, encoding the joints angles
+            if set: population size depends on joint working range. (Default value = 0.0)
+        ini_path : str
+            Path to the "interface_param.ini"-file. (Default value = "../data/")
 
-        Returns:
-            bool: return True, if successful
+        Returns
+        -------
+        bool
+            return True, if successful
         """
         self._part = part
         # preregister module for some prechecks e.g. part already in use
@@ -81,20 +91,32 @@ cdef class PyJointReader:
                   str ip_address="0.0.0.0", unsigned int port=50005):
         """Initialize the joint reader with given parameters, including the gRPC based connection.
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
-            name (str): name for the joint reader module
-            part (str): string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
-            sigma (double): sigma for the joints angles populations coding
-            n_pop (unsigned int): number of neurons per population, encoding each one joint angle only works if parameter "deg_per_neuron" is not set
-            degr_per_neuron (double, optional): degree per neuron in the populations, encoding the joints angles
-                                                if set: population size depends on joint working range. Defaults to 0.0.
-            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
-            ip_address (str, optional): gRPC server ip address. Defaults to "0.0.0.0".
-            port (unsigned int, optional): gRPC server port. Defaults to 50005.
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+        name : str
+            name for the joint reader module
+        part : str
+            string representing the robot part, has to match iCub part naming {left_(arm/leg), right_(arm/leg), head, torso}
+        sigma : double
+            sigma for the joints angles populations coding
+        n_pop : unsigned int
+            number of neurons per population, encoding each one joint angle only works if parameter "deg_per_neuron" is not set
+        degr_per_neuron : double
+            degree per neuron in the populations, encoding the joints angles
+            if set: population size depends on joint working range. (Default value = 0.0)
+        ini_path : str
+            Path to the "interface_param.ini"-file. (Default value = "../data/")
+        ip_address : str
+            gRPC server ip address. (Default value = "0.0.0.0")
+        port : unsigned int
+            gRPC server port. (Default value = 50005)
 
-        Returns:
-            bool: return True, if successful
+        Returns
+        -------
+        bool
+            return True, if successful
         """
         self._part = part
         # preregister module for some prechecks e.g. part already in use
@@ -110,8 +132,14 @@ cdef class PyJointReader:
     def close(self, ANNiCub_wrapper iCub):
         """Close joint reader with cleanup
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+
         """
         iCub.unregister_jreader(self)
         self._part = ""
@@ -121,7 +149,12 @@ cdef class PyJointReader:
     def get_joint_count(self):
         """Return the number of controlled joints
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             int: return number of joints, being controlled by the reader
         """
         return deref(self._cpp_joint_reader).GetJointCount()
@@ -130,7 +163,12 @@ cdef class PyJointReader:
     def get_joints_deg_res(self):
         """Return the resolution in degree of the populations encoding the joint angles
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[double]): return vector, containing the resolution for every joints population coding in degree
         """
         return np.array(deref(self._cpp_joint_reader).GetJointsDegRes())
@@ -139,7 +177,12 @@ cdef class PyJointReader:
     def get_neurons_per_joint(self):
         """Return the size of the populations encoding the joint angles
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[int]): return vector, containing the population size for every joint
         """
         return np.array(deref(self._cpp_joint_reader).GetNeuronsPerJoint())
@@ -148,8 +191,13 @@ cdef class PyJointReader:
     def read_double_all(self):
         """Read all joints and return joint angles directly as double values
 
-        Returns:
-            NDarray (vector[double]): joint angles read from the robot; empty vector at error
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray : vector[double]
+            joint angles read from the robot; empty vector at error
         """
         return np.array(deref(self._cpp_joint_reader).ReadDoubleAll(), dtype=np.float64)
 
@@ -157,11 +205,15 @@ cdef class PyJointReader:
     def read_double_multiple(self, joints):
         """Read multiple joints and return joint angles directly as double value.
 
-        Args:
-            joints (list (vector[int])): joint numbers of the robot part
+        Parameters
+        ----------
+        joints : list (vector[int]
+            joint numbers of the robot part
 
-        Returns:
-            NDarray (vector[double]): joint angle read from the robot; empty vector at error
+        Returns
+        -------
+        NDarray : vector[double]
+            joint angle read from the robot; empty vector at error
         """
         return np.array(deref(self._cpp_joint_reader).ReadDoubleMultiple(joints), dtype=np.float64)
 
@@ -169,11 +221,15 @@ cdef class PyJointReader:
     def read_double_one(self, int joint):
         """Read one joint and return joint angle directly as double value.
 
-        Args:
-            joint (int): joint number of the robot part
+        Parameters
+        ----------
+        joint : int
+            joint number of the robot part
 
-        Returns:
-            double: joint angle read from the robot; NAN at error
+        Returns
+        -------
+        double
+            joint angle read from the robot; NAN at error
         """
         return deref(self._cpp_joint_reader).ReadDoubleOne(joint)
 
@@ -181,8 +237,13 @@ cdef class PyJointReader:
     def read_pop_all(self):
         """Read all joints and return the joint angles encoded in vectors (population coding)
 
-        Returns:
-            NDarray (vector[vector[double]]): population vectors encoding every joint angle from associated robot part
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray : vector[vector[double]]
+            population vectors encoding every joint angle from associated robot part
         """
         return np.array(deref(self._cpp_joint_reader).ReadPopAll())
 
@@ -190,11 +251,15 @@ cdef class PyJointReader:
     def read_pop_multiple(self, joints):
         """Read multiple joints and return the joint angles encoded in vectors (population coding).
 
-        Args:
-            joints (list (vector[int])): joint numbers of the robot part
+        Parameters
+        ----------
+        joints : list (vector[int]
+            joint numbers of the robot part
 
-        Returns:
-            NDarray (vector[vector[double]]): population vectors encoding selected joint angles from associated robot part
+        Returns
+        -------
+        NDarray : vector[vector[double]]
+            population vectors encoding selected joint angles from associated robot part
         """
         return np.array(deref(self._cpp_joint_reader).ReadPopMultiple(joints))
 
@@ -202,10 +267,14 @@ cdef class PyJointReader:
     def read_pop_one(self, int joint):
         """Read one joint and return the joint angle encoded in a vector (population coding).
 
-        Args:
-            joint (int): joint number of the robot part
+        Parameters
+        ----------
+        joint : int
+            joint number of the robot part
 
-        Returns:
-            NDarray (vector[double]): population vector encoding the joint angle
+        Returns
+        -------
+        NDarray : vector[double]
+            population vector encoding the joint angle
         """
         return np.array(deref(self._cpp_joint_reader).ReadPopOne(joint))

@@ -51,15 +51,23 @@ cdef class PySkinReader:
     def init(self, ANNiCub_wrapper iCub, str name, str arm, norm=True, str ini_path="../data/"):
         """Initialize skin reader with given parameters.
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
-            name (str): individual name for the skin reader module
-            arm (str): character to choose the arm side (r/R for right; l/L for left)
-            norm (bool, optional): if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1]). Defaults to True.
-            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+        name : str
+            individual name for the skin reader module
+        arm : str
+            character to choose the arm side (r/R for right; l/L for left)
+        norm : bool
+            if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1]). (Default value = True)
+        ini_path : str
+            Path to the "interface_param.ini"-file. (Default value = "../data/")
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         self._part = arm
         # preregister module for some prechecks e.g. arm already in use
@@ -75,17 +83,27 @@ cdef class PySkinReader:
     def init_grpc(self, ANNiCub_wrapper iCub, str name, str arm, norm=True, str ini_path="../data/", str ip_address="0.0.0.0", unsigned int port=50015):
         """Initialize the skin reader with given parameters, including the gRPC based connection.
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
-            name (str): individual name for the skin reader module
-            arm (str): character to choose the arm side (r/R for right; l/L for left)
-            norm (bool, optional): if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1]). Defaults to True.
-            ini_path (str, optional): Path to the "interface_param.ini"-file. Defaults to "../data/".
-            ip_address (str, optional): gRPC server ip address. Defaults to "0.0.0.0".
-            port (unsigned int, optional): gRPC server port. Defaults to 50015.
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+        name : str
+            individual name for the skin reader module
+        arm : str
+            character to choose the arm side (r/R for right; l/L for left)
+        norm : bool
+            if true, the sensor data are returned normalized (iCub [0..255]; normalized [0..1]). (Default value = True)
+        ini_path : str
+            Path to the "interface_param.ini"-file. (Default value = "../data/")
+        ip_address : str
+            gRPC server ip address. (Default value = "0.0.0.0")
+        port : unsigned int
+            gRPC server port. (Default value = 50015)
 
-        Returns:
-            bool: return True/False, indicating success/failure
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
         """
         # we need to transform py-string to c++ compatible string
         self._part = arm
@@ -102,8 +120,14 @@ cdef class PySkinReader:
     def close(self, ANNiCub_wrapper iCub):
         """Close and clean skin reader.
 
-        Args:
-            iCub (ANNiCub_wrapper): main interface wrapper
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+
         """
         iCub.unregister_skin_reader(self)
         self._part = ""
@@ -113,7 +137,12 @@ cdef class PySkinReader:
     def get_tactile_arm(self):
         """Return tactile data for the upper arm skin.
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[vector[double]]): tactile data of the arm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
         return np.array(deref(self._cpp_skin_reader).GetTactileArm())
@@ -122,7 +151,12 @@ cdef class PySkinReader:
     def get_tactile_arm_size(self):
         """Return size of tactile data for the upper arm skin.
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             unsigned int: size of sensor data vector -> upper arm section
         """
         return deref(self._cpp_skin_reader).GetTactileArmSize()
@@ -131,7 +165,12 @@ cdef class PySkinReader:
     def get_tactile_forearm(self):
         """Return tactile data for the forearm skin.
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[vector[double]]): tactile data of the forearm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
         return np.array(deref(self._cpp_skin_reader).GetTactileForearm())
@@ -140,7 +179,12 @@ cdef class PySkinReader:
     def get_tactile_forearm_size(self):
         """Return size of tactile data for the forearm skin
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             unsigned int: size of sensor data vector -> forearm section
         """
         return deref(self._cpp_skin_reader).GetTactileForearmSize()
@@ -149,7 +193,12 @@ cdef class PySkinReader:
     def get_tactile_hand(self):
         """Return tactile data for the hand skin.
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             NDarray (vector[vector[double]]): tactile data of the hand part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
         return np.array(deref(self._cpp_skin_reader).GetTactileHand())
@@ -158,7 +207,12 @@ cdef class PySkinReader:
     def get_tactile_hand_size(self):
         """Return size of tactile data for the hand skin.
 
-        Returns:
+        Parameters
+        ----------
+
+        Returns
+        -------
+        type
             unsigned int: size of sensor data vector -> hand section
         """
         return deref(self._cpp_skin_reader).GetTactileHandSize()
@@ -167,10 +221,14 @@ cdef class PySkinReader:
     def get_taxel_pos(self, str skin_part):
         """Return the taxel positions given by the ini files from the icub-main repo.
 
-        Args:
-            skin_part (str): skin part to load the data for ("arm", "forearm", "hand")
+        Parameters
+        ----------
+        skin_part : str:
+            skin part to load the data for ("arm", "forearm", "hand")
 
-        Returns:
+        Returns
+        -------
+        type
             NDarray (vector[vector[double]]): Vector containing taxel positions -> reference frame depending on skin part
         """
         # we need to transform py-string to c++ compatible string
@@ -181,17 +239,27 @@ cdef class PySkinReader:
     def read_tactile(self):
         """Read sensor data for one step
 
-        Returns:
-            bool: return True/False, indicating success/failure
-        """        
+        Parameters
+        ----------
+
+        Returns
+        -------
+        bool
+            return True/False, indicating success/failure
+        """
         return deref(self._cpp_skin_reader).ReadTactile()
 
     # read tactile data for upper arm skin
     def read_skin_arm(self):
         """Read tactile data for upper arm skin.
 
-        Returns:
-            NDarray (vector[double]): tactile data of the arm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray : vector[double]
+            tactile data of the arm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
         return np.array(deref(self._cpp_skin_reader).ReadSkinArm())
 
@@ -199,8 +267,13 @@ cdef class PySkinReader:
     def read_skin_forearm(self):
         """Read tactile data for forearm skin.
 
-        Returns:
-            NDarray (vector[double]): tactile data of the forearm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray : vector[double]
+            tactile data of the forearm part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
         return np.array(deref(self._cpp_skin_reader).ReadSkinForearm())
 
@@ -208,7 +281,12 @@ cdef class PySkinReader:
     def read_skin_hand(self):
         """Read tactile data for hand skin.
 
-        Returns:
-            NDarray (vector[double]): tactile data of the hand part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray : vector[double]
+            tactile data of the hand part of the skin, values: non-normalized: 0..255 ; normalized: 0..1.0
         """
         return np.array(deref(self._cpp_skin_reader).ReadSkinHand())

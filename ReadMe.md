@@ -38,7 +38,7 @@ The interface consists of different parts. Clustering the different tasks of the
 
 
 3. Sync
-    - The Sync module provide two classes MasterClock and ClockInterface. Thereby, the MasterClock is the main synchronization handler and for the use exactly one instance of it is needed to create. To synchronize the ANNarchy and iCub simulations, for each side one derived class of the ClockInterface ahs to be created. This class provide two abstract functions, which has to be impleemnted. The first is the update method and the second is sync_input. These method are executed once for update step. The timing can be individually be set and is dependent on the usecase.<br>
+    - The Sync module provide two classes MasterClock and ClockInterface. Thereby, the MasterClock is the main synchronization handler and for the use exactly one instance of it is needed to create. To synchronize the ANNarchy and iCub simulations, for each side one derived class of the ClockInterface has to be created. This class provide two abstract functions, which has to be impleemnted. The first is the update method and the second is sync_input. These method are executed once for update step. The timing can be individually be set and is dependent on the usecase.<br>
     At this time this synchronization mechanism should only be used with the iCub in simulation.
 
 4. Vocabs
@@ -52,13 +52,13 @@ The interface consists of different parts. Clustering the different tasks of the
         - ANNarchy_iCub_Populations -> ANNarchy population source files for the iCub input/output populations
         - grpc-> gRPC communication source files
         - iCub -> Contains the Cython files (pyx, pxd) for wrapping the C++ code for the use in Python (iCub interaction modules)
-        - Sync -> Classes used for synchronized execution of iCub interaction, ANNarchy simulation and further modules
+        - Sync -> Classes which can be used for synchronized execution of iCub interaction, ANNarchy simulation and further modules
         - include -> This folder contains the C++ header files for the interface modules.
             - INI_Reader -> The INI-Reader is an external module, which is used to handle ini-files.
         - src -> This folder contains the C++ source files for the interface modules.
     - data -> Folder capsulate the data files used by the interface.
-        - sensor_positions -> This folder caontains the files from the iCub simulator installation with the position data for the tactile sensors.
-        - interface_param.ini -> ini-file with several parameters for the interface
+        - sensor_positions -> This folder contains the files from the iCub-simulator installation with the position data for the tactile sensors.
+        - interface_param.ini -> ini-file with several parameters for the interface (default values for tests)
     - doc -> This folder contains the doxygen files for generating the documentaion
     - Testfiles -> files for interface testing
     - Examples -> Interface implementation examples
@@ -154,7 +154,7 @@ compile(directory='results/annarchy_vreader', compiler_flags="-I"+ann_interface_
 pop_vis.connect()
 ...
 
-# Instanciate main iCub wrapper
+# Instantiate main iCub wrapper
 iCub = iCub_Interface.ANNiCub_wrapper()
 
 # Add necessary module instances
@@ -195,6 +195,7 @@ Fietzek, T., Dinkelbach, H. Ü., & Hamker, F. H. (2022). ANNarchy - iCub: An Int
 
 
 ## Dependencies
+g++     >= 6.1
 Python  >= 3.5<br>
 YARP    >= 3.2<br>
 OpenCV  >= 3.4<br>
