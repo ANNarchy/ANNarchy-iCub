@@ -86,7 +86,10 @@ bool SkinReader::Init(std::string name, char arm, bool norm_data, std::string in
         }
 
         // Set side and read taxel position files depending on selected arm side
-        std::string data_dir = reader_gen.Get("skin", "sensor_position_dir", "../data/sensor_positions/");
+        std::string data_dir = reader_gen.Get("skin", "sensor_position_dir", ini_path + "/sensor_positions/");
+        if (data_dir == "default") {
+            data_dir = ini_path + "/sensor_positions/";
+        }
         if (arm == 'r' || arm == 'R') {
             side = "right";
             bool read_err_arm = !ReadTaxelPos(data_dir + "right_arm_mesh_idx.txt", data_dir + "right_arm_mesh_pos.txt", "arm");
@@ -371,9 +374,9 @@ bool SkinReader::ReadTactile() {
     }
 }
 
-unsigned int SkinReader::GetTactileArmSize() { return taxel_pos_data["arm"].idx.size(); }
-unsigned int SkinReader::GetTactileForearmSize() { return taxel_pos_data["forearm"].idx.size(); }
-unsigned int SkinReader::GetTactileHandSize() { return taxel_pos_data["hand"].idx.size(); }
+unsigned int SkinReader::GetTactileArmSize() { return taxel_pos_data["arm"].num_sensors; }
+unsigned int SkinReader::GetTactileForearmSize() { return taxel_pos_data["forearm"].num_sensors; }
+unsigned int SkinReader::GetTactileHandSize() { return taxel_pos_data["hand"].num_sensors; }
 
 std::vector<double> SkinReader::ReadSkinArm() {
     /*
@@ -448,49 +451,54 @@ std::vector<double> SkinReader::ReadSkinHand() {
 }
 
 /*** gRPC related functions ***/
-// TODO seperated functions for different sections
+// TODO(tofo) seperated functions for different sections
 #ifdef _USE_GRPC
 std::vector<double> SkinReader::provideData(int section) {
     std::vector<double> sensor_data;
 
-    if (section == 3) {
-        tactile_hand = port_hand.read();
-        if (tactile_hand != NULL) {
-            std::string skin_part_h = "hand";
-            auto idx_arr_h = taxel_pos_data[skin_part_h].idx;
-            for (unsigned int i = 0; i < idx_arr_h.size(); i++) {
-                if (idx_arr_h[i] > 0) sensor_data.push_back(tactile_hand->data()[i] * norm_fac);
+    switch (section) {
+        case 1:    // arm
+            tactile_arm = port_arm.read();
+            if (tactile_arm != NULL) {
+                std::string skin_part_a = "arm";
+                auto idx_arr_a = taxel_pos_data[skin_part_a].idx;
+                for (unsigned int i = 0; i < idx_arr_a.size(); i++) {
+                    if (idx_arr_a[i] > 0) sensor_data.push_back(tactile_arm->data()[i] * norm_fac);
+                }
+            } else {
+                std::cerr << "[Skin Reader " + side + "] Error in reading arm tactile data from the iCub!" << std::endl;
             }
-        } else {
-            std::cerr << "[Skin Reader " + side + "] Error in reading hand tactile data from the iCub!" << std::endl;
-        }
+            break;
 
-    } else if (section == 2) {
-        tactile_forearm = port_forearm.read();
-        if (tactile_forearm != NULL) {
-            std::string skin_part_f = "forearm";
-            auto idx_arr_f = taxel_pos_data[skin_part_f].idx;
-            for (unsigned int i = 0; i < idx_arr_f.size(); i++) {
-                if (idx_arr_f[i] > 0) sensor_data.push_back(tactile_forearm->data()[i] * norm_fac);
+        case 2:    // forearm
+            tactile_forearm = port_forearm.read();
+            if (tactile_forearm != NULL) {
+                std::string skin_part_f = "forearm";
+                auto idx_arr_f = taxel_pos_data[skin_part_f].idx;
+                for (unsigned int i = 0; i < idx_arr_f.size(); i++) {
+                    if (idx_arr_f[i] > 0) sensor_data.push_back(tactile_forearm->data()[i] * norm_fac);
+                }
+            } else {
+                std::cerr << "[Skin Reader " + side + "] Error in reading forearm tactile data from the iCub!" << std::endl;
             }
-        } else {
-            std::cerr << "[Skin Reader " + side + "] Error in reading forearm tactile data from the iCub!" << std::endl;
-        }
+            break;
 
-    } else if (section == 1) {
-        tactile_arm = port_arm.read();
-        // ARM
-        if (tactile_arm != NULL) {
-            std::string skin_part_a = "arm";
-            auto idx_arr_a = taxel_pos_data[skin_part_a].idx;
-            for (unsigned int i = 0; i < idx_arr_a.size(); i++) {
-                if (idx_arr_a[i] > 0) sensor_data.push_back(tactile_arm->data()[i] * norm_fac);
+        case 3:    // hand
+            tactile_hand = port_hand.read();
+            if (tactile_hand != NULL) {
+                std::string skin_part_h = "hand";
+                auto idx_arr_h = taxel_pos_data[skin_part_h].idx;
+                for (unsigned int i = 0; i < idx_arr_h.size(); i++) {
+                    if (idx_arr_h[i] > 0) sensor_data.push_back(tactile_hand->data()[i] * norm_fac);
+                }
+            } else {
+                std::cerr << "[Skin Reader " + side + "] Error in reading hand tactile data from the iCub!" << std::endl;
             }
-        } else {
-            std::cerr << "[Skin Reader " + side + "] Error in reading arm tactile data from the iCub!" << std::endl;
-        }
-    } else {
-        std::cerr << "[Skin Reader " + side + "] Undefined skin section!" << std::endl;
+            break;
+
+        default:
+            std::cerr << "[Skin Reader " + side + "] Undefined skin section!" << std::endl;
+            break;
     }
     return sensor_data;
 }
@@ -519,6 +527,7 @@ bool SkinReader::ReadTaxelPos(std::string filename_idx, std::string filename_pos
     int i;
 
     // read information from file about used indices of the skin sensor position data
+    unsigned int num_sensors = 0;
     i = 0;
     file_idx.open(filename_idx);
     if (file_idx.fail()) {
@@ -528,6 +537,9 @@ bool SkinReader::ReadTaxelPos(std::string filename_idx, std::string filename_pos
     while (file_idx >> ind) {
         i++;
         idx.push_back(ind);
+        if (ind > 0) {
+            num_sensors++;
+        }
     }
     file_idx.close();
 
@@ -553,6 +565,7 @@ bool SkinReader::ReadTaxelPos(std::string filename_idx, std::string filename_pos
 
     part_tax_pos.idx = idx;
     part_tax_pos.arr = arr;
+    part_tax_pos.num_sensors = num_sensors;
 
     taxel_pos_data[part] = part_tax_pos;
 

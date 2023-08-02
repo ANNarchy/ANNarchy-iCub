@@ -81,14 +81,14 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "/interface_param.ini");
         if (reader_gen.ParseError() != 0) {
-            std::cerr << "[Kinematic Writer " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path << "\" and the ini file content!" << std::endl;
+            std::cerr << "[Kinematic Writer " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path
+                      << "\" and the ini file content!" << std::endl;
             return false;
         }
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         std::string client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
         if (part == "right_arm" || part == "left_arm") {
-
             std::string::size_type i = part.find("_arm");
             std::string descriptor = part.substr(0, i);
 
@@ -285,7 +285,7 @@ std::vector<double> KinematicWriter::solveInvKin(std::vector<double> position, s
 
         // strip blocked links from joint angle vector
         for (auto i = 0; i < angles_torso.size(); i++) {
-            if (!(std::find(blocked_links.begin(), blocked_links.end(), i) != blocked_links.end())) {
+            if (!(std::find(blocked_links.begin(), blocked_links.end(), i) != blocked_links.end())) {    // TODO(tofo): check that correct angles are missed
                 angles.push_back(angles_torso[i]);
             }
         }
@@ -310,7 +310,6 @@ std::vector<double> KinematicWriter::solveInvKin(std::vector<double> position, s
 }
 
 void KinematicWriter::testinvKin() {
-
     yarp::sig::Vector q0, qf, qhat, xf, xhat;
 
     KinChain->blockLink(2);
@@ -332,7 +331,8 @@ void KinematicWriter::testinvKin() {
         // last joint set to 1 deg higher than the bound
         if (i == KinChain->getDOF() - 1) qf[i] = max + 1.0 * iCub::ctrl::CTRL_DEG2RAD;
 
-        std::cout << "joint " << i << " in [" << iCub::ctrl::CTRL_RAD2DEG * min << "," << iCub::ctrl::CTRL_RAD2DEG * max << "] set to " << iCub::ctrl::CTRL_RAD2DEG * qf[i] << std::endl;
+        std::cout << "joint " << i << " in [" << iCub::ctrl::CTRL_RAD2DEG * min << "," << iCub::ctrl::CTRL_RAD2DEG * max << "] set to "
+                  << iCub::ctrl::CTRL_RAD2DEG * qf[i] << std::endl;
     }
 
     // it is not allowed to overcome the bounds...

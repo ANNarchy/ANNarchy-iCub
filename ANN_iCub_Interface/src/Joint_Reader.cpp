@@ -88,7 +88,8 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "/interface_param.ini");
         if (reader_gen.ParseError() != 0) {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path << "\" and the ini file content!" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path
+                      << "\" and the ini file content!" << std::endl;
             return false;
         }
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
@@ -334,7 +335,7 @@ std::vector<double> JointReader::ReadDoubleAllTime() {
 std::vector<double> JointReader::ReadDoubleMultiple(std::vector<int> joint_select) {
     /*
         Read multiple joints and return joint angles directly as double value
-        
+
         params: std::vector<int> joint  -- joint selection of the robot part
 
         return: std::vector<double>     -- joint angles read from the robot
@@ -504,7 +505,6 @@ std::vector<double> JointReader::ReadPopOne(int joint) {
 }
 
 /*** gRPC functions ***/
-// TODO seperated functions for different modi -> set enc/joints in init
 #ifdef _USE_GRPC
 std::vector<double> JointReader::provideData(int value, bool enc) {
     if (enc) {

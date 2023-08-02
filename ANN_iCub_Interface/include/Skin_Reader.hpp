@@ -36,10 +36,11 @@
  * \brief  Struct for the skin taxel position data per iCub part
  */
 struct TaxelData {
-    std::vector<int> idx;                    // index array
+    unsigned int num_sensors;                // number of sensors in the respective skin part
+    std::vector<int> idx;                    // index array, indicating the assignment of the data values to the skin sensors
     std::vector<std::vector<double>> arr;    // taxel position array -> x;y;z position for the idx taxel
 };
-// TODO: getter for skin section sizes
+
 /**
  * \brief  Read-out of the skin sensor data from the iCubs artificial skin
  */

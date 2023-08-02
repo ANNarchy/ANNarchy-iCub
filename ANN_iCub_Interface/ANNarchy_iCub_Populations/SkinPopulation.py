@@ -40,7 +40,7 @@ class SkinPopulation(SpecificPopulation):
             copied (bool, optional): ANNarchy specific parameter. Defaults to False.
             name (str, optional): individiual name for the population. Defaults to None.
         """
-        SpecificPopulation.__init__(self, geometry=geometry, neuron = Neuron(equations="r = 0.0"), copied=copied, name=name )
+        SpecificPopulation.__init__(self, geometry=geometry, neuron=Neuron(equations="r = 0.0"), copied=copied, name=name)
 
         self._skin_section = skin_section
         self._ip_address = ip_address
@@ -48,15 +48,12 @@ class SkinPopulation(SpecificPopulation):
         self.name = name
 
     def _init_attributes(self):
-
         SpecificPopulation._init_attributes(self)
 
         self.cyInstance.set_ip_address(self._ip_address)
         self.cyInstance.set_port(self._port)
 
-
     def _copy(self):
-
         return SkinPopulation(geometry=self.geometry, ip_address=self._ip_address, port=self._port, copied=True, name=self.name)
 
     @property
@@ -161,9 +158,7 @@ class SkinPopulation(SpecificPopulation):
         r  = skin_source->retrieve_skin_hand();
         """
 
-
     def _instantiate(self, cython_module):
-
         # initializes cython wrapper
         SpecificPopulation._instantiate(self, cython_module)
 

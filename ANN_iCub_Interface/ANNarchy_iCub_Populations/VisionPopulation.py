@@ -29,7 +29,7 @@ class VisionPopulation(SpecificPopulation):
         Read the camera images from the iCub, preprocess the images and set it as activation for the ANNarchy population.
     """
 
-    def __init__(self, geometry=(320,240), ip_address="0.0.0.0", port=50000, copied=False, name=None):
+    def __init__(self, geometry=(320, 240), ip_address="0.0.0.0", port=50000, copied=False, name=None):
         """Init the VisionPopulation.
 
         Args:
@@ -39,7 +39,7 @@ class VisionPopulation(SpecificPopulation):
             copied (bool, optional): ANNarchy specific parameter. Defaults to False.
             name (str, optional): individiual name for the population. Defaults to None.
         """
-        SpecificPopulation.__init__(self, geometry=geometry, neuron = Neuron(equations="r = 0.0"), copied=copied, name=name )
+        SpecificPopulation.__init__(self, geometry=geometry, neuron=Neuron(equations="r = 0.0"), copied=copied, name=name)
 
         self._ip_address = ip_address
         self._port = port
@@ -48,7 +48,6 @@ class VisionPopulation(SpecificPopulation):
         self._offset = 0
 
     def _init_attributes(self):
-
         SpecificPopulation._init_attributes(self)
 
         self.cyInstance.set_ip_address(self._ip_address)
@@ -57,7 +56,6 @@ class VisionPopulation(SpecificPopulation):
         self.cyInstance.set_period(self._period)
 
     def _copy(self):
-
         return VisionPopulation(geometry=self.geometry, ip_address=self._ip_address, port=self._port, copied=True, name=self.name)
 
     @property
@@ -219,7 +217,6 @@ class VisionPopulation(SpecificPopulation):
         """
 
     def _instantiate(self, cython_module):
-
         # initializes cython wrapper
         SpecificPopulation._instantiate(self, cython_module)
 

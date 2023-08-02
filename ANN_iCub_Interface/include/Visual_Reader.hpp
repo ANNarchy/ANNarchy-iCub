@@ -37,9 +37,7 @@
 /**
  * \brief  Read-out of the camera images from the iCub robot
  */
-// class VisualReader : private yarp::os::RFModule, public Mod_BaseClass {
 class VisualReader : public Mod_BaseClass {
-
  public:
 #ifndef _DOUBLE_PRECISION
     typedef float precision;

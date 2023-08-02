@@ -58,7 +58,7 @@ joint_ctrl_neuron = ann.Neuron(
 
 # Proprioception of joint angles
 pop_joint_read = iCub_pop.JointReadout(geometry=(4,), joints=[0, 1, 2, 3], name="rarm_read")
-pop_compute = ann.Population(geometry=(4,), neuron=compute_neuron, name="cumpute")
+pop_compute = ann.Population(geometry=(4,), neuron=compute_neuron, name="compute")
 
 # Joint control command population
 pop_joint_write = iCub_pop.JointControl(geometry=(4,), neuron=joint_ctrl_neuron, name="rarm_ctrl")

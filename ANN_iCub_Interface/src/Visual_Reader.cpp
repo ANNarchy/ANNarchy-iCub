@@ -50,7 +50,8 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
     /*
         Initialize Visual reader with given parameters for image resolution, field of view and eye selection
 
-        params: char eye                        -- character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer)
+        params: char eye                        -- character representing the selected eye (l/L; r/R) or b/B for binocular mode
+                                                   (right and left eye image are stored in the same buffer)
                 double fov_width                -- output field of view width in degree [0, 60] (input fov width: 60°)
                 double fov_height               -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width                   -- output image width in pixel (input width: 320px)
@@ -240,11 +241,13 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 }
 
 #ifdef _USE_GRPC
-bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address,
+                            unsigned int port) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
 
-        params: char eye                        -- character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer)
+        params: char eye                        -- character representing the selected eye (l/L; r/R) or b/B for binocular mode 
+                                                   (right and left eye image are stored in the same buffer)
                 double fov_width                -- output field of view width in degree [0, 60] (input fov width: 60°)
                 double fov_height               -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width                   -- output image width in pixel (input width: 320px)
@@ -276,11 +279,13 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
     }
 }
 #else
-bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address,
+                            unsigned int port) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
 
-        params: char eye                        -- character representing the selected eye (l/L; r/R) or b/B for binocular mode (right and left eye image are stored in the same buffer)
+        params: char eye                        -- character representing the selected eye (l/L; r/R) or b/B for binocular mode
+                                                   (right and left eye image are stored in the same buffer)
                 double fov_width                -- output field of view width in degree [0, 60] (input fov width: 60°)
                 double fov_height               -- output field of view height in degree [0, 48] (input fov height: 48°)
                 int img_width                   -- output image width in pixel (input width: 320px)
@@ -419,7 +424,6 @@ void VisualReader::Close() {
 /*** gRPC related functions ***/
 #ifdef _USE_GRPC
 std::vector<double> VisualReader::provideData() {
-
     std::vector<double> img;
     if (act_eye == 'L') {
         iEyeRgb = port_left.read();

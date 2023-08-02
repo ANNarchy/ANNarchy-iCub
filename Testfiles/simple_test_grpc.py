@@ -54,7 +54,7 @@ def call_test_jreader(iCub, ann_interface_root):
     popsize = 25
 
     # Add ANNarchy joint input population
-    pop_jread = JointReadout(geometry = (len(joints), popsize), joints=joints, encoded=True)
+    pop_jread = JointReadout(geometry = (len(joints), popsize), joints=joints, encoded=True, name="joint_read")
 
     grpc_cpp_plugin = subprocess.check_output(["which", "grpc_cpp_plugin"]).strip().decode(sys.stdout.encoding)
     grpc_path = str(Path(grpc_cpp_plugin).resolve().parents[1]) + "/"

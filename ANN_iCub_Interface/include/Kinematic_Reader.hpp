@@ -116,7 +116,7 @@ class KinematicReader : public Mod_BaseClass {
     std::vector<int> GetBlockedLinks();
 
     /**
-     * \brief Set blocked links
+     * \brief Set blocked links. Chain DOF reduced by number of blocked links.
      * \param[in] joints links to block in kinematic chain
      */
     void BlockLinks(std::vector<int> joints);
@@ -128,7 +128,7 @@ class KinematicReader : public Mod_BaseClass {
     std::vector<int> GetDOFLinks();
 
     /**
-     * \brief Set released links of kinematic chain
+     * \brief Set released links of kinematic chain. Chain DOF increased by number of released links.
      * \param[in] joints
      */
     void ReleaseLinks(std::vector<int> joints);

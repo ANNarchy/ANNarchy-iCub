@@ -146,10 +146,10 @@ class PyJointWriter:
         joints : list (vector[int]
             joint selection for grpc -> empty vector for all joints
         mode : str
-            mode for writing joints:
-            - 'abs' for absolute joint angle positions
-            - 'rel' for relative joint angles
-            - 'vel' for velocity values -> DO NOT USE "VEL" AS BLOCKING MOTION!!!
+            string to select the motion mode:
+                'abs' for absolute joint angle positions;
+                'rel' for relative joint angles;
+                'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
         degr_per_neuron : double
@@ -278,7 +278,10 @@ class PyJointWriter:
         position : list/NDarray (vector[double]
             joint angles/velocities to write to the robot joints
         mode : str
-            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+            string to select the motion mode:
+                'abs' for absolute joint angle positions;
+                'rel' for relative joint angles;
+                'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
 
@@ -299,7 +302,10 @@ class PyJointWriter:
         joints : list/NDarray (vector[int]
             joint indizes of the joints, which should be moved (e.g. head: [3, 4, 5] -> all eye movements)
         mode : str
-            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+            string to select the motion mode:
+                'abs' for absolute joint angle positions;
+                'rel' for relative joint angles;
+                'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
 
@@ -320,7 +326,10 @@ class PyJointWriter:
         joint : int
             joint number of the robot part
         mode : str
-            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+            string to select the motion mode:
+                'abs' for absolute joint angle positions;
+                'rel' for relative joint angles;
+                'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
 
@@ -339,7 +348,10 @@ class PyJointWriter:
         position_pops : NDarray (vector[vector[double]]
             vector of populations, each encoding the angle/velocity for a single joint
         mode : str
-            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+            string to select the motion mode:
+                'abs' for absolute joint angle positions;
+                'rel' for relative joint angles;
+                'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
 
@@ -360,7 +372,10 @@ class PyJointWriter:
         joints : list/NDarray (vector[int]
             Joint indizes of the joints, which should be moved (head: [3, 4, 5] -> all eye movements)
         mode : str
-            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+            string to select the motion mode:
+                'abs' for absolute joint angle positions;
+                'rel' for relative joint angles;
+                'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
 
@@ -381,7 +396,10 @@ class PyJointWriter:
         joint : int
             joint number of the robot part
         mode : str
-            string to select the motion mode: 'abs' for absolute joint angle positions; 'rel' for relative joint angles; 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
+            string to select the motion mode:
+                'abs' for absolute joint angle positions;
+                'rel' for relative joint angles;
+                'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
 

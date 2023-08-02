@@ -24,6 +24,7 @@
 #include <yarp/sig/all.h>
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -82,7 +83,8 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "/interface_param.ini");
         if (reader_gen.ParseError() != 0) {
-            std::cerr << "[Joint Writer " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path << "\" and the ini file content!" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path
+                      << "\" and the ini file content!" << std::endl;
             return false;
         }
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
@@ -212,8 +214,8 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
     }
 }
 #ifdef _USE_GRPC
-bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking, double deg_per_neuron, double speed, std::string ini_path,
-                           std::string ip_address, unsigned int port) {
+bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking, double deg_per_neuron, double speed,
+                           std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize the joint Writer with given parameters
 
@@ -251,8 +253,8 @@ bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<
     }
 }
 #else
-bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking, double deg_per_neuron, double speed, std::string ini_path,
-                           std::string ip_address, unsigned int port) {
+bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking, double deg_per_neuron, double speed,
+                           std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize the joint Writer with given parameters
 
@@ -532,17 +534,18 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
     if (CheckInit()) {
         // Check joint count
         if (joint_selection.size() > (unsigned int)joints) {
-            std::cerr << "[Joint Writer " << icub_part << "] Too many joints for the robot part!" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Too many joints (" << joint_selection.size() << ") for the robot part!" << std::endl;
             return false;
         }
 
         if (joint_selection.size() != position.size()) {
-            std::cerr << "[Joint Writer " << icub_part << "] Position count and joint count does not fit together!" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Position count (" << position.size() << ") and joint count (" << joint_selection.size()
+                      << ") does not fit together!" << std::endl;
             return false;
         }
 
         if (*(std::max_element(joint_selection.begin(), joint_selection.end())) >= joints) {
-            std::cerr << "[Joint Writer " << icub_part << "] Maximum joint number is out of range!" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Maximum joint number is out of range (" << joints << ")!" << std::endl;
             return false;
         }
 
@@ -652,8 +655,10 @@ bool JointWriter::WriteDoubleOne(double position, int joint, std::string mode, b
 
                 if (new_pos > joint_max[joint]) {
                     position = joint_max[joint] - act_pos;
+                    std::cerr << "[Joint Writer " << icub_part << "] Correct position due to joint maximum reach!" << std::endl;
                 } else if (new_pos < joint_min[joint]) {
                     position = joint_min[joint] - act_pos;
+                    std::cerr << "[Joint Writer " << icub_part << "] Correct position due to joint minimum reach!" << std::endl;
                 }
                 // start motion
                 start = ipos->relativeMove(joint, position);
@@ -942,7 +947,11 @@ double JointWriter::Decode_ext(std::vector<double> position_pop, int joint) { re
 /*** gRPC related functions ***/
 #ifdef _USE_GRPC
 void JointWriter::Retrieve_ANNarchy_Input_SJ() { joint_value = joint_source->retrieve_singletarget(); }
-void JointWriter::Write_ANNarchy_Input_SJ() { WriteDoubleOne(joint_value, _joint_select[0], _mode, _blocking); }
+void JointWriter::Write_ANNarchy_Input_SJ() {
+    if (std::isfinite(joint_value)) {
+        WriteDoubleOne(joint_value, _joint_select[0], _mode, _blocking);
+    }
+}
 
 void JointWriter::Retrieve_ANNarchy_Input_SJ_enc() { joint_value_1dvector = joint_source->retrieve_singletarget_enc(); }
 void JointWriter::Write_ANNarchy_Input_SJ_enc() { WritePopOne(joint_value_1dvector, _joint_select[0], _mode, _blocking); }

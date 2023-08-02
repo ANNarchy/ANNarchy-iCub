@@ -4,11 +4,9 @@ from .VisionPopulation import VisionPopulation
 from .KinematicPopulation import KinematicForward
 
 
-__all__ = [ "VisionPopulation",
-            "JointControl",
-            "JointReadout",
-            "SkinPopulation",
-            "KinematicForward"
-        ]
-
-
+__all__ = ["VisionPopulation",
+           "JointControl",
+           "JointReadout",
+           "SkinPopulation",
+           "KinematicForward"
+           ]

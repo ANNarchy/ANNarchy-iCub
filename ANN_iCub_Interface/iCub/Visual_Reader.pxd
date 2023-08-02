@@ -40,7 +40,7 @@ cdef extern from "Visual_Reader.hpp":
         bool_t Init(char, double, double, int, int, bool_t, string)
 
         # Init Visual reader with given parameters for image resolution, field of view and eye selection and grpc communication.
-        bool_t InitGRPC(char, double, double, int, int, bool_t, string, string , unsigned int)
+        bool_t InitGRPC(char, double, double, int, int, bool_t, string, string, unsigned int)
 
         # Read a set of images from the robot cameras.
         vector[vector[precision]] ReadRobotEyes()

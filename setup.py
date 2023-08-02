@@ -28,7 +28,7 @@ from make_config import *
 try:
     from setuptools import Extension, find_packages, setup
     print('Checking for setuptools... OK')
-except:
+except Exception:
     print('Checking for setuptools... NO')
     print('Error : Python package "setuptools" is required.')
     print('You can install it from pip or: http://pypi.python.org/pypi/setuptools')
@@ -38,7 +38,7 @@ except:
 try:
     from Cython.Build import cythonize
     print('Checking for Cython... OK')
-except:
+except Exception:
     print('Checking for Cython... NO')
     print('Error : Python package "Cython" is required.')
     print('You can install it from pip')
@@ -48,17 +48,18 @@ except:
 try:
     import numpy
     print('Checking for numpy... OK')
-except:
+except Exception:
     print('Checking for numpy... NO')
     print('Error : Python package "numpy" is required.')
     print('You can install it from pip or: http://www.numpy.org')
     exit(0)
 
 # test ANNarchy
+# TODO: check if ANNarchy is necessary
 try:
     import ANNarchy
     print('Checking for ANNarchy... OK')
-except:
+except Exception:
     print('Checking for ANNarchy... NO')
     print('Error : Python package "ANNarchy" is required.')
     exit(0)
@@ -113,8 +114,7 @@ py_major = sys.version_info[0]
 py_minor = sys.version_info[1]
 py_version = str(py_major) + "." + str(py_minor)
 
-
-# find YARP include path
+# Find YARP include path
 if yarp_prefix == "default":
     yarp_prefix = set_yarp_prefix()
 else:
@@ -128,27 +128,26 @@ log_define = False
 if yarp_version_major >= 3 and yarp_version_minor >= 4:
     log_define = True
 
-# find OpenCV include path
+# Find OpenCV include path
 if cv_include == "default":
     cv_include = set_opencv_prefix()
 else:
     if not os.path.isdir(cv_include + "/opencv2"):
         sys.exit("Did not find OpenCV in given path! Please correct cv_include in make_config.py!")
 
-# Setup lists with lib/include directories and names
+# Lists with lib/include directories and names
 include_dir = ["/usr/include", "ANN_iCub_Interface/include", "./", yarp_prefix + "/include", cv_include, numpy.get_include()] + grpc_include_dir
 
 libs = ["opencv_core", "opencv_imgproc",
         "YARP_dev", "YARP_init", "YARP_math", "YARP_name", "YARP_os", "YARP_run", "YARP_sig"] + grpc_libs
 
-lib_dirs=["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib"] + grpc_lib_dir
-
+lib_dirs = ["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib"] + grpc_lib_dir
 
 # Prefixes for Cython and C++ based code
 prefix_cy = "ANN_iCub_Interface/"
 prefix_cpp = "ANN_iCub_Interface/src/"
 
-# Sourcefiles lists
+# Sourcefile lists
 sources = ["ANN_iCub_Interface/include/INI_Reader/INIReader.cpp", "ANN_iCub_Interface/include/INI_Reader/ini.cpp", prefix_cpp + "Module_Base_Class.cpp"]
 sources1 = [prefix_cpp + "Joint_Reader.cpp", prefix_cpp + "Joint_Writer.cpp", prefix_cpp + "Skin_Reader.cpp", prefix_cpp + "Visual_Reader.cpp", prefix_cpp + "Kinematic_Reader.cpp"]
 
@@ -160,8 +159,11 @@ package_data = ['__init__.py',
                 'py.typed'
                 ] + grpc_package_data
 
-# set compile arguments
-extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall", "-pthread"] # , "-fpermissive" nicht als default; macht den Compiler relaxter; "-march=native" ermöglicht direkter Plattformabhängige Optimierung
+# Set compile arguments
+extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=native", "-Wall", "-pthread"]
+# , "-fpermissive" nicht als default; macht den Compiler relaxter;
+# "-march=native" ermöglicht direkter Plattformabhängige Optimierung
+
 if verbose:
     extra_compile_args.append("--verbose")
 if pedantic:
@@ -173,96 +175,97 @@ if double_precision:
 if log_define:
     extra_compile_args.append("-D_USE_LOG_QUIET")
 
-# define extensions for the cython-based modules
+# Define extensions for the cython-based modules
 extensions = [
     Extension("ANN_iCub_Interface.iCub.Joint_Reader", [prefix_cy + "iCub/Joint_Reader.pyx", prefix_cpp + "Joint_Reader.cpp"] + sources,
-        include_dirs=include_dir,
-        libraries=libs,
-        library_dirs=lib_dirs,
-        language="c++",
-        extra_compile_args=extra_compile_args,
-        extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
-        ),
+              include_dirs=include_dir,
+              libraries=libs,
+              library_dirs=lib_dirs,
+              language="c++",
+              extra_compile_args=extra_compile_args,
+              extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
+              ),
 
     Extension("ANN_iCub_Interface.iCub.Joint_Writer", [prefix_cy + "iCub/Joint_Writer.pyx", prefix_cpp + "Joint_Writer.cpp"] + sources,
-        include_dirs=include_dir,
-        libraries=libs,
-        library_dirs=lib_dirs,
-        language="c++",
-        extra_compile_args=extra_compile_args,
-        extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
-        ),
+              include_dirs=include_dir,
+              libraries=libs,
+              library_dirs=lib_dirs,
+              language="c++",
+              extra_compile_args=extra_compile_args,
+              extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
+              ),
 
     Extension("ANN_iCub_Interface.iCub.Skin_Reader", [prefix_cy + "iCub/Skin_Reader.pyx", prefix_cpp + "Skin_Reader.cpp"] + sources,
-        include_dirs=include_dir,
-        libraries=libs,
-        library_dirs=lib_dirs,
-        language="c++",
-        extra_compile_args=extra_compile_args,
-        extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
-        ),
+              include_dirs=include_dir,
+              libraries=libs,
+              library_dirs=lib_dirs,
+              language="c++",
+              extra_compile_args=extra_compile_args,
+              extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
+              ),
 
     Extension("ANN_iCub_Interface.iCub.Visual_Reader", [prefix_cy + "iCub/Visual_Reader.pyx", prefix_cpp + "Visual_Reader.cpp"] + sources,
-        include_dirs=include_dir,
-        libraries=libs,
-        library_dirs=lib_dirs,
-        language="c++",
-        extra_compile_args=extra_compile_args,
-        extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
-        ),
+              include_dirs=include_dir,
+              libraries=libs,
+              library_dirs=lib_dirs,
+              language="c++",
+              extra_compile_args=extra_compile_args,
+              extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
+              ),
 
     Extension("ANN_iCub_Interface.iCub.Kinematic_Reader", [prefix_cy + "iCub/Kinematic_Reader.pyx", prefix_cpp + "Kinematic_Reader.cpp"] + sources,
-        include_dirs=include_dir,
-        libraries=libs + ["iKin", "ctrlLib", "optimization"],
-        library_dirs=lib_dirs,
-        language="c++",
-        extra_compile_args=extra_compile_args,
-        extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
-        ),
+              include_dirs=include_dir,
+              libraries=libs + ["iKin", "ctrlLib", "optimization"],
+              library_dirs=lib_dirs,
+              language="c++",
+              extra_compile_args=extra_compile_args,
+              extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
+              ),
 
     Extension("ANN_iCub_Interface.iCub.Kinematic_Writer", [prefix_cy + "iCub/Kinematic_Writer.pyx", prefix_cpp + "Kinematic_Writer.cpp"] + sources,
-        include_dirs=include_dir,
-        libraries=libs + ["iKin", "ctrlLib", "optimization", "ipopt"],
-        library_dirs=lib_dirs,
-        language="c++",
-        extra_compile_args=extra_compile_args,
-        extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
-        ),
+              include_dirs=include_dir,
+              libraries=libs + ["iKin", "ctrlLib", "optimization", "ipopt"],
+              library_dirs=lib_dirs,
+              language="c++",
+              extra_compile_args=extra_compile_args,
+              extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
+              ),
 
     Extension("ANN_iCub_Interface.iCub.iCub_Interface", [prefix_cy + "iCub/iCub_Interface.pyx", prefix_cpp + "Interface_iCub.cpp"] + sources + sources1,
-        include_dirs=include_dir,
-        libraries=libs + ["iKin", "ctrlLib", "optimization", "ipopt"],
-        library_dirs=lib_dirs,
-        language="c++",
-        extra_compile_args=extra_compile_args,
-        extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
-        ),
+              include_dirs=include_dir,
+              libraries=libs + ["iKin", "ctrlLib", "optimization", "ipopt"],
+              library_dirs=lib_dirs,
+              language="c++",
+              extra_compile_args=extra_compile_args,
+              extra_link_args=["-L"+root_path+"/ANN_iCub_Interface/grpc", "-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/"] + grpc_link_args
+              ),
 
     Extension("ANN_iCub_Interface.Sync.Master_Clock", [prefix_cy + "Sync/Master_Clock.pyx"],
-        include_dirs=include_dir,
-        libraries=libs,
-        library_dirs=lib_dirs,
-        language="c++",
-        extra_compile_args=extra_compile_args
-        )
+              include_dirs=include_dir,
+              libraries=libs,
+              library_dirs=lib_dirs,
+              language="c++",
+              extra_compile_args=extra_compile_args
+              )
 ]
 
-# python dependencies
+# Python dependencies
 dependencies = [
     'numpy',
     'cython'
 ]
 
-version="1.0.4"
+# Set interface version
+version = "1.0.5"
 filename = './ANN_iCub_Interface/_version.py'
 with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
     file_object.write("__version__ = \"" + version + "\"\n")
 
-# test if gRPC is already used -> need new cythonizing if prior build was without gRPC
+# Test if gRPC is already used -> need new cythonizing if prior build was without gRPC
 try:
     from ANN_iCub_Interface._use_grpc import __use_grpc__ as used_grpc
-except:
+except Exception:
     used_grpc = False
 
 filename = './ANN_iCub_Interface/_use_grpc.py'
@@ -277,7 +280,8 @@ setup(
     packages=find_packages(),
     ext_modules=cythonize(extensions, nthreads=num_threads, language_level=int(sys.version_info[0]), force=force_rebuild),
     description="Interface for iCub robot and ANNarchy neuro-simulator",
-    long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and with gazebo (except SkinReader since skin not implemented)). It is written in C++ with a Cython wrapping to Python.""",
+    long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and with gazebo
+                        (except SkinReader since skin not implemented)). It is written in C++ with a Cython wrapping to Python.""",
     version=version,
     author="Torsten Fietzek; Helge Uelo Dinkelbach",
     author_email="torsten.fietzek@informatik.tu-chemnitz.de; helge.dinkelbach@gmail.com",

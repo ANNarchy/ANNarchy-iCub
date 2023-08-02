@@ -82,14 +82,14 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "/interface_param.ini");
         if (reader_gen.ParseError() != 0) {
-            std::cerr << "[Kinematic Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path << "\" and the ini file content!" << std::endl;
+            std::cerr << "[Kinematic Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path
+                      << "\" and the ini file content!" << std::endl;
             return false;
         }
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
         std::string client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
         if (part == "right_arm" || part == "left_arm") {
-
             std::string::size_type i = part.find("_arm");
             std::string descriptor = part.substr(0, i);
 
@@ -321,17 +321,17 @@ std::vector<double> KinematicReader::GetCartesianPosition(unsigned int joint) {
 
 // Get joint angles in radians
 std::vector<double> KinematicReader::GetJointAngles() {
-    if (CheckInit() and offlinemode) {
+    if (CheckInit() && offlinemode) {
         auto angles = KinArm->getAng();
         return std::vector<double>(angles.begin(), angles.end());
     } else {
-        return std::vector<double> ();
+        return std::vector<double>();
     }
 }
 
 // Set joint angles for forward kinematic in offline mode
 void KinematicReader::SetJointAngles(std::vector<double> joint_angles) {
-    if (CheckInit() and offlinemode) {
+    if (CheckInit() && offlinemode) {
         KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
     }
 }
@@ -339,7 +339,7 @@ void KinematicReader::SetJointAngles(std::vector<double> joint_angles) {
 // Get blocked links
 std::vector<int> KinematicReader::GetBlockedLinks() {
     std::vector<int> blocked;
-    if (CheckInit() and offlinemode) {
+    if (CheckInit() && offlinemode) {
         for (int i = 0; i < KinArm->getN(); i++) {
             if (KinArm->isLinkBlocked(i)) {
                 blocked.push_back(i);
@@ -351,7 +351,7 @@ std::vector<int> KinematicReader::GetBlockedLinks() {
 
 // Block given links
 void KinematicReader::BlockLinks(std::vector<int> joints) {
-    if (CheckInit() and offlinemode) {
+    if (CheckInit() && offlinemode) {
         for (auto it = joints.begin(); it != joints.end(); ++it) {
             KinArm->blockLink(*it);
         }
@@ -361,7 +361,7 @@ void KinematicReader::BlockLinks(std::vector<int> joints) {
 // Get joints being part of active kinematic chain
 std::vector<int> KinematicReader::GetDOFLinks() {
     std::vector<int> dof;
-    if (CheckInit() and offlinemode) {
+    if (CheckInit() && offlinemode) {
         for (int i = 0; i < KinArm->getN(); i++) {
             if (!KinArm->isLinkBlocked(i)) {
                 dof.push_back(i);
@@ -373,7 +373,7 @@ std::vector<int> KinematicReader::GetDOFLinks() {
 
 // Set released links of kinematic chain
 void KinematicReader::ReleaseLinks(std::vector<int> joints) {
-    if (CheckInit() and offlinemode) {
+    if (CheckInit() && offlinemode) {
         for (auto it = joints.begin(); it != joints.end(); ++it) {
             KinArm->releaseLink(*it);
         }
