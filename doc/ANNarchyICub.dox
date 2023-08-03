@@ -38,7 +38,7 @@ PROJECT_NAME           = "ANNarchy iCub Interface"
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 1.0.4
+PROJECT_NUMBER         = 1.0.5
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -864,7 +864,8 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../
+INPUT                  = ../ \
+                         ./
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -917,9 +918,8 @@ EXCLUDE                = ../Testfiles \
                          ../ANN_iCub_Interface/_use_grpc.py \
                          ../setup.py \
                          ../ANN_iCub_Interface/_version.py \
-                         ../sphinx_doc \
                          ../make_config.py \
-                         ./
+                         ./types
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
@@ -936,6 +936,7 @@ EXCLUDE_SYMLINKS       = NO
 # exclude all test directories for example use the pattern */test/*
 
 EXCLUDE_PATTERNS       = test_*.py \
+                         test_*.md \
                          __init__.py
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
