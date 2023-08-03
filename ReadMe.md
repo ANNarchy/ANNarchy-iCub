@@ -71,10 +71,14 @@ For the source installation of gRPC ([installation from the repository](https://
 
 ## useful links
 Wiki for the iCub robot:<br>
-<http://wiki.icub.org/wiki/Manual>
+<https://icub-tech-iit.github.io/documentation/> <br>
+<http://wiki.icub.org/wiki/Manual> (partially outdated)
 
 YARP website:<br>
 <http://www.yarp.it/git-master/index.html>
+
+iCub community (hosted by iit) on github:<br>
+<https://github.com/robotology>
 
 git repository with helpful documents and scripts for the work with iCub:<br>
 <https://ai.informatik.tu-chemnitz.de/gogs/iCub_TUC/iCub_simulator_tools.git>
