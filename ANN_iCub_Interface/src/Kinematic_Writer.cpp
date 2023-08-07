@@ -284,7 +284,7 @@ std::vector<double> KinematicWriter::solveInvKin(std::vector<double> position, s
         }
 
         // strip blocked links from joint angle vector
-        for (auto i = 0; i < angles_torso.size(); i++) {
+        for (unsigned int i = 0; i < angles_torso.size(); i++) {
             if (!(std::find(blocked_links.begin(), blocked_links.end(), i) != blocked_links.end())) {    // TODO(tofo): check that correct angles are missed
                 angles.push_back(angles_torso[i]);
             }

@@ -1,5 +1,5 @@
 from ANNarchy.core.SpecificPopulation import SpecificPopulation
-from _typeshed import Incomplete
+from typing import Tuple
 
 
 class KinematicForward(SpecificPopulation):
@@ -7,8 +7,7 @@ class KinematicForward(SpecificPopulation):
         ANNarchy population class to connect with the iCub forward kinematics.
         Readout the angles from the iCub, compute the forward kinematics and set it as population activation.
     """
-    name: Incomplete
-    def __init__(self, geometry=..., ip_address: str = ..., port: int = ..., copied: bool = ..., name: Incomplete | None = ...) -> None:
+    def __init__(self, geometry: Tuple =..., ip_address: str = ..., port: int = ..., copied: bool = ..., name: str | None = ...) -> None:
         '''Init the KinematicForward Population.
 
         Args:

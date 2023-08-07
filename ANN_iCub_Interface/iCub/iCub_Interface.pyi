@@ -7,9 +7,6 @@ from .Skin_Reader import PySkinReader
 from .Joint_Writer import PyJointWriter
 from .Joint_Reader import PyJointReader
 
-import typing
-Tuple: typing._TupleType
-
 
 class ANNiCub_wrapper:
     """ """

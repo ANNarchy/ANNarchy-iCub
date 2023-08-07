@@ -452,7 +452,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
 
     if (CheckInit()) {
         // Check joint count
-        if (position.size() != joints) {
+        if (static_cast<int>(position.size()) != joints) {
             std::cerr << "[Joint Writer " << icub_part << "] Array size does not fit with joint count!" << std::endl;
             return false;
         }
@@ -486,7 +486,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
         } else if (mode == "vel") {
             bool check_ctrl = true;
             // clamp to joint limits
-            for (unsigned int i = 0; i < joints; i++) {
+            for (int i = 0; i < joints; i++) {
                 check_ctrl = check_ctrl && (joint_control_mode[i] == VOCAB_CM_VELOCITY);
                 position[i] = std::clamp(position[i], -velocity_max, velocity_max);
             }
@@ -711,7 +711,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, st
 
     if (CheckInit()) {
         // Check population count
-        if (position_pops.size() != joints) {
+        if (static_cast<int>(position_pops.size()) != joints) {
             std::cerr << "[Joint Writer " << icub_part << "] Invalid joint count in population input!" << std::endl;
             return false;
         }
@@ -791,7 +791,7 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
 
     if (CheckInit()) {
         // Check joint count
-        if (joint_selection.size() > joints) {
+        if (static_cast<int>(joint_selection.size()) > joints) {
             std::cerr << "[Joint Writer " << icub_part << "] Too many joints for the robot part!" << std::endl;
             return false;
         }

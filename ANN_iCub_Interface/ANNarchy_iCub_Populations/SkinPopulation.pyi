@@ -1,5 +1,5 @@
 from ANNarchy.core.SpecificPopulation import SpecificPopulation
-from _typeshed import Incomplete
+from typing import Tuple, List
 
 
 class SkinPopulation(SpecificPopulation):
@@ -7,8 +7,7 @@ class SkinPopulation(SpecificPopulation):
         ANNarchy population class to connect with the iCub skin.
         Readout the skin sensor data and set it as population activation.
     """
-    name: Incomplete
-    def __init__(self, geometry: Incomplete | None = ..., skin_section: str = ..., ip_address: str = ..., port: int = ..., copied: bool = ..., name: Incomplete | None = ...) -> None:
+    def __init__(self, geometry: Tuple | None = ..., skin_section: str = ..., ip_address: str = ..., port: int = ..., copied: bool = ..., name: str | None = ...) -> None:
         '''Init the SkinPopulation.
 
         Args:

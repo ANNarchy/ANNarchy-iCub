@@ -340,7 +340,7 @@ void KinematicReader::SetJointAngles(std::vector<double> joint_angles) {
 std::vector<int> KinematicReader::GetBlockedLinks() {
     std::vector<int> blocked;
     if (CheckInit() && offlinemode) {
-        for (int i = 0; i < KinArm->getN(); i++) {
+        for (unsigned int i = 0; i < KinArm->getN(); i++) {
             if (KinArm->isLinkBlocked(i)) {
                 blocked.push_back(i);
             }
@@ -362,7 +362,7 @@ void KinematicReader::BlockLinks(std::vector<int> joints) {
 std::vector<int> KinematicReader::GetDOFLinks() {
     std::vector<int> dof;
     if (CheckInit() && offlinemode) {
-        for (int i = 0; i < KinArm->getN(); i++) {
+        for (unsigned int i = 0; i < KinArm->getN(); i++) {
             if (!KinArm->isLinkBlocked(i)) {
                 dof.push_back(i);
             }

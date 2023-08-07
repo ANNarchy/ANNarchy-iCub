@@ -1,5 +1,5 @@
 from ANNarchy.core.SpecificPopulation import SpecificPopulation
-from _typeshed import Incomplete
+from typing import Tuple
 
 
 class VisionPopulation(SpecificPopulation):
@@ -7,8 +7,7 @@ class VisionPopulation(SpecificPopulation):
         ANNarchy population class to connect with the iCub cameras.
         Read the camera images from the iCub, preprocess the images and set it as activation for the ANNarchy population.
     """
-    name: Incomplete
-    def __init__(self, geometry=..., ip_address: str = ..., port: int = ..., copied: bool = ..., name: Incomplete | None = ...) -> None:
+    def __init__(self, geometry: Tuple =..., ip_address: str = ..., port: int = ..., copied: bool = ..., name: str | None = ...) -> None:
         '''Init the VisionPopulation.
 
         Args:

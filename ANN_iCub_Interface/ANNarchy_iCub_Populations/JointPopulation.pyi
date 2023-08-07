@@ -1,5 +1,5 @@
 from ANNarchy.core.SpecificPopulation import SpecificPopulation
-from _typeshed import Incomplete
+from typing import Tuple, List
 
 
 class JointControl(SpecificPopulation):
@@ -7,8 +7,7 @@ class JointControl(SpecificPopulation):
         ANNarchy population class to connect with the iCub joint control, e. g. arm or head.
         Readout the angles from the ANNarchy Population and send it to the iCub.
     """
-    name: Incomplete
-    def __init__(self, geometry: Incomplete | None = ..., neuron=..., ip_address: str = ..., port: int = ..., copied: bool = ..., name: Incomplete | None = ...) -> None:
+    def __init__(self, geometry: Tuple | None = ..., neuron=..., ip_address: str = ..., port: int = ..., copied: bool = ..., name: str | None = ...) -> None:
         '''Init the JointControl population.
 
         Args:
@@ -36,8 +35,7 @@ class JointReadout(SpecificPopulation):
         ANNarchy population class to connect with the iCub joint readout, e. g. arm or head.
         Readout the angles from the iCub and set it as population activation.
     """
-    name: Incomplete
-    def __init__(self, geometry: Incomplete | None = ..., joints: Incomplete | None = ..., encoded: bool = ..., ip_address: str = ..., port: int = ..., copied: bool = ..., name: Incomplete | None = ...) -> None:
+    def __init__(self, geometry: Tuple | None = ..., joints: List | None = ..., encoded: bool = ..., ip_address: str = ..., port: int = ..., copied: bool = ..., name: str | None = ...) -> None:
         '''Init the JointReadout population.
 
         Args:

@@ -7,7 +7,7 @@ class ClockInterface:
     """
     def __init__(self, *args, **kwargs) -> None: ...
 
-    def sync_input(self, *args, **kwargs) -> NoReturn:
+    def sync_input(self) -> NoReturn:
         """
         Need to be implemented. Should contain necessary input retrieval.
 
@@ -18,7 +18,7 @@ class ClockInterface:
         """
         ...
 
-    def update(self, *args, **kwargs) -> NoReturn:
+    def update(self, T: int) -> NoReturn:
         """
         Need to be implemented. Should contain necessary update steps -> e.g. ANNarchy simulation.
 
@@ -39,9 +39,9 @@ class MasterClock:
     """
         Main Class for synchronisation, needs to be instantiated only once.
     """
-    def __init__(self, *args, **kwargs) -> None: ...
+    def __init__(self) -> None: ...
 
-    def add(self, *args, **kwargs) -> Any:
+    def add(self, instance: ClockInterface) -> Any:
         """
         Add instance of class inherited from "ClockInterface" for synchronisation.
 
@@ -57,7 +57,7 @@ class MasterClock:
         """
         ...
 
-    def update(self, *args, **kwargs) -> NoReturn:
+    def update(self, T: int) -> NoReturn:
         """
         Perform an update for each registered instance in parallel. Contains an input retrieval step and the actual update.
 
