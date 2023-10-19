@@ -166,7 +166,7 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
         init_param["part"] = part;
         init_param["version"] = std::to_string(version);
         init_param["ini_path"] = ini_path;
-        init_param["offline_mode"] = offline_mode;
+        init_param["offline_mode"] = std::to_string(offline_mode);
         this->dev_init = true;
         return true;
     } else {

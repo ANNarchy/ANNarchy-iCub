@@ -33,10 +33,7 @@ pop_vis = VisionPopulation( geometry = (240,320), port=50010)
 
 
 ann_interface_root = ANN_iCub_Interface.__root_path__ + "/"
-compile(
-    compiler_flags="-I"+ann_interface_root+" -Wl,-rpath,"+ann_interface_root+"/ANN_iCub_Interface/grpc/",
-    extra_libs="-lprotobuf -lgrpc++ -lgrpc++_reflection -L"+ann_interface_root+"ANN_iCub_Interface/grpc/ -liCub_ANN_grpc",
-)
+compile(compiler_flags=ANN_iCub_Interface.__ann_compile_args__, extra_libs=ANN_iCub_Interface.__ann_extra_libs__,)
 
 # fancy other stuff ...
 for pop in populations():
@@ -46,8 +43,13 @@ for pop in populations():
     pop.connect()
 
 
-
 simulate(1)
 print("Simulated")
 
 plot.show_image_matplot(pop_vis.r, "VIS", "x", "y")
+
+iCub.save_robot_to_file("./results/test_robot.xml")
+
+iCub.clear()
+
+iCub.init_robot_from_file("./results/test_robot.xml")

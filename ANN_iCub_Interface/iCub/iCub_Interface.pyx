@@ -92,7 +92,7 @@ cdef class ANNiCub_wrapper:
             self._joint_reader[list(self._joint_reader.keys())[0]].close(self)
             size = len(self._joint_reader)
 
-        size = len(self._joint_reader)
+        size = len(self._joint_writer)
         while size > 0:
             self._joint_writer[list(self._joint_writer.keys())[0]].close(self)
             size = len(self._joint_writer)
@@ -459,7 +459,6 @@ cdef class ANNiCub_wrapper:
 
     '''
     # Access to interface instances via main warpper
-    # TODO: Add getter for kinematic modules
     '''
 
     # get joint reader module by name
@@ -582,6 +581,46 @@ cdef class ANNiCub_wrapper:
             print("[Interface iCub] No Visual Reader module with the given name is registered!")
             return None
 
+    # get kinematic reader module by name
+    def get_kin_reader_by_name(self, name: str) -> PyKinematicReader:
+        """Returns the Kinematic Reader instance with the given name.
+
+        Parameters
+        ----------
+        name : str
+            Name of the Kinematic Reader instance.
+
+        Returns
+        -------
+        PyKinematicReader
+            Kinematic Reader instance
+        """
+        if (name in self._kinematic_reader):
+            return self._kinematic_reader[name]
+        else:
+            print("[Interface iCub] No Kinematic Reader module with the given name is registered!")
+            return None
+
+    # get kinematic reader module by name
+    def get_kin_writer_by_name(self, name: str) -> PyKinematicWriter:
+        """Returns the Kinematic Writer instance with the given name.
+
+        Parameters
+        ----------
+        name : str
+            Name of the Kinematic Writer instance.
+
+        Returns
+        -------
+        PyKinematicWriter
+            Kinematic Writer instance
+        """
+        if (name in self._kinematic_writer):
+            return self._kinematic_writer[name]
+        else:
+            print("[Interface iCub] No Kinematic Writer module with the given name is registered!")
+            return None
+
     '''
     # Global loading/ saving methods for whole interface configuration
     # TODO: extend for kinematic modules
@@ -623,11 +662,14 @@ cdef class ANNiCub_wrapper:
                     else:
                         args['sigma'] = float(jread.find('sigma').text)
                     if (jread.find('popsize') is None):
-                        if (jread.find('n_pop') is None):
-                            print("Element popsize is missing")
-                            no_error_jread = False
+                        if (jread.find('pop_size') is None):
+                            if (jread.find('n_pop') is None):
+                                print("Element popsize is missing")
+                                no_error_jread = False
+                            else:
+                                args['n_pop'] = int(jread.find('n_pop').text)
                         else:
-                            args['n_pop'] = int(jread.find('n_pop').text)
+                            args['n_pop'] = int(jread.find('pop_size').text)
                     else:
                         args['n_pop'] = int(jread.find('popsize').text)
                     if (jread.find('ini_path') is None):
@@ -641,7 +683,7 @@ cdef class ANNiCub_wrapper:
                             args['port'] = int(jread.find('port').text)
                             grpc = True
                     if (jread.find('deg_per_neuron') is not None):
-                        deg_per_neuron = float(jread.find('deg_per_neuron').text)
+                        args['degr_per_neuron'] = float(jread.find('deg_per_neuron').text)
 
                     if (no_error_jread):
                         reader = PyJointReader()
@@ -656,7 +698,7 @@ cdef class ANNiCub_wrapper:
 
                 # init joint writer
                 for jwrite in robot.iter('JWriter'):
-                    args = {}
+                    args = {'name': jwrite.attrib['name']}
                     grpc = False
                     no_error_jwrite = True
                     if (jwrite.find('part') is None):
@@ -665,17 +707,17 @@ cdef class ANNiCub_wrapper:
                     else:
                         args['part'] = jwrite.find('part').text
                     if (jwrite.find('popsize') is None):
-                        if (jwrite.find('n_pop') is None):
-                            print("Element popsize is missing")
-                            no_error_jwrite = False
+                        if (jwrite.find('pop_size') is None):
+                            if (jwrite.find('n_pop') is None):
+                                print("Element n_pop is missing")
+                                no_error_jwrite = False
+                            else:
+                                args['n_pop'] = int(jwrite.find('n_pop').text)
                         else:
-                            args['n_pop'] = int(jwrite.find('n_pop').text)
+                            args['n_pop'] = int(jwrite.find('pop_size').text)
                     else:
                         args['n_pop'] = int(jwrite.find('popsize').text)
-                    if (jwrite.find('speed') is None):
-                        print("Element speed is missing")
-                        no_error_jwrite = False
-                    else:
+                    if (jwrite.find('speed') is not None):
                         args['speed'] = float(jwrite.find('speed').text)
                     if (jwrite.find('ini_path') is None):
                         print("Element ini_path is missing")
@@ -702,17 +744,17 @@ cdef class ANNiCub_wrapper:
                     if (no_error_jwrite):
                         writer = PyJointWriter()
                         if grpc:
-                            if not writer.init_grpc(self, jwrite.attrib['name'], **args):
+                            if not writer.init_grpc(self, **args):
                                 print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
                         else:
-                            if not writer.init(self, jwrite.attrib['name'], **args):
+                            if not writer.init(self, **args):
                                 print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
                     else:
                         print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
 
                 # init visual reader
                 for vread in robot.iter('VisReader'):
-                    args = {}
+                    args = {'name': vread.attrib['name']}
                     grpc = False
                     no_error_vread = True
                     if (vread.find('eye') is None):
@@ -720,22 +762,15 @@ cdef class ANNiCub_wrapper:
                         no_error_vread = False
                     else:
                         args['eye'] = vread.find('eye').text
-                    if (vread.find('fov_width') is None or vread.find('fov_height') is None):
-                        print("Element fov_width or fov_height is missing")
-                        no_error_vread = False
-                    else:
+                    if vread.find('fov_width') is not None:
                         args['fov_width'] = float(vread.find('fov_width').text)
+                    if vread.find('fov_height') is not None:
                         args['fov_height'] = float(vread.find('fov_height').text)
-                    if (vread.find('img_width') is None or vread.find('img_height') is None):
-                        print("Element img_width or img_height is missing")
-                        no_error_vread = False
-                    else:
-                        args['img_width'] = float(vread.find('img_width').text)
-                        args['img_height'] = float(vread.find('img_height').text)
-                    if (vread.find('fast_filter') is None):
-                        print("Element fast_filter is missing")
-                        no_error_vread = False
-                    else:
+                    if vread.find('img_width') is not None:
+                        args['img_width'] = int(vread.find('img_width').text)
+                    if vread.find('img_height') is not None:
+                        args['img_height'] = int(vread.find('img_height').text)
+                    if (vread.find('fast_filter') is not None):
                         args['fast_filter'] = eval(vread.find('fast_filter').text.capitalize())
                     if (vread.find('ini_path') is None):
                         print("Element ini_path is missing")
@@ -750,19 +785,17 @@ cdef class ANNiCub_wrapper:
                     if (no_error_vread):
                         vreader = PyVisualReader()
                         if grpc:
-                            if not vreader.init_grpc(self, vread.attrib['name'], args['eye'], args['fov_width'], args['fov_height'], args['img_width'], args['img_height'],
-                                                     args['fast_filter'], ini_path=args['ini_path'], ip_address=args['ip_address'], port=args['port']):
+                            if not vreader.init_grpc(self, **args):
                                 print("Init Visual Reader '" + vread.attrib['name'] + "' failed!")
                         else:
-                            if not vreader.init(self, vread.attrib['name'], args['eye'], args['fov_width'], args['fov_height'], args['img_width'], args['img_height'],
-                                                args['fast_filter'], ini_path=args['ini_path']):
+                            if not vreader.init(self, **args):
                                 print("Init Visual Reader '" + vread.attrib['name'] + "' failed!")
                     else:
                         print("Skipped Visual Reader init due to missing element")
 
                 # init tactile reader
                 for sread in robot.iter('TacReader'):
-                    args = {}
+                    args = {'name': sread.attrib['name']}
                     grpc = False
                     no_error_sread = True
                     if (sread.find('arm') is None):
@@ -771,8 +804,14 @@ cdef class ANNiCub_wrapper:
                     else:
                         args['arm'] = sread.find('arm').text
                     if (sread.find('normalize') is None):
-                        print("Element norm is missing")
-                        no_error_sread = False
+                        if (sread.find('norm_data') is None):
+                            if (sread.find('norm') is None):
+                                print("Element norm is missing")
+                                no_error_sread = False
+                            else:
+                                args['norm'] = eval(sread.find('norm').text.capitalize())
+                        else:
+                            args['norm'] = eval(sread.find('norm_data').text.capitalize())
                     else:
                         args['norm'] = eval(sread.find('normalize').text.capitalize())
                     if (sread.find('ini_path') is None):
@@ -788,18 +827,98 @@ cdef class ANNiCub_wrapper:
                     if (no_error_sread):
                         sreader = PySkinReader()
                         if grpc:
-                            if not sreader.init_grpc(self, sread.attrib['name'], args['arm'], args['norm'], args['ini_path'], ip_address=args['ip_address'], port=args['port']):
+                            if not sreader.init_grpc(self, **args):
                                 print("Init Skin Reader '" + sread.attrib['name'] + "' failed!")
                         else:
-                            if not sreader.init(self, sread.attrib['name'], args['arm'], args['norm'], args['ini_path']):
+                            if not sreader.init(self, **args):
                                 print("Init Skin Reader '" + sread.attrib['name'] + "' failed!")
                     else:
                         print("Skipped Skin Reader '" + sread.attrib['name'] + "' init due to missing element")
+
+                # init kinematic reader
+                for kread in robot.iter('KinReader'):
+                    args = {'name': kread.attrib['name']}
+                    grpc = False
+                    no_error_kread = True
+
+                    if (kread.find('part') is None):
+                        print("Element part is missing")
+                        no_error_kread = False
+                    else:
+                        args['part'] = kread.find('part').text
+                    if (kread.find('version') is None):
+                        print("Element version is missing")
+                        no_error_kread = False
+                    else:
+                        args['version'] = float(kread.find('version').text)
+                    if (kread.find('ini_path') is None):
+                        print("Element ini_path is missing")
+                        no_error_kread = False
+                    else:
+                        args['ini_path'] = kread.find('ini_path').text
+                    if (kread.find('offline_mode') is not None):
+                        args['offline_mode'] = eval(kread.find('offline_mode').text.capitalize())
+
+                    if (kread.find('ip_address') is not None):
+                        args['ip_address'] = kread.find('ip_address').text
+                        if (kread.find('port') is not None):
+                            args['port'] = int(kread.find('port').text)
+                            grpc = True
+
+                    if (no_error_kread):
+                        kreader = PyKinematicReader()
+                        if grpc:
+                            if not kreader.init_grpc(self, **args):
+                                print("Init Kinematic Reader '" + kread.attrib['name'] + "' failed!")
+                        else:
+                            if not kreader.init(self, **args):
+                                print("Init Kinematic Reader '" + kread.attrib['name'] + "' failed!")
+                    else:
+                        print("Skipped Kinematic Reader '" + kread.attrib['name'] + "' init due to missing element")
+
+                # init kinematic writer
+                for kwrite in robot.iter('KinWriter'):
+                    args = {}
+                    grpc = False
+                    no_error_kwrite = True
+                    if (kwrite.find('part') is None):
+                        print("Element part is missing")
+                        no_error_kwrite = False
+                    else:
+                        args['part'] = kwrite.find('part').text
+                    if (kwrite.find('version') is None):
+                        print("Element version is missing")
+                        no_error_kwrite = False
+                    else:
+                        args['version'] = float(kwrite.find('version').text)
+                    if (kwrite.find('ini_path') is None):
+                        print("Element ini_path is missing")
+                        no_error_kwrite = False
+                    else:
+                        args['ini_path'] = kwrite.find('ini_path').text
+                    if (kwrite.find('ip_address') is not None):
+                        args['ip_address'] = kwrite.find('ip_address').text
+                        if (kwrite.find('port') is not None):
+                            args['port'] = int(kwrite.find('port').text)
+                            grpc = True
+
+                    if (no_error_kwrite):
+                        kwriter = PyKinematicWriter()
+                        if grpc:
+                            if not kwriter.init_grpc(self, **args):
+                                print("Init Kinematic Writer '" + kwrite.attrib['name'] + "' failed!")
+                        else:
+                            if not kwriter.init(self, **args):
+                                print("Init Kinematic Writer '" + kwrite.attrib['name'] + "' failed!")
+                    else:
+                        print("Skipped Kinematic Writer '" + kwrite.attrib['name'] + "' init due to missing element")
 
                 name_dict["Joint_Reader"] = self._joint_reader.keys()
                 name_dict["Joint_Writer"] = self._joint_writer.keys()
                 name_dict["Skin_Reader"] = self._skin_reader.keys()
                 name_dict["Visual_Reader"] = self._visual_reader.keys()
+                name_dict["Kinematic_Reader"] = self._kinematic_reader.keys()
+                name_dict["Kinematic_Writer"] = self._kinematic_writer.keys()
 
                 return True, name_dict
             else:
@@ -854,6 +973,20 @@ cdef class ANNiCub_wrapper:
             sread_param = deref(sread_cast._cpp_skin_reader).getParameter()
             for key, value in (<dict> sread_param).items():
                 ET.SubElement(SReader, key.decode('utf-8')).text = value.decode('utf-8')
+
+        for name, module in self._kinematic_reader.items():
+            KReader = ET.SubElement(root, "KinReader", attrib={"name": name})
+            kread_cast = <PyKinematicReader> module
+            kread_param = deref(kread_cast._cpp_kin_reader).getParameter()
+            for key, value in (<dict> kread_param).items():
+                ET.SubElement(KReader, key.decode('utf-8')).text = value.decode('utf-8')
+
+        for name, module in self._kinematic_writer.items():
+            KWriter = ET.SubElement(root, "KinWriter", attrib={"name": name})
+            kwrite_cast = <PyKinematicWriter> module
+            kwrite_param = deref(kwrite_cast._cpp_kin_writer).getParameter()
+            for key, value in (<dict> kwrite_param).items():
+                ET.SubElement(KWriter, key.decode('utf-8')).text = value.decode('utf-8')
 
         XML_file_string = minidom.parseString(ET.tostring(root, 'utf-8')).toprettyxml(indent="    ")
         with open(xml_file, "w") as files:

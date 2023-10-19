@@ -88,8 +88,7 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "/interface_param.ini");
         if (reader_gen.ParseError() != 0) {
-            std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path
-                      << "\" and the ini file content!" << std::endl;
+            std::cerr << "[Joint Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path << "\" and the ini file content!" << std::endl;
             return false;
         }
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
@@ -171,8 +170,10 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
         this->type = "JointReader";
         init_param["part"] = part;
         init_param["sigma"] = std::to_string(sigma);
-        init_param["pop_size"] = std::to_string(pop_size);
-        init_param["deg_per_neuron"] = std::to_string(deg_per_neuron);
+        init_param["popsize"] = std::to_string(pop_size);
+        if (deg_per_neuron != 0.0) {
+            init_param["deg_per_neuron"] = std::to_string(deg_per_neuron);
+        }
         init_param["ini_path"] = ini_path;
 
         this->dev_init = true;

@@ -73,38 +73,38 @@ def create_robot_interface_file(filename_config: str, filename_interface: str = 
                 args = {"name": jread.attrib['name']}
                 grpc = False
                 no_error_jread = True
-                if (jread.find('part') is None):
+                if jread.find('part') is None:
                     print(args['name'], "Element part is missing")
                     no_error_jread = False
                 else:
                     args['part'] = jread.find('part').text
-                if (jread.find('sigma') is None):
+                if jread.find('sigma') is None:
                     print(args['name'], "Element sigma is missing")
                     no_error_jread = False
                 else:
                     args['sigma'] = float(jread.find('sigma').text)
-                if (jread.find('popsize') is None):
-                    if (jread.find('n_pop') is None):
+                if jread.find('popsize') is None:
+                    if jread.find('n_pop') is None:
                         print(args['name'], "Element popsize is missing")
                         no_error_jread = False
                     else:
                         args['n_pop'] = int(jread.find('n_pop').text)
                 else:
                     args['n_pop'] = int(jread.find('popsize').text)
-                if (jread.find('ini_path') is None):
+                if jread.find('ini_path') is None:
                     print(args['name'], "Element ini_path is missing")
                     no_error_jread = False
                 else:
                     args['ini_path'] = jread.find('ini_path').text
-                if (not (jread.find('ip_address') is None)):
+                if not jread.find('ip_address') is None:
                     args['ip_address'] = jread.find('ip_address').text
-                    if (not (jread.find('port') is None)):
+                    if not jread.find('port') is None:
                         args['port'] = int(jread.find('port').text)
                         grpc = True
-                if (jread.find('deg_per_neuron') is not None):
+                if jread.find('deg_per_neuron') is not None:
                     args['degr_per_neuron'] = float(jread.find('deg_per_neuron').text)
 
-                if (no_error_jread):
+                if no_error_jread:
                     jreader.append(file_template["create_instance"].format({'var': "jreader", "count": idx, "mod": "Joint_Reader", "type": "PyJointReader"}))
                     jreader.append(file_template["args_dict"].format(var="jreader", count=idx, cont=str(args)))
                     if grpc:
@@ -126,47 +126,47 @@ def create_robot_interface_file(filename_config: str, filename_interface: str = 
                 args = {"name": jwrite.attrib['name']}
                 grpc = False
                 no_error_jwrite = True
-                if (jwrite.find('part') is None):
+                if jwrite.find('part') is None:
                     print(args['name'], "Element part is missing")
                     no_error_jwrite = False
                 else:
                     args['part'] = jwrite.find('part').text
-                if (jwrite.find('popsize') is None):
-                    if (jwrite.find('n_pop') is None):
+                if jwrite.find('popsize') is None:
+                    if jwrite.find('n_pop') is None:
                         print(args['name'], "Element popsize is missing")
                         no_error_jwrite = False
                     else:
                         args['n_pop'] = int(jwrite.find('n_pop').text)
                 else:
                     args['n_pop'] = int(jwrite.find('popsize').text)
-                if (jwrite.find('speed') is None):
+                if jwrite.find('speed') is None:
                     print(args['name'], "Element speed is missing")
                     no_error_jwrite = False
                 else:
                     args['speed'] = float(jwrite.find('speed').text)
-                if (jwrite.find('ini_path') is None):
+                if jwrite.find('ini_path') is None:
                     print(args['name'], "Element ini_path is missing")
                     no_error_jwrite = False
                 else:
                     args['ini_path'] = jwrite.find('ini_path').text
-                if (not (jwrite.find('ip_address') is None)):
+                if not jwrite.find('ip_address') is None:
                     args['ip_address'] = jwrite.find('ip_address').text
-                    if (not (jwrite.find('port') is None)):
+                    if not jwrite.find('port') is None:
                         args['port'] = int(jwrite.find('port').text)
-                        if (not (jwrite.find('mode') is None)):
+                        if not jwrite.find('mode') is None:
                             args['mode'] = jwrite.find('mode').text
-                            if (not (jwrite.find('blocking') is None)):
+                            if not jwrite.find('blocking') is None:
                                 args['blocking'] = eval(jwrite.find('blocking').text.capitalize())
-                                if (not (jwrite.find('joint_select') is None)):
+                                if not jwrite.find('joint_select') is None:
                                     args['joints'] = _textToList(jwrite.find('joint_select').text)
                                     grpc = True
-                                elif (not (jwrite.find('joints') is None)):
+                                elif not jwrite.find('joints') is None:
                                     args['joints'] = _textToList(jwrite.find('joints').text)
                                     grpc = True
-                if (jwrite.find('deg_per_neuron') is not None):
+                if jwrite.find('deg_per_neuron') is not None:
                     args['degr_per_neuron'] = float(jwrite.find('deg_per_neuron').text)
 
-                if (no_error_jwrite):
+                if no_error_jwrite:
                     jwriter.append(file_template["create_instance"].format({'var': "jwriter", "count": idx, "mod": "Joint_Writer", "type": "PyJointWriter"}))
                     jwriter.append(file_template["args_dict"].format(var="jwriter", count=idx, cont=str(args)))
                     if grpc:
@@ -186,39 +186,39 @@ def create_robot_interface_file(filename_config: str, filename_interface: str = 
                 args = {"name": vread.attrib['name']}
                 grpc = False
                 no_error_vread = True
-                if (vread.find('eye') is None):
+                if vread.find('eye') is None:
                     print(args['name'], "Element eye is missing")
                     no_error_vread = False
                 else:
                     args['eye'] = vread.find('eye').text
-                if (vread.find('fov_width') is None or vread.find('fov_height') is None):
+                if (vread.find('fov_width') is None) or (vread.find('fov_height') is None):
                     print(args['name'], "Element fov_width or fov_height is missing")
                     no_error_vread = False
                 else:
                     args['fov_width'] = float(vread.find('fov_width').text)
                     args['fov_height'] = float(vread.find('fov_height').text)
-                if (vread.find('img_width') is None or vread.find('img_height') is None):
+                if (vread.find('img_width') is None) or (vread.find('img_height') is None):
                     print(args['name'], "Element img_width or img_height is missing")
                     no_error_vread = False
                 else:
                     args['img_width'] = int(vread.find('img_width').text)
                     args['img_height'] = int(vread.find('img_height').text)
-                if (vread.find('fast_filter') is None):
+                if vread.find('fast_filter') is None:
                     print(args['name'], "Element fast_filter is missing")
                     no_error_vread = False
                 else:
                     args['fast_filter'] = eval(vread.find('fast_filter').text.capitalize())
-                if (vread.find('ini_path') is None):
+                if vread.find('ini_path') is None:
                     print(args['name'], "Element ini_path is missing")
                     no_error_vread = False
                 else:
                     args['ini_path'] = vread.find('ini_path').text
-                if (not (vread.find('ip_address') is None)):
+                if not vread.find('ip_address') is None:
                     args['ip_address'] = vread.find('ip_address').text
-                    if (not (vread.find('port') is None)):
+                    if not vread.find('port') is None:
                         args['port'] = int(vread.find('port').text)
                         grpc = True
-                if (no_error_vread):
+                if no_error_vread:
                     vreader.append(file_template["create_instance"].format({'var': "vreader", "count": idx, "mod": "Visual_Reader", "type": "PyVisualReader"}))
                     vreader.append(file_template["args_dict"].format(var="vreader", count=idx, cont=str(args)))
                     if grpc:
@@ -240,27 +240,27 @@ def create_robot_interface_file(filename_config: str, filename_interface: str = 
                 args = {"name": sread.attrib['name']}
                 grpc = False
                 no_error_sread = True
-                if (sread.find('arm') is None):
+                if sread.find('arm') is None:
                     print(args['name'], "Element arm is missing")
                     no_error_sread = False
                 else:
                     args['arm'] = sread.find('arm').text
-                if (sread.find('normalize') is None):
+                if sread.find('normalize') is None:
                     print(args['name'], "Element norm is missing")
                     no_error_sread = False
                 else:
                     args['norm'] = eval(sread.find('normalize').text.capitalize())
-                if (sread.find('ini_path') is None):
+                if sread.find('ini_path') is None:
                     print(args['name'], "Element ini_path is missing")
                     no_error_sread = False
                 else:
                     args['ini_path'] = sread.find('ini_path').text
-                if (not (sread.find('ip_address') is None)):
+                if not sread.find('ip_address') is None:
                     args['ip_address'] = sread.find('ip_address').text
-                    if (not (sread.find('port') is None)):
+                    if not sread.find('port') is None:
                         args['port'] = int(sread.find('port').text)
                         grpc = True
-                if (no_error_sread):
+                if no_error_sread:
                     sreader.append(file_template["create_instance"].format({'var': "sreader", "count": idx, "mod": "Skin_Reader", "type": "PySkinReader"}))
                     sreader.append(file_template["args_dict"].format(var="sreader", count=idx, cont=str(args)))
                     if grpc:
@@ -282,32 +282,32 @@ def create_robot_interface_file(filename_config: str, filename_interface: str = 
                 args = {"name": kread.attrib['name']}
                 grpc = False
                 no_error_kread = True
-                if (kread.find('part') is None):
+                if kread.find('part') is None:
                     print(args['name'], "Element part is missing!")
                     no_error_kread = False
                 else:
                     args['part'] = kread.find('part').text
-                if (kread.find('version') is None):
+                if kread.find('version') is None:
                     print(args['name'], "Element version is missing!")
                     no_error_kread = False
                 else:
                     args['version'] = float(kread.find('version').text)
-                if (kread.find('ini_path') is None):
+                if kread.find('ini_path') is None:
                     print(args['name'], "Element ini_path is missing!")
                     no_error_kread = False
                 else:
                     args['ini_path'] = kread.find('ini_path').text
-                if (kread.find('offline_mode') is None):
+                if kread.find('offline_mode') is None:
                     print(args['name'], "Standard value for element 'offline_mode' is used.")
                     args['offline_mode'] = False
                 else:
                     args['offline_mode'] = eval(kread.find('offline_mode').text.capitalize())
-                if (not (kread.find('ip_address') is None)):
+                if not kread.find('ip_address') is None:
                     args['ip_address'] = kread.find('ip_address').text
-                    if (not (kread.find('port') is None)):
+                    if not kread.find('port') is None:
                         args['port'] = int(kread.find('port').text)
                         grpc = True
-                if (no_error_kread):
+                if no_error_kread:
                     kreader.append(file_template["create_instance"].format({'var': "kreader", "count": idx, "mod": "Kinematic_Reader", "type": "PyKinematicReader"}))
                     kreader.append(file_template["args_dict"].format(var="kreader", count=idx, cont=str(args)))
                     if grpc:
@@ -329,27 +329,27 @@ def create_robot_interface_file(filename_config: str, filename_interface: str = 
                 args = {"name": kwrite.attrib['name']}
                 grpc = False
                 no_error_kwrite = True
-                if (kwrite.find('part') is None):
+                if kwrite.find('part') is None:
                     print(args['name'], "Element part is missing")
                     no_error_kwrite = False
                 else:
                     args['part'] = kwrite.find('part').text
-                if (kwrite.find('version') is None):
+                if kwrite.find('version') is None:
                     print(args['name'], "Element version is missing")
                     no_error_kwrite = False
                 else:
                     args['version'] = float(kwrite.find('version').text)
-                if (kwrite.find('ini_path') is None):
+                if kwrite.find('ini_path') is None:
                     print(args['name'], "Element ini_path is missing")
                     no_error_kwrite = False
                 else:
                     args['ini_path'] = kwrite.find('ini_path').text
-                if (not (kwrite.find('ip_address') is None)):
+                if not kwrite.find('ip_address') is None:
                     args['ip_address'] = kwrite.find('ip_address').text
-                    if (not (kwrite.find('port') is None)):
+                    if not kwrite.find('port') is None:
                         args['port'] = int(kwrite.find('port').text)
                         grpc = True
-                if (no_error_kwrite):
+                if no_error_kwrite:
                     kwriter.append(file_template["create_instance"].format({'var': "kwriter", "count": idx, "mod": "Kinematic_Writer", "type": "PyKinematicWriter"}))
                     kwriter.append(file_template["args_dict"].format(var="kwriter", count=idx, cont=str(args)))
                     if grpc:

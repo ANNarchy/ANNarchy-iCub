@@ -202,7 +202,7 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
 
         this->type = "JointWriter";
         init_param["part"] = part;
-        init_param["pop_size"] = std::to_string(pop_size);
+        init_param["popsize"] = std::to_string(pop_size);
         init_param["deg_per_neuron"] = std::to_string(deg_per_neuron);
         init_param["speed"] = std::to_string(speed);
         init_param["ini_path"] = ini_path;

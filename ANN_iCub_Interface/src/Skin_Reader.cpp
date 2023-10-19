@@ -179,10 +179,9 @@ bool SkinReader::Init(std::string name, char arm, bool norm_data, std::string in
         //     }
 
         this->type = "SkinReader";
-        this->icub_part = std::string(1, arm);
-        init_param["name"] = name;
-        init_param["arm"] = std::to_string(arm);
-        init_param["norm_data"] = std::to_string(norm_data);
+        this->icub_part = arm;
+        init_param["arm"] = arm;
+        init_param["norm"] = std::to_string(norm_data);
         init_param["ini_path"] = ini_path;
         this->dev_init = true;
         return true;

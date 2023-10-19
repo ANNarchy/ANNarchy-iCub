@@ -224,8 +224,8 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         }
 
         this->type = "VisualReader";
-        this->icub_part = std::string(1, eye);
-        init_param["eye"] = std::to_string(act_eye);
+        this->icub_part = act_eye;
+        init_param["eye"] = act_eye;
         init_param["fov_width"] = std::to_string(fov_width);
         init_param["fov_height"] = std::to_string(fov_height);
         init_param["img_width"] = std::to_string(img_width);
@@ -241,8 +241,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
 }
 
 #ifdef _USE_GRPC
-bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address,
-                            unsigned int port) {
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
 
@@ -279,8 +278,7 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
     }
 }
 #else
-bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address,
-                            unsigned int port) {
+bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port) {
     /*
         Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
 
