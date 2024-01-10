@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <ctime>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -83,8 +84,7 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "/interface_param.ini");
         if (reader_gen.ParseError() != 0) {
-            std::cerr << "[Joint Writer " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path
-                      << "\" and the ini file content!" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path << "\" and the ini file content!" << std::endl;
             return false;
         }
         bool on_Simulator = reader_gen.GetBoolean("general", "simulator", true);
@@ -214,8 +214,8 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
     }
 }
 #ifdef _USE_GRPC
-bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking, double deg_per_neuron, double speed,
-                           std::string ini_path, std::string ip_address, unsigned int port) {
+bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking, double deg_per_neuron, double speed, std::string ini_path,
+                           std::string ip_address, unsigned int port) {
     /*
         Initialize the joint Writer with given parameters
 
@@ -253,8 +253,8 @@ bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<
     }
 }
 #else
-bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking, double deg_per_neuron, double speed,
-                           std::string ini_path, std::string ip_address, unsigned int port) {
+bool JointWriter::InitGRPC(std::string part, unsigned int pop_size, std::vector<int> joint_select, std::string mode, bool blocking, double deg_per_neuron, double speed, std::string ini_path,
+                           std::string ip_address, unsigned int port) {
     /*
         Initialize the joint Writer with given parameters
 
@@ -291,7 +291,11 @@ int JointWriter::GetJointCount() {
         return: int       -- return number of controlled joints
     */
 
-    return joints;
+    if (CheckInit()) {
+        return joints;
+    } else {
+        return 0;
+    }
 }
 
 std::vector<double> JointWriter::GetJointsDegRes() {
@@ -301,8 +305,11 @@ std::vector<double> JointWriter::GetJointsDegRes() {
         return: std::vector<double>        -- return vector, containing the resolution for every joints population codimg in degree
     */
 
-    CheckInit();
-    return joint_deg_res_abs;
+    if (CheckInit()) {
+        return joint_deg_res_abs;
+    } else {
+        return std::vector<double>();
+    }
 }
 
 std::vector<unsigned int> JointWriter::GetNeuronsPerJoint() {
@@ -346,21 +353,22 @@ bool JointWriter::SetJointVelocity(double speed, int joint) {
         return false;
     }
     // set velocity for all joints
+    bool ret = true;
     if (joint < 0) {
         for (int i = 0; i < joints; i++) {
             // set joint velocity
             if (speed > 0 && speed <= velocity_max) {
-                ipos->setRefSpeed(i, speed);
+                ret = ret && ipos->setRefSpeed(i, speed);
             }
         }
         // set velocity for a single joint
     } else {
         // set joint velocity
         if (speed > 0 && speed < velocity_max) {
-            ipos->setRefSpeed(joint, speed);
+            ret = ret && ipos->setRefSpeed(joint, speed);
         }
     }
-    return true;
+    return ret;
 }
 
 bool JointWriter::SetJointAcceleration(double acc, int joint) {
@@ -377,21 +385,22 @@ bool JointWriter::SetJointAcceleration(double acc, int joint) {
         return false;
     }
     // set acceleration for all joints
+    bool ret = true;
     if (joint < 0) {
         for (int i = 0; i < joints; i++) {
             // set joint acceleration
             if (acc > 0 && acc <= acc_max) {
-                ipos->setRefAcceleration(i, acc);
+                ret = ret && ipos->setRefAcceleration(i, acc);
             }
         }
         // set acceleration for a single joint
     } else {
         // set joint acceleration
         if (acc > 0 && acc < acc_max) {
-            ipos->setRefAcceleration(joint, acc);
+            ret = ret && ipos->setRefAcceleration(joint, acc);
         }
     }
-    return true;
+    return ret;
 }
 
 bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
@@ -399,6 +408,7 @@ bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
         std::cerr << "[Joint Writer " << icub_part << "] Selected joint out of range!" << std::endl;
         return false;
     }
+    bool ret = true;
     if (joint < 0) {
         for (int i = 0; i < joints; i++) {
             // set control modes
@@ -407,10 +417,10 @@ bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
                 if (joint_control_mode[i] == VOCAB_CM_VELOCITY) {
                     ivel->stop(i);
                 }
-                icont->setControlMode(i, VOCAB_CM_POSITION);
+                ret = ret && icont->setControlMode(i, VOCAB_CM_POSITION);
                 joint_control_mode[i] = static_cast<int32_t>(VOCAB_CM_POSITION);
             } else if (control_mode == "velocity") {
-                icont->setControlMode(i, VOCAB_CM_VELOCITY);
+                ret = ret && icont->setControlMode(i, VOCAB_CM_VELOCITY);
                 ivel->stop(i);
                 joint_control_mode[i] = static_cast<int32_t>(VOCAB_CM_VELOCITY);
             } else {
@@ -425,10 +435,10 @@ bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
             if (joint_control_mode[joint] == VOCAB_CM_VELOCITY) {
                 ivel->stop(joint);
             }
-            icont->setControlMode(joint, VOCAB_CM_POSITION);
+            ret = ret && icont->setControlMode(joint, VOCAB_CM_POSITION);
             joint_control_mode[joint] = static_cast<int32_t>(VOCAB_CM_POSITION);
         } else if (control_mode == "velocity") {
-            icont->setControlMode(joint, VOCAB_CM_VELOCITY);
+            ret = ret && icont->setControlMode(joint, VOCAB_CM_VELOCITY);
             ivel->stop(joint);
             joint_control_mode[joint] = static_cast<int32_t>(VOCAB_CM_VELOCITY);
         } else {
@@ -436,10 +446,10 @@ bool JointWriter::SetJointControlMode(std::string control_mode, int joint) {
             return false;
         }
     }
-    return true;
+    return ret;
 }
 
-bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode, bool blocking) {
+bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode, bool blocking, time_t timeout) {
     /*
         Write all joints with double values
 
@@ -467,6 +477,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
             }
             // start motion
             start = ipos->positionMove(position.data());
+            yarp::os::Time::delay(0.005);    // needed for correct execution of motion
 
         } else if (mode == "rel") {
             // clamp to joint limits
@@ -482,6 +493,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
             }
             // start motion
             start = ipos->relativeMove(position.data());
+            yarp::os::Time::delay(0.005);    // needed for correct execution of motion
 
         } else if (mode == "vel") {
             bool check_ctrl = true;
@@ -493,6 +505,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
             if (check_ctrl) {
                 // start motion
                 start = ivel->velocityMove(position.data());
+                yarp::os::Time::delay(0.005);    // needed for correct execution of motion
             } else {
                 std::cerr << "[Joint Writer " << icub_part << "] Motion mode does not fit with control mode! Use 'velocity' control mode for 'vel' motion mode" << std::endl;
             }
@@ -503,15 +516,24 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
 
         // move joints blocking/non-blocking
         if (start) {
-            if (blocking) {
+            if (blocking && (mode != "vel")) {
+                bool in_time = true;
                 bool motion = false;
-                while (!motion) {
+                time_t start_time = std::time(NULL);
+                while (!motion && in_time) {
                     if (!ipos->checkMotionDone(&motion)) {
                         std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving occured!" << std::endl;
                         return false;
                     }
+                    yarp::os::Time::delay(0.005);
+                    if (((std::time(NULL) - start_time) > timeout) && (timeout > 0)) {
+                        in_time = false;
+                        ipos->stop();
+                    }
                 }
             }
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] Could not start motion!" << std::endl;
         }
         return start;
     } else {
@@ -519,7 +541,7 @@ bool JointWriter::WriteDoubleAll(std::vector<double> position, std::string mode,
     }
 }
 
-bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, std::string mode, bool blocking) {
+bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, std::string mode, bool blocking, time_t timeout) {
     /*
         Write multiple joints with double values
 
@@ -539,8 +561,7 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
         }
 
         if (joint_selection.size() != position.size()) {
-            std::cerr << "[Joint Writer " << icub_part << "] Position count (" << position.size() << ") and joint count (" << joint_selection.size()
-                      << ") does not fit together!" << std::endl;
+            std::cerr << "[Joint Writer " << icub_part << "] Position count (" << position.size() << ") and joint count (" << joint_selection.size() << ") does not fit together!" << std::endl;
             return false;
         }
 
@@ -563,6 +584,8 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
             }
             // start motion
             start = ipos->positionMove(joint_selection.size(), joint_selection.data(), position.data());
+            yarp::os::Time::delay(0.005);    // needed for correct execution of motion
+
         } else if (mode == "rel") {
             // clamp to joint limits
             std::vector<double> act_pos;
@@ -581,6 +604,8 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
             }
             // start motion
             start = ipos->relativeMove(joint_selection.size(), joint_selection.data(), position.data());
+            yarp::os::Time::delay(0.005);    // needed for correct execution of motion
+
         } else if (mode == "vel") {
             bool check_ctrl = true;
             // clamp to joint limits
@@ -591,6 +616,7 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
             if (check_ctrl) {
                 // start motion
                 start = ivel->velocityMove(joint_selection.size(), joint_selection.data(), position.data());
+                yarp::os::Time::delay(0.005);    // needed for correct execution of motion
             } else {
                 std::cerr << "[Joint Writer " << icub_part << "] Motion mode does not fit with control mode! Use 'velocity' control mode for 'vel' motion mode" << std::endl;
             }
@@ -600,15 +626,24 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
 
         // move joints blocking/non-blocking
         if (start) {
-            if (blocking) {
+            if (blocking && (mode != "vel")) {
+                bool in_time = true;
                 bool motion = false;
-                while (!motion) {
+                time_t start_time = std::time(NULL);
+                while (!motion && in_time) {
                     if (!ipos->checkMotionDone(&motion)) {
                         std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving occured!" << std::endl;
                         return false;
                     }
+                    yarp::os::Time::delay(0.005);
+                    if ((std::time(NULL) - start_time) > timeout && timeout > 0) {
+                        in_time = false;
+                        ipos->stop(joint_selection.size(), joint_selection.data());
+                    }
                 }
             }
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] Could not start motion!" << std::endl;
         }
         return start;
     } else {
@@ -616,7 +651,7 @@ bool JointWriter::WriteDoubleMultiple(std::vector<double> position, std::vector<
     }
 }
 
-bool JointWriter::WriteDoubleOne(double position, int joint, std::string mode, bool blocking) {
+bool JointWriter::WriteDoubleOne(double position, int joint, std::string mode, bool blocking, time_t timeout) {
     /*
         Write one joint with double value
 
@@ -644,6 +679,7 @@ bool JointWriter::WriteDoubleOne(double position, int joint, std::string mode, b
                 position = std::clamp(position, joint_min[joint], joint_max[joint]);
                 // start motion
                 start = ipos->positionMove(joint, position);
+                yarp::os::Time::delay(0.005);    // needed for correct execution of motion
             } else {
                 std::cerr << "[Joint Writer " << icub_part << "] Motion mode does not fit with control mode! Use 'position' control mode for 'abs' motion mode" << std::endl;
             }
@@ -662,35 +698,45 @@ bool JointWriter::WriteDoubleOne(double position, int joint, std::string mode, b
                 }
                 // start motion
                 start = ipos->relativeMove(joint, position);
+                yarp::os::Time::delay(0.005);    // needed for correct execution of motion
             } else {
                 std::cerr << "[Joint Writer " << icub_part << "] Motion mode does not fit with control mode! Use 'position' control mode for 'rel' motion mode" << std::endl;
             }
+
         } else if (mode == "vel") {
             if (joint_control_mode[joint] == VOCAB_CM_VELOCITY) {
                 // clamp to joint limits
                 position = std::clamp(position, -velocity_max, velocity_max);
                 // start motion
                 start = ivel->velocityMove(joint, position);
+                yarp::os::Time::delay(0.005);    // needed for correct execution of motion
             } else {
                 std::cerr << "[Joint Writer " << icub_part << "] Motion mode does not fit with control mode! Use 'velocity' control mode for 'vel' motion mode" << std::endl;
             }
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
         }
+
         // move joint blocking/non-blocking
         if (start) {
-            if (blocking) {
+            if (blocking && (mode != "vel")) {
+                bool in_time = true;
                 bool motion = false;
-                while (!motion) {
+                time_t start_time = std::time(NULL);
+                while (!motion && in_time) {
                     if (!ipos->checkMotionDone(&motion)) {
                         std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving occured!" << std::endl;
                         return false;
+                    }
+                    yarp::os::Time::delay(0.005);
+                    if ((std::time(NULL) - start_time) > timeout && timeout > 0) {
+                        in_time = false;
+                        ipos->stop(joint);
                     }
                 }
             }
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] Could not start motion!" << std::endl;
-            return false;
         }
         return start;
     } else {
@@ -698,7 +744,7 @@ bool JointWriter::WriteDoubleOne(double position, int joint, std::string mode, b
     }
 }
 
-bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, std::string mode, bool blocking) {
+bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, std::string mode, bool blocking, time_t timeout) {
     /*
         Write all joints with joint angles encoded in populations
 
@@ -729,6 +775,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, st
             }
             // start motion
             start = ipos->positionMove(joint_angles.data());
+            yarp::os::Time::delay(0.005);    // needed for correct execution of motion
         } else if (mode == "rel") {
             // Decode positions from populations
             for (int i = 0; i < joints; i++) {
@@ -755,6 +802,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, st
 
             // start motion
             start = ipos->relativeMove(joint_angles.data());
+            yarp::os::Time::delay(0.005);    // needed for correct execution of motion
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
         }
@@ -762,14 +810,23 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, st
         // move joints blocking/non-blocking
         if (start) {
             if (blocking) {
+                bool in_time = true;
                 bool motion = false;
-                while (!motion) {
+                time_t start_time = std::time(NULL);
+                while (!motion && in_time) {
                     if (!ipos->checkMotionDone(&motion)) {
                         std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving occured!" << std::endl;
                         return false;
                     }
+                    yarp::os::Time::delay(0.005);
+                    if ((std::time(NULL) - start_time) > timeout && timeout > 0) {
+                        in_time = false;
+                        ipos->stop();
+                    }
                 }
             }
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] Could not start motion!" << std::endl;
         }
         return start;
     } else {
@@ -777,7 +834,7 @@ bool JointWriter::WritePopAll(std::vector<std::vector<double>> position_pops, st
     }
 }
 
-bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, std::string mode, bool blocking) {
+bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, std::string mode, bool blocking, time_t timeout) {
     /*
         Write multiple joints with joint angles encoded in populations
 
@@ -819,6 +876,7 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
             }
             // start motion
             start = ipos->positionMove(joint_selection.size(), joint_selection.data(), joint_angles.data());
+            yarp::os::Time::delay(0.005);    // needed for correct execution of motion
 
         } else if (mode == "rel") {
             // Decode positions from populations
@@ -846,6 +904,7 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
             }
             // start motion
             start = ipos->relativeMove(joint_selection.size(), joint_selection.data(), joint_angles.data());
+            yarp::os::Time::delay(0.005);    // needed for correct execution of motion
 
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
@@ -854,14 +913,23 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
         // move joints blocking/non-blocking
         if (start) {
             if (blocking) {
+                bool in_time = true;
                 bool motion = false;
-                while (!motion) {
+                time_t start_time = std::time(NULL);
+                while (!motion && in_time) {
                     if (!ipos->checkMotionDone(&motion)) {
                         std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving occured!" << std::endl;
                         return false;
                     }
+                    yarp::os::Time::delay(0.005);
+                    if ((std::time(NULL) - start_time) > timeout && timeout > 0) {
+                        in_time = false;
+                        ipos->stop(joint_selection.size(), joint_selection.data());
+                    }
                 }
             }
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] Could not start motion!" << std::endl;
         }
         return start;
     } else {
@@ -869,7 +937,7 @@ bool JointWriter::WritePopMultiple(std::vector<std::vector<double>> position_pop
     }
 }
 
-bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, std::string mode, bool blocking) {
+bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, std::string mode, bool blocking, time_t timeout) {
     /*
         Write one joint with the joint angle encoded in a population
 
@@ -899,6 +967,7 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, std::
             }
             // start motion
             start = ipos->positionMove(joint, angle);
+            yarp::os::Time::delay(0.005);    // needed for correct execution of motion
         } else if (mode == "rel") {
             // Decode relative position from population
             double angle = Decode(position_pop, joint, neuron_deg_rel);
@@ -920,6 +989,7 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, std::
 
             // start motion
             start = ipos->relativeMove(joint, angle);
+            yarp::os::Time::delay(0.005);    // needed for correct execution of motion
         } else {
             std::cerr << "[Joint Writer " << icub_part << "] No valid motion mode is given. Possible options are 'abs' or 'rel' !" << std::endl;
         }
@@ -927,14 +997,23 @@ bool JointWriter::WritePopOne(std::vector<double> position_pop, int joint, std::
         // move joint blocking/non-blocking
         if (start) {
             if (blocking) {
+                bool in_time = true;
                 bool motion = false;
-                while (!motion) {
+                time_t start_time = std::time(NULL);
+                while (!motion && in_time) {
                     if (!ipos->checkMotionDone(&motion)) {
                         std::cerr << "[Joint Writer " << icub_part << "] Communication error while moving occured!" << std::endl;
                         return false;
                     }
+                    yarp::os::Time::delay(0.005);
+                    if ((std::time(NULL) - start_time) > timeout && timeout > 0) {
+                        in_time = false;
+                        ipos->stop(joint);
+                    }
                 }
             }
+        } else {
+            std::cerr << "[Joint Writer " << icub_part << "] Could not start motion!" << std::endl;
         }
         return start;
     } else {
@@ -949,15 +1028,15 @@ double JointWriter::Decode_ext(std::vector<double> position_pop, int joint) { re
 void JointWriter::Retrieve_ANNarchy_Input_SJ() { joint_value = joint_source->retrieve_singletarget(); }
 void JointWriter::Write_ANNarchy_Input_SJ() {
     if (std::isfinite(joint_value)) {
-        WriteDoubleOne(joint_value, _joint_select[0], _mode, _blocking);
+        WriteDoubleOne(joint_value, _joint_select[0], _mode, _blocking, 0);
     }
 }
 
 void JointWriter::Retrieve_ANNarchy_Input_SJ_enc() { joint_value_1dvector = joint_source->retrieve_singletarget_enc(); }
-void JointWriter::Write_ANNarchy_Input_SJ_enc() { WritePopOne(joint_value_1dvector, _joint_select[0], _mode, _blocking); }
+void JointWriter::Write_ANNarchy_Input_SJ_enc() { WritePopOne(joint_value_1dvector, _joint_select[0], _mode, _blocking, 0); }
 
 void JointWriter::Retrieve_ANNarchy_Input_MJ() { joint_value_1dvector = joint_source->retrieve_multitarget(); }
-void JointWriter::Write_ANNarchy_Input_MJ() { WriteDoubleMultiple(joint_value_1dvector, _joint_select, _mode, _blocking); }
+void JointWriter::Write_ANNarchy_Input_MJ() { WriteDoubleMultiple(joint_value_1dvector, _joint_select, _mode, _blocking, 0); }
 
 void JointWriter::Retrieve_ANNarchy_Input_MJ_enc() {
     joint_value_1dvector = joint_source->retrieve_multitarget_enc();
@@ -965,10 +1044,10 @@ void JointWriter::Retrieve_ANNarchy_Input_MJ_enc() {
         joint_value_2dvector.push_back(std::vector<double>((joint_value_1dvector.begin() + i), (joint_value_1dvector.begin() + i + pop_size + 1)));
     }
 }
-void JointWriter::Write_ANNarchy_Input_MJ_enc() { WritePopMultiple(joint_value_2dvector, _joint_select, _mode, _blocking); }
+void JointWriter::Write_ANNarchy_Input_MJ_enc() { WritePopMultiple(joint_value_2dvector, _joint_select, _mode, _blocking, 0); }
 
 void JointWriter::Retrieve_ANNarchy_Input_AJ() { joint_value_1dvector = joint_source->retrieve_alltarget(); }
-void JointWriter::Write_ANNarchy_Input_AJ() { WriteDoubleAll(joint_value_1dvector, _mode, _blocking); }
+void JointWriter::Write_ANNarchy_Input_AJ() { WriteDoubleAll(joint_value_1dvector, _mode, _blocking, 0); }
 
 void JointWriter::Retrieve_ANNarchy_Input_AJ_enc() {
     joint_value_1dvector = joint_source->retrieve_alltarget_enc();
@@ -976,7 +1055,7 @@ void JointWriter::Retrieve_ANNarchy_Input_AJ_enc() {
         joint_value_2dvector.push_back(std::vector<double>((joint_value_1dvector.begin() + i), (joint_value_1dvector.begin() + i + pop_size + 1)));
     }
 }
-void JointWriter::Write_ANNarchy_Input_AJ_enc() { WritePopAll(joint_value_2dvector, _mode, _blocking); }
+void JointWriter::Write_ANNarchy_Input_AJ_enc() { WritePopAll(joint_value_2dvector, _mode, _blocking, 0); }
 #else
 void JointWriter::Retrieve_ANNarchy_Input_SJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }
 void JointWriter::Write_ANNarchy_Input_SJ() { std::cerr << "[Joint Writer] gRPC is not included in the setup process!" << std::endl; }

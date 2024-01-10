@@ -302,7 +302,7 @@ cdef class PyJointWriter:
         return deref(self._cpp_joint_writer).SetJointControlMode(s1, joint)
 
     # write all joints with double values
-    def write_double_all(self, position, str mode, blocking=True):
+    def write_double_all(self, position, str mode, blocking=True, timeout=0):
         """Move all joints to the given positiion (joint angles/velocities).
 
         Parameters
@@ -326,10 +326,10 @@ cdef class PyJointWriter:
         cdef string s1 = mode.encode('UTF-8')
         # we need to transform py-bool to c++ compatible boolean
         cdef bint block = blocking.__int__()
-        return deref(self._cpp_joint_writer).WriteDoubleAll(position, s1, block)
+        return deref(self._cpp_joint_writer).WriteDoubleAll(position, s1, block, timeout)
 
     # write all joints with double values
-    def write_double_multiple(self, position, joints, str mode, blocking=True):
+    def write_double_multiple(self, position, joints, str mode, blocking=True, timeout=0):
         """Move multiple joints to the given positiion (joint angles/velocities).
 
         Parameters
@@ -355,10 +355,10 @@ cdef class PyJointWriter:
         cdef string s1 = mode.encode('UTF-8')
         # we need to transform py-bool to c++ compatible boolean
         cdef bint block = blocking.__int__()
-        return deref(self._cpp_joint_writer).WriteDoubleMultiple(position, joints, s1, block)
+        return deref(self._cpp_joint_writer).WriteDoubleMultiple(position, joints, s1, block, timeout)
 
     # write one joint with double value
-    def write_double_one(self, double position, int joint, str mode, blocking=True):
+    def write_double_one(self, double position, int joint, str mode, blocking=True, timeout=0):
         """Move single joint to the given positiion (joint angle/velocity).
 
         Parameters
@@ -384,10 +384,10 @@ cdef class PyJointWriter:
         cdef string s1 = mode.encode('UTF-8')
         # we need to transform py-bool to c++ compatible boolean
         cdef bint block = blocking.__int__()
-        return deref(self._cpp_joint_writer).WriteDoubleOne(position, joint, s1, block)
+        return deref(self._cpp_joint_writer).WriteDoubleOne(position, joint, s1, block, timeout)
 
     # write all joints with joint angles encoded in populations vectors
-    def write_pop_all(self, position_pops, str mode, blocking=True):
+    def write_pop_all(self, position_pops, str mode, blocking=True, timeout=0):
         """Move all joints to the joint angles/velocities encoded in the given vector of populations.
 
         Parameters
@@ -411,10 +411,10 @@ cdef class PyJointWriter:
         cdef string s1 = mode.encode('UTF-8')
         # we need to transform py-bool to c++ compatible boolean
         cdef bint block = blocking.__int__()
-        return deref(self._cpp_joint_writer).WritePopAll(position_pops, s1, block)
+        return deref(self._cpp_joint_writer).WritePopAll(position_pops, s1, block, timeout)
 
     # write multiple joints with joint angles encoded in populations vectors
-    def write_pop_multiple(self, position_pops, joints, str mode, blocking=True):
+    def write_pop_multiple(self, position_pops, joints, str mode, blocking=True, timeout=0):
         """Move multiple joints to the joint angles/velocities encoded in the given vector of populations.
 
         Parameters
@@ -440,10 +440,10 @@ cdef class PyJointWriter:
         cdef string s1 = mode.encode('UTF-8')
         # we need to transform py-bool to c++ compatible boolean
         cdef bint block = blocking.__int__()
-        return deref(self._cpp_joint_writer).WritePopMultiple(position_pops, joints, s1, block)
+        return deref(self._cpp_joint_writer).WritePopMultiple(position_pops, joints, s1, block, timeout)
 
     # write one joint with the joint angle encoded in a population vector
-    def write_pop_one(self, position_pop, int joint, str mode, blocking=True):
+    def write_pop_one(self, position_pop, int joint, str mode, blocking=True, timeout=0):
         """Move a single joint to the joint angle/velocity encoded in the given population.
 
         Parameters
@@ -469,7 +469,7 @@ cdef class PyJointWriter:
         cdef string s1 = mode.encode('UTF-8')
         # we need to transform py-bool to c++ compatible boolean
         cdef bint block = blocking.__int__()
-        return deref(self._cpp_joint_writer).WritePopOne(position_pop, joint, s1, block)
+        return deref(self._cpp_joint_writer).WritePopOne(position_pop, joint, s1, block, timeout)
 
     '''
     # gRPC related methods

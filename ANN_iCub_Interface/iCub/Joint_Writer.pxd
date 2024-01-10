@@ -71,22 +71,22 @@ cdef extern from "Joint_Writer.hpp":
         bool_t SetJointControlMode(string, int)
 
         # Write all joints with double values.
-        bool_t WriteDoubleAll(vector[double], string, bool_t)
+        bool_t WriteDoubleAll(vector[double], string, bool_t, long)
 
         # Write all joints with double values.
-        bool_t WriteDoubleMultiple(vector[double], vector[int], string, bool_t)
+        bool_t WriteDoubleMultiple(vector[double], vector[int], string, bool_t, long)
 
         # Write one joint with double value.
-        bool_t WriteDoubleOne(double, int, string, bool_t)
+        bool_t WriteDoubleOne(double, int, string, bool_t, long)
 
         # Write all joints with joint angles encoded in populations
-        bool_t WritePopAll(vector[vector[double]], string, bool_t)
+        bool_t WritePopAll(vector[vector[double]], string, bool_t, long)
 
         # Write all joints with joint angles encoded in populations
-        bool_t WritePopMultiple(vector[vector[double]], vector[int], string, bool_t)
+        bool_t WritePopMultiple(vector[vector[double]], vector[int], string, bool_t, long)
 
         # Write one joint with the joint angle encoded in a population.
-        bool_t WritePopOne(vector[double], int, string, bool_t)
+        bool_t WritePopOne(vector[double], int, string, bool_t, long)
 
         void setRegister(bint)
         bint getRegister()

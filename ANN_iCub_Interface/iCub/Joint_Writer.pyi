@@ -270,12 +270,12 @@ class PyJointWriter:
         """Write single joint with retrieved population encoded joint angle."""
         ...
 
-    def write_double_all(self, position, mode: str, blocking=...) -> bool:
+    def write_double_all(self, position, mode: str, blocking=..., timeout: int=...) -> bool:
         """Move all joints to the given positiion (joint angles/velocities).
 
         Parameters
         ----------
-        position : list/NDarray (vector[double]
+        position : list/NDarray (vector[double])
             joint angles/velocities to write to the robot joints
         mode : str
             string to select the motion mode:
@@ -284,6 +284,8 @@ class PyJointWriter:
                 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
+        timeout : int
+            Timeout in seconds to stop the block mode. Set to 0 for not timeout. (Default value = 0)
 
         Returns
         -------
@@ -292,7 +294,7 @@ class PyJointWriter:
         """
         ...
 
-    def write_double_multiple(self, position, joints, mode: str, blocking=...) -> bool:
+    def write_double_multiple(self, position, joints, mode: str, blocking=..., timeout: int=...) -> bool:
         """Move multiple joints to the given positiion (joint angles/velocities).
 
         Parameters
@@ -308,6 +310,8 @@ class PyJointWriter:
                 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
+        timeout : int
+            Timeout in seconds to stop the block mode. Set to 0 for not timeout. (Default value = 0)
 
         Returns
         -------
@@ -316,7 +320,7 @@ class PyJointWriter:
         """
         ...
 
-    def write_double_one(self, position: float, joint: int, mode: str, blocking=...) -> bool:
+    def write_double_one(self, position: float, joint: int, mode: str, blocking=..., timeout: int=...) -> bool:
         """Move single joint to the given positiion (joint angle/velocity).
 
         Parameters
@@ -332,6 +336,8 @@ class PyJointWriter:
                 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
+        timeout : int
+            Timeout in seconds to stop the block mode. Set to 0 for not timeout. (Default value = 0)
 
         Returns
         -------
@@ -340,7 +346,7 @@ class PyJointWriter:
         """
         ...
 
-    def write_pop_all(self, position_pops, mode: str, blocking=...) -> bool:
+    def write_pop_all(self, position_pops, mode: str, blocking=..., timeout: int=...) -> bool:
         """Move all joints to the joint angles/velocities encoded in the given vector of populations.
 
         Parameters
@@ -354,6 +360,8 @@ class PyJointWriter:
                 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
+        timeout : int
+            Timeout in seconds to stop the block mode. Set to 0 for not timeout. (Default value = 0)
 
         Returns
         -------
@@ -362,7 +370,7 @@ class PyJointWriter:
         """
         ...
 
-    def write_pop_multiple(self, position_pops, joints, mode: str, blocking=...) -> bool:
+    def write_pop_multiple(self, position_pops, joints, mode: str, blocking=..., timeout: int=...) -> bool:
         """Move multiple joints to the joint angles/velocities encoded in the given vector of populations.
 
         Parameters
@@ -378,6 +386,8 @@ class PyJointWriter:
                 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
+        timeout : int
+            Timeout in seconds to stop the block mode. Set to 0 for not timeout. (Default value = 0)
 
         Returns
         -------
@@ -386,7 +396,7 @@ class PyJointWriter:
         """
         ...
 
-    def write_pop_one(self, position_pop, joint: int, mode: str, blocking=...) -> bool:
+    def write_pop_one(self, position_pop, joint: int, mode: str, blocking=..., timeout: int=...) -> bool:
         """Move a single joint to the joint angle/velocity encoded in the given population.
 
         Parameters
@@ -402,6 +412,8 @@ class PyJointWriter:
                 'vel' for velocity values: DO NOT USE "VEL" AS BLOCKING MOTION!!!
         blocking : bool
             if True, complete motion before continuation. (Default value = True)
+        timeout : int
+            Timeout in seconds to stop the block mode. Set to 0 for not timeout. (Default value = 0)
 
         Returns
         -------

@@ -165,12 +165,13 @@ class JointWriter : public Mod_BaseClass {
      * \param[in] position Joint angles to write to the robot joints
      * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \param[in] blocking if True, function waits for end of motion
+     * \param[in] timeout time in seconds, to wait for motion execution
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: position array size does not fit joint count; positioning mode not valid
      *              - missing initialization
      */
-    bool WriteDoubleAll(std::vector<double> position, std::string mode, bool blocking);
+    bool WriteDoubleAll(std::vector<double> position, std::string mode, bool blocking, time_t timeout);
 
     /**
      * \brief Write all joints with double values.
@@ -178,12 +179,13 @@ class JointWriter : public Mod_BaseClass {
      * \param[in] joint_selection Joint indizes of the joints, which should be moved (head: 3, 4, 5 -> all eye movements)
      * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \param[in] blocking if True, function waits for end of motion
+     * \param[in] timeout time in seconds, to wait for motion execution
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: position array size does not fit joint count; positioning mode not valid
      *              - missing initialization
      */
-    bool WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, std::string mode, bool blocking);
+    bool WriteDoubleMultiple(std::vector<double> position, std::vector<int> joint_selection, std::string mode, bool blocking, time_t timeout);
 
     /**
      * \brief Write one joint with double value.
@@ -191,25 +193,27 @@ class JointWriter : public Mod_BaseClass {
      * \param[in] joint Joint number of the robot part
      * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \param[in] blocking if True, function waits for end of motion
+     * \param[in] timeout time in seconds, to wait for motion execution
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: position out of joint limits; joint out of range; positioning mode not valid
      *              - missing initialization
      */
-    bool WriteDoubleOne(double position, int joint, std::string mode, bool blocking);
+    bool WriteDoubleOne(double position, int joint, std::string mode, bool blocking, time_t timeout);
 
     /**
      * \brief Write all joints with joint angles encoded in populations
      * \param[in] position_pops Populations encoding every joint angle for writing them to the associated robot part
      * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \param[in] blocking if True, function waits for end of motion
+     * \param[in] timeout time in seconds, to wait for motion execution
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: joints out of range; positioning mode not valid; position_pops size does not fit joint count
      *              - position decoding returned NaN
      *              - missing initialization
      */
-    bool WritePopAll(std::vector<std::vector<double>> position_pops, std::string mode, bool blocking);
+    bool WritePopAll(std::vector<std::vector<double>> position_pops, std::string mode, bool blocking, time_t timeout);
 
     /**
      * \brief Write all joints with joint angles encoded in populations
@@ -217,6 +221,7 @@ class JointWriter : public Mod_BaseClass {
      * \param[in] joint_selection Joint indizes of the joints, which should be moved (head: 3, 4, 5 -> all eye movements)
      * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \param[in] blocking if True, function waits for end of motion
+     * \param[in] timeout time in seconds, to wait for motion execution
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).
      *          Typical errors:
      *              - arguments not valid: joints out of range; positioning mode not valid; position_pops size does not fit joint selection
@@ -224,7 +229,7 @@ class JointWriter : public Mod_BaseClass {
      *              - missing initialization
      */
     bool WritePopMultiple(std::vector<std::vector<double>> position_pops, std::vector<int> joint_selection, std::string mode,
-                          bool blocking);
+                          bool blocking, time_t timeout);
 
     /**
      * \brief Write one joint with the joint angle encoded in a population.
@@ -232,13 +237,14 @@ class JointWriter : public Mod_BaseClass {
      * \param[in] joint Joint number of the robot part
      * \param[in] mode string to select the motion mode: possible are 'abs' for absolute joint angle positions and 'rel' for relative joint angles
      * \param[in] blocking if True, function waits for end of motion
+     * \param[in] timeout time in seconds, to wait for motion execution
      * \return True, if successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: joint out of range; positioning mode not valid
      *              - position decoding returned NaN
      *              - missing initialization
      */
-    bool WritePopOne(std::vector<double> position_pop, int joint, std::string mode, bool blocking);
+    bool WritePopOne(std::vector<double> position_pop, int joint, std::string mode, bool blocking, time_t timeout);
 
     /**
      * \brief Write all joints with double values.
