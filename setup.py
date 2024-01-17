@@ -136,12 +136,12 @@ else:
         sys.exit("Did not find OpenCV in given path! Please correct cv_include in make_config.py!")
 
 # Lists with lib/include directories and names
-include_dir = ["/usr/include", "ANN_iCub_Interface/include", "./", yarp_prefix + "/include", cv_include, numpy.get_include()] + grpc_include_dir
+include_dir = ["ANN_iCub_Interface/include", "./", yarp_prefix + "/include", cv_include, numpy.get_include()] + grpc_include_dir
 
 libs = ["opencv_core", "opencv_imgproc",
         "YARP_dev", "YARP_init", "YARP_math", "YARP_name", "YARP_os", "YARP_run", "YARP_sig"] + grpc_libs
 
-lib_dirs = ["/usr/lib", "/usr/local/lib", yarp_prefix + "/lib"] + grpc_lib_dir
+lib_dirs = [yarp_prefix + "/lib"] + grpc_lib_dir
 
 # Prefixes for Cython and C++ based code
 prefix_cy = "ANN_iCub_Interface/"
