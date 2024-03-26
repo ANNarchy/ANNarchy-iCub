@@ -34,10 +34,10 @@ cdef extern from "Kinematic_Writer.hpp":
         KinematicWriter() except +
 
         # Initialize the joint writer with given parameters
-        bool_t Init(string, float, string)
+        bool_t Init(string, float, string, bool_t)
 
         # Initialize the joint writer with given parameters
-        bool_t InitGRPC(string, float, string, string, unsigned int)
+        bool_t InitGRPC(string, float, string, string, unsigned int, bool_t)
 
         # Close joint writer with cleanup
         void Close()
@@ -45,7 +45,26 @@ cdef extern from "Kinematic_Writer.hpp":
         # Return number of controlled joints
         int GetDOF()
 
-        vector[double] solveInvKin(vector[double], vector[int])
+        # Get joints being part of active kinematic chain
+        vector[int] GetDOFLinks()
+
+        # Set blocked links
+        void BlockLinks(vector[int])
+
+        # Get blocked links
+        vector[int] GetBlockedLinks()
+
+        # Released links of kinematic chain -> add links to active kinematic chain
+        void ReleaseLinks(vector[int])
+
+        # Get joint angles
+        vector[double] GetJointAngles()
+
+        # Set joint angles for forward kinematic in offline mode
+        vector[double] SetJointAngles(vector[double])
+
+
+        vector[double] SolveInvKin(vector[double], vector[int])
 
         void setRegister(bint)
         bint getRegister()

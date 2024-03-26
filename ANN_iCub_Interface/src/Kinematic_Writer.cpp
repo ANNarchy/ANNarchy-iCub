@@ -43,7 +43,7 @@
 KinematicWriter::~KinematicWriter() { Close(); }
 
 /*** public methods for the user ***/
-bool KinematicWriter::Init(std::string part, float version, std::string ini_path) {
+bool KinematicWriter::Init(std::string part, float version, std::string ini_path, bool offline_mode) {
     /*
         Initialize the Kinematic Writer with given parameters
 
@@ -65,7 +65,7 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
         }
 
         // Check Yarp-network
-        if (!yarp::os::Network::checkNetwork()) {
+        if (!yarp::os::Network::checkNetwork() && !offline_mode) {
             std::cerr << "[Kinematic Writer " << icub_part << "] YARP Network is not online. Check nameserver is running!" << std::endl;
             return false;
         }
@@ -81,8 +81,7 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "/interface_param.ini");
         if (reader_gen.ParseError() != 0) {
-            std::cerr << "[Kinematic Writer " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path
-                      << "\" and the ini file content!" << std::endl;
+            std::cerr << "[Kinematic Writer " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path << "\" and the ini file content!" << std::endl;
             return false;
         }
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
@@ -100,70 +99,86 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
                 std::cerr << "[Kinematic Writer " << icub_part << "] Unable to establish kinematic chain!" << std::endl;
                 return false;
             }
-            KinArm->releaseLink(0);
-            KinArm->releaseLink(1);
-            KinArm->releaseLink(2);
 
-            // setup iCub joint position control
-            yarp::os::Property options_torso;
-            options_torso.put("device", "remote_controlboard");
-            options_torso.put("remote", (robot_port_prefix + "/torso").c_str());
-            options_torso.put("local", (client_port_prefix + "/ANNarchy_Kin_write/torso").c_str());
+            active_torso = false;
+            if (!offline_mode) {
+                // setup iCub joint position control
+                yarp::os::Property options_torso;
+                options_torso.put("device", "remote_controlboard");
+                options_torso.put("remote", (robot_port_prefix + "/torso").c_str());
+                options_torso.put("local", (client_port_prefix + "/ANNarchy_Kin_write/torso").c_str());
 
-            if (!driver_torso.open(options_torso)) {
-                std::cerr << "[Kinematic Writer torso] Unable to open " << options_torso.find("device").asString() << "!" << std::endl;
-                return false;
+                if (!driver_torso.open(options_torso)) {
+                    std::cerr << "[Kinematic Writer torso] Unable to open " << options_torso.find("device").asString() << "!" << std::endl;
+                    return false;
+                } else {
+                    if (!driver_torso.view(encoder_torso)) {
+                        std::cerr << "[Kinematic Writer torso] Unable to open motor encoder interface!" << std::endl;
+                        Close();
+                        return false;
+                    }
+
+                    if (!driver_torso.view(limit_torso)) {
+                        std::cerr << "[Kinematic Writer torso] Unable to open motor limit interface!" << std::endl;
+                        Close();
+                        return false;
+                    }
+
+                    encoder_torso->getAxes(&joint_torso);
+                    limits.push_back(limit_torso);
+
+                    // add torso joints to the active part of the kinematic chain
+                    KinArm->releaseLink(0);
+                    KinArm->releaseLink(1);
+                    KinArm->releaseLink(2);
+
+                    active_torso = true;
+                }
+
+                // setup iCub joint position control
+                yarp::os::Property options_arm;
+                options_arm.put("device", "remote_controlboard");
+                options_arm.put("remote", (robot_port_prefix + "/" + part).c_str());
+                options_arm.put("local", (client_port_prefix + "/ANNarchy_Kin_write/" + part).c_str());
+
+                if (!driver_arm.open(options_arm)) {
+                    std::cerr << "[Kinematic Writer " << part << "] Unable to open " << options_arm.find("device").asString() << "!" << std::endl;
+                    return false;
+                }
+
+                if (!driver_arm.view(encoder_arm)) {
+                    std::cerr << "[Kinematic Writer " << part << "] Unable to open motor encoder interface!" << std::endl;
+                    Close();
+                    return false;
+                }
+
+                if (!driver_arm.view(limit_arm)) {
+                    std::cerr << "[Kinematic Writer " << part << "] Unable to open motor limit interface!" << std::endl;
+                    Close();
+                    return false;
+                }
+
+                encoder_arm->getAxes(&joint_arm);
+                limits.push_back(limit_arm);
+
+                KinArm->alignJointsBounds(limits);
+            } else {
+                // add torso joints to the active part of the kinematic chain
+                KinArm->releaseLink(0);
+                KinArm->releaseLink(1);
+                KinArm->releaseLink(2);
+
+                angles_set = false;
             }
-
-            if (!driver_torso.view(encoder_torso)) {
-                std::cerr << "[Kinematic Writer torso] Unable to open motor encoder interface!" << std::endl;
-                Close();
-                return false;
-            }
-
-            if (!driver_torso.view(limit_torso)) {
-                std::cerr << "[Kinematic Writer torso] Unable to open motor limit interface!" << std::endl;
-                Close();
-                return false;
-            }
-
-            encoder_torso->getAxes(&joint_torso);
-            limits.push_back(limit_torso);
-
-            // setup iCub joint position control
-            yarp::os::Property options_arm;
-            options_arm.put("device", "remote_controlboard");
-            options_arm.put("remote", (robot_port_prefix + "/" + part).c_str());
-            options_arm.put("local", (client_port_prefix + "/ANNarchy_Kin_write/" + part).c_str());
-
-            if (!driver_arm.open(options_arm)) {
-                std::cerr << "[Kinematic Writer " << part << "] Unable to open " << options_arm.find("device").asString() << "!" << std::endl;
-                return false;
-            }
-
-            if (!driver_arm.view(encoder_arm)) {
-                std::cerr << "[Kinematic Writer " << part << "] Unable to open motor encoder interface!" << std::endl;
-                Close();
-                return false;
-            }
-
-            if (!driver_arm.view(limit_arm)) {
-                std::cerr << "[Kinematic Writer " << part << "] Unable to open motor limit interface!" << std::endl;
-                Close();
-                return false;
-            }
-
-            encoder_arm->getAxes(&joint_arm);
-            limits.push_back(limit_arm);
-
-            KinArm->alignJointsBounds(limits);
         }
         this->KinChain = KinArm->asChain();
 
         this->type = "KinematicWriter";
+        offlinemode = offline_mode;
         init_param["part"] = part;
         init_param["version"] = std::to_string(version);
         init_param["ini_path"] = ini_path;
+        init_param["offline_mode"] = std::to_string(offline_mode);
         this->dev_init = true;
         return true;
     } else {
@@ -173,7 +188,7 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
 }
 
 #ifdef _USE_GRPC
-bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port) {
+bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode) {
     /*
         Initialize the Kinematic Writer with given parameters
 
@@ -185,7 +200,7 @@ bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_
     */
 
     if (!this->dev_init) {
-        if (this->Init(part, version, ini_path)) {
+        if (this->Init(part, version, ini_path, offline_mode)) {
             this->_ip_address = ip_address;
             this->_port = port;
             this->kin_source = new ServerInstance(ip_address, port, this);
@@ -204,7 +219,7 @@ bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_
     }
 }
 #else
-bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port) {
+bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode) {
     /*
         Initialize the Kinematic Writer with given parameters
 
@@ -243,6 +258,28 @@ void KinematicWriter::Close() {
     this->dev_init = false;
 }
 
+// Block given links
+void KinematicWriter::BlockLinks(std::vector<int> joints) {
+    if (CheckInit() && offlinemode) {
+        for (auto it = joints.begin(); it != joints.end(); ++it) {
+            KinArm->blockLink(*it);
+        }
+    }
+}
+
+// Get blocked links
+std::vector<int> KinematicWriter::GetBlockedLinks() {
+    std::vector<int> blocked;
+    if (CheckInit() && offlinemode) {
+        for (unsigned int i = 0; i < KinArm->getN(); i++) {
+            if (KinArm->isLinkBlocked(i)) {
+                blocked.push_back(i);
+            }
+        }
+    }
+    return blocked;
+}
+
 int KinematicWriter::GetDOF() {
     /*
         Return number of controlled joints
@@ -256,53 +293,109 @@ int KinematicWriter::GetDOF() {
     }
 }
 
-std::vector<double> KinematicWriter::solveInvKin(std::vector<double> position, std::vector<int> blocked_links) {
+// Get joints being part of active kinematic chain
+std::vector<int> KinematicWriter::GetDOFLinks() {
+    std::vector<int> dof;
+    if (CheckInit() && offlinemode) {
+        for (unsigned int i = 0; i < KinArm->getN(); i++) {
+            if (!KinArm->isLinkBlocked(i)) {
+                dof.push_back(i);
+            }
+        }
+    }
+    return dof;
+}
+
+// Get joint angles in radians
+std::vector<double> KinematicWriter::GetJointAngles() {
+    if (CheckInit()) {
+        auto angles = KinArm->getAng();
+        return std::vector<double>(angles.begin(), angles.end());
+    } else {
+        return std::vector<double>();
+    }
+}
+
+// Set released links of kinematic chain
+void KinematicWriter::ReleaseLinks(std::vector<int> joints) {
+    if (CheckInit() && offlinemode) {
+        for (auto it = joints.begin(); it != joints.end(); ++it) {
+            KinArm->releaseLink(*it);
+        }
+    }
+}
+
+// Set joint angles for forward kinematic in offline mode
+std::vector<double> KinematicWriter::SetJointAngles(std::vector<double> joint_angles) {
+    std::vector<double> act_angles;
+    if (CheckInit() && offlinemode) {
+        yarp::sig::Vector angles = KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
+        angles_set = true;
+        act_angles.assign(angles.begin(), angles.end());
+        return act_angles;
+    }
+    return act_angles;
+}
+
+std::vector<double> KinematicWriter::SolveInvKin(std::vector<double> position, std::vector<int> blocked_links) {
     /*
-        Compute the joint configuration for a given 3D End-Effector position (Inverse Kinematics)
+        Compute the joint configuration for a given 3D End-Effector position (Inverse Kinematics) in online mode.
 
         return: vector       -- joint angle configuration for given position (free joints)
     */
     std::vector<double> joint_angles, angles_arm, angles_torso, angles;
     if (CheckInit()) {
-        double deg2rad = M_PI / 180.;
+        // Init necessary data structures
         yarp::sig::Vector pos(position.size(), position.data());
         yarp::sig::Vector jnt_angles;
-        iCub::iKin::iKinIpOptMin slv(*this->KinChain, IKINCTRL_POSE_XYZ, 1e-3, 1e-6, 100);
-        slv.setUserScaling(true, 100.0, 100.0, 100.0);
-
-        // read joint angles
-        angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
-        angles_torso = ReadDoubleAll(encoder_torso, joint_torso);
-        angles_torso.insert(angles_torso.end(), angles_arm.begin(), angles_arm.begin() + 7);
-
-        // block links from blocking selection
         bool value = true;
-        if (blocked_links.size() > 0) {
-            for (auto it = blocked_links.begin(); it != blocked_links.end(); it++) {
-                value = value & KinArm->blockLink(*it);
-            }
-        }
 
-        // strip blocked links from joint angle vector
-        for (unsigned int i = 0; i < angles_torso.size(); i++) {
-            if (!(std::find(blocked_links.begin(), blocked_links.end(), i) != blocked_links.end())) {    // TODO(tofo): check that correct angles are missed
-                angles.push_back(angles_torso[i]);
+        // in online mode: read the angles from the robot and set them to the kinematic chain
+        if (!offlinemode) {
+            // read joint angles
+            angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
+            if (active_torso) {
+                angles_torso = ReadDoubleAll(encoder_torso, joint_torso);
+            } else {
+                angles_torso = std::vector<double>({0., 0., 0.});
+                blocked_links.insert(blocked_links.end(), {0, 1, 2});
             }
-        }
+            angles_torso.insert(angles_torso.end(), angles_arm.begin(), angles_arm.begin() + 7);
 
-        // set joint configuration for kinematic chain
-        std::transform(angles.begin(), angles.end(), angles.begin(), [deg2rad](double& c) { return c * deg2rad; });
-        KinArm->setAng(yarp::sig::Vector(angles.size(), angles.data()));
-        slv.setMaxIter(5000);
+            // block links from blocking selection
+            if (blocked_links.size() > 0) {
+                for (auto it = blocked_links.begin(); it != blocked_links.end(); it++) {
+                    value = value & KinArm->blockLink(*it);
+                }
+                // strip blocked links from joint angle vector
+                for (unsigned int i = 0; i < angles_torso.size(); i++) {
+                    if (std::find(blocked_links.begin(), blocked_links.end(), i) == blocked_links.end()) {
+                        angles.push_back(angles_torso[i]);
+                    }
+                }
+            } else {
+                angles = angles_torso;
+            }
+
+            // set joint configuration for kinematic chain
+            double deg2rad1 = this->deg2rad;
+            std::transform(angles.begin(), angles.end(), angles.begin(), [deg2rad1](double& c) { return c * deg2rad1; });
+            KinArm->setAng(yarp::sig::Vector(angles.size(), angles.data()));
+        }
 
         // compute inverse kinematics
+        iCub::iKin::iKinIpOptMin slv(*this->KinChain, IKINCTRL_POSE_XYZ, 1e-3, 1e-6, 100);
+        slv.setUserScaling(true, 100.0, 100.0, 100.0);
+        slv.setMaxIter(5000);
         jnt_angles = slv.solve(KinArm->getAng(), pos);
         joint_angles.assign(jnt_angles.begin(), jnt_angles.end());
 
-        // unblock blocked links for further computations
-        if (blocked_links.size() > 0) {
-            for (auto it = blocked_links.begin(); it != blocked_links.end(); it++) {
-                value = value & KinArm->releaseLink(*it);
+        if (!offlinemode) {
+            // unblock blocked links for further computations
+            if (blocked_links.size() > 0) {
+                for (auto it = blocked_links.begin(); it != blocked_links.end(); it++) {
+                    value = value & KinArm->releaseLink(*it);
+                }
             }
         }
     }
@@ -331,8 +424,7 @@ void KinematicWriter::testinvKin() {
         // last joint set to 1 deg higher than the bound
         if (i == KinChain->getDOF() - 1) qf[i] = max + 1.0 * iCub::ctrl::CTRL_DEG2RAD;
 
-        std::cout << "joint " << i << " in [" << iCub::ctrl::CTRL_RAD2DEG * min << "," << iCub::ctrl::CTRL_RAD2DEG * max << "] set to "
-                  << iCub::ctrl::CTRL_RAD2DEG * qf[i] << std::endl;
+        std::cout << "joint " << i << " in [" << iCub::ctrl::CTRL_RAD2DEG * min << "," << iCub::ctrl::CTRL_RAD2DEG * max << "] set to " << iCub::ctrl::CTRL_RAD2DEG * qf[i] << std::endl;
     }
 
     // it is not allowed to overcome the bounds...

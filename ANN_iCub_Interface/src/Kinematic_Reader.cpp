@@ -82,8 +82,7 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
         // read configuration data from ini file
         INIReader reader_gen(ini_path + "/interface_param.ini");
         if (reader_gen.ParseError() != 0) {
-            std::cerr << "[Kinematic Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path
-                      << "\" and the ini file content!" << std::endl;
+            std::cerr << "[Kinematic Reader " << icub_part << "] Error in parsing the ini-file! Please check the ini-path \"" << ini_path << "\" and the ini file content!" << std::endl;
             return false;
         }
         std::string robot_port_prefix = reader_gen.Get("general", "robot_port_prefix", "/icubSim");
@@ -100,10 +99,13 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
                 std::cerr << "[Kinematic Reader " << icub_part << "] Unable to establish kinematic chain!" << std::endl;
                 return false;
             }
+
+            // add torso joints to the active part of the kinematic chain
             KinArm->releaseLink(0);
             KinArm->releaseLink(1);
             KinArm->releaseLink(2);
 
+            active_torso = false;
             if (!offline_mode) {
                 // setup iCub joint position control
                 yarp::os::Property options_torso;
@@ -114,22 +116,24 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
                 if (!driver_torso.open(options_torso)) {
                     std::cerr << "[Kinematic Reader torso] Unable to open " << options_torso.find("device").asString() << "!" << std::endl;
                     return false;
-                }
+                } else {
+                    if (!driver_torso.view(encoder_torso)) {
+                        std::cerr << "[Kinematic Reader torso] Unable to open motor encoder interface!" << std::endl;
+                        Close();
+                        return false;
+                    }
 
-                if (!driver_torso.view(encoder_torso)) {
-                    std::cerr << "[Kinematic Reader torso] Unable to open motor encoder interface!" << std::endl;
-                    Close();
-                    return false;
-                }
+                    if (!driver_torso.view(limit_torso)) {
+                        std::cerr << "[Kinematic Reader torso] Unable to open motor limit interface!" << std::endl;
+                        Close();
+                        return false;
+                    }
 
-                if (!driver_torso.view(limit_torso)) {
-                    std::cerr << "[Kinematic Reader torso] Unable to open motor limit interface!" << std::endl;
-                    Close();
-                    return false;
-                }
+                    encoder_torso->getAxes(&joint_torso);
+                    limits.push_back(limit_torso);
 
-                encoder_torso->getAxes(&joint_torso);
-                limits.push_back(limit_torso);
+                    active_torso = true;
+                }
 
                 // setup iCub joint position control
                 yarp::os::Property options_arm;
@@ -158,6 +162,8 @@ bool KinematicReader::Init(std::string part, float version, std::string ini_path
                 limits.push_back(limit_arm);
 
                 KinArm->alignJointsBounds(limits);
+            } else {
+                angles_set = false;
             }
         }
 
@@ -248,6 +254,66 @@ void KinematicReader::Close() {
     this->dev_init = false;
 }
 
+// Block given links
+void KinematicReader::BlockLinks(std::vector<int> joints) {
+    if (CheckInit() && offlinemode) {
+        for (auto it = joints.begin(); it != joints.end(); ++it) {
+            KinArm->blockLink(*it);
+        }
+    }
+}
+
+// Get blocked links
+std::vector<int> KinematicReader::GetBlockedLinks() {
+    std::vector<int> blocked;
+    if (CheckInit() && offlinemode) {
+        for (unsigned int i = 0; i < KinArm->getN(); i++) {
+            if (KinArm->isLinkBlocked(i)) {
+                blocked.push_back(i);
+            }
+        }
+    }
+    return blocked;
+}
+
+std::vector<double> KinematicReader::GetCartesianPosition(unsigned int joint) {
+    /*
+        Return cartesian position the selected iCub arm/torso joint based on iCub joint angles (online)
+
+        return: vector       -- return cartesian position the selected iCub arm/torso joint
+    */
+
+    std::vector<double> joint_angles, angles_arm;
+    if (CheckInit()) {
+        if (!offlinemode) {
+            // read joint angles from robot
+            angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
+            if (active_torso) {
+                joint_angles = ReadDoubleAll(encoder_torso, joint_torso);
+                joint_angles.insert(joint_angles.end(), angles_arm.begin(), angles_arm.begin() + 7);
+            } else {
+                joint_angles = angles_arm;
+                for (unsigned int i = 0; i < 3; i++) {
+                    KinArm->blockLink(i);
+                }
+            }
+            double deg2rad1 = this->deg2rad;
+
+            // set joint configuration for kinematic chain
+            std::transform(joint_angles.begin(), joint_angles.end(), joint_angles.begin(), [deg2rad1](double& c) { return c * deg2rad1; });
+            KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
+        } else {
+            if (!angles_set) {
+                std::cerr << "[Kinematic Reader] Warning: The joint angles are not set yet!" << std::endl;
+            }
+        }
+        // compute forward kinematics
+        yarp::sig::Vector position = KinArm->Position(joint);
+        return std::vector<double>(position.begin(), position.end());
+    }
+    return joint_angles;
+}
+
 int KinematicReader::GetDOF() {
     /*
         Return number of controlled joints
@@ -266,6 +332,19 @@ int KinematicReader::GetDOF() {
     }
 }
 
+// Get joints being part of active kinematic chain
+std::vector<int> KinematicReader::GetDOFLinks() {
+    std::vector<int> dof;
+    if (CheckInit()) {
+        for (unsigned int i = 0; i < KinArm->getN(); i++) {
+            if (!KinArm->isLinkBlocked(i)) {
+                dof.push_back(i);
+            }
+        }
+    }
+    return dof;
+}
+
 std::vector<double> KinematicReader::GetHandPosition() {
     /*
         Return cartesian position of the iCub Hand based on iCub joint angles (online)
@@ -280,11 +359,15 @@ std::vector<double> KinematicReader::GetHandPosition() {
             angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
             joint_angles = ReadDoubleAll(encoder_torso, joint_torso);
             joint_angles.insert(joint_angles.end(), angles_arm.begin(), angles_arm.begin() + 7);
-            double deg2rad = M_PI / 180.;
+            double deg2rad1 = this->deg2rad;
 
             // set joint configuration for kinematic chain
-            std::transform(joint_angles.begin(), joint_angles.end(), joint_angles.begin(), [deg2rad](double& c) { return c * deg2rad; });
+            std::transform(joint_angles.begin(), joint_angles.end(), joint_angles.begin(), [deg2rad1](double& c) { return c * deg2rad1; });
             KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
+        } else {
+            if (!angles_set) {
+                std::cerr << "[Kinematic Reader] Warning: The joint angles are not set yet!" << std::endl;
+            }
         }
         yarp::sig::Vector position = KinArm->EndEffPosition();
         return std::vector<double>(position.begin(), position.end());
@@ -292,83 +375,14 @@ std::vector<double> KinematicReader::GetHandPosition() {
     return joint_angles;
 }
 
-std::vector<double> KinematicReader::GetCartesianPosition(unsigned int joint) {
-    /*
-        Return cartesian position the selected iCub arm/torso joint based on iCub joint angles (online)
-
-        return: vector       -- return cartesian position the selected iCub arm/torso joint
-    */
-
-    std::vector<double> joint_angles, angles_arm;
-    if (CheckInit()) {
-        if (!offlinemode) {
-            // read joint angles from robot
-            angles_arm = ReadDoubleAll(encoder_arm, joint_arm);
-            joint_angles = ReadDoubleAll(encoder_torso, joint_torso);
-            joint_angles.insert(joint_angles.end(), angles_arm.begin(), angles_arm.begin() + 7);
-            double deg2rad = M_PI / 180.;
-
-            // set joint configuration for kinematic chain
-            std::transform(joint_angles.begin(), joint_angles.end(), joint_angles.begin(), [deg2rad](double& c) { return c * deg2rad; });
-            KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
-        }
-        // compute forward kinematics
-        yarp::sig::Vector position = KinArm->Position(joint);
-        return std::vector<double>(position.begin(), position.end());
-    }
-    return joint_angles;
-}
-
 // Get joint angles in radians
 std::vector<double> KinematicReader::GetJointAngles() {
-    if (CheckInit() && offlinemode) {
+    if (CheckInit()) {
         auto angles = KinArm->getAng();
         return std::vector<double>(angles.begin(), angles.end());
     } else {
         return std::vector<double>();
     }
-}
-
-// Set joint angles for forward kinematic in offline mode
-void KinematicReader::SetJointAngles(std::vector<double> joint_angles) {
-    if (CheckInit() && offlinemode) {
-        KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
-    }
-}
-
-// Get blocked links
-std::vector<int> KinematicReader::GetBlockedLinks() {
-    std::vector<int> blocked;
-    if (CheckInit() && offlinemode) {
-        for (unsigned int i = 0; i < KinArm->getN(); i++) {
-            if (KinArm->isLinkBlocked(i)) {
-                blocked.push_back(i);
-            }
-        }
-    }
-    return blocked;
-}
-
-// Block given links
-void KinematicReader::BlockLinks(std::vector<int> joints) {
-    if (CheckInit() && offlinemode) {
-        for (auto it = joints.begin(); it != joints.end(); ++it) {
-            KinArm->blockLink(*it);
-        }
-    }
-}
-
-// Get joints being part of active kinematic chain
-std::vector<int> KinematicReader::GetDOFLinks() {
-    std::vector<int> dof;
-    if (CheckInit() && offlinemode) {
-        for (unsigned int i = 0; i < KinArm->getN(); i++) {
-            if (!KinArm->isLinkBlocked(i)) {
-                dof.push_back(i);
-            }
-        }
-    }
-    return dof;
 }
 
 // Set released links of kinematic chain
@@ -378,6 +392,18 @@ void KinematicReader::ReleaseLinks(std::vector<int> joints) {
             KinArm->releaseLink(*it);
         }
     }
+}
+
+// Set joint angles for forward kinematic in offline mode
+std::vector<double> KinematicReader::SetJointAngles(std::vector<double> joint_angles) {
+    std::vector<double> act_angles;
+    if (CheckInit() && offlinemode) {
+        yarp::sig::Vector angles = KinArm->setAng(yarp::sig::Vector(joint_angles.size(), joint_angles.data()));
+        angles_set = true;
+        act_angles.assign(angles.begin(), angles.end());
+        return act_angles;
+    }
+    return act_angles;
 }
 
 /*** gRPC functions ***/

@@ -208,9 +208,10 @@ cdef class PyKinematicReader:
 
         Returns
         -------
-
+        NDarray
+            actual set joint angles in radians -> evaluted constraints
         """
-        deref(self._cpp_kin_reader).SetJointAngles(joint_angles)
+        return np.array(deref(self._cpp_kin_reader).SetJointAngles(joint_angles))
 
     # Get blocked links
     def get_blocked_links(self):

@@ -47,7 +47,7 @@ cdef class PyKinematicWriter:
     '''
 
     # init kinematic writer with given parameters
-    def init(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path = "../data/"):
+    def init(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path = "../data/", offline_mode=False):
         """Initialize the Kinematic Writer with given parameters.
 
         Parameters
@@ -71,7 +71,7 @@ cdef class PyKinematicWriter:
         self._part = part
         # preregister module for some prechecks e.g. name already in use
         if iCub.register_kin_writer(name, self):
-            retval = deref(self._cpp_kin_writer).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'))
+            retval = deref(self._cpp_kin_writer).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), offline_mode)
             if not retval:
                 iCub.unregister_kin_writer(self)
             return retval
@@ -79,7 +79,7 @@ cdef class PyKinematicWriter:
             return False
 
     # init kinematic writer with given parameters, including the gRPC based connection
-    def init_grpc(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path = "../data/", str ip_address = "0.0.0.0", unsigned int port = 50025):
+    def init_grpc(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path = "../data/", str ip_address = "0.0.0.0", unsigned int port = 50025, offline_mode=False):
         """Initialize the Kinematic Writer with given parameters, including the gRPC based connection.
 
         Parameters
@@ -108,7 +108,7 @@ cdef class PyKinematicWriter:
         self._part = part
         # preregister module for some prechecks e.g. eye already in use
         if iCub.register_kin_writer(name, self):
-            retval = deref(self._cpp_kin_writer).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
+            retval = deref(self._cpp_kin_writer).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port, offline_mode)
             if not retval:
                 iCub.unregister_kin_writer(self)
             return retval
@@ -133,7 +133,7 @@ cdef class PyKinematicWriter:
         deref(self._cpp_kin_writer).Close()
 
     # solve inverse kinematics for given position
-    def solve_InvKin(self, position, blocked_links):
+    def solve_InvKin(self, position, blocked_links=[]):
         """Compute the joint configuration for a given 3D End-Effector position (Inverse Kinematics).
 
         Parameters
@@ -141,14 +141,14 @@ cdef class PyKinematicWriter:
         position : list
             target cartesian position for the end-effector/hand
         blocked_links : list
-            links of the kinematic chain, which should be blocked for inverse kinematic
+            links of the kinematic chain, which should be blocked for inverse kinematic, IGNORED in offline mode -> use setter for block links and joint angles
 
         Returns
         -------
         NDarray
             active joint positions (in radians)
         """
-        return np.array(deref(self._cpp_kin_writer).solveInvKin(position, blocked_links))
+        return np.array(deref(self._cpp_kin_writer).SolveInvKin(position, blocked_links))
 
     # return DOF of kinematic chain
     def get_DOF(self):
@@ -163,3 +163,91 @@ cdef class PyKinematicWriter:
             int: DOF of the kinematic chain
         """
         return deref(self._cpp_kin_writer).GetDOF()
+
+    # Get current joint angles
+    def get_jointangles(self):
+        """Get current joint angles of active kinematic chain -> radians.
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray
+            joint angles in radians
+        """
+        return np.array(deref(self._cpp_kin_writer).GetJointAngles())
+
+    # Set joint angles for forward kinematic in offline mode
+    def set_jointangles(self, joint_angles):
+        """Set joint angles for forward kinematic in offline mode.
+
+        Parameters
+        ----------
+        joint_angles : list/NDarray
+            joint angles
+
+        Returns
+        -------
+        NDarray
+            actual set joint angles in radians -> evaluted constraints
+        """
+        return np.array(deref(self._cpp_kin_writer).SetJointAngles(joint_angles))
+
+    # Get blocked links
+    def get_blocked_links(self):
+        """Get blocked links.
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray
+            vector containing the blocked links
+        """
+        return np.array(deref(self._cpp_kin_writer).GetBlockedLinks())
+
+    # Block links
+    def block_links(self, blocked_joints):
+        """Block specific set of joints in the kinematic chain.
+
+        Parameters
+        ----------
+        blocked_joints : list
+            joints that should be blocked
+
+        Returns
+        -------
+
+        """
+        deref(self._cpp_kin_writer).BlockLinks(blocked_joints)
+
+    # Get joints being part of active kinematic chain
+    def get_DOF_links(self):
+        """Get joints being part of active kinematic chain.
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        NDarray
+            vector with the active joints
+        """
+        return np.array(deref(self._cpp_kin_writer).GetDOFLinks())
+
+    # Release links of kinematic chain
+    def release_links(self, release_joints):
+        """Release links of kinematic chain
+
+        Parameters
+        ----------
+        release_joints : list
+            joints that should be released
+
+        Returns
+        -------
+
+        """
+        deref(self._cpp_kin_writer).ReleaseLinks(release_joints)

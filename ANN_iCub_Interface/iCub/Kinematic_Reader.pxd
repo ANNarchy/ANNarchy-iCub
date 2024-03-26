@@ -45,7 +45,7 @@ cdef extern from "Kinematic_Reader.hpp":
         # Return number of controlled joints
         int GetDOF()
 
-        # Get Cartesian position either for given joint or for end-effector
+        # Get cartesian position either for given joint or for end-effector
         vector[double] GetCartesianPosition(unsigned int)
         vector[double] GetHandPosition()
 
@@ -53,7 +53,7 @@ cdef extern from "Kinematic_Reader.hpp":
         vector[double] GetJointAngles()
 
         # Set joint angles for forward kinematic in offline mode
-        void SetJointAngles(vector[double])
+        vector[double] SetJointAngles(vector[double])
 
         # Get blocked links
         vector[int] GetBlockedLinks()

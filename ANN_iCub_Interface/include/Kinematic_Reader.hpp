@@ -78,11 +78,18 @@ class KinematicReader : public Mod_BaseClass {
      */
     void Close() override;
 
+
     /**
-     * \brief  Return number of controlled joints
-     * \return Number of joints, being controlled by the reader
+     * \brief Set blocked links. Chain DOF reduced by number of blocked links.
+     * \param[in] joints links to block in kinematic chain
      */
-    int GetDOF();
+    void BlockLinks(std::vector<int> joints);
+
+    /**
+     * \brief Get blocked links
+     * \return blocked links
+     */
+    std::vector<int> GetBlockedLinks();
 
     /**
      * \brief Compute 3D link position for the robot joint configuration
@@ -90,6 +97,18 @@ class KinematicReader : public Mod_BaseClass {
      * \return 3D cartesian position of the selected link in robot reference frame
      */
     std::vector<double> GetCartesianPosition(unsigned int joint);
+
+        /**
+     * \brief  Return number of controlled joints
+     * \return Number of joints, being controlled by the reader
+     */
+    int GetDOF();
+
+    /**
+     * \brief Get joints being part of active kinematic chain
+     * \return links of active kinematic chain
+     */
+    std::vector<int> GetDOFLinks();
 
     /**
      * \brief Compute 3D End-Effector position for the robot joint configuration
@@ -104,34 +123,18 @@ class KinematicReader : public Mod_BaseClass {
     std::vector<double> GetJointAngles();
 
     /**
-     * \brief Set joint angles for forward kinematic in offline mode
-     * \param[in] joint_angles joint angles to set for forward kinematic
-     */
-    void SetJointAngles(std::vector<double> joint_angles);
-
-    /**
-     * \brief Get blocked links
-     * \return blocked links
-     */
-    std::vector<int> GetBlockedLinks();
-
-    /**
-     * \brief Set blocked links. Chain DOF reduced by number of blocked links.
-     * \param[in] joints links to block in kinematic chain
-     */
-    void BlockLinks(std::vector<int> joints);
-
-    /**
-     * \brief Get joints being part of active kinematic chain
-     * \return links of active kinematic chain
-     */
-    std::vector<int> GetDOFLinks();
-
-    /**
      * \brief Set released links of kinematic chain. Chain DOF increased by number of released links.
      * \param[in] joints
      */
     void ReleaseLinks(std::vector<int> joints);
+
+    /**
+     * \brief Set joint angles for forward kinematic in offline mode
+     * \param[in] joint_angles joint angles to set for forward kinematic (in radians)
+     * \return return the actual joint angles set for the free links -> radians
+     */
+    std::vector<double> SetJointAngles(std::vector<double> joint_angles);
+
 
     /*** gRPC functions ***/
 #ifdef _USE_GRPC
@@ -147,7 +150,10 @@ class KinematicReader : public Mod_BaseClass {
     /*** parameter ***/
     int joint_arm;      // number of joints arm
     int joint_torso;    // number of joints torso
+    bool active_torso;  // flag indicating if torso is included for online computation
     bool offlinemode;   // flag for offline mode
+    bool angles_set;    // flag to check that angles are set at least once in offline mode
+    double deg2rad = M_PI / 180.;
 
     /*** yarp data structures ***/
     yarp::dev::PolyDriver driver_arm;        // yarp driver needed for reading joint encoders

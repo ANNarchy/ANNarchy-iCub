@@ -185,7 +185,7 @@ class PyKinematicReader:
         """
         ...
 
-    def set_jointangles(self, joint_angles) -> Any:
+    def set_jointangles(self, joint_angles) -> ndarray:
         """Set joint angles for forward kinematic in offline mode.
 
         Parameters
@@ -195,6 +195,7 @@ class PyKinematicReader:
 
         Returns
         -------
-
+        NDarray
+            actual set joint angles in radians -> evaluted constraints
         """
         ...
