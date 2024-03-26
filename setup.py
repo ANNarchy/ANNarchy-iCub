@@ -21,8 +21,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-
-from make_config import *
+import tomlkit
 
 # setuptools
 try:
@@ -54,25 +53,91 @@ except Exception:
     print('You can install it from pip or: http://www.numpy.org')
     exit(0)
 
-# test ANNarchy
-# TODO: check if ANNarchy is necessary
-try:
-    import ANNarchy
-    print('Checking for ANNarchy... OK')
-except Exception:
-    print('Checking for ANNarchy... NO')
-    print('Error : Python package "ANNarchy" is required.')
-    exit(0)
 
+## Helper functions to determine the OpenCV and YARP include paths
+def set_yarp_prefix():
+    # Yarp install direction
+    yarp_prefix = None
+
+    if "ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX" in os.environ:
+        yarp_prefix = os.environ["ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX"]
+    elif os.path.isdir("/usr/local/packages/yarp"):
+        yarp_prefix = "/usr/local/packages/yarp"
+    elif "YARP_DATA_DIRS" in os.environ:
+        yarp_data = os.environ['YARP_DATA_DIRS'].split(':')[0].split('/')
+        if yarp_data[-1] == "iCub" or yarp_data[-1] == "yarp":
+            yarp_prefix = "/".join(yarp_data[:-3])
+        else:
+            yarp_prefix = "/".join(yarp_data[:-2])
+    elif os.path.isdir("/usr/local/include/yarp"):
+        yarp_prefix = "/usr/local"
+    elif os.path.isdir("/usr/include/yarp"):
+        yarp_prefix = "/usr"
+    else:
+        if yarp_prefix == None:
+            print("Did not find YARP include path! Please set yarp_prefix manually!")
+            print("Please type the YARP prefix in the form /path/to/include/and/lib:")
+            yarp_prefix = input()
+            if not os.path.isdir(yarp_prefix + "/include/yarp"):
+                sys.exit("Did not find YARP in given path! Please set yarp_prefix manually in make_config.py or retry!")
+    return yarp_prefix
+
+def set_opencv_prefix():
+    # OpenCV direction
+    cv_include = None
+    try:
+        import cv2
+        cvpath = cv2.__file__
+        path_list = cvpath.split("/")
+        if not ("usr" in path_list  or ".local" in path_list):
+            cv_include = "/".join(path_list[:path_list.index("lib")] + ["include",])
+            if os.path.isdir(cv_include + "/opencv4"):
+                cv_include += "/opencv4"
+    except:
+        pass
+    if cv_include == None:
+        if os.path.isdir("/usr/include/opencv2"):
+            cv_include = "/usr/include"
+        elif os.path.isdir("/usr/include/opencv4"):
+            cv_include = "/usr/include/opencv4"
+        elif os.path.isdir("/usr/local/include/opencv2"):
+            cv_include = "/usr/local/include"
+        elif os.path.isdir("/usr/local/include/opencv4"):
+            cv_include = "/usr/local/include/opencv4"
+        else:
+            if cv_include == None:
+                print("Did not find OpenCV include path! Please set cv_include manually!")
+                print("Please type the OpenCV prefix e.g. /usr/include for /usr/include/opencv2:")
+                cv_include = input()
+                if not os.path.isdir(cv_include + "/opencv2"):
+                    sys.exit("Did not find OpenCV in given path! Please set cv_include manually in make_config.py or retry!")
+    return cv_include
+
+####
+
+# Interface path
 root_path = os.path.abspath("./")
 
+# Load build config
+with open(root_path + "/build_config.toml", mode="rt", encoding="utf-8") as fp:
+    config = tomlkit.load(fp)
+
+# Collect data to include gRPC in the compile process and precompile the gRPC-connection infrastructure
 grpc_include_dir = []
 grpc_libs = []
 grpc_lib_dir = []
 grpc_package_data = []
 grpc_link_args = []
 
-if use_grpc:
+if config['module_conf']['use_grpc']:
+    # test ANNarchy
+    try:
+        import ANNarchy
+        print('Checking for ANNarchy... OK')
+    except Exception:
+        print('Checking for ANNarchy... NO')
+        print('Warning : Python package "ANNarchy" is required at runtime.')
+
     # protobuf, grpc
     grpc_avaiable = True
 
@@ -97,7 +162,7 @@ if use_grpc:
         grpc_link_args += ["-Wl,-rpath," + grpc_lib_path]
 
         # build grpc proto related sourcefiles to library
-        if os.path.isfile("./ANN_iCub_Interface/grpc/libiCub_ANN_grpc.so") and (not rebuild_grpc):
+        if os.path.isfile("./ANN_iCub_Interface/grpc/libiCub_ANN_grpc.so") and (not config['build']['rebuild_grpc']):
             print("Skip gRPC build process")
         else:
             # build the interface gRPC definitions
@@ -115,10 +180,10 @@ py_minor = sys.version_info[1]
 py_version = str(py_major) + "." + str(py_minor)
 
 # Find YARP include path
-if yarp_prefix == "default":
+if config['path']['yarp_prefix'] == "default":
     yarp_prefix = set_yarp_prefix()
 else:
-    if not os.path.isdir(yarp_prefix + "/include/yarp"):
+    if not os.path.isdir(config['path']['yarp_prefix'] + "/include/yarp"):
         sys.exit("Did not find YARP in given path! Please correct yarp_prefix in make_config.py!")
 
 yarp_version = subprocess.check_output(["yarp", "version"]).strip().decode(sys.stdout.encoding).replace("YARP version ", "")
@@ -129,10 +194,10 @@ if yarp_version_major >= 3 and yarp_version_minor >= 4:
     log_define = True
 
 # Find OpenCV include path
-if cv_include == "default":
+if config['path']['cv_include'] == "default":
     cv_include = set_opencv_prefix()
 else:
-    if not os.path.isdir(cv_include + "/opencv2"):
+    if not os.path.isdir(config['path']['cv_include'] + "/opencv2"):
         sys.exit("Did not find OpenCV in given path! Please correct cv_include in make_config.py!")
 
 # Lists with lib/include directories and names
@@ -164,13 +229,13 @@ extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O2", "-march=na
 # , "-fpermissive" nicht als default; macht den Compiler relaxter;
 # "-march=native" ermöglicht direkter Plattformabhängige Optimierung
 
-if verbose:
+if config['compiler']['verbose']:
     extra_compile_args.append("--verbose")
-if pedantic:
+if config['compiler']['pedantic']:
     extra_compile_args.append("-pedantic")
-if use_grpc:
+if config['module_conf']['use_grpc']:
     extra_compile_args += ["-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/", "-D_USE_GRPC"]
-if double_precision:
+if config['module_conf']['double_precision']:
     extra_compile_args.append("-D_DOUBLE_PRECISION")
 if log_define:
     extra_compile_args.append("-D_USE_LOG_QUIET")
@@ -249,14 +314,15 @@ extensions = [
               )
 ]
 
-# Python dependencies
-dependencies = [
-    'numpy',
-    'cython'
-]
+# # Python dependencies
+# dependencies = [
+#     'numpy',
+#     'cython',
+#     ''
+# ]
 
 # Set interface version
-version = "1.0.5"
+version = "1.1.0b0"
 filename = './ANN_iCub_Interface/_version.py'
 with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
@@ -271,23 +337,15 @@ except Exception:
 filename = './ANN_iCub_Interface/_use_grpc.py'
 with open(filename, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
-    file_object.write("__use_grpc__ = " + str(use_grpc) + "\n")
+    file_object.write("__use_grpc__ = " + str(config['module_conf']['use_grpc']) + "\n")
 
-force_rebuild = (use_grpc != used_grpc) or rebuild_grpc or rebuild_cython
+force_rebuild = (config['module_conf']['use_grpc'] != used_grpc) or config['build']['rebuild_grpc'] or config['build']['rebuild_cython']
 
 setup(
     name="ANN_iCub_Interface",
     packages=find_packages(),
-    ext_modules=cythonize(extensions, nthreads=num_threads, language_level=int(sys.version_info[0]), force=force_rebuild),
-    description="Interface for iCub robot and ANNarchy neuro-simulator",
-    long_description="""This program is an interface between the Neurosimulator ANNarchy and the iCub robot (tested with the iCub simulator and with gazebo
-                        (except SkinReader since skin not implemented)). It is written in C++ with a Cython wrapping to Python.""",
+    ext_modules=cythonize(extensions, nthreads=config['build']['num_threads'], language_level=int(sys.version_info[0]), force=force_rebuild),
     version=version,
-    author="Torsten Fietzek; Helge Uelo Dinkelbach",
-    author_email="torsten.fietzek@informatik.tu-chemnitz.de; helge.dinkelbach@gmail.com",
-    license="GPLv2+",
     platforms='GNU/Linux',
-    zip_safe=False,
     package_data={'ANN_iCub_Interface': package_data},
-    install_requires=dependencies
 )

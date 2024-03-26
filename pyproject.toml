@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools", "Cython", "numpy", "tomlkit", "ANNarchy"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ANN_iCub_Interface"
+description = "This program is an interface spezialized for the connection between the neurosimulator ANNarchy and the iCub robot. At the same time it can also be used as a stand-alone interface for the iCub."
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "GPLv2+"}
+keywords = ["neurorobotic", "interface", "iCub"]
+authors = [
+  { name = "Torsten Fietzek", email = "torsten.fietzek@informatik.tu-chemnitz.de" },
+  { name = "Helge Dinkelbach", email = "helge-uelo.dinkelbach@informatik.tu-chemnitz.de" },
+  { name = "Fred Hamker", email = "fred.hamker@informatik.tu-chemnitz.de" },
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11"
+]
+dependencies = [
+    'ANNarchy',
+    'cython',
+    'numpy',
+    'matplotlib',
+    'tomlkit',
+]
+dynamic = ["version"]
+
+
+[project.urls]
+Source = "https://github.com/ANNarchy/ANNarchy-iCub"
+
+
+[tool.setuptools.dynamic]
+version = {attr = "ANN_iCub_Interface.__version__"}
