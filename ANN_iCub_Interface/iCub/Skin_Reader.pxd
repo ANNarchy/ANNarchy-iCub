@@ -29,9 +29,11 @@ from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
 from libcpp.map cimport map as cmap
 
+from .Module_Base_Class cimport Mod_BaseClass, PyModuleBase
+
 cdef extern from "Skin_Reader.hpp":
 
-    cdef cppclass SkinReader:
+    cdef cppclass SkinReader(Mod_BaseClass):
         SkinReader() except +
 
         # Initialize skin reader with given parameters.
@@ -73,13 +75,11 @@ cdef extern from "Skin_Reader.hpp":
         # Return size of tactile data for hand skin.
         unsigned int GetTactileHandSize()
 
-        void setRegister(bint)
-        bint getRegister()
+        # void setRegister(bint)
+        # bint getRegister()
 
-        cmap[string, string] getParameter()
+        # cmap[string, string] getParameter()
 
 
-cdef class PySkinReader:
+cdef class PySkinReader(PyModuleBase):
     cdef shared_ptr[SkinReader] _cpp_skin_reader
-    cdef str _name
-    cdef str _part

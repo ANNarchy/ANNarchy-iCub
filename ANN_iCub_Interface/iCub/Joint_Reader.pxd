@@ -22,15 +22,18 @@
    along with this headers. If not, see [http://www.gnu.org/licenses/].
  """
 
+from typing import overload
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
 from libcpp.map cimport map as cmap
 
+from .Module_Base_Class cimport Mod_BaseClass, PyModuleBase
+
 cdef extern from "Joint_Reader.hpp":
 
-    cdef cppclass JointReader:
+    cdef cppclass JointReader(Mod_BaseClass):
         JointReader() except +
 
         # Initialize the joint reader with given parameters
@@ -69,12 +72,10 @@ cdef extern from "Joint_Reader.hpp":
         # Read one joint and return the joint angle encoded in a population.
         vector[double] ReadPopOne(int)
 
-        void setRegister(bint)
-        bint getRegister()
+        # void setRegister(bint)
+        # bint getRegister()
 
-        cmap[string, string] getParameter()
+        # cmap[string, string] getParameter()
 
-cdef class PyJointReader:
+cdef class PyJointReader(PyModuleBase):
     cdef shared_ptr[JointReader] _cpp_joint_reader
-    cdef str _name
-    cdef str _part

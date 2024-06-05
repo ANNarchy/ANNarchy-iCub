@@ -28,9 +28,11 @@ from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
 from libcpp.map cimport map as cmap
 
+from .Module_Base_Class cimport Mod_BaseClass, PyModuleBase
+
 cdef extern from "Kinematic_Reader.hpp":
 
-    cdef cppclass KinematicReader:
+    cdef cppclass KinematicReader(Mod_BaseClass):
         KinematicReader() except +
 
         # Initialize the joint reader with given parameters
@@ -67,15 +69,13 @@ cdef extern from "Kinematic_Reader.hpp":
         # Set released links of kinematic chain
         void ReleaseLinks(vector[int])
 
-        # For internal use only ##
-        # Set/get register functions
-        void setRegister(bint)
-        bint getRegister()
+        # # For internal use only ##
+        # # Set/get register functions
+        # void setRegister(bint)
+        # bint getRegister()
 
-        # Return init parameter
-        cmap[string, string] getParameter()
+        # # Return init parameter
+        # cmap[string, string] getParameter()
 
-cdef class PyKinematicReader:
+cdef class PyKinematicReader(PyModuleBase):
     cdef shared_ptr[KinematicReader] _cpp_kin_reader
-    cdef str _name
-    cdef str _part

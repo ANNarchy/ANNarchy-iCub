@@ -29,6 +29,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <string_view>
 #include <thread>
 #include <vector>
 
@@ -43,7 +44,7 @@
 KinematicWriter::~KinematicWriter() { Close(); }
 
 /*** public methods for the user ***/
-bool KinematicWriter::Init(std::string part, float version, std::string ini_path, bool offline_mode) {
+bool KinematicWriter::Init(std::string part, float version, std::string ini_path, bool offline_mode, bool active_torso) {
     /*
         Initialize the Kinematic Writer with given parameters
 
@@ -100,39 +101,37 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
                 return false;
             }
 
-            active_torso = false;
             if (!offline_mode) {
-                // setup iCub joint position control
-                yarp::os::Property options_torso;
-                options_torso.put("device", "remote_controlboard");
-                options_torso.put("remote", (robot_port_prefix + "/torso").c_str());
-                options_torso.put("local", (client_port_prefix + "/ANNarchy_Kin_write/torso").c_str());
+                if (active_torso) {
+                    // setup iCub joint position control
+                    yarp::os::Property options_torso;
+                    options_torso.put("device", "remote_controlboard");
+                    options_torso.put("remote", (robot_port_prefix + "/torso").c_str());
+                    options_torso.put("local", (client_port_prefix + "/ANNarchy_Kin_write/torso").c_str());
 
-                if (!driver_torso.open(options_torso)) {
-                    std::cerr << "[Kinematic Writer torso] Unable to open " << options_torso.find("device").asString() << "!" << std::endl;
-                    return false;
-                } else {
-                    if (!driver_torso.view(encoder_torso)) {
-                        std::cerr << "[Kinematic Writer torso] Unable to open motor encoder interface!" << std::endl;
-                        Close();
+                    if (!driver_torso.open(options_torso)) {
+                        std::cerr << "[Kinematic Writer torso] Unable to open " << options_torso.find("device").asString() << "!" << std::endl;
                         return false;
+                    } else {
+                        if (!driver_torso.view(encoder_torso)) {
+                            std::cerr << "[Kinematic Writer torso] Unable to open motor encoder interface!" << std::endl;
+                            Close();
+                            return false;
+                        }
+
+                        if (!driver_torso.view(limit_torso)) {
+                            std::cerr << "[Kinematic Writer torso] Unable to open motor limit interface!" << std::endl;
+                            Close();
+                            return false;
+                        }
+                        encoder_torso->getAxes(&joint_torso);
+                        limits.push_back(limit_torso);
+
+                        // add torso joints to the active part of the kinematic chain
+                        KinArm->releaseLink(0);
+                        KinArm->releaseLink(1);
+                        KinArm->releaseLink(2);
                     }
-
-                    if (!driver_torso.view(limit_torso)) {
-                        std::cerr << "[Kinematic Writer torso] Unable to open motor limit interface!" << std::endl;
-                        Close();
-                        return false;
-                    }
-
-                    encoder_torso->getAxes(&joint_torso);
-                    limits.push_back(limit_torso);
-
-                    // add torso joints to the active part of the kinematic chain
-                    KinArm->releaseLink(0);
-                    KinArm->releaseLink(1);
-                    KinArm->releaseLink(2);
-
-                    active_torso = true;
                 }
 
                 // setup iCub joint position control
@@ -188,7 +187,7 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
 }
 
 #ifdef _USE_GRPC
-bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode) {
+bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode, bool active_torso) {
     /*
         Initialize the Kinematic Writer with given parameters
 
@@ -200,7 +199,7 @@ bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_
     */
 
     if (!this->dev_init) {
-        if (this->Init(part, version, ini_path, offline_mode)) {
+        if (this->Init(part, version, ini_path, offline_mode, active_torso)) {
             this->_ip_address = ip_address;
             this->_port = port;
             this->kin_source = new ServerInstance(ip_address, port, this);
@@ -219,7 +218,7 @@ bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_
     }
 }
 #else
-bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode) {
+bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode, bool active_torso) {
     /*
         Initialize the Kinematic Writer with given parameters
 
@@ -233,6 +232,141 @@ bool KinematicWriter::InitGRPC(std::string part, float version, std::string ini_
     return false;
 }
 #endif
+
+bool KinematicWriter::InitConf(std::string robot_prefix, std::string client_prefix, std::string part, float version, bool offline_mode) {
+    /*
+        Initialize the Kinematic Writer with given parameters
+
+        params: std::string part        -- filename of toml configuration file
+
+        return: bool                    -- return True, if successful
+    */
+
+    if (!this->dev_init) {
+        if (!CheckPartKey(part)) {
+            std::cerr << "[Kinematic Writer] " << part << " is an invalid iCub part key!" << std::endl;
+            return false;
+        }
+        this->icub_part = part;
+
+        if (version <= 0. || version >= 4.) {
+            std::cerr << "[Kinematic Writer] " << version << " is an invalid version number!" << std::endl;
+            return false;
+        }
+
+        // Check Yarp-network
+        if (!yarp::os::Network::checkNetwork() && !offline_mode) {
+            std::cerr << "[Kinematic Writer " << icub_part << "] YARP Network is not online. Check nameserver is running!" << std::endl;
+            return false;
+        }
+
+#ifdef _USE_LOG_QUIET
+        // set YARP logging level to warnings, if the respective environment variable is set
+        auto yarp_quiet = GetEnvVar("YARP_QUIET");
+        if (yarp_quiet == "on" || yarp_quiet == "1") {
+            yarp::os::Log::setMinimumPrintLevel(yarp::os::Log::WarningType);
+        }
+#endif
+
+        if (part == "right_arm" || part == "left_arm") {
+            std::string::size_type i = part.find("_arm");
+            std::string descriptor = part.substr(0, i);
+
+            descriptor.append("_v" + std::to_string(version).substr(0, 3));
+            std::cout << "Descriptor: " << descriptor << std::endl;
+
+            KinArm = new iCub::iKin::iCubArm(descriptor);
+            if (!KinArm->isValid()) {
+                std::cerr << "[Kinematic Writer " << icub_part << "] Unable to establish kinematic chain!" << std::endl;
+                return false;
+            }
+
+            active_torso = false;
+            if (!offline_mode) {
+                // setup iCub joint position control
+                yarp::os::Property options_torso;
+                options_torso.put("device", "remote_controlboard");
+                options_torso.put("remote", (robot_prefix + "/torso").c_str());
+                options_torso.put("local", (client_prefix + "/ANNarchy_Kin_write/torso").c_str());
+
+                if (!driver_torso.open(options_torso)) {
+                    std::cerr << "[Kinematic Writer torso] Unable to open " << options_torso.find("device").asString() << "!" << std::endl;
+                    return false;
+                } else {
+                    if (!driver_torso.view(encoder_torso)) {
+                        std::cerr << "[Kinematic Writer torso] Unable to open motor encoder interface!" << std::endl;
+                        Close();
+                        return false;
+                    }
+                    if (!driver_torso.view(limit_torso)) {
+                        std::cerr << "[Kinematic Writer torso] Unable to open motor limit interface!" << std::endl;
+                        Close();
+                        return false;
+                    }
+
+                    encoder_torso->getAxes(&joint_torso);
+                    limits.push_back(limit_torso);
+
+                    // add torso joints to the active part of the kinematic chain
+                    KinArm->releaseLink(0);
+                    KinArm->releaseLink(1);
+                    KinArm->releaseLink(2);
+
+                    active_torso = true;
+                }
+
+                // setup iCub joint position control
+                yarp::os::Property options_arm;
+                options_arm.put("device", "remote_controlboard");
+                options_arm.put("remote", (robot_prefix + "/" + part).c_str());
+                options_arm.put("local", (client_prefix + "/ANNarchy_Kin_write/" + part).c_str());
+
+                if (!driver_arm.open(options_arm)) {
+                    std::cerr << "[Kinematic Writer " << part << "] Unable to open " << options_arm.find("device").asString() << "!" << std::endl;
+                    return false;
+                }
+
+                if (!driver_arm.view(encoder_arm)) {
+                    std::cerr << "[Kinematic Writer " << part << "] Unable to open motor encoder interface!" << std::endl;
+                    Close();
+                    return false;
+                }
+
+                if (!driver_arm.view(limit_arm)) {
+                    std::cerr << "[Kinematic Writer " << part << "] Unable to open motor limit interface!" << std::endl;
+                    Close();
+                    return false;
+                }
+
+                encoder_arm->getAxes(&joint_arm);
+                limits.push_back(limit_arm);
+
+                KinArm->alignJointsBounds(limits);
+            } else {
+                // add torso joints to the active part of the kinematic chain
+                KinArm->releaseLink(0);
+                KinArm->releaseLink(1);
+                KinArm->releaseLink(2);
+
+                angles_set = false;
+            }
+        }
+        this->KinChain = KinArm->asChain();
+
+        this->type = "KinematicWriter";
+        offlinemode = offline_mode;
+        init_param["robot_prefix"] = robot_prefix;
+        init_param["client_prefix"] = client_prefix;
+        init_param["part"] = part;
+        init_param["version"] = std::to_string(version);
+        init_param["offline_mode"] = std::to_string(offline_mode);
+        this->dev_init = true;
+        return true;
+    } else {
+        std::cerr << "[Kinematic Writer " << icub_part << "] Initialization aready done!" << std::endl;
+        return false;
+    }
+}
 
 void KinematicWriter::Close() {
     /*
@@ -492,7 +626,7 @@ std::vector<double> KinematicWriter::provideData(int value) { return std::vector
 #endif
 
 /*** auxilary functions ***/
-bool KinematicWriter::CheckPartKey(std::string key) {
+bool KinematicWriter::CheckPartKey(std::string_view key) {
     /*
         Check if iCub part key is valid
     */

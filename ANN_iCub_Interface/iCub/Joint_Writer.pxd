@@ -29,9 +29,11 @@ from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
 from libcpp.map cimport map as cmap
 
+from .Module_Base_Class cimport Mod_BaseClass, PyModuleBase
+
 cdef extern from "Joint_Writer.hpp":
 
-    cdef cppclass JointWriter:
+    cdef cppclass JointWriter(Mod_BaseClass):
         JointWriter() except +
 
         # Initialize the joint writer with given parameters
@@ -88,8 +90,8 @@ cdef extern from "Joint_Writer.hpp":
         # Write one joint with the joint angle encoded in a population.
         bool_t WritePopOne(vector[double], int, string, bool_t, long)
 
-        void setRegister(bint)
-        bint getRegister()
+        # void setRegister(bint)
+        # bint getRegister()
 
         # Return decoded joint angle
         double Decode_ext(vector[double], int)
@@ -112,9 +114,7 @@ cdef extern from "Joint_Writer.hpp":
         void Retrieve_ANNarchy_Input_AJ_enc()
         void Write_ANNarchy_Input_AJ_enc()
 
-        cmap[string, string] getParameter()
+        # cmap[string, string] getParameter()
 
-cdef class PyJointWriter:
+cdef class PyJointWriter(PyModuleBase):
     cdef shared_ptr[JointWriter] _cpp_joint_writer
-    cdef str _name
-    cdef str _part

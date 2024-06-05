@@ -28,10 +28,11 @@ from cython.operator cimport dereference as deref
 
 from .Skin_Reader cimport SkinReader
 from .iCub_Interface cimport ANNiCub_wrapper
+from .Module_Base_Class cimport PyModuleBase
 
 import numpy as np
 
-cdef class PySkinReader:
+cdef class PySkinReader(PyModuleBase):
 
     # init method
     def __cinit__(self):
@@ -42,6 +43,65 @@ cdef class PySkinReader:
     def __dealloc__(self):
         print("Close iCub Interface: Skin Reader.")
         self._cpp_skin_reader.reset()
+
+
+    # register skin reader module
+    def _register(self, name: str, ANNiCub_wrapper iCub):
+        """Register Skin Reader module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        name : str
+            name given to the Skin Reader
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_skin_reader).getRegister():
+            print("[Interface iCub] Skin Reader module is already registered!")
+            return False
+        else:
+            if name in iCub._skin_reader:
+                print("[Interface iCub] Skin Reader module name is already used!")
+                return False
+            else:
+                iCub._skin_reader[name] = self
+                self._name = name
+                deref(self._cpp_skin_reader).setRegister(1)
+                return True
+
+    # unregister skin reader module
+    def _unregister(self, ANNiCub_wrapper iCub):
+        """Unregister Skin Reader module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_skin_reader).getRegister():
+            deref(self._cpp_skin_reader).setRegister(0)
+            iCub._skin_reader.pop(self._name, None)
+            self._name = ""
+            return True
+        else:
+            print("[Interface iCub] Skin Reader module is not yet registered!")
+            return False
+
+    def _get_parameter(self):
+        return deref(self._cpp_skin_reader).getParameter()
+
 
     '''
     # Access to skin reader member functions
@@ -71,10 +131,10 @@ cdef class PySkinReader:
         """
         self._part = arm
         # preregister module for some prechecks e.g. arm already in use
-        if iCub.register_skin_reader(name, self):
+        if self._register(name, iCub):
             retval = deref(self._cpp_skin_reader).Init(name.encode('UTF-8'), arm.encode('UTF-8')[0], norm.__int__(), ini_path.encode('UTF-8'))
             if not retval:
-                iCub.unregister_skin_reader(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
@@ -108,10 +168,10 @@ cdef class PySkinReader:
         # we need to transform py-string to c++ compatible string
         self._part = arm
         # preregister module for some prechecks e.g. arm already in use
-        if iCub.register_skin_reader(name, self):
+        if self._register(name, iCub):
             retval = deref(self._cpp_skin_reader).InitGRPC(name.encode('UTF-8'), arm.encode('UTF-8')[0], norm.__int__(), ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
             if not retval:
-                iCub.unregister_skin_reader(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
@@ -129,7 +189,7 @@ cdef class PySkinReader:
         -------
 
         """
-        iCub.unregister_skin_reader(self)
+        self._unregister(iCub)
         self._part = ""
         deref(self._cpp_skin_reader).Close()
 

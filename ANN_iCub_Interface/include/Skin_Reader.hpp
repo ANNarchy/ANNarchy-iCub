@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <iCub/iKin/iKinFwd.h>    // iCub forward Kinematics
+// #include <iCub/iKin/iKinFwd.h>    // iCub forward Kinematics
 #include <yarp/os/all.h>
 #include <yarp/sig/all.h>
 

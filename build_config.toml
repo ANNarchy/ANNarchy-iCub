@@ -2,26 +2,26 @@
 #    Copyright (C) 2019-2024 Torsten Fietzek; Helge Ülo Dinkelbach
 
 [compiler]
-# Add compiler flags to the g++ commands
-verbose = false
-pedantic = false
+    # Add compiler flags to the g++ commands
+    verbose = true
+    pedantic = false
 
 [module_conf]
-# Use gRPC for direct iCub to ANNarchy communication
-use_grpc = true
+    # Use gRPC for direct iCub to ANNarchy communication
+    use_grpc = false
 
-# Select precision type for images returned by the visual reader
-double_precision = true
+    # Select precision type for images returned by the visual reader
+    double_precision = true
 
 [path]
-# Set the OpenCV include directory -> only set this if the setup fails due to missing OpenCV path
-cv_include = "default"
+    # Set the OpenCV include directory -> only set this if the setup fails due to missing OpenCV path
+    cv_include = "default"
 
-# Set the prefix of the YARP installation -> only set this if the setup fails due to missing YARP path
-yarp_prefix = "default"
+    # Set the prefix of the YARP installation -> only set this if the setup fails due to missing YARP path
+    yarp_prefix = "default"
 
 [build]
-# Build process
-rebuild_grpc = false    # set to true if the grpc code changed and need a rebuild, e.g. after an update of the repository
-rebuild_cython = true  # set to true if the cython code changed and need a forced rebuild, e.g. after an update of the repository
-num_threads = 4 # activate multi-thread build process by setting to a value >0
+    # Build process
+    rebuild_grpc = false    # set to true if the grpc code changed and need a rebuild, e.g. after an update of the repository
+    rebuild_cython = true   # set to true if the cython code changed and need a forced rebuild, e.g. after an update of the repository
+    num_threads = 4

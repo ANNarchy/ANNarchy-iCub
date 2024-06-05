@@ -27,10 +27,11 @@ from cython.operator cimport dereference as deref
 
 from .Visual_Reader cimport VisualReader
 from .iCub_Interface cimport ANNiCub_wrapper
+from .Module_Base_Class cimport PyModuleBase
 
 import numpy as np
 
-cdef class PyVisualReader:
+cdef class PyVisualReader(PyModuleBase):
 
     # init method
     def __cinit__(self):
@@ -41,6 +42,64 @@ cdef class PyVisualReader:
     def __dealloc__(self):
         print("Close iCub Interface: Visual Reader.")
         self._cpp_visual_reader.reset()
+
+
+    # register visual reader module
+    def _register(self, name: str, ANNiCub_wrapper iCub):
+        """Register Visual Reader module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        name : str
+            name given to the Visual Reader
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_visual_reader).getRegister():
+            print("[Interface iCub] Visual Reader module is already registered!")
+            return False
+        else:
+            if name in iCub._visual_reader:
+                print("[Interface iCub] Visual Reader module name is already used!")
+                return False
+            iCub._visual_reader[name] = self
+            self._name = name
+            deref(self._cpp_visual_reader).setRegister(1)
+            return True
+
+    # unregister visual reader module
+    def _unregister(self, ANNiCub_wrapper iCub):
+        """Unregister Visual Reader module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_visual_reader).getRegister():
+            deref(self._cpp_visual_reader).setRegister(0)
+            iCub._visual_reader.pop(self._name, None)
+            self._name = ""
+            return True
+        else:
+            print("[Interface iCub] Visual Reader module is not yet registered!")
+            return False
+
+    def _get_parameter(self):
+        return deref(self._cpp_visual_reader).getParameter()
+
 
     '''
     # Access to visual reader member functions
@@ -80,11 +139,11 @@ cdef class PyVisualReader:
         # ini_path = os.path.abspath(ini_path)
         self._part = eye
         # preregister module for some prechecks e.g. name already in use
-        if iCub.register_vis_reader(name, self):
+        if self._register(name, iCub):
             # call the interface
             retval = deref(self._cpp_visual_reader).Init(eye.encode('UTF-8')[0], fov_width, fov_height, img_width, img_height, fast_filter, ini_path.encode('UTF-8'))
             if not retval:
-                iCub.unregister_vis_reader(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
@@ -126,11 +185,11 @@ cdef class PyVisualReader:
         """
         self._part = eye
         # preregister module for some prechecks e.g. eye already in use
-        if iCub.register_vis_reader(name, self):
+        if self._register(name, iCub):
             retval = deref(self._cpp_visual_reader).InitGRPC(eye.encode('UTF-8')[0], fov_width, fov_height, img_width, img_height, fast_filter, ini_path.encode('UTF-8'),
                                                              ip_address.encode('UTF-8'), port)
             if not retval:
-                iCub.unregister_vis_reader(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
@@ -178,6 +237,6 @@ cdef class PyVisualReader:
         -------
 
         """
-        iCub.unregister_vis_reader(self)
+        self._unregister(iCub)
         self._part = ""
         deref(self._cpp_visual_reader).Close()

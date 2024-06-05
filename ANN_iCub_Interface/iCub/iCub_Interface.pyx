@@ -30,20 +30,8 @@ from xml.dom import minidom
 
 from cython.operator cimport dereference as deref
 
-from .Kinematic_Writer cimport PyKinematicWriter
-from .Kinematic_Reader cimport PyKinematicReader
-from .Visual_Reader cimport PyVisualReader
-from .Skin_Reader cimport PySkinReader
-from .Joint_Writer cimport PyJointWriter
-from .Joint_Reader cimport PyJointReader
-
-
-def _textToList(liststring):
-    l_x = liststring.strip('[]').replace('\'', '').replace(' ', '')
-    if len(l_x) == 0:
-        return list(l_x)
-    else:
-        return [int(x) for x in l_x.split(",")]
+from .Module_Base_Class cimport PyModuleBase
+from ..Special_Features import init_robot_from_file as sp_init_robot_from_file, save_robot_to_file as sp_save_robot_to_file
 
 
 cdef class ANNiCub_wrapper:
@@ -78,11 +66,11 @@ cdef class ANNiCub_wrapper:
         if self._kinematic_writer is not None:
             self._kinematic_writer.clear()
 
+
     '''
     # Manage the reader/writer modules
     # Handling of the Reader and Writer modules in the main Interface
     '''
-
     # close all interface modules
     def clear(self):
         """Clean-up all initialized interface instances"""
@@ -124,345 +112,13 @@ cdef class ANNiCub_wrapper:
         self._kinematic_reader.clear()
         self._kinematic_writer.clear()
 
-    # register joint reader module
-    def register_jreader(self, name: str, module: PyJointReader):
-        """Register Joint Reader module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        name : str
-            name given to the Joint Reader
-        module : PyJointReader
-            Joint Reader instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_joint_reader).getRegister():
-            print("[Interface iCub] Joint Reader module is already registered!")
-            return False
-        else:
-            if name in self._joint_reader:
-                print("[Interface iCub] Joint Reader module name is already used!")
-                return False
-            else:
-                if module._part in self._joint_reader_parts:
-                    print("[Interface iCub] Joint Reader module part is already used!")
-                    return False
-                else:
-                    self._joint_reader[name] = module
-                    module._name = name
-                    self._joint_reader_parts[module._part] = name
-                    deref(module._cpp_joint_reader).setRegister(1)
-                    return True
-
-    # unregister joint reader  module
-    def unregister_jreader(self, module: PyJointReader):
-        """Unregister Joint Reader module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        module : PyJointReader
-            Joint Reader instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_joint_reader).getRegister():
-            deref(module._cpp_joint_reader).setRegister(0)
-            self._joint_reader.pop(module._name, None)
-            self._joint_reader_parts.pop(module._part, None)
-            module._name = ""
-            return True
-        else:
-            print("[Interface iCub] Joint Reader module is not yet registered!")
-            return False
-
-    # register joint writer  module
-    def register_jwriter(self, name: str, module: PyJointWriter):
-        """Register Joint Writer module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        name : str
-            name given to the Joint Writer
-        module : PyJointWriter
-            Joint Writer instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_joint_writer).getRegister():
-            print("[Interface iCub] Joint Writer module is already registered!")
-            return False
-        else:
-            if name in self._joint_writer:
-                print("[Interface iCub] Joint Writer module name is already used!")
-                return False
-            else:
-                if module._part in self._joint_writer_parts:
-                    print("[Interface iCub] Joint Writer module part is already used!")
-                    return False
-                else:
-                    self._joint_writer[name] = module
-                    module._name = name
-                    self._joint_writer_parts[module._part] = name
-                    deref(module._cpp_joint_writer).setRegister(1)
-                    return True
-
-    # unregister joint writer module
-    def unregister_jwriter(self, module: PyJointWriter):
-        """Unregister Joint Writer module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        module : PyJointWriter
-            Joint Writer instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_joint_writer).getRegister():
-            deref(module._cpp_joint_writer).setRegister(0)
-            self._joint_writer.pop(module._name, None)
-            self._joint_writer_parts.pop(module._part, None)
-            module._name = ""
-            return True
-        else:
-            print("[Interface iCub] Joint Writer module is not yet registered!")
-            return False
-
-    # register skin reader module
-    def register_skin_reader(self, name: str, module: PySkinReader):
-        """Register Skin Reader module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        name : str
-            name given to the Skin Reader
-        module : PySkinReader
-            Skin Reader instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_skin_reader).getRegister():
-            print("[Interface iCub] Skin Reader module is already registered!")
-            return False
-        else:
-            if name in self._skin_reader:
-                print("[Interface iCub] Skin Reader module name is already used!")
-                return False
-            else:
-                self._skin_reader[name] = module
-                module._name = name
-                deref(module._cpp_skin_reader).setRegister(1)
-                return True
-
-    # unregister skin reader module
-    def unregister_skin_reader(self, module: PySkinReader):
-        """Unregister Skin Reader module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        module : PySkinReader
-            Skin Reader instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_skin_reader).getRegister():
-            deref(module._cpp_skin_reader).setRegister(0)
-            self._skin_reader.pop(module._name, None)
-            module._name = ""
-            return True
-        else:
-            print("[Interface iCub] Skin Reader module is not yet registered!")
-            return False
-
-    # register visual reader module
-    def register_vis_reader(self, name: str, module: PyVisualReader):
-        """Register Visual Reader module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        name : str
-            name given to the Visual Reader
-        module : PyVisualReader
-            Visual Reader instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_visual_reader).getRegister():
-            print("[Interface iCub] Visual Reader module is already registered!")
-            return False
-        else:
-            if name in self._visual_reader:
-                print("[Interface iCub] Visual Reader module name is already used!")
-                return False
-            self._visual_reader[name] = module
-            module._name = name
-            deref(module._cpp_visual_reader).setRegister(1)
-            return True
-
-    # unregister visual reader module
-    def unregister_vis_reader(self, module: PyVisualReader):
-        """Unregister Visual Reader module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        module : PyVisualReader
-            Visual Reader instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_visual_reader).getRegister():
-            deref(module._cpp_visual_reader).setRegister(0)
-            self._visual_reader.pop(module._name, None)
-            module._name = ""
-            return True
-        else:
-            print("[Interface iCub] Visual Reader module is not yet registered!")
-            return False
-
-    # register kinematic reader module
-    def register_kin_reader(self, name: str, module: PyKinematicReader):
-        """Register Kinematic Reader module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        name : str
-            name given to the Kinematic Reader
-        module : PyKinematicReader
-            Kinematic Reader instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_kin_reader).getRegister():
-            print("[Interface iCub] Kinematic Reader module is already registered!")
-            return False
-        else:
-            if name in self._kinematic_reader:
-                print("[Interface iCub] Kinematic Reader module name is already used!")
-                return False
-            self._kinematic_reader[name] = module
-            module._name = name
-            deref(module._cpp_kin_reader).setRegister(1)
-            return True
-
-    # unregister kinematic reader module
-    def unregister_kin_reader(self, module: PyKinematicReader):
-        """Unregister Kinematic Reader module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        module : PyKinematicReader
-            Kinematic Reader instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_kin_reader).getRegister():
-            deref(module._cpp_kin_reader).setRegister(0)
-            self._kinematic_reader.pop(module._name, None)
-            module._name = ""
-            return True
-        else:
-            print("[Interface iCub] Kinematic Reader module is not yet registered!")
-            return False
-
-    # register kinematic writer module
-    def register_kin_writer(self, name: str, module: PyKinematicWriter):
-        """Register Kinematic Writer module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        name : str
-            name given to the Kinematic Writer
-        module : PyKinematicWriter
-            Kinematic Writer instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_kin_writer).getRegister():
-            print("[Interface iCub] Kinematic Writer module is already registered!")
-            return False
-        else:
-            if name in self._kinematic_writer:
-                print("[Interface iCub] Kinematic Writer module name is already used!")
-                return False
-            self._kinematic_writer[name] = module
-            module._name = name
-            deref(module._cpp_kin_writer).setRegister(1)
-            return True
-
-    # unregister kinematic writer module
-    def unregister_kin_writer(self, module: PyKinematicWriter):
-        """Unregister Kinematic Writer module at the main wrapper.
-            -> For internal use only.
-
-        Parameters
-        ----------
-        module : PyKinematicWriter
-            Kinematic Writer instance
-
-        Returns
-        -------
-        bool
-            True/False on Success/Failure
-        """
-        if deref(module._cpp_kin_writer).getRegister():
-            deref(module._cpp_kin_writer).setRegister(0)
-            self._kinematic_writer.pop(module._name, None)
-            module._name = ""
-            return True
-        else:
-            print("[Interface iCub] Kinematic Writer module is not yet registered!")
-            return False
 
     '''
     # Access to interface instances via main warpper
     '''
 
     # get joint reader module by name
-    def get_jreader_by_name(self, name: str) -> PyJointReader:
+    def get_jreader_by_name(self, name: str):
         """Returns the Joint Reader instance with the given name.
 
         Parameters
@@ -482,7 +138,7 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get joint reader module by part
-    def get_jreader_by_part(self, part: str) -> PyJointReader:
+    def get_jreader_by_part(self, part: str):
         """Returns the Joint Reader instance with the given part.
 
         Parameters
@@ -502,7 +158,7 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get joint writer module by name
-    def get_jwriter_by_name(self, name: str) -> PyJointWriter:
+    def get_jwriter_by_name(self, name: str):
         """Returns the Joint Writer instance with the given name.
 
         Parameters
@@ -522,7 +178,7 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get joint writer module by part
-    def get_jwriter_by_part(self, part: str) -> PyJointWriter:
+    def get_jwriter_by_part(self, part: str):
         """Returns the Joint Writer instance with the given part.
 
         Parameters
@@ -542,7 +198,7 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get skin reader module by name
-    def get_skinreader_by_name(self, name: str) -> PySkinReader:
+    def get_skinreader_by_name(self, name: str):
         """Returns the Skin Reader instance with the given name.
 
         Parameters
@@ -562,7 +218,7 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get visual reader module by name
-    def get_vis_reader_by_name(self, name: str) -> PyVisualReader:
+    def get_vis_reader_by_name(self, name: str):
         """Returns the Visual Reader instance with the given name.
 
         Parameters
@@ -582,7 +238,7 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get kinematic reader module by name
-    def get_kin_reader_by_name(self, name: str) -> PyKinematicReader:
+    def get_kin_reader_by_name(self, name: str):
         """Returns the Kinematic Reader instance with the given name.
 
         Parameters
@@ -602,7 +258,7 @@ cdef class ANNiCub_wrapper:
             return None
 
     # get kinematic reader module by name
-    def get_kin_writer_by_name(self, name: str) -> PyKinematicWriter:
+    def get_kin_writer_by_name(self, name: str):
         """Returns the Kinematic Writer instance with the given name.
 
         Parameters
@@ -621,314 +277,29 @@ cdef class ANNiCub_wrapper:
             print("[Interface iCub] No Kinematic Writer module with the given name is registered!")
             return None
 
-    '''
-    # Global loading/ saving methods for whole interface configuration
-    # TODO: extend for kinematic modules
-    '''
 
-    # initialize interface for a robot configuration defined in a XML-file
-    def init_robot_from_file(self, xml_file: str) -> Tuple[bool, str]:
-        """Init iCub interface with the modules given in the xml-file
+    def _get_jreader_dict(self):
+        return self._joint_reader
 
-        Parameters
-        ----------
-        xml_file : str
-            filename of the xml-config-file
+    def _get_jwriter_dict(self):
+        return self._joint_writer
 
-        Returns
-        -------
-        Tuple[bool, str]
-            Returns a bool value representing the success of the init and a dicionary containing the module names for each module type
-        """
-        name_dict = {}
-        if os.path.isfile(xml_file):
-            tree = ET.parse(xml_file)
-            robot = tree.getroot()
+    def _get_kreader_dict(self):
+        return self._kinematic_reader
 
-            if robot is not None:
-                # init joint reader
-                for jread in robot.iter('JReader'):
-                    args = {'name': jread.attrib['name']}
-                    grpc = False
-                    no_error_jread = True
-                    if (jread.find('part') is None):
-                        print("Element part is missing")
-                        no_error_jread = False
-                    else:
-                        args['part'] = jread.find('part').text
-                    if (jread.find('sigma') is None):
-                        print("Element sigma is missing")
-                        no_error_jread = False
-                    else:
-                        args['sigma'] = float(jread.find('sigma').text)
-                    if (jread.find('popsize') is None):
-                        if (jread.find('pop_size') is None):
-                            if (jread.find('n_pop') is None):
-                                print("Element popsize is missing")
-                                no_error_jread = False
-                            else:
-                                args['n_pop'] = int(jread.find('n_pop').text)
-                        else:
-                            args['n_pop'] = int(jread.find('pop_size').text)
-                    else:
-                        args['n_pop'] = int(jread.find('popsize').text)
-                    if (jread.find('ini_path') is None):
-                        print("Element ini_path is missing")
-                        no_error_jread = False
-                    else:
-                        args['ini_path'] = jread.find('ini_path').text
-                    if (jread.find('ip_address') is not None):
-                        args['ip_address'] = jread.find('ip_address').text
-                        if (jread.find('port') is not None):
-                            args['port'] = int(jread.find('port').text)
-                            grpc = True
-                    if (jread.find('deg_per_neuron') is not None):
-                        args['degr_per_neuron'] = float(jread.find('deg_per_neuron').text)
+    def _get_kwriter_dict(self):
+        return self._kinematic_writer
 
-                    if (no_error_jread):
-                        reader = PyJointReader()
-                        if grpc:
-                            if not reader.init_grpc(self, **args):
-                                print("Init Joint Reader '" + jread.attrib['name'] + "' failed!")
-                        else:
-                            if not reader.init(self, **args):
-                                print("Init Joint Reader '" + jread.attrib['name'] + "' failed!")
-                    else:
-                        print("Skipped Joint Reader '" + jread.attrib['name'] + "' init due to missing element")
+    def _get_sreader_dict(self):
+        return self._skin_reader
+    
+    def _get_vreader_dict(self):
+        return self._visual_reader
 
-                # init joint writer
-                for jwrite in robot.iter('JWriter'):
-                    args = {'name': jwrite.attrib['name']}
-                    grpc = False
-                    no_error_jwrite = True
-                    if (jwrite.find('part') is None):
-                        print("Element part is missing")
-                        no_error_jwrite = False
-                    else:
-                        args['part'] = jwrite.find('part').text
-                    if (jwrite.find('popsize') is None):
-                        if (jwrite.find('pop_size') is None):
-                            if (jwrite.find('n_pop') is None):
-                                print("Element n_pop is missing")
-                                no_error_jwrite = False
-                            else:
-                                args['n_pop'] = int(jwrite.find('n_pop').text)
-                        else:
-                            args['n_pop'] = int(jwrite.find('pop_size').text)
-                    else:
-                        args['n_pop'] = int(jwrite.find('popsize').text)
-                    if (jwrite.find('speed') is not None):
-                        args['speed'] = float(jwrite.find('speed').text)
-                    if (jwrite.find('ini_path') is None):
-                        print("Element ini_path is missing")
-                        no_error_jwrite = False
-                    else:
-                        args['ini_path'] = jwrite.find('ini_path').text
-                    if (jwrite.find('ip_address') is not None):
-                        args['ip_address'] = jwrite.find('ip_address').text
-                        if (jwrite.find('port') is not None):
-                            args['port'] = int(jwrite.find('port').text)
-                            if (jwrite.find('mode') is not None):
-                                args['mode'] = jwrite.find('mode').text
-                                if (jwrite.find('blocking') is not None):
-                                    args['blocking'] = eval(jwrite.find('blocking').text.capitalize())
-                                    if (jwrite.find('joint_select') is not None):
-                                        args['joints'] = _textToList(jwrite.find('joint_select').text)
-                                        grpc = True
-                                    elif (jwrite.find('joints') is not None):
-                                        args['joints'] = _textToList(jwrite.find('joints').text)
-                                        grpc = True
-                    if (jwrite.find('deg_per_neuron') is not None):
-                        deg_per_neuron = float(jwrite.find('deg_per_neuron').text)
+    def init_robot_from_file(self, xml_file: str):
+        print("Function deprecated; Please use ANN_iCub_Interface.init_robot_from_file-method instead!")
+        return sp_init_robot_from_file(self, xml_file)
 
-                    if (no_error_jwrite):
-                        writer = PyJointWriter()
-                        if grpc:
-                            if not writer.init_grpc(self, **args):
-                                print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
-                        else:
-                            if not writer.init(self, **args):
-                                print("Init Joint Writer '" + jwrite.attrib['name'] + "' failed!")
-                    else:
-                        print("Skipped Joint Writer '" + jwrite.attrib['name'] + "' init due to missing element")
-
-                # init visual reader
-                for vread in robot.iter('VisReader'):
-                    args = {'name': vread.attrib['name']}
-                    grpc = False
-                    no_error_vread = True
-                    if (vread.find('eye') is None):
-                        print("Element eye is missing")
-                        no_error_vread = False
-                    else:
-                        args['eye'] = vread.find('eye').text
-                    if vread.find('fov_width') is not None:
-                        args['fov_width'] = float(vread.find('fov_width').text)
-                    if vread.find('fov_height') is not None:
-                        args['fov_height'] = float(vread.find('fov_height').text)
-                    if vread.find('img_width') is not None:
-                        args['img_width'] = int(vread.find('img_width').text)
-                    if vread.find('img_height') is not None:
-                        args['img_height'] = int(vread.find('img_height').text)
-                    if (vread.find('fast_filter') is not None):
-                        args['fast_filter'] = eval(vread.find('fast_filter').text.capitalize())
-                    if (vread.find('ini_path') is None):
-                        print("Element ini_path is missing")
-                        no_error_vread = False
-                    else:
-                        args['ini_path'] = vread.find('ini_path').text
-                    if (vread.find('ip_address') is not None):
-                        args['ip_address'] = vread.find('ip_address').text
-                        if (vread.find('port') is not None):
-                            args['port'] = int(vread.find('port').text)
-                            grpc = True
-                    if (no_error_vread):
-                        vreader = PyVisualReader()
-                        if grpc:
-                            if not vreader.init_grpc(self, **args):
-                                print("Init Visual Reader '" + vread.attrib['name'] + "' failed!")
-                        else:
-                            if not vreader.init(self, **args):
-                                print("Init Visual Reader '" + vread.attrib['name'] + "' failed!")
-                    else:
-                        print("Skipped Visual Reader init due to missing element")
-
-                # init tactile reader
-                for sread in robot.iter('TacReader'):
-                    args = {'name': sread.attrib['name']}
-                    grpc = False
-                    no_error_sread = True
-                    if (sread.find('arm') is None):
-                        print("Element arm is missing")
-                        no_error_sread = False
-                    else:
-                        args['arm'] = sread.find('arm').text
-                    if (sread.find('normalize') is None):
-                        if (sread.find('norm_data') is None):
-                            if (sread.find('norm') is None):
-                                print("Element norm is missing")
-                                no_error_sread = False
-                            else:
-                                args['norm'] = eval(sread.find('norm').text.capitalize())
-                        else:
-                            args['norm'] = eval(sread.find('norm_data').text.capitalize())
-                    else:
-                        args['norm'] = eval(sread.find('normalize').text.capitalize())
-                    if (sread.find('ini_path') is None):
-                        print("Element ini_path is missing")
-                        no_error_sread = False
-                    else:
-                        args['ini_path'] = sread.find('ini_path').text
-                    if (sread.find('ip_address') is not None):
-                        args['ip_address'] = sread.find('ip_address').text
-                        if (sread.find('port') is not None):
-                            args['port'] = int(sread.find('port').text)
-                            grpc = True
-                    if (no_error_sread):
-                        sreader = PySkinReader()
-                        if grpc:
-                            if not sreader.init_grpc(self, **args):
-                                print("Init Skin Reader '" + sread.attrib['name'] + "' failed!")
-                        else:
-                            if not sreader.init(self, **args):
-                                print("Init Skin Reader '" + sread.attrib['name'] + "' failed!")
-                    else:
-                        print("Skipped Skin Reader '" + sread.attrib['name'] + "' init due to missing element")
-
-                # init kinematic reader
-                for kread in robot.iter('KinReader'):
-                    args = {'name': kread.attrib['name']}
-                    grpc = False
-                    no_error_kread = True
-
-                    if (kread.find('part') is None):
-                        print("Element part is missing")
-                        no_error_kread = False
-                    else:
-                        args['part'] = kread.find('part').text
-                    if (kread.find('version') is None):
-                        print("Element version is missing")
-                        no_error_kread = False
-                    else:
-                        args['version'] = float(kread.find('version').text)
-                    if (kread.find('ini_path') is None):
-                        print("Element ini_path is missing")
-                        no_error_kread = False
-                    else:
-                        args['ini_path'] = kread.find('ini_path').text
-                    if (kread.find('offline_mode') is not None):
-                        args['offline_mode'] = eval(kread.find('offline_mode').text.capitalize())
-
-                    if (kread.find('ip_address') is not None):
-                        args['ip_address'] = kread.find('ip_address').text
-                        if (kread.find('port') is not None):
-                            args['port'] = int(kread.find('port').text)
-                            grpc = True
-
-                    if (no_error_kread):
-                        kreader = PyKinematicReader()
-                        if grpc:
-                            if not kreader.init_grpc(self, **args):
-                                print("Init Kinematic Reader '" + kread.attrib['name'] + "' failed!")
-                        else:
-                            if not kreader.init(self, **args):
-                                print("Init Kinematic Reader '" + kread.attrib['name'] + "' failed!")
-                    else:
-                        print("Skipped Kinematic Reader '" + kread.attrib['name'] + "' init due to missing element")
-
-                # init kinematic writer
-                for kwrite in robot.iter('KinWriter'):
-                    args = {}
-                    grpc = False
-                    no_error_kwrite = True
-                    if (kwrite.find('part') is None):
-                        print("Element part is missing")
-                        no_error_kwrite = False
-                    else:
-                        args['part'] = kwrite.find('part').text
-                    if (kwrite.find('version') is None):
-                        print("Element version is missing")
-                        no_error_kwrite = False
-                    else:
-                        args['version'] = float(kwrite.find('version').text)
-                    if (kwrite.find('ini_path') is None):
-                        print("Element ini_path is missing")
-                        no_error_kwrite = False
-                    else:
-                        args['ini_path'] = kwrite.find('ini_path').text
-                    if (kwrite.find('ip_address') is not None):
-                        args['ip_address'] = kwrite.find('ip_address').text
-                        if (kwrite.find('port') is not None):
-                            args['port'] = int(kwrite.find('port').text)
-                            grpc = True
-
-                    if (no_error_kwrite):
-                        kwriter = PyKinematicWriter()
-                        if grpc:
-                            if not kwriter.init_grpc(self, **args):
-                                print("Init Kinematic Writer '" + kwrite.attrib['name'] + "' failed!")
-                        else:
-                            if not kwriter.init(self, **args):
-                                print("Init Kinematic Writer '" + kwrite.attrib['name'] + "' failed!")
-                    else:
-                        print("Skipped Kinematic Writer '" + kwrite.attrib['name'] + "' init due to missing element")
-
-                name_dict["Joint_Reader"] = self._joint_reader.keys()
-                name_dict["Joint_Writer"] = self._joint_writer.keys()
-                name_dict["Skin_Reader"] = self._skin_reader.keys()
-                name_dict["Visual_Reader"] = self._visual_reader.keys()
-                name_dict["Kinematic_Reader"] = self._kinematic_reader.keys()
-                name_dict["Kinematic_Writer"] = self._kinematic_writer.keys()
-
-                return True, name_dict
-            else:
-                print("Failed to read XML-file")
-                return False, name_dict
-        else:
-            print("Not a valid XML-Filepath given!")
-            return False, name_dict
-
-    # save robot robot configuration as XML-file
     def save_robot_to_file(self, xml_file: str, description: str = ""):
         """Save robot configuration to xml-config file
 
@@ -943,51 +314,5 @@ cdef class ANNiCub_wrapper:
         -------
 
         """
-        root = ET.Element("robot")
-        root.append(ET.Comment(description))
-
-        for name, module in self._joint_reader.items():
-            JReader = ET.SubElement(root, "JReader", attrib={"name": name})
-            jread_cast = <PyJointReader> module
-            jread_param = deref(jread_cast._cpp_joint_reader).getParameter()
-            for key, value in (<dict> jread_param).items():
-                ET.SubElement(JReader, key.decode('utf-8')).text = value.decode('utf-8')
-
-        for name, module in self._joint_writer.items():
-            JWriter = ET.SubElement(root, "JWriter", attrib={"name": name})
-            jwrite_cast = <PyJointWriter> module
-            jwrite_param = deref(jwrite_cast._cpp_joint_writer).getParameter()
-            for key, value in (<dict> jwrite_param).items():
-                ET.SubElement(JWriter, key.decode('utf-8')).text = value.decode('utf-8')
-
-        for name, module in self._visual_reader.items():
-            VReader = ET.SubElement(root, "VisReader", attrib={"name": name})
-            vread_cast = <PyVisualReader> module
-            vread_param = deref(vread_cast._cpp_visual_reader).getParameter()
-            for key, value in (<dict> vread_param).items():
-                ET.SubElement(VReader, key.decode('utf-8')).text = value.decode('utf-8')
-
-        for name, module in self._skin_reader.items():
-            SReader = ET.SubElement(root, "TacReader", attrib={"name": name})
-            sread_cast = <PySkinReader> module
-            sread_param = deref(sread_cast._cpp_skin_reader).getParameter()
-            for key, value in (<dict> sread_param).items():
-                ET.SubElement(SReader, key.decode('utf-8')).text = value.decode('utf-8')
-
-        for name, module in self._kinematic_reader.items():
-            KReader = ET.SubElement(root, "KinReader", attrib={"name": name})
-            kread_cast = <PyKinematicReader> module
-            kread_param = deref(kread_cast._cpp_kin_reader).getParameter()
-            for key, value in (<dict> kread_param).items():
-                ET.SubElement(KReader, key.decode('utf-8')).text = value.decode('utf-8')
-
-        for name, module in self._kinematic_writer.items():
-            KWriter = ET.SubElement(root, "KinWriter", attrib={"name": name})
-            kwrite_cast = <PyKinematicWriter> module
-            kwrite_param = deref(kwrite_cast._cpp_kin_writer).getParameter()
-            for key, value in (<dict> kwrite_param).items():
-                ET.SubElement(KWriter, key.decode('utf-8')).text = value.decode('utf-8')
-
-        XML_file_string = minidom.parseString(ET.tostring(root, 'utf-8')).toprettyxml(indent="    ")
-        with open(xml_file, "w") as files:
-            files.write(XML_file_string)
+        print("Function deprecated; Please use ANN_iCub_Interface.save_robot_to_file-method instead!")
+        return sp_save_robot_to_file(self, xml_file, description)

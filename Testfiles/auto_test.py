@@ -20,6 +20,7 @@
 import os
 import sys
 import time
+from pathlib import Path
 
 import matplotlib.pylab as plt
 import numpy as np
@@ -249,7 +250,7 @@ def test_joint_positioning(ann_wrapper):
     position_path = params.position_path_pos
 
     if not os.path.isdir(path):
-        os.mkdir(path)
+        Path(path).mkdir(parents=True, exist_ok=True)
 
     print('____________________________________________________________')
     print('__ Load test positions __')
@@ -361,9 +362,9 @@ def test_tactile_reading(ann_wrapper):
     """
     data_count = 5
 
-    path = "./results/Tactile/"
+    path = params.path_tac
     if not os.path.isdir(path):
-        os.mkdir(path)
+        Path(path).mkdir(parents=True, exist_ok=True)
 
     # set sphere positions
     loc_sph = []
@@ -474,9 +475,8 @@ def test_visual_perception(ann_wrapper):
     img_w = 320
     img_h = 240
 
-    path = "./Vision/"
-    if not os.path.isdir(path):
-        os.mkdir(path)
+    if not os.path.isdir(params.path_vis):
+        Path(params.path_vis).mkdir(parents=True, exist_ok=True)
 
     if(params.gazebo):
         # instanciate the simulator world controller
@@ -505,7 +505,6 @@ def test_visual_perception(ann_wrapper):
     print('____ Initialized visual reader ____')
     print('____________________________________________________________\n')
 
-    # start the RFModule to obtain the images from the iCub
     read_imgs = []
     if(params.gazebo):
         # move the sphere object
@@ -531,7 +530,7 @@ def test_visual_perception(ann_wrapper):
         #     print('No buffered image!')
     print(round(t, 4), 's')
     # store the recorded images
-    np.save(path + 'Vision_full_size.npy', read_imgs)
+    np.save(params.path_vis + 'Vision_full_size.npy', read_imgs)
 
     print('____________________________________________________________')
     print('__ Close visual reader module __')

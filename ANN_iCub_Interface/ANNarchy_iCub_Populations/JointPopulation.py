@@ -18,7 +18,11 @@
  """
 import ANN_iCub_Interface
 
-from ANNarchy.core.SpecificPopulation import SpecificPopulation
+try:
+    from ANNarchy.intern.SpecificPopulation import SpecificPopulation
+except:
+    from ANNarchy.core.SpecificPopulation import SpecificPopulation
+
 from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import _error
 
@@ -44,7 +48,6 @@ class JointControl(SpecificPopulation):
 
         self._ip_address = ip_address
         self._port = port
-        self.name = name
 
     def _init_attributes(self):
 
@@ -191,7 +194,6 @@ class JointReadout(SpecificPopulation):
         self._port = port
         self._joints = joints
         self._encoded = encoded
-        self.name = name
 
     def _init_attributes(self):
         SpecificPopulation._init_attributes(self)

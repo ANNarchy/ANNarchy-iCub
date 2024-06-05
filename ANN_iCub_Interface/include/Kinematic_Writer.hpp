@@ -26,6 +26,7 @@
 #include <deque>
 #include <map>
 #include <string>
+#include <string_view>
 #include <thread>
 #include <vector>
 
@@ -52,12 +53,13 @@ class KinematicWriter : public Mod_BaseClass {
      * \param[in] version iCub hardware version
      * \param[in] ini_path Path to the "interface_param.ini"-file.
      * \param[in] offline_mode flag if limits are retrieved from running iCub -> if true no running iCub is necessary
+     * \param[in] active_torso if torso is used, include it in kinematic chain
      * \return True, if the initializatiion was successful. False if an error occured. Additionally, an error message is written to the error stream (cerr).\n
      *          Typical errors:
      *              - arguments not valid: e.g. part string not correct or ini file not in given path \n
      *              - YARP-Server not running
      */
-    bool Init(std::string part, float version, std::string ini_path, bool offline_mode);
+    bool Init(std::string part, float version, std::string ini_path, bool offline_mode, bool active_torso);
 
     /**
      * \brief Initialize the kinematic writer with given parameters
@@ -72,7 +74,9 @@ class KinematicWriter : public Mod_BaseClass {
      *              - arguments not valid: e.g. part string not correct or ini file not in given path \n
      *              - YARP-Server not running
      */
-    bool InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode);
+    bool InitGRPC(std::string part, float version, std::string ini_path, std::string ip_address, unsigned int port, bool offline_mode, bool active_torso);
+
+    bool InitConf(std::string robot_prefix, std::string client_prefix, std::string part, float version, bool offline_mode);
 
     /**
      * \brief  Close kinematic writer with cleanup
@@ -140,7 +144,7 @@ class KinematicWriter : public Mod_BaseClass {
 
  private:
     /*** configuration variables ***/
-    std::vector<std::string> key_map{"right_arm", "left_arm"};    // valid iCub part keys
+    std::vector<std::string_view> key_map{"right_arm", "left_arm"};    // valid iCub part keys
     // std::vector<std::string> key_map{"head", "torso", "right_arm", "left_arm", "right_leg", "left_leg"};    // valid iCub part keys
 
     /*** parameter ***/
@@ -180,7 +184,7 @@ class KinematicWriter : public Mod_BaseClass {
 
     /*** auxilary functions ***/
     // check if iCub part key is valid
-    bool CheckPartKey(std::string key);
+    bool CheckPartKey(std::string_view key);
     // read joint angles from robot
     std::vector<double> ReadDoubleAll(yarp::dev::IEncoders* iencoder, unsigned int joint_count);
 };

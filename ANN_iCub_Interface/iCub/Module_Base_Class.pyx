@@ -22,23 +22,15 @@
    along with this headers. If not, see [http://www.gnu.org/licenses/].
  """
 
-from libcpp.string cimport string
-from libcpp cimport bool as bool_t
-from libcpp.map cimport map as cmap
 
-cdef extern from "Module_Base_Class.hpp":
-
-    cdef cppclass Mod_BaseClass:
-        Mod_BaseClass() except +
-
-        # For internal use only ##
-        # Set/get register functions
-        void setRegister(bint)
-        bint getRegister()
-
-        cmap[string, string] getParameter()
-
+from .Module_Base_Class cimport PyModuleBase
 
 cdef class PyModuleBase:
-    cdef str _name
-    cdef str _part
+
+    # init method
+    def __cinit__(self):
+        print("Initialize Module_base.")
+
+    # close method
+    def __dealloc__(self):
+        print("Close Module_base.")

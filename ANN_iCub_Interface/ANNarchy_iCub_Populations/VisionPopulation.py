@@ -18,7 +18,11 @@
  """
 import ANN_iCub_Interface
 
-from ANNarchy.core.SpecificPopulation import SpecificPopulation
+try:
+    from ANNarchy.intern.SpecificPopulation import SpecificPopulation
+except:
+    from ANNarchy.core.SpecificPopulation import SpecificPopulation
+
 from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import _error, dt
 
@@ -43,7 +47,6 @@ class VisionPopulation(SpecificPopulation):
 
         self._ip_address = ip_address
         self._port = port
-        self.name = name
         self._period = 1
         self._offset = 0
 
@@ -211,8 +214,11 @@ class VisionPopulation(SpecificPopulation):
 """ %{'id': self.id}
 
         self._specific_template['update_variables'] = """
-        if((t%period==offset) && _active){
-            r = image_source->retrieve_image();
+        #pragma omp single
+        {
+            if((t%period==offset) && _active){
+                r = image_source->retrieve_image();
+            }
         }
         """
 

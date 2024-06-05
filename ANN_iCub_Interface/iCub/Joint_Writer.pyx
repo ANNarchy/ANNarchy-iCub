@@ -30,9 +30,10 @@ from cython.operator cimport dereference as deref
 
 from .Joint_Writer cimport JointWriter
 from .iCub_Interface cimport ANNiCub_wrapper
+from .Module_Base_Class cimport PyModuleBase
 
 
-cdef class PyJointWriter:
+cdef class PyJointWriter(PyModuleBase):
     """Wrapper class for Joint Writer module."""
 
     # constructor method
@@ -45,12 +46,77 @@ cdef class PyJointWriter:
         print("Close iCub Interface: Joint Writer.")
         self._cpp_joint_writer.reset()
 
+
+    # register joint writer  module
+    def _register(self, name: str, ANNiCub_wrapper iCub):
+        """Register Joint Writer module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        name : str
+            name given to the Joint Writer
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_joint_writer).getRegister():
+            print("[Interface iCub] Joint Writer module is already registered!")
+            return False
+        else:
+            if name in iCub._joint_writer:
+                print("[Interface iCub] Joint Writer module name is already used!")
+                return False
+            else:
+                if self._part in iCub._joint_writer_parts:
+                    print("[Interface iCub] Joint Writer module part is already used!")
+                    return False
+                else:
+                    iCub._joint_writer[name] = self
+                    self._name = name
+                    iCub._joint_writer_parts[self._part] = name
+                    deref(self._cpp_joint_writer).setRegister(1)
+                    return True
+
+    # unregister joint writer module
+    def _unregister(self, ANNiCub_wrapper iCub):
+        """Unregister Joint Writer module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_joint_writer).getRegister():
+            deref(self._cpp_joint_writer).setRegister(0)
+            iCub._joint_writer.pop(self._name, None)
+            iCub._joint_writer_parts.pop(self._part, None)
+            self._name = ""
+            return True
+        else:
+            print("[Interface iCub] Joint Writer module is not yet registered!")
+            return False
+
+    def _get_parameter(self):
+        return deref(self._cpp_joint_writer).getParameter()
+
+
     '''
     # Access to joint writer member functions
     '''
 
     # initialize the joint writer with given parameters
-    def init(self, ANNiCub_wrapper iCub, str name, str part, unsigned int n_pop, double degr_per_neuron=0.0, double speed=10.0, str ini_path="../data/"):
+    def init(self, iCub, str name, str part, unsigned int n_pop, double degr_per_neuron=0.0, double speed=10.0, str ini_path="../data/"):
         """Initialize the joint writer with given parameters.
 
         Parameters
@@ -83,16 +149,16 @@ cdef class PyJointWriter:
 
         self._part = part
         # preregister module for some prechecks e.g. part already in use
-        if iCub.register_jwriter(name, self):
+        if self._register(name, iCub):
             retval = deref(self._cpp_joint_writer).Init(key, n_pop, degr_per_neuron, speed, path)
             if not retval:
-                iCub.unregister_jwriter(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
 
     # Initialize the joint writer with given parameters for use with gRPC
-    def init_grpc(self, ANNiCub_wrapper iCub, str name, str part, unsigned int n_pop, joints, str mode, blocking=True, double degr_per_neuron=0.0,
+    def init_grpc(self, iCub, str name, str part, unsigned int n_pop, joints, str mode, blocking=True, double degr_per_neuron=0.0,
                   double speed=10.0, str ini_path="../data/", str ip_address="0.0.0.0", unsigned int port=50010):
         """Initialize the joint writer with given parameters, including the gRPC based connection.
 
@@ -135,17 +201,17 @@ cdef class PyJointWriter:
         """
         self._part = part
         # preregister module for some prechecks e.g. part already in use
-        if iCub.register_jwriter(name, self):
+        if self._register(name, iCub):
             retval = deref(self._cpp_joint_writer).InitGRPC(part.encode('UTF-8'), n_pop, joints, mode.encode('UTF-8'), blocking.__int__(), degr_per_neuron,
                                                             speed, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
             if not retval:
-                iCub.unregister_jwriter(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
 
     # close joint writer with cleanup
-    def close(self, ANNiCub_wrapper iCub):
+    def close(self, iCub):
         """Close joint writer with cleanup
 
         Parameters
@@ -157,7 +223,7 @@ cdef class PyJointWriter:
         -------
 
         """
-        iCub.unregister_jwriter(self)
+        self._unregister(iCub)
         self._part = ""
         deref(self._cpp_joint_writer).Close()
 

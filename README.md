@@ -14,7 +14,7 @@ The interface consists of different parts. Clustering the different tasks of the
     - This submodule consists on the one hand of the core modules to communicate with the iCub, which are the sensor reader (Skin, Camera, Joint) and the joint writer. The core modules are described in more detail in the following:
 
         1. *iCubInterface:*<br>
-            This is mangement module consists of an abstract main Wrapper and gives the opportunity to load/save the interface modules from/to a given XML-file. 
+            This is mangement module consists of an abstract main Wrapper and gives the opportunity to load/save the interface modules from/to a given XML-file.
 
         2. *JointReader:*<br>
             This module handles the joint reading. The iCub robot is divided in multiple robot parts, which are the head, right arm, left arm, torso right leg and left leg.<br>
@@ -66,7 +66,7 @@ The system packages are recommended especially for recent Linux versions (>Ubunt
 ```bash
     sudo apt install protobuf-compiler-grpc libgrpc++-dev
 ```
-For the source installation of gRPC ([installation from the repository](https://grpc.io/docs/languages/cpp/quickstart/#install-grpc) with cmake or bazel) you need to take of other packages, using protobuf like gazebo to handle the needed versions. Since this can lead to a lot of trouble, the use of the system packages is recommended.
+For the source installation of gRPC ([installation from the repository](https://grpc.io/docs/languages/cpp/quickstart/#install-grpc) with cmake or bazel) you need to take care of other packages, using protobuf like gazebo to handle the needed versions. Since this can lead to a lot of trouble, the use of the system packages is recommended.
 
 
 ## useful links
@@ -81,23 +81,27 @@ iCub community (hosted by iit) on github:<br>
 <https://github.com/robotology>
 
 git repository with helpful documents and scripts for the work with iCub:<br>
-<https://ai.informatik.tu-chemnitz.de/gogs/iCub_TUC/iCub_simulator_tools.git>
+<https://github.com/tfietzek/iCub_simulation_tools.git>
 
 
 ## Authors
 Torsten Fietzek (<torsten.fietzek@informatik.tu-chemnitz.de>)<br>
 Helge Ülo Dinkelbach (<helge.dinkelbach@gmail.com>)<br>
-
+Fred Hamker <br>
 
 ## Publications
 Fietzek, T., Dinkelbach, H. Ü., & Hamker, F. H. (2022). ANNarchy - iCub: An Interface for Easy Interaction between Neural Network Models and the iCub Robot. 2022 IEEE 9th International Conference on Computational Intelligence and Virtual Environments for Measurement Systems and Applications (CIVEMSA), 1–6. <https://doi.org/10.1109/CIVEMSA53371.2022.9853699>
 
 
 ## Dependencies
-g++     >= 6.1
-Python  >= 3.5<br>
-YARP    >= 3.2<br>
-OpenCV  >= 3.4<br>
-numpy  <br>
-(Optional) <br>
-gRPC >= <br>
+* g++     >= 6.1
+* Python  >= 3.7
+* YARP    >= 3.2
+* OpenCV  >= 3.4
+* cython  > 0.20
+* numpy >= 1.13
+* tomlkit
+
+### Optional
+* ANNarchy >= 4.7
+* gRPC >=

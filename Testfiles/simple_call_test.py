@@ -133,6 +133,8 @@ def call_test_jwriter(iCub):
     print(jwriter1.get_neurons_per_joint())
     print(jwriter1.set_joint_velocity(10.0, joint=3))
 
+    print(jwriter.get_joint_limits())
+
     print('finish JWriter resolutions')
     print('\n')
 
@@ -164,7 +166,7 @@ def call_test_jwriter(iCub):
     print(jwriter.write_double_multiple( [10., 10., 10.],  [3, 4, 5], "abs", True))
     time.sleep(2.5)
     print('write double_all')
-    print(jwriter.write_double_all(double_all, "abs", True))
+    print(jwriter.write_double_all(double_all, "abs", True, 0))
     time.sleep(2.5)
     print('write pop_one')
     print(jwriter.write_pop_one(test_pos, 4, "abs", True))

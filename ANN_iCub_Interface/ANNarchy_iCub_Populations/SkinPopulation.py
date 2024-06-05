@@ -18,7 +18,11 @@
  """
 import ANN_iCub_Interface
 
-from ANNarchy.core.SpecificPopulation import SpecificPopulation
+try:
+    from ANNarchy.intern.SpecificPopulation import SpecificPopulation
+except:
+    from ANNarchy.core.SpecificPopulation import SpecificPopulation
+
 from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import _error
 
@@ -45,7 +49,6 @@ class SkinPopulation(SpecificPopulation):
         self._skin_section = skin_section
         self._ip_address = ip_address
         self._port = port
-        self.name = name
 
     def _init_attributes(self):
         SpecificPopulation._init_attributes(self)

@@ -23,6 +23,7 @@
  """
 
 import numpy as np
+import tomlkit
 
 from libcpp.memory cimport make_shared
 
@@ -30,6 +31,7 @@ from cython.operator cimport dereference as deref
 
 from .Joint_Reader cimport JointReader
 from .iCub_Interface cimport ANNiCub_wrapper
+from .Module_Base_Class cimport PyModuleBase
 
 
 cdef class PyJointReader:
@@ -44,6 +46,71 @@ cdef class PyJointReader:
     def __dealloc__(self):
         print("Close iCub Interface: Joint Reader.")
         self._cpp_joint_reader.reset()
+
+
+    # register joint reader module
+    def _register(self, name: str, ANNiCub_wrapper iCub):
+        """Register Joint Reader module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        name : str
+            name given to the Joint Reader
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_joint_reader).getRegister():
+            print("[Interface iCub] Joint Reader module is already registered!")
+            return False
+        else:
+            if name in iCub._joint_reader:
+                print("[Interface iCub] Joint Reader module name is already used!")
+                return False
+            else:
+                if self._part in iCub._joint_reader_parts:
+                    print("[Interface iCub] Joint Reader module part is already used!")
+                    return False
+                else:
+                    iCub._joint_reader[name] = self
+                    self._name = name
+                    iCub._joint_reader_parts[self._part] = name
+                    deref(self._cpp_joint_reader).setRegister(1)
+                    print("Register", deref(self._cpp_joint_reader).getRegister())
+                    return True
+
+    # unregister joint reader  module
+    def _unregister(self, ANNiCub_wrapper iCub):
+        """Unregister Joint Reader module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        module : PyJointReader
+            Joint Reader instance
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_joint_reader).getRegister():
+            deref(self._cpp_joint_reader).setRegister(0)
+            iCub._joint_reader.pop(self._name, None)
+            iCub._joint_reader_parts.pop(self._part, None)
+            self._name = ""
+            return True
+        else:
+            print("[Interface iCub] Joint Reader module is not yet registered!")
+            return False
+
+    def _get_parameter(self):
+        return deref(self._cpp_joint_reader).getParameter()
 
     '''
     # Access to joint reader member functions
@@ -78,10 +145,10 @@ cdef class PyJointReader:
         """
         self._part = part
         # preregister module for some prechecks e.g. part already in use
-        if iCub.register_jreader(name, self):
+        if self._register(name, iCub):
             retval = deref(self._cpp_joint_reader).Init(part.encode('UTF-8'), sigma, n_pop, degr_per_neuron, ini_path.encode('UTF-8'))
             if not retval:
-                iCub.unregister_jreader(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
@@ -120,16 +187,21 @@ cdef class PyJointReader:
         """
         self._part = part
         # preregister module for some prechecks e.g. part already in use
-        if iCub.register_jreader(name, self):
+        if self._register(name, iCub):
             retval = deref(self._cpp_joint_reader).InitGRPC(part.encode('UTF-8'), sigma, n_pop, degr_per_neuron, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port)
             if not retval:
-                iCub.unregister_jreader(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
 
+    # Initialize the joint reader with given parameters
+    def init_file(self, str filename):
+        with open(filename, mode="rt", encoding="utf-8") as fp:
+            config = tomlkit.load(fp)
+
     # close joint reader with cleanup
-    def close(self, ANNiCub_wrapper iCub):
+    def close(self, iCub):
         """Close joint reader with cleanup
 
         Parameters
@@ -141,7 +213,7 @@ cdef class PyJointReader:
         -------
 
         """
-        iCub.unregister_jreader(self)
+        self._unregister(iCub)
         self._part = ""
         deref(self._cpp_joint_reader).Close()
 

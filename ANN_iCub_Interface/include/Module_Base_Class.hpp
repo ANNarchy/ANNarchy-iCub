@@ -57,7 +57,7 @@ class Mod_BaseClass {
     std::map<std::string, std::string> getParameter();
 
     // template function for close method
-    virtual void Close() = 0;
+    virtual void Close();
 
     virtual std::vector<double> provideData();
     virtual std::vector<double> provideData(int value, bool enc);

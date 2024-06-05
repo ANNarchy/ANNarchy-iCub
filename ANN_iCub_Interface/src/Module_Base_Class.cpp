@@ -37,7 +37,9 @@ bool Mod_BaseClass::CheckInit() {
     return dev_init & registered;
 }
 
-void Mod_BaseClass::setRegister(bool value) { this->registered = value; }
+void Mod_BaseClass::Close() { std::cerr << "[" << type << "] Error: Close method not implemented!" << std::endl; }
+
+void Mod_BaseClass::setRegister(bool value) { registered = value; }
 bool Mod_BaseClass::getRegister() { return registered; }
 
 std::string Mod_BaseClass::get_identifier() { return type + ": " + icub_part; }

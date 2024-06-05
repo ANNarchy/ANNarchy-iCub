@@ -28,16 +28,18 @@ from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
 from libcpp.map cimport map as cmap
 
+from .Module_Base_Class cimport Mod_BaseClass, PyModuleBase
+
 cdef extern from "Kinematic_Writer.hpp":
 
-    cdef cppclass KinematicWriter:
+    cdef cppclass KinematicWriter(Mod_BaseClass):
         KinematicWriter() except +
 
         # Initialize the joint writer with given parameters
-        bool_t Init(string, float, string, bool_t)
+        bool_t Init(string, float, string, bool_t, bool_t)
 
         # Initialize the joint writer with given parameters
-        bool_t InitGRPC(string, float, string, string, unsigned int, bool_t)
+        bool_t InitGRPC(string, float, string, string, unsigned int, bool_t, bool_t)
 
         # Close joint writer with cleanup
         void Close()
@@ -66,12 +68,11 @@ cdef extern from "Kinematic_Writer.hpp":
 
         vector[double] SolveInvKin(vector[double], vector[int])
 
-        void setRegister(bint)
-        bint getRegister()
+        # void setRegister(bint)
+        # bint getRegister()
 
-        cmap[string, string] getParameter()
+        # cmap[string, string] getParameter()
 
-cdef class PyKinematicWriter:
+cdef class PyKinematicWriter(PyModuleBase):
     cdef shared_ptr[KinematicWriter] _cpp_kin_writer
-    cdef str _name
-    cdef str _part
+    

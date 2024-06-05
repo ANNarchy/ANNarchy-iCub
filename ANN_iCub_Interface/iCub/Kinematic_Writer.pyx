@@ -27,10 +27,11 @@ from cython.operator cimport dereference as deref
 
 from .Kinematic_Writer cimport KinematicWriter
 from .iCub_Interface cimport ANNiCub_wrapper
+from .Module_Base_Class cimport PyModuleBase
 
 import numpy as np
 
-cdef class PyKinematicWriter:
+cdef class PyKinematicWriter(PyModuleBase):
 
     # init method
     def __cinit__(self):
@@ -42,12 +43,70 @@ cdef class PyKinematicWriter:
         print("Close iCub Interface: Kinematic Writer.")
         self._cpp_kin_writer.reset()
 
+
+    # register kinematic writer module
+    def _register(self, name: str, ANNiCub_wrapper iCub):
+        """Register Kinematic Writer module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        name : str
+            name given to the Kinematic Writer
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_kin_writer).getRegister():
+            print("[Interface iCub] Kinematic Writer module is already registered!")
+            return False
+        else:
+            if name in iCub._kinematic_writer:
+                print("[Interface iCub] Kinematic Writer module name is already used!")
+                return False
+            iCub._kinematic_writer[name] = self
+            self._name = name
+            deref(self._cpp_kin_writer).setRegister(1)
+            return True
+
+    # unregister kinematic writer module
+    def _unregister(self, ANNiCub_wrapper iCub):
+        """Unregister Kinematic Writer module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_kin_writer).getRegister():
+            deref(self._cpp_kin_writer).setRegister(0)
+            iCub._kinematic_writer.pop(self._name, None)
+            self._name = ""
+            return True
+        else:
+            print("[Interface iCub] Kinematic Writer module is not yet registered!")
+            return False
+
+    def _get_parameter(self):
+        return deref(self._cpp_kin_writer).getParameter()
+
+
     '''
     # Access to Kinematic writer member functions
     '''
 
     # init kinematic writer with given parameters
-    def init(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path = "../data/", offline_mode=False):
+    def init(self, iCub, str name, str part, float version, str ini_path = "../data/", offline_mode=False, active_torso=True):
         """Initialize the Kinematic Writer with given parameters.
 
         Parameters
@@ -70,16 +129,16 @@ cdef class PyKinematicWriter:
         """
         self._part = part
         # preregister module for some prechecks e.g. name already in use
-        if iCub.register_kin_writer(name, self):
-            retval = deref(self._cpp_kin_writer).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), offline_mode)
+        if self._register(name, iCub):
+            retval = deref(self._cpp_kin_writer).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), offline_mode, active_torso)
             if not retval:
-                iCub.unregister_kin_writer(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
 
     # init kinematic writer with given parameters, including the gRPC based connection
-    def init_grpc(self, ANNiCub_wrapper iCub, str name, str part, float version, str ini_path = "../data/", str ip_address = "0.0.0.0", unsigned int port = 50025, offline_mode=False):
+    def init_grpc(self, iCub, str name, str part, float version, str ini_path = "../data/", str ip_address = "0.0.0.0", unsigned int port = 50025, offline_mode=False, active_torso=True):
         """Initialize the Kinematic Writer with given parameters, including the gRPC based connection.
 
         Parameters
@@ -107,16 +166,16 @@ cdef class PyKinematicWriter:
         """
         self._part = part
         # preregister module for some prechecks e.g. eye already in use
-        if iCub.register_kin_writer(name, self):
-            retval = deref(self._cpp_kin_writer).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port, offline_mode)
+        if self._register(name, iCub):
+            retval = deref(self._cpp_kin_writer).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port, offline_mode, active_torso)
             if not retval:
-                iCub.unregister_kin_writer(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
 
     # close module
-    def close(self, ANNiCub_wrapper iCub):
+    def close(self, iCub):
         """Close the module.
 
         Parameters
@@ -128,7 +187,7 @@ cdef class PyKinematicWriter:
         -------
 
         """
-        iCub.unregister_kin_writer(self)
+        self._unregister(iCub)
         self._part = ""
         deref(self._cpp_kin_writer).Close()
 
@@ -178,7 +237,7 @@ cdef class PyKinematicWriter:
         """
         return np.array(deref(self._cpp_kin_writer).GetJointAngles())
 
-    # Set joint angles for forward kinematic in offline mode
+    # Set joint angles for inverse kinematic in offline mode
     def set_jointangles(self, joint_angles):
         """Set joint angles for forward kinematic in offline mode.
 

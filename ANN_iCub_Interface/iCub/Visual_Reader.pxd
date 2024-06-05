@@ -29,9 +29,11 @@ from libcpp.memory cimport shared_ptr
 from libcpp.map cimport map as cmap
 from libc.stdint cimport uint8_t
 
+from .Module_Base_Class cimport Mod_BaseClass, PyModuleBase
+
 cdef extern from "Visual_Reader.hpp":
 
-    cdef cppclass VisualReader:
+    cdef cppclass VisualReader(Mod_BaseClass):
         ctypedef double precision
 
         VisualReader() except +
@@ -50,12 +52,10 @@ cdef extern from "Visual_Reader.hpp":
         # Close Visual Reader module.
         void Close()
 
-        void setRegister(bint)
-        bint getRegister()
+        # void setRegister(bint)
+        # bint getRegister()
 
-        cmap[string, string] getParameter()
+        # cmap[string, string] getParameter()
 
-cdef class PyVisualReader:
+cdef class PyVisualReader(PyModuleBase):
     cdef shared_ptr[VisualReader] _cpp_visual_reader
-    cdef str _name
-    cdef str _part

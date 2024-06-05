@@ -1,7 +1,7 @@
 from typing import NoReturn, Tuple
 
-# from .Kinematic_Writer import PyKinematicWriter
-# from .Kinematic_Reader import PyKinematicReader
+from .Kinematic_Writer import PyKinematicWriter
+from .Kinematic_Reader import PyKinematicReader
 from .Visual_Reader import PyVisualReader
 from .Skin_Reader import PySkinReader
 from .Joint_Writer import PyJointWriter
@@ -106,6 +106,37 @@ class ANNiCub_wrapper:
             Visual Reader instance
         """
         ...
+
+    def get_kin_reader_by_name(self, name: str) -> PyKinematicReader:
+        """Returns the Kinematic Reader instance with the given name.
+
+        Parameters
+        ----------
+        name : str
+            Name of the Kinematic Reader instance.
+
+        Returns
+        -------
+        PyKinematicReader
+            Kinematic Reader instance
+        """
+        ...
+
+    def get_kin_writer_by_name(self, name: str) -> PyKinematicWriter:
+        """Returns the Kinematic Writer instance with the given name.
+
+        Parameters
+        ----------
+        name : str
+            Name of the Kinematic Writer instance.
+
+        Returns
+        -------
+        PyKinematicWriter
+            Kinematic Writer instance
+        """
+        ...
+
 
     def init_robot_from_file(self, xml_file: str) -> Tuple[bool, str]:
         """Init iCub interface with the modules given in the xml-file

@@ -27,6 +27,7 @@ from cython.operator cimport dereference as deref
 
 from .Kinematic_Reader cimport KinematicReader
 from .iCub_Interface cimport ANNiCub_wrapper
+from .Module_Base_Class cimport PyModuleBase
 
 import numpy as np
 
@@ -42,6 +43,64 @@ cdef class PyKinematicReader:
     def __dealloc__(self):
         print("Close iCub Interface: Kinematic Reader.")
         self._cpp_kin_reader.reset()
+
+
+    # register kinematic reader module
+    def _register(self, name: str, ANNiCub_wrapper iCub):
+        """Register Kinematic Reader module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        name : str
+            name given to the Kinematic Reader
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_kin_reader).getRegister():
+            print("[Interface iCub] Kinematic Reader module is already registered!")
+            return False
+        else:
+            if name in iCub._kinematic_reader:
+                print("[Interface iCub] Kinematic Reader module name is already used!")
+                return False
+            iCub._kinematic_reader[name] = self
+            self._name = name
+            deref(self._cpp_kin_reader).setRegister(1)
+            return True
+
+    # unregister kinematic reader module
+    def _unregister(self, ANNiCub_wrapper iCub):
+        """Unregister Kinematic Reader module at the main wrapper.
+            -> For internal use only.
+
+        Parameters
+        ----------
+        iCub : ANNiCub_wrapper
+            main interface wrapper
+
+        Returns
+        -------
+        bool
+            True/False on Success/Failure
+        """
+        if deref(self._cpp_kin_reader).getRegister():
+            deref(self._cpp_kin_reader).setRegister(0)
+            iCub._kinematic_reader.pop(self._name, None)
+            self._name = ""
+            return True
+        else:
+            print("[Interface iCub] Kinematic Reader module is not yet registered!")
+            return False
+
+    def _get_parameter(self):
+        return deref(self._cpp_kin_reader).getParameter()
+
 
     '''
     # Access to kinematic reader member functions
@@ -73,11 +132,11 @@ cdef class PyKinematicReader:
         """
         self._part = part
         # preregister module for some prechecks e.g. name already in use
-        if iCub.register_kin_reader(name, self):
+        if self._register(name, iCub):
             # call the interface
             retval = deref(self._cpp_kin_reader).Init(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), offline_mode.__int__())
             if not retval:
-                iCub.unregister_kin_reader(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
@@ -113,11 +172,11 @@ cdef class PyKinematicReader:
         """
         self._part = part
         # preregister module for some prechecks e.g. eye already in use
-        if iCub.register_kin_reader(name, self):
+        if self._register(name, iCub):
             # call the interface
             retval = deref(self._cpp_kin_reader).InitGRPC(part.encode('UTF-8'), version, ini_path.encode('UTF-8'), ip_address.encode('UTF-8'), port, offline_mode.__int__())
             if not retval:
-                iCub.unregister_kin_reader(self)
+                self._unregister(iCub)
             return retval
         else:
             return False
@@ -135,7 +194,7 @@ cdef class PyKinematicReader:
         -------
 
         """
-        iCub.unregister_kin_reader(self)
+        self._unregister(iCub)
         self._part = ""
         deref(self._cpp_kin_reader).Close()
 

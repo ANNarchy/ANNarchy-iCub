@@ -154,13 +154,18 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         }
 
         // open and connect YARP port for the chosen eye
+        // TODO: integrate camcalib ports (/icub/camcalib/{side}/out)
+        // include b-mode in left/right
         if (eye == 'r' || eye == 'R') {    // right eye chosen
             act_eye = 'R';
             std::string port_name = client_port_prefix + "/V_Reader/image_" + eye + "/right:i";
+
+            std::string robot_port_calib = robot_port_prefix + "/camcalib/right/out";
             std::string robot_port_name = robot_port_prefix + "/cam/right";
             std::string robot_port_postfix = "/rgbImage:o";
 
-            if (yarp::os::Network::exists(robot_port_name)) {
+            if (yarp::os::Network::exists(robot_port_calib)) {
+                robot_port_name = robot_port_calib;
             } else if (yarp::os::Network::exists(robot_port_name + robot_port_postfix)) {
                 robot_port_name = robot_port_name + robot_port_postfix;
             }
@@ -172,15 +177,18 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
             }
         } else if (eye == 'l' || eye == 'L') {    // left eye chosen
             act_eye = 'L';
+            std::string port_name = client_port_prefix + "/V_Reader/image_" + eye + "/left:i";
+
+            std::string robot_port_calib = robot_port_prefix + "/camcalib/left/out";
             std::string robot_port_name = robot_port_prefix + "/cam/left";
             std::string robot_port_postfix = "/rgbImage:o";
 
-            if (yarp::os::Network::exists(robot_port_name)) {
+            if (yarp::os::Network::exists(robot_port_calib)) {
+                robot_port_name = robot_port_calib;
             } else if (yarp::os::Network::exists(robot_port_name + robot_port_postfix)) {
                 robot_port_name = robot_port_name + robot_port_postfix;
             }
 
-            std::string port_name = client_port_prefix + "/V_Reader/image_" + eye + "/left:i";
             port_left.open(port_name);
             if (!yarp::os::Network::connect(robot_port_name.c_str(), port_name.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to left eye camera port!" << std::endl;
@@ -188,31 +196,38 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
             }
         } else if (eye == 'b' || eye == 'B') {    // both eyes chosen
             act_eye = 'B';
+            // left eye
+            std::string port_name_l = client_port_prefix + "/V_Reader/image_" + eye + "/left:i";
 
+            std::string robot_port_calib_l = robot_port_prefix + "/camcalib/left/out";
             std::string robot_port_name_l = robot_port_prefix + "/cam/left";
             std::string robot_port_postfix_l = "/rgbImage:o";
 
-            if (yarp::os::Network::exists(robot_port_name_l)) {
+            if (yarp::os::Network::exists(robot_port_calib_l)) {
+                robot_port_name_l = robot_port_calib_l;
             } else if (yarp::os::Network::exists(robot_port_name_l + robot_port_postfix_l)) {
                 robot_port_name_l = robot_port_name_l + robot_port_postfix_l;
             }
 
-            std::string port_name_l = client_port_prefix + "/V_Reader/image_" + eye + "/left:i";
             port_left.open(port_name_l);
             if (!yarp::os::Network::connect(robot_port_name_l.c_str(), port_name_l.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to left eye camera port!" << std::endl;
                 return false;
             }
 
+            // right eye
+            std::string port_name_r = client_port_prefix + "/V_Reader/image_" + eye + "/right:i";
+
+            std::string robot_port_calib_r = robot_port_prefix + "/camcalib/right/out";
             std::string robot_port_name_r = robot_port_prefix + "/cam/right";
             std::string robot_port_postfix_r = "/rgbImage:o";
 
-            if (yarp::os::Network::exists(robot_port_name_r)) {
+            if (yarp::os::Network::exists(robot_port_calib_r)) {
+                robot_port_name_r = robot_port_calib_r;
             } else if (yarp::os::Network::exists(robot_port_name_r + robot_port_postfix_r)) {
                 robot_port_name_r = robot_port_name_r + robot_port_postfix_r;
             }
 
-            std::string port_name_r = client_port_prefix + "/V_Reader/image_" + eye + "/right:i";
             port_right.open(port_name_r);
             if (!yarp::os::Network::connect(robot_port_name_r.c_str(), port_name_r.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to right eye camera port!" << std::endl;
@@ -245,7 +260,7 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
     /*
         Initialize Visual reader with given parameters for image resolution, field of view, eye selection and grpc parameter
 
-        params: char eye                        -- character representing the selected eye (l/L; r/R) or b/B for binocular mode 
+        params: char eye                        -- character representing the selected eye (l/L; r/R) or b/B for binocular mode
                                                    (right and left eye image are stored in the same buffer)
                 double fov_width                -- output field of view width in degree [0, 60] (input fov width: 60°)
                 double fov_height               -- output field of view height in degree [0, 48] (input fov height: 48°)
@@ -302,86 +317,106 @@ bool VisualReader::InitGRPC(char eye, double fov_width, double fov_height, int i
 std::vector<std::vector<VisualReader::precision>> VisualReader::ReadRobotEyes() {
     std::vector<std::vector<VisualReader::precision>> imgs;
     if (CheckInit()) {
-        if (act_eye == 'B') {
-            // read image from the iCub and get CV-Matrix
-            iEyeRgb_r = port_left.read();
-            iEyeRgb_l = port_right.read();
+        switch (act_eye) {
+            case 'B':
+                // read image from the iCub and get CV-Matrix
+                iEyeRgb_r = port_left.read();
+                iEyeRgb_r = port_left.read();
+                // yarp::os::Time::delay(0.005);
+                iEyeRgb_l = port_right.read();
+                iEyeRgb_l = port_right.read();
+                // yarp::os::Time::delay(0.005);
 
-            if (iEyeRgb_r == nullptr || iEyeRgb_l == nullptr) {
-                return imgs;
-            }
-            cv::Mat RgbMat_r = yarp::cv::toCvMat(*iEyeRgb_r);
-            cv::Mat RgbMat_l = yarp::cv::toCvMat(*iEyeRgb_l);
+                if (iEyeRgb_r == nullptr || iEyeRgb_l == nullptr) {
+                    return imgs;
+                }
 
-            cv::cvtColor(RgbMat_r, tmpMat_r, colorcode);
-            cv::cvtColor(RgbMat_l, tmpMat_l, colorcode);
+                // convert image to RGB or Gray
+                cv::cvtColor(yarp::cv::toCvMat(*iEyeRgb_r), tmpMat_r, colorcode);
+                cv::cvtColor(yarp::cv::toCvMat(*iEyeRgb_l), tmpMat_l, colorcode);
 
-            // extracting the output part of the field of view
-            if (!cut_img) {
-                ROV_r = tmpMat_r;
-                ROV_l = tmpMat_l;
-            } else {
-                ROV_r = tmpMat_r(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
-                ROV_l = tmpMat_l(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
-            }
+                // extracting the output part of the field of view
+                if (!cut_img) {
+                    ROV_r = tmpMat_r;
+                    ROV_l = tmpMat_l;
+                } else {
+                    ROV_r = tmpMat_r(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+                    ROV_l = tmpMat_l(cv::Rect(out_fov_x_low, out_fov_y_low, rov_width, rov_height)).clone();
+                }
 
-            // resize ROV to given output resolution
-            if (res_scale_x == 1 && res_scale_x == 1) {
-                monoMat_r = ROV_r;
-                monoMat_l = ROV_l;
+                // resize ROV to given output resolution
+                if (res_scale_x == 1 && res_scale_x == 1) {
+                    monoMat_r = ROV_r;
+                    monoMat_l = ROV_l;
 
-            } else if (res_scale_x < 1 || res_scale_x < 1) {
-                cv::resize(ROV_r, monoMat_r, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
-                cv::resize(ROV_l, monoMat_l, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
+                } else if (res_scale_x < 1 || res_scale_x < 1) {
+                    cv::resize(ROV_r, monoMat_r, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
+                    cv::resize(ROV_l, monoMat_l, cv::Size(), res_scale_x, res_scale_y, cv::INTER_AREA);
 
-            } else {
-                cv::resize(ROV_r, monoMat_r, cv::Size(), res_scale_x, res_scale_y, filter_ds);
-                cv::resize(ROV_l, monoMat_l, cv::Size(), res_scale_x, res_scale_y, filter_ds);
-            }
+                } else {
+                    cv::resize(ROV_r, monoMat_r, cv::Size(), res_scale_x, res_scale_y, filter_ds);
+                    cv::resize(ROV_l, monoMat_l, cv::Size(), res_scale_x, res_scale_y, filter_ds);
+                }
 
-            // normalize the image from 0..255 to 0..1.0
-            monoMat_r.convertTo(tmpMat1_r, new_type, norm_fact);
-            monoMat_l.convertTo(tmpMat1_l, new_type, norm_fact);
+                // normalize the image from 0..255 to 0..1.0
+                monoMat_r.convertTo(tmpMat1_r, new_type, norm_fact);
+                monoMat_l.convertTo(tmpMat1_l, new_type, norm_fact);
 
-            // flat the image matrix to 1D-vector
-            std::vector<precision> img_vec_norm_r = MatC2Vec(tmpMat1_r);
-            std::vector<precision> img_vec_norm_l = MatC2Vec(tmpMat1_l);
+                // flat the image matrix to 1D-vector
+                // store image in the buffer
+                imgs.push_back(MatC2Vec(tmpMat1_r));
+                imgs.push_back(MatC2Vec(tmpMat1_l));
+                break;
 
-            // store image in the buffer
-            imgs.push_back(img_vec_norm_r);
-            imgs.push_back(img_vec_norm_l);
-        } else {
-            // read image from the iCub and get CV-Matrix
-            if (act_eye == 'L') {
+            case 'L':
                 iEyeRgb = port_left.read();
-            }
-            if (act_eye == 'R') {
-                iEyeRgb = port_right.read();
-            }
+                iEyeRgb = port_left.read();
+                // yarp::os::Time::delay(0.005);
+                if (iEyeRgb == nullptr) {
+                    return imgs;
+                }
+                imgs.push_back(ProcessRead());
+                break;
 
-            if (iEyeRgb == nullptr) {
+            case 'R':
+                iEyeRgb = port_right.read();
+                iEyeRgb = port_right.read();
+                // yarp::os::Time::delay(0.005);
+                if (iEyeRgb == nullptr) {
+                    return imgs;
+                }
+                imgs.push_back(ProcessRead());
+                break;
+
+            default:
                 return imgs;
-            }
-            imgs.push_back(ProcessRead());
+                break;
         }
+
+        return imgs;
     }
-    return imgs;
 }
 
 std::vector<uint8_t> VisualReader::RetrieveRobotEye() {
     std::vector<uint8_t> img;
     if (CheckInit()) {
         // read image from the iCub and get CV-Matrix
-        if (act_eye == 'L') {
-            iEyeRgb = port_left.read();
-        }
-        if (act_eye == 'R') {
-            iEyeRgb = port_right.read();
+        switch (act_eye) {
+            case 'L':
+                iEyeRgb = port_left.read();
+                iEyeRgb = port_left.read();
+                // yarp::os::Time::delay(0.005);
+                break;
+            case 'R':
+                iEyeRgb = port_right.read();
+                iEyeRgb = port_right.read();
+                // yarp::os::Time::delay(0.005);
+                break;
+            default:
+                return std::vector<uint8_t>();
+                break;
         }
 
-        if (iEyeRgb == nullptr) {
-            return std::vector<uint8_t>();
-        }
         // convert yarp image to vector
         std::vector<uint8_t> vec(iEyeRgb->getRawImage(), iEyeRgb->getRawImage() + iEyeRgb->getRawImageSize());
         return vec;
@@ -423,13 +458,16 @@ void VisualReader::Close() {
 #ifdef _USE_GRPC
 std::vector<double> VisualReader::provideData() {
     std::vector<double> img;
-    if (act_eye == 'L') {
-        iEyeRgb = port_left.read();
+    switch (act_eye) {
+        case 'L':
+            iEyeRgb = port_left.read();
+            break;
+        case 'R':
+            iEyeRgb = port_right.read();
+            break;
+        default:
+            break;
     }
-    if (act_eye == 'R') {
-        iEyeRgb = port_right.read();
-    }
-
     if (iEyeRgb == nullptr) {
         return img;
     }
