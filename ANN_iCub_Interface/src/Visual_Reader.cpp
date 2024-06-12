@@ -25,6 +25,7 @@
 #include <yarp/sig/all.h>
 
 #include <chrono>
+#include <ctime>
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <queue>
@@ -154,53 +155,51 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
         }
 
         // open and connect YARP port for the chosen eye
-        // TODO: integrate camcalib ports (/icub/camcalib/{side}/out)
-        // include b-mode in left/right
         if (eye == 'r' || eye == 'R') {    // right eye chosen
             act_eye = 'R';
-            std::string port_name = client_port_prefix + "/V_Reader/image_" + eye + "/right:i";
+            std::string port_name = client_port_prefix + "/V_Reader/image_" + eye + "_" + std::to_string(std::time(NULL)) + "/right:i";
 
             std::string robot_port_calib = robot_port_prefix + "/camcalib/right/out";
-            std::string robot_port_name = robot_port_prefix + "/cam/right";
+            robot_port_name_r = robot_port_prefix + "/cam/right";
             std::string robot_port_postfix = "/rgbImage:o";
 
             if (yarp::os::Network::exists(robot_port_calib)) {
-                robot_port_name = robot_port_calib;
-            } else if (yarp::os::Network::exists(robot_port_name + robot_port_postfix)) {
-                robot_port_name = robot_port_name + robot_port_postfix;
+                robot_port_name_r = robot_port_calib;
+            } else if (yarp::os::Network::exists(robot_port_name_r + robot_port_postfix)) {
+                robot_port_name_r = robot_port_name_r + robot_port_postfix;
             }
 
             port_right.open(port_name);
-            if (!yarp::os::Network::connect(robot_port_name.c_str(), port_name.c_str())) {
+            if (!yarp::os::Network::connect(robot_port_name_r.c_str(), port_name.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to right eye camera port!" << std::endl;
                 return false;
             }
         } else if (eye == 'l' || eye == 'L') {    // left eye chosen
             act_eye = 'L';
-            std::string port_name = client_port_prefix + "/V_Reader/image_" + eye + "/left:i";
+            std::string port_name = client_port_prefix + "/V_Reader/image_" + eye + "_" + std::to_string(std::time(NULL)) + "/left:i";
 
             std::string robot_port_calib = robot_port_prefix + "/camcalib/left/out";
-            std::string robot_port_name = robot_port_prefix + "/cam/left";
+            robot_port_name_l = robot_port_prefix + "/cam/left";
             std::string robot_port_postfix = "/rgbImage:o";
 
             if (yarp::os::Network::exists(robot_port_calib)) {
-                robot_port_name = robot_port_calib;
-            } else if (yarp::os::Network::exists(robot_port_name + robot_port_postfix)) {
-                robot_port_name = robot_port_name + robot_port_postfix;
+                robot_port_name_l = robot_port_calib;
+            } else if (yarp::os::Network::exists(robot_port_name_l + robot_port_postfix)) {
+                robot_port_name_l = robot_port_name_l + robot_port_postfix;
             }
 
             port_left.open(port_name);
-            if (!yarp::os::Network::connect(robot_port_name.c_str(), port_name.c_str())) {
+            if (!yarp::os::Network::connect(robot_port_name_l.c_str(), port_name.c_str())) {
                 std::cerr << "[Visual Reader] Could not connect to left eye camera port!" << std::endl;
                 return false;
             }
         } else if (eye == 'b' || eye == 'B') {    // both eyes chosen
             act_eye = 'B';
             // left eye
-            std::string port_name_l = client_port_prefix + "/V_Reader/image_" + eye + "/left:i";
+            std::string port_name_l = client_port_prefix + "/V_Reader/image_" + eye + "_" + std::to_string(std::time(NULL)) + "/left:i";
 
             std::string robot_port_calib_l = robot_port_prefix + "/camcalib/left/out";
-            std::string robot_port_name_l = robot_port_prefix + "/cam/left";
+            robot_port_name_l = robot_port_prefix + "/cam/left";
             std::string robot_port_postfix_l = "/rgbImage:o";
 
             if (yarp::os::Network::exists(robot_port_calib_l)) {
@@ -216,7 +215,7 @@ bool VisualReader::Init(char eye, double fov_width, double fov_height, int img_w
             }
 
             // right eye
-            std::string port_name_r = client_port_prefix + "/V_Reader/image_" + eye + "/right:i";
+            std::string port_name_r = client_port_prefix + "/V_Reader/image_" + eye + "_" + std::to_string(std::time(NULL)) + "/right:i";
 
             std::string robot_port_calib_r = robot_port_prefix + "/camcalib/right/out";
             std::string robot_port_name_r = robot_port_prefix + "/cam/right";
@@ -441,13 +440,13 @@ void VisualReader::Close() {
     // close Ports
     // disconnect and close left eye port
     if (!port_left.isClosed()) {
-        yarp::os::Network::disconnect(robot_port_prefix + "/cam/left", client_port_prefix + "/V_Reader/image/left:i");
+        yarp::os::Network::disconnect(robot_port_name_l, port_left.getName());
         port_left.close();
     }
 
     // disconnect and close right eye port
     if (!port_right.isClosed()) {
-        yarp::os::Network::disconnect(robot_port_prefix + "/cam/right", client_port_prefix + "/V_Reader/image/right:i");
+        yarp::os::Network::disconnect(robot_port_name_r, port_right.getName());
         port_right.close();
     }
 

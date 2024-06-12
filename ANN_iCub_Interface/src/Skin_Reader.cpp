@@ -31,6 +31,7 @@
 #include <map>
 #include <queue>
 #include <string>
+#include <ctime>
 
 #include "INI_Reader/INIReader.h"
 #include "Module_Base_Class.hpp"
@@ -127,7 +128,7 @@ bool SkinReader::Init(std::string name, char arm, bool norm_data, std::string in
         std::string client_port_prefix = reader_gen.Get("general", "client_port_prefix", "/client");
 
         // Open and connect YARP-Port to read upper arm skin sensor data
-        std::string port_name_arm = client_port_prefix + "/" + name + "/Skin_Reader_" + norm + "/" + side + "_arm:i";
+        std::string port_name_arm = client_port_prefix + "/" + name + "/Skin_Reader_" + norm + "/" + side + "_arm_" + std::to_string(std::time(NULL)) + ":i";
         if (!port_arm.open(port_name_arm)) {
             std::cerr << "[Skin Reader " << side << "] Could not open skin arm port!" << std::endl;
             return false;
@@ -138,7 +139,7 @@ bool SkinReader::Init(std::string name, char arm, bool norm_data, std::string in
         }
 
         // Open and connect YARP-Port to read forearm skin sensor data
-        std::string port_name_farm = client_port_prefix + "/" + name + "/Skin_Reader_" + norm + "/" + side + "_forearm:i";
+        std::string port_name_farm = client_port_prefix + "/" + name + "/Skin_Reader_" + norm + "/" + side + "_forearm_" + std::to_string(std::time(NULL)) + ":i";
         if (!port_forearm.open(port_name_farm)) {
             std::cerr << "[Skin Reader" << side << "] Could not open skin forearm port!" << std::endl;
             return false;
@@ -149,7 +150,7 @@ bool SkinReader::Init(std::string name, char arm, bool norm_data, std::string in
         }
 
         // Open and connect YARP-Port to read hand skin sensor data
-        std::string port_name_hand = client_port_prefix + "/" + name + "/Skin_Reader_" + norm + "/" + side + "_hand:i";
+        std::string port_name_hand = client_port_prefix + "/" + name + "/Skin_Reader_" + norm + "/" + side + "_hand_" + std::to_string(std::time(NULL)) + ":i";
         if (!port_hand.open(port_name_hand)) {
             std::cerr << "[Skin Reader " << side << "] Could not open skin hand port!" << std::endl;
             return false;
@@ -225,15 +226,15 @@ void SkinReader::Close() {
     */
 
     if (!port_hand.isClosed()) {
-        yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_hand_comp").c_str(), ("/Skin_Reader/" + side + "_hand:i").c_str());
+        yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_hand_comp").c_str(), port_hand.getName());
         port_hand.close();
     }
     if (!port_forearm.isClosed()) {
-        yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_forearm_comp").c_str(), ("/Skin_Reader/" + side + "_forearm:i").c_str());
+        yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_forearm_comp").c_str(), port_forearm.getName());
         port_forearm.close();
     }
     if (!port_arm.isClosed()) {
-        yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_arm_comp").c_str(), ("/Skin_Reader/" + side + "_arm:i").c_str());
+        yarp::os::Network::disconnect(("/icubSim/skin/" + side + "_arm_comp").c_str(), port_arm.getName());
         port_arm.close();
     }
 #ifdef _USE_GRPC

@@ -98,7 +98,7 @@ bool JointWriter::Init(std::string part, unsigned int pop_size, double deg_per_n
         yarp::os::Property options;
         options.put("device", "remote_controlboard");
         options.put("remote", (port_prefix + "/" + icub_part).c_str());
-        options.put("local", (client_port_prefix + "/ANNarchy_write/" + icub_part).c_str());
+        options.put("local", (client_port_prefix + "/ANNarchy_write_" + std::to_string(std::time(NULL)) + "/" + icub_part).c_str());
 
         if (!driver.open(options)) {
             std::cerr << "[Joint Writer " << icub_part << "] Unable to open" << options.find("device").asString() << "!" << std::endl;
@@ -276,12 +276,15 @@ void JointWriter::Close() {
     */
     if (driver.isValid()) {
         SetJointControlMode("position", -1);
-        driver.close();
     }
+    driver.close();
+
 #ifdef _USE_GRPC
-    if (this->joint_source)
+    if (this->joint_source) {
+        this->joint_source->shutdown()
+    }
 #endif
-        this->dev_init = false;
+    this->dev_init = false;
 }
 
 int JointWriter::GetJointCount() {

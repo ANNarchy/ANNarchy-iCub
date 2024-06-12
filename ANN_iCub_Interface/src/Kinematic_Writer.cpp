@@ -107,7 +107,7 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
                     yarp::os::Property options_torso;
                     options_torso.put("device", "remote_controlboard");
                     options_torso.put("remote", (robot_port_prefix + "/torso").c_str());
-                    options_torso.put("local", (client_port_prefix + "/ANNarchy_Kin_write/torso").c_str());
+                    options_torso.put("local", (client_port_prefix + "/ANNarchy_Kin_write_" + std::to_string(std::time(NULL)) + "/torso").c_str());
 
                     if (!driver_torso.open(options_torso)) {
                         std::cerr << "[Kinematic Writer torso] Unable to open " << options_torso.find("device").asString() << "!" << std::endl;
@@ -138,7 +138,7 @@ bool KinematicWriter::Init(std::string part, float version, std::string ini_path
                 yarp::os::Property options_arm;
                 options_arm.put("device", "remote_controlboard");
                 options_arm.put("remote", (robot_port_prefix + "/" + part).c_str());
-                options_arm.put("local", (client_port_prefix + "/ANNarchy_Kin_write/" + part).c_str());
+                options_arm.put("local", (client_port_prefix + "/ANNarchy_Kin_write_" + std::to_string(std::time(NULL)) + "/" + part).c_str());
 
                 if (!driver_arm.open(options_arm)) {
                     std::cerr << "[Kinematic Writer " << part << "] Unable to open " << options_arm.find("device").asString() << "!" << std::endl;

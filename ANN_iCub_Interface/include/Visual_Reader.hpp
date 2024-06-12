@@ -81,8 +81,7 @@ class VisualReader : public Mod_BaseClass {
      *              - arguments not valid: e.g. eye character not valid
      *              - YARP-Server not running
      */
-    bool InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path,
-                  std::string ip_address, unsigned int port);
+    bool InitGRPC(char eye, double fov_width, double fov_height, int img_width, int img_height, bool fast_filter, std::string ini_path, std::string ip_address, unsigned int port);
 
     /**
      * \brief Read a set of images from the robot cameras -> dependent on init selection.
@@ -137,13 +136,15 @@ class VisualReader : public Mod_BaseClass {
     yarp::sig::ImageOf<yarp::sig::PixelRgb> *iEyeRgb_r, *iEyeRgb_l;    // YARP-image structure for image handling -> both eyes
 
     cv::Mat RgbMat;
-    cv::Mat tmpMat, monoMat, ROV, tmpMat1;    // matrices for image computations -> single eye
+    cv::Mat tmpMat, monoMat, ROV, tmpMat1;                                                   // matrices for image computations -> single eye
     cv::Mat tmpMat_r, tmpMat_l, monoMat_r, monoMat_l, ROV_r, ROV_l, tmpMat1_r, tmpMat1_l;    // matrices for image computations -> both eye
-    int new_type;    // store CV data type for images -> single/double precision
+    int new_type;                                                                            // store CV data type for images -> single/double precision
 
     /** yarp ports **/
     std::string client_port_prefix;                                                // client portame prefix
     std::string robot_port_prefix;                                                 // robot portname prefix
+    std::string robot_port_name_l;                                                 // robot portname left eye
+    std::string robot_port_name_r;                                                 // robot portname right eye
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_right;    // port for the iCub right eye image
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb>> port_left;     // port for the iCub left eye image
 

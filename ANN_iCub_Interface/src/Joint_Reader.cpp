@@ -24,6 +24,7 @@
 #include <yarp/sig/all.h>
 
 #include <algorithm>
+#include <ctime>
 #include <iostream>
 #include <map>
 #include <string>
@@ -98,7 +99,7 @@ bool JointReader::Init(std::string part, double sigma, unsigned int pop_size, do
         yarp::os::Property options;
         options.put("device", "remote_controlboard");
         options.put("remote", (robot_port_prefix + "/" + icub_part).c_str());
-        options.put("local", (client_port_prefix + "/ANNarchy_Jread/" + icub_part).c_str());
+        options.put("local", (client_port_prefix + "/ANNarchy_Jread_" + std::to_string(std::time(NULL)) + "/" + icub_part).c_str());
 
         if (!driver.open(options)) {
             std::cerr << "[Joint Reader " << icub_part << "] Unable to open " << options.find("device").asString() << "!" << std::endl;
