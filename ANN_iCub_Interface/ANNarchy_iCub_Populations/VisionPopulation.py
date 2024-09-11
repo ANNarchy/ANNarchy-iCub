@@ -17,14 +17,15 @@
    along with this headers. If not, see [http://www.gnu.org/licenses/].
  """
 import ANN_iCub_Interface
-
+from ANNarchy.core.Neuron import Neuron
+from ANNarchy.core.Global import dt
 try:
     from ANNarchy.intern.SpecificPopulation import SpecificPopulation
+    from ANNarchy.intern.Messages import _error
+
 except:
     from ANNarchy.core.SpecificPopulation import SpecificPopulation
-
-from ANNarchy.core.Neuron import Neuron
-from ANNarchy.core.Global import _error, dt
+    from ANNarchy.core.Global import _error
 
 
 class VisionPopulation(SpecificPopulation):

@@ -1,5 +1,8 @@
-from ANNarchy.core.SpecificPopulation import SpecificPopulation
 from typing import Tuple
+try:
+    from ANNarchy.intern.SpecificPopulation import SpecificPopulation
+except:
+    from ANNarchy.core.SpecificPopulation import SpecificPopulation
 
 
 class KinematicForward(SpecificPopulation):
