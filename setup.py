@@ -58,8 +58,10 @@ except Exception:
 def set_yarp_prefix():
     # Yarp install direction
     yarp_prefix = None
-
-    if "ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX" in os.environ:
+    if subprocess.check_output(["which", "yarp"]):
+        yarp_bin = subprocess.check_output(["which", "yarp"]).strip().decode(sys.stdout.encoding)
+        yarp_prefix = str(Path(yarp_bin).resolve().parents[1]) + "/"
+    elif "ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX" in os.environ:
         yarp_prefix = os.environ["ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX"]
     elif os.path.isdir("/usr/local/packages/yarp"):
         yarp_prefix = "/usr/local/packages/yarp"
@@ -79,7 +81,7 @@ def set_yarp_prefix():
             print("Please type the YARP prefix in the form /path/to/include/and/lib:")
             yarp_prefix = input()
             if not os.path.isdir(yarp_prefix + "/include/yarp"):
-                sys.exit("Did not find YARP in given path! Please set yarp_prefix manually in make_config.py or retry!")
+                sys.exit("Did not find YARP in given path! Please set yarp_prefix manually in build_config.toml or retry!")
     return yarp_prefix
 
 
@@ -203,8 +205,11 @@ elif config['path']['yarp_prefix'] == "icub":
                         "/usr/local/src/robot/icub-main/src/libraries/ctrlLib/include"]
     special_lib = ["/usr/local/src/robot/icub-main/build/lib"]
 else:
-    if not os.path.isdir(config['path']['yarp_prefix'] + "/include/yarp"):
-        sys.exit("Did not find YARP in given path! Please correct yarp_prefix in make_config.py!")
+    if os.path.isdir(config['path']['yarp_prefix'] + "/include/yarp"):
+        yarp_prefix = config['path']['yarp_prefix']
+    else:
+        sys.exit("Did not find YARP in given path! Please correct yarp_prefix in build_config.toml!")
+
 
 yarp_version = subprocess.check_output(["yarp", "version"]).strip().decode(sys.stdout.encoding).replace("YARP version ", "")
 yarp_version_major = int(yarp_version[0])
