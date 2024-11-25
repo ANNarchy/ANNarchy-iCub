@@ -29,8 +29,9 @@ cdef class PyModuleBase:
 
     # init method
     def __cinit__(self):
-        print("Initialize Module_base.")
+        pass
+        # print("Initialize Module_base.")
 
     # close method
-    def __dealloc__(self):
-        print("Close Module_base.")
+    # def __dealloc__(self):
+        # print("Close Module_base.")

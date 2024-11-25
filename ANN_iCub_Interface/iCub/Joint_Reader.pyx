@@ -81,7 +81,6 @@ cdef class PyJointReader:
                     self._name = name
                     iCub._joint_reader_parts[self._part] = name
                     deref(self._cpp_joint_reader).setRegister(1)
-                    print("Register", deref(self._cpp_joint_reader).getRegister())
                     return True
 
     # unregister joint reader  module

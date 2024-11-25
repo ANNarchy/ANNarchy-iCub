@@ -88,12 +88,13 @@ class PyKinematicReader:
         """
         ...
 
-    def get_jointangles(self) -> ndarray:
+    def get_jointangles(self, radians=True) -> ndarray:
         """Get current joint angles of active kinematic chain -> radians.
 
         Parameters
         ----------
-
+        radians : bool
+            control the format (radians/degrees) of the returned angles
         Returns
         -------
         NDarray
@@ -185,17 +186,19 @@ class PyKinematicReader:
         """
         ...
 
-    def set_jointangles(self, joint_angles) -> ndarray:
+    def set_jointangles(self, joint_angles, radians=True) -> ndarray:
         """Set joint angles for forward kinematic in offline mode.
 
         Parameters
         ----------
         joint_angles : list/NDarray
-            joint angles
+            joint angles in radians
+        radians : bool
+            if true, the angles are given in radians, otherwise the angles should be given in degrees
 
         Returns
         -------
         NDarray
-            actual set joint angles in radians -> evaluted constraints
+            actual set joint angles in radians/degrees -> evaluted constraints
         """
         ...

@@ -694,7 +694,7 @@ def init_robot_from_file(iCub: ANNiCub_wrapper, xml_file: str) -> Tuple[bool, di
         return False, name_dict
 
 # save robot robot configuration as XML-file
-def save_robot_to_file(iCub, xml_file: str, description: str = ""):
+def save_robot_to_file(iCub: ANNiCub_wrapper, xml_file: str, description: str = ""):
     """Save robot configuration to xml-config file
 
     Parameters

@@ -75,16 +75,18 @@ class PyKinematicWriter:
         """
         ...
 
-    def get_jointangles(self) -> ndarray:
+    def get_jointangles(self, radians = ...)-> ndarray:
         """Get current joint angles of active kinematic chain -> radians.
 
         Parameters
         ----------
+        radians : bool
+            control the format (radians/degrees) of the returned angles
 
         Returns
         -------
         NDarray
-            joint angles in radians
+            joint angles radians/degrees
         """
         ...
 
@@ -156,22 +158,24 @@ class PyKinematicWriter:
         """
         ...
 
-    def set_jointangles(self, joint_angles) -> ndarray:
-        """Set joint angles for inverse kinematic in offline mode.
+    def set_jointangles(self, joint_angles, radians = ...) -> ndarray:
+        """Set joint angles for forward kinematic in offline mode.
 
         Parameters
         ----------
         joint_angles : list/NDarray
-            joint angles
+            joint angles in radians/degrees
+        radians : bool
+            control the format (radians/degrees) of the given/returned angles
 
         Returns
         -------
         NDarray
-            actual set joint angles in radians -> evaluted constraints
+            actual set joint angles in radians/degrees -> evaluted constraints
         """
         ...
 
-    def solve_InvKin(self, position, blocked_links=...) -> ndarray:
+    def solve_InvKin(self, position, blocked_links = ...) -> ndarray:
         """Compute the joint configuration for a given 3D End-Effector position (Inverse Kinematics).
 
         Parameters

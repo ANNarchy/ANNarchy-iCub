@@ -243,34 +243,45 @@ cdef class PyKinematicReader:
         return deref(self._cpp_kin_reader).GetDOF()
 
     # Get current joint angles
-    def get_jointangles(self):
+    def get_jointangles(self, radians=True):
         """Get current joint angles of active kinematic chain -> radians.
 
         Parameters
         ----------
-
+        radians : bool
+            control the format (radians/degrees) of the returned angles
         Returns
         -------
         NDarray
             joint angles in radians
         """
-        return np.array(deref(self._cpp_kin_reader).GetJointAngles())
+        joint_angles = np.array(deref(self._cpp_kin_reader).GetJointAngles())
+        if not radians:
+            joint_angles = np.rad2deg(joint_angles)
+        return joint_angles
 
     # Set joint angles for forward kinematic in offline mode
-    def set_jointangles(self, joint_angles):
+    def set_jointangles(self, joint_angles, radians=True):
         """Set joint angles for forward kinematic in offline mode.
 
         Parameters
         ----------
         joint_angles : list/NDarray
-            joint angles
+            joint angles in radians
+        radians : bool
+            if true, the angles are given in radians, otherwise the angles should be given in degrees
 
         Returns
         -------
         NDarray
-            actual set joint angles in radians -> evaluted constraints
+            actual set joint angles in radians/degrees -> evaluted constraints
         """
-        return np.array(deref(self._cpp_kin_reader).SetJointAngles(joint_angles))
+        if not radians:
+            joint_angles = np.deg2rad(joint_angles)
+        joint_angles1 = np.array(deref(self._cpp_kin_reader).SetJointAngles(joint_angles))
+        if not radians:
+            joint_angles1 = np.rad2deg(joint_angles1)
+        return joint_angles1
 
     # Get blocked links
     def get_blocked_links(self):
