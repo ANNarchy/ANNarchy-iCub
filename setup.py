@@ -89,13 +89,11 @@ def set_opencv_prefix():
     # OpenCV direction
     cv_include = None
     try:
-        import cv2
-        cvpath = cv2.__file__
-        path_list = cvpath.split("/")
-        if not ("usr" in path_list or ".local" in path_list):
-            cv_include = "/".join(path_list[:path_list.index("lib")] + ["include",])
-            if os.path.isdir(cv_include + "/opencv4"):
-                cv_include += "/opencv4"
+        if subprocess.check_output(["which", "yarp"]):
+            bin = subprocess.check_output(["which", "yarp"]).strip().decode(sys.stdout.encoding)
+            prefix = str(Path(bin).resolve().parents[1]) + "/"
+            if os.path.isdir(f"{prefix}/include/opencv4"):
+                return f"{prefix}/include/opencv4"
     except:
         pass
     if cv_include == None:
@@ -113,7 +111,7 @@ def set_opencv_prefix():
                 print("Please type the OpenCV prefix e.g. /usr/include for /usr/include/opencv2:")
                 cv_include = input()
                 if not os.path.isdir(cv_include + "/opencv2"):
-                    sys.exit("Did not find OpenCV in given path! Please set cv_include manually in make_config.py or retry!")
+                    sys.exit("Did not find OpenCV in given path! Please set cv_include manually in build_config.toml or install OpenCV!")
     return cv_include
 
 ####
@@ -346,13 +344,17 @@ extensions = [
 ]
 
 # Set interface version
-fileversion = './ANN_iCub_Interface/_version.txt'
+fileversion = './ANN_iCub_Interface/version.txt'
 with open(fileversion, 'r') as file_object:
-    version = file_object.readlines()[0].rstrip()
+    version = file_object.readlines()[0].rstrip().lstrip()
 fileversion_py = './ANN_iCub_Interface/_version.py'
 with open(fileversion_py, 'w') as file_object:
     file_object.write("# automatically generated in setup.py\n")
-    file_object.write("__version__ = \"" + version + "\"\n")
+    file_object.write(f"__version__ = \"{version}\"\n")
+fileversion_doxy = './doc/_version.dox'
+with open(fileversion_doxy, 'w') as file_object:
+    file_object.write("# automatically generated in setup.py\n")
+    file_object.write(f"PROJECT_NUMBER = \"{version}\"\n")
 
 # Test if gRPC is already used -> need new cythonizing if prior build was without gRPC
 try:
