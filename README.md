@@ -38,7 +38,7 @@ The interface consists of different parts. Clustering the different tasks of the
             This module handles the iCub forward kinematic to receive the cartesian coordinates for specific joints or end-effectors like the hand. This module could be used online, retrieving the joint angles from the running iCub or offline with given joint angles.
 
         7. *KinematicWriter:*<br>
-            This module handles the iCub inverse kinematics.
+            This module handles the iCub inverse kinematics. This module could be used online, retrieving the joint angles from the running iCub or offline with given joint angles.
 
 3. Sync
     - The Sync module provide two classes MasterClock and ClockInterface. Thereby, the MasterClock is the main synchronization handler and for the use exactly one instance of it is needed to create. To synchronize the ANNarchy and iCub simulations, for each side one derived class of the ClockInterface has to be created. This class provide two abstract functions, which has to be impleemnted. The first is the update method and the second is sync_input. These method are executed once for update step. The timing can be individually be set and is dependent on the usecase.<br>
@@ -53,15 +53,19 @@ Make sure YARP is installed before installing the interface. An installation gui
 
 ### Default Installation
 Then the interface can be installed with pip by executing the following line in a terminal in the interface directory.
+In case of missing/false include directories the build_config.toml file has to be modified.<br>
 
 ```bash
 pip3 install .
 ```
+or with git reference:
+```bash
+pip3 install git+https://github.com/ANNarchy/ANNarchy-iCub.git
+```
 
-In case of missing/false include directories the make_config.py file has to be modified.<br>
 
 ### Enable Low-Level gRPC communication
-The interface is build in a default configuration. In this case the gRPC communication with ANNarchy is disabled. To enable this part, set the use_grpc parameter in make_config.py to True. This part depends on the gRPC package and the protobuf compiler.
+The interface is build in a default configuration. In this case the gRPC communication with ANNarchy is disabled. To enable this part, set the use_grpc parameter in build_config.toml to True. This part depends on the gRPC package and the protobuf compiler.
 The system packages are recommended especially for recent Linux versions (>Ubuntu 18.XX). Install the following apt packages: protobuf-compiler-grpc, libgrpc++-dev
 ```bash
     sudo apt install protobuf-compiler-grpc libgrpc++-dev
@@ -89,17 +93,18 @@ Torsten Fietzek (<torsten.fietzek@informatik.tu-chemnitz.de>)<br>
 Helge Ülo Dinkelbach (<helge.dinkelbach@gmail.com>)<br>
 Fred Hamker <br>
 
+
 ## Publications
 Fietzek, T., Dinkelbach, H. Ü., & Hamker, F. H. (2022). ANNarchy - iCub: An Interface for Easy Interaction between Neural Network Models and the iCub Robot. 2022 IEEE 9th International Conference on Computational Intelligence and Virtual Environments for Measurement Systems and Applications (CIVEMSA), 1–6. <https://doi.org/10.1109/CIVEMSA53371.2022.9853699>
 
 
 ## Dependencies
 * g++     >= 6.1
-* Python  >= 3.7
-* YARP    >= 3.2
+* YARP    >= 3.4
 * OpenCV  >= 3.4
+* Python  >= 3.10
 * cython  > 0.20
-* numpy >= 1.13
+* numpy   >= 1.13
 * tomlkit
 
 ### Optional
