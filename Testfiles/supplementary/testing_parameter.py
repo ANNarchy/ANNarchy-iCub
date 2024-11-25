@@ -33,7 +33,7 @@ sigma_jw = 1.5         # sigma for population coding gaussian
 neuron_res_jw = 0.0    # population resolution
 
 # vreader
-save_path_vr = "./results/Vision/"
+save_path_vr = "./results/perform/Vision/"
 
 # vis_move
 n_pop_vm = 50
@@ -48,7 +48,7 @@ save_path_vm = "./results/Vis_movement/"
 n_pop_pos = 100
 sigma_pos = 1.5
 neuron_res_pos = 0.0
-path_pos = './results/Movement/'
+path_pos = './results/auto/Movement/'
 position_path_pos = "./supplementary/test_positions/"
 
 # number of images for visual reader test
@@ -62,3 +62,8 @@ if(gazebo):
     loc_sph = [loc_sph[2], loc_sph[0], loc_sph[1]]
     loc_box = [loc_box[2], loc_box[0], loc_box[1]]
 
+# vision
+path_vis = "./results/auto/Vision/"
+
+# tactile
+path_tac = "./results/Tactile/"
