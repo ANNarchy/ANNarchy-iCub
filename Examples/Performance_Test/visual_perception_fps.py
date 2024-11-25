@@ -10,7 +10,6 @@ Visual perception performance test
 ########################## Import modules  ###########################
 ######################################################################
 
-import os
 import sys
 import subprocess
 from pathlib import Path
@@ -186,7 +185,7 @@ def speed_test_interface_manual(test_count):
 
     ######################################################################
     ################ Performance test for reading images #################
-    test_count = 1
+
     duration = np.zeros((test_count,))
     print("----- Start Performance Test -----")
     for i in range(test_count):
@@ -194,8 +193,8 @@ def speed_test_interface_manual(test_count):
         img = visread.retrieve_robot_eye()
         # vis_pop.baseline = img
 
-        plt.imshow(np.reshape(img, (240,320,3)))
-        plt.show()
+        # plt.imshow(np.reshape(img, (240,320,3)))
+        # plt.show()
 
         # ann.simulate(1)
         duration[i] = timer() - start

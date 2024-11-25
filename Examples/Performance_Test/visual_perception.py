@@ -10,7 +10,6 @@ Visual perception performance test
 ########################## Import modules  ###########################
 ######################################################################
 
-import os
 import sys
 import subprocess
 from pathlib import Path

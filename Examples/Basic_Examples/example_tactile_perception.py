@@ -14,7 +14,7 @@ import example_parameter as params
 import iCub_Python_Lib.iCubSim_world_controller as iSim
 import matplotlib.pyplot as plt
 
-import ANN_iCub_Interface.Vocabs as iCub_const
+import ANN_iCub_Interface.Vocabs as iCub_Const
 from ANN_iCub_Interface import __ann_compile_args__, __ann_extra_libs__
 from ANN_iCub_Interface.ANNarchy_iCub_Populations import SkinPopulation
 from ANN_iCub_Interface.iCub import Skin_Reader, iCub_Interface
@@ -44,15 +44,15 @@ def tactile_prcptn_iCub_ANN():
         # read tactile data
         sreader.read_tactile()
 
-        # print tactile data
-        print("Data arm:")
-        print(sreader.get_tactile_arm())
+    # print tactile data
+    print("Data arm:")
+    print(sreader.get_tactile_arm())
 
-        print("Data forearm:")
-        print(sreader.get_tactile_forearm())
+    print("Data forearm:")
+    print(sreader.get_tactile_forearm())
 
-        print("Data hand:")
-        print(sreader.get_tactile_hand())
+    print("Data hand:")
+    print(sreader.get_tactile_hand())
 
     ######################################################################
     # Read skin sensor data -> skin section specific
@@ -79,9 +79,9 @@ def tactile_prcptn_iCub_ANN_grpc():
     print("Example for Skin Reader with direct connection to ANNarchy.")
     ######################################################################
     # Create, compile and connect ANNarchy Skin input population
-    pop_sread_arm = SkinPopulation(geometry=(iCub_const.SKIN_SECTION_SIZE_ARM,), skin_section="arm")
-    pop_sread_forearm = SkinPopulation(geometry=(iCub_const.SKIN_SECTION_SIZE_FOREARM,), skin_section="forearm")
-    pop_sread_hand = SkinPopulation(geometry=(iCub_const.SKIN_SECTION_SIZE_HAND,), skin_section="hand")
+    pop_sread_arm = SkinPopulation(geometry=(iCub_Const.SKIN_SECTION_SIZE_ARM,), skin_section="arm")
+    pop_sread_forearm = SkinPopulation(geometry=(iCub_Const.SKIN_SECTION_SIZE_FOREARM,), skin_section="forearm")
+    pop_sread_hand = SkinPopulation(geometry=(iCub_Const.SKIN_SECTION_SIZE_HAND,), skin_section="hand")
 
     print("Compile ANNarchy network.")
     ann.compile(directory='./annarchy/annarchy_sreader', compiler_flags=__ann_compile_args__, extra_libs=__ann_extra_libs__)

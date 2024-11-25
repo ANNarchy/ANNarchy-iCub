@@ -15,7 +15,7 @@ import iCub_Python_Lib.iCub_transformation_matrices as iTransform
 import matplotlib.pyplot as plt
 import numpy as np
 
-import ANN_iCub_Interface.Vocabs as iCub_const
+import ANN_iCub_Interface.Vocabs as iCub_Const
 from ANN_iCub_Interface import __ann_compile_args__, __ann_extra_libs__
 from ANN_iCub_Interface.ANNarchy_iCub_Populations import KinematicForward
 from ANN_iCub_Interface.iCub import Joint_Reader, Joint_Writer, Kinematic_Reader, iCub_Interface
@@ -37,18 +37,22 @@ def forward_kin_ANN_iCub_Interface():
 
     # Init kinematic reader
     print('Init kinematic reader')
-    if not kinreader.init(iCub, "fkin", part=iCub_const.PART_KEY_RIGHT_ARM, version=2, ini_path=params.INTERFACE_INI_PATH, offline_mode=params.offline):
+    if not kinreader.init(iCub, "fkin", part=iCub_Const.PART_KEY_RIGHT_ARM, version=2, ini_path=params.INTERFACE_INI_PATH, offline_mode=params.offline):
         sys.exit("Initialization failed")
 
     ######################################################################
     # Perform forward kinematic
 
+    # In the offline mode the angles has to be set manually, otherwise the angles will be retrieved from the connected robot
     if params.offline:
         kinreader.block_links([0, 1, 2])
         joint_angles = np.deg2rad(np.array([15., 16., 0., 70., -90., 0., 0.]))
         kinreader.set_jointangles(joint_angles)
 
     print("DOF:", kinreader.get_DOF())
+    print("Active DOF:", kinreader.get_DOF_links())
+    print("Blocked links:", kinreader.get_blocked_links())
+    print("Current angles:", np.rad2deg(kinreader.get_jointangles()))
 
     # print end-effector position
     end_eff_pos = kinreader.get_handposition()
@@ -103,17 +107,17 @@ def forward_kin_ANN_iCub_Interface_grpc():
 
     # Kinematic Reader with connection to ANNarchy
     kinreader = Kinematic_Reader.PyKinematicReader()
-    if not kinreader.init_grpc(iCub, "fkin", part=iCub_const.PART_KEY_RIGHT_ARM, version=2, ini_path=params.INTERFACE_INI_PATH, ip_address=params.ip_address, port=pop_kin.port):
+    if not kinreader.init_grpc(iCub, "fkin", part=iCub_Const.PART_KEY_RIGHT_ARM, version=2, ini_path=params.INTERFACE_INI_PATH, ip_address=params.ip_address, port=pop_kin.port):
         sys.exit("Initialization failed!")
 
     # Joint Writer for motion arm motion
     writer = Joint_Writer.PyJointWriter()
-    if not writer.init(iCub, "write_arm", iCub_const.PART_KEY_RIGHT_ARM, n_pop=10, ini_path=params.INTERFACE_INI_PATH):
+    if not writer.init(iCub, "write_arm", iCub_Const.PART_KEY_RIGHT_ARM, n_pop=10, ini_path=params.INTERFACE_INI_PATH):
         sys.exit("Initialization failed!")
 
     # Joint Reader to read out reset position
     joint_reader = Joint_Reader.PyJointReader()
-    if not joint_reader.init(iCub, "name", iCub_const.PART_KEY_RIGHT_ARM, sigma=1., n_pop=10, ini_path=params.INTERFACE_INI_PATH):
+    if not joint_reader.init(iCub, "name", iCub_Const.PART_KEY_RIGHT_ARM, sigma=1., n_pop=10, ini_path=params.INTERFACE_INI_PATH):
         sys.exit("Initialization failed!")
 
     ######################################################################

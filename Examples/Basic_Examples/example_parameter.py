@@ -17,13 +17,13 @@ import iCub_Python_Lib.iCub_transformation_matrices as iTransform
 ######################################################################
 
 # True if the Gazebo simulator is used; False for the iCub-simulator
-GAZEBO_SIM = False
+GAZEBO_SIM = True
 # normally no need to change; only if multiple user work in the same YARP-network
 CLIENT_PREFIX = "client"
 # set to robot name: normally "iCubSim" for simulation and "icub" for real robot
 ROBOT_PREFIX = "icubSim"
 
-use_grpc = True
+use_grpc = False
 INTERFACE_INI_PATH = os.path.abspath("../../data/") + "/"
 
 PATH_TO_INTERFACE_BUILD = ""    # "/path/to/Interface_ANNarchy_iCub/build" -> required only, if needed for import
@@ -44,7 +44,7 @@ popsize = 60
 sigma = 3.5
 steps_pos = 50
 
-# Run forward kinematic in offline mode
+# Run kinematic in offline mode
 offline = True
 steps_kin = 40
 

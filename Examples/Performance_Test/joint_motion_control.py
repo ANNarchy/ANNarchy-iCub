@@ -11,7 +11,6 @@ joint position control example
 ########################## Import modules  ###########################
 ######################################################################
 
-import os
 import sys
 import subprocess
 import time
@@ -20,7 +19,6 @@ from timeit import default_timer as timer
 
 import ANNarchy as ann
 import numpy as np
-import yarp
 
 home_arm_pos = np.load("./data/test_pos_home.npy")
 pos_perf_test_all = np.load("./data/pos_perf_test_all.npy")
@@ -191,7 +189,7 @@ def speed_test_interface_manual(testcount, joint, speed):
     print("Speed:", speed)
 
     import ANN_iCub_Interface.iCub as iCub_mod
-    import ANN_iCub_Interface.Vocabs as iCub_const
+    import ANN_iCub_Interface.Vocabs as iCub_Const
 
     ######################################################################
     ######################## Init ANNarchy network #######################
@@ -225,8 +223,8 @@ def speed_test_interface_manual(testcount, joint, speed):
 
     # initialization
     init = True
-    init = init & reader.init(iCub, "read_right_arm", iCub_const.PART_KEY_RIGHT_ARM, 0.5, 15, ini_path="./data")
-    init = init & writer.init(iCub, "write_right_arm", iCub_const.PART_KEY_RIGHT_ARM, 0.5, 15, speed=speed, ini_path="./data")
+    init = init & reader.init(iCub, "read_right_arm", iCub_Const.PART_KEY_RIGHT_ARM, 0.5, 15, ini_path="./data")
+    init = init & writer.init(iCub, "write_right_arm", iCub_Const.PART_KEY_RIGHT_ARM, 0.5, 15, speed=speed, ini_path="./data")
 
     if not init:
         sys.exit("interface initialization failed!")
@@ -289,7 +287,7 @@ def speed_test_interface_grpc(testcount, joint, speed):
     print("\n----- Interface with gRPC transport performance test -----")
     print("Speed:", speed)
     # ANNarchy iCub interface
-    import ANN_iCub_Interface.Vocabs as iCub_const
+    import ANN_iCub_Interface.Vocabs as iCub_Const
     from ANN_iCub_Interface import __root_path__ as ann_interface_root
     from ANN_iCub_Interface.ANNarchy_iCub_Populations import JointControl
     from ANN_iCub_Interface.iCub import (Joint_Reader, Joint_Writer,
@@ -343,8 +341,8 @@ def speed_test_interface_grpc(testcount, joint, speed):
 
     # initialization
     init = True
-    init = init & reader.init(iCub, "read_right_arm", iCub_const.PART_KEY_RIGHT_ARM, 0.5, 15, ini_path="./data")
-    init = init & writer.init_grpc(iCub, "write_right_arm", iCub_const.PART_KEY_RIGHT_ARM, 15, joints=np.arange(0, 7), mode="abs", blocking=True, degr_per_neuron=0.5, speed=speed, ini_path="./data", port=joint_ctrl_pop_all.port)
+    init = init & reader.init(iCub, "read_right_arm", iCub_Const.PART_KEY_RIGHT_ARM, 0.5, 15, ini_path="./data")
+    init = init & writer.init_grpc(iCub, "write_right_arm", iCub_Const.PART_KEY_RIGHT_ARM, 15, joints=np.arange(0, 7), mode="abs", blocking=True, degr_per_neuron=0.5, speed=speed, ini_path="./data", port=joint_ctrl_pop_all.port)
 
     if not init:
         sys.exit("interface initialization failed!")
@@ -379,7 +377,7 @@ def speed_test_interface_grpc(testcount, joint, speed):
 
     # initialization
     writer.close(iCub)
-    init = writer.init_grpc(iCub, "write_right_arm", iCub_const.PART_KEY_RIGHT_ARM, 15, joints=[3,], mode="abs", blocking=True, degr_per_neuron=0.5, speed=speed, ini_path="./data", port=joint_ctrl_pop_single.port)
+    init = writer.init_grpc(iCub, "write_right_arm", iCub_Const.PART_KEY_RIGHT_ARM, 15, joints=[3,], mode="abs", blocking=True, degr_per_neuron=0.5, speed=speed, ini_path="./data", port=joint_ctrl_pop_single.port)
 
     if not init:
         sys.exit("interface initialization failed!")

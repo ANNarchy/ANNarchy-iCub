@@ -16,7 +16,7 @@ import example_parameter as params
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ANN_iCub_Interface import Vocabs as iCub_Const
+import ANN_iCub_Interface.Vocabs as iCub_Const
 from ANN_iCub_Interface import __ann_compile_args__, __ann_extra_libs__
 from ANN_iCub_Interface.ANNarchy_iCub_Populations import JointControl, JointReadout
 from ANN_iCub_Interface.iCub import Joint_Reader, Joint_Writer, iCub_Interface
