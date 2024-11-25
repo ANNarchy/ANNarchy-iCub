@@ -186,8 +186,22 @@ py_minor = sys.version_info[1]
 py_version = str(py_major) + "." + str(py_minor)
 
 # Find YARP include path
+special_include = []
+special_lib = []
+special_link_args = []
 if config['path']['yarp_prefix'] == "default":
     yarp_prefix = set_yarp_prefix()
+elif config['path']['yarp_prefix'] == "icub":
+    yarp_prefix = "/usr/local/src/robot/yarp/build"
+    include_prefix = "/usr/local/src/robot/yarp/src/"
+    special_include = [ include_prefix + "libYARP_os/src", include_prefix + "libYARP_dev/src", include_prefix + "libYARP_sig/src", 
+                        include_prefix + "libYARP_init/src", include_prefix + "libYARP_math/src", include_prefix + "libYARP_run/src", 
+                        include_prefix + "libYARP_cv/src",
+                        "/usr/local/src/robot/yarp/build/src/libYARP_conf/src",
+                        "/usr/local/src/robot/yarp/src/libYARP_dev/src/idl_generated_code",
+                        "/usr/local/src/robot/icub-main/src/libraries/iKin/include",
+                        "/usr/local/src/robot/icub-main/src/libraries/ctrlLib/include"]
+    special_lib = ["/usr/local/src/robot/icub-main/build/lib"]
 else:
     if not os.path.isdir(config['path']['yarp_prefix'] + "/include/yarp"):
         sys.exit("Did not find YARP in given path! Please correct yarp_prefix in make_config.py!")
@@ -207,12 +221,11 @@ else:
         sys.exit("Did not find OpenCV in given path! Please correct cv_include in make_config.py!")
 
 # Lists with lib/include directories and names
-include_dir = ["ANN_iCub_Interface/include", "./", yarp_prefix + "/include", cv_include, numpy.get_include()] + grpc_include_dir
-
+include_dir = ["ANN_iCub_Interface/include", "./", yarp_prefix + "/include", cv_include, numpy.get_include()] + grpc_include_dir + special_include
 libs = ["opencv_core", "opencv_imgproc",
         "YARP_dev", "YARP_init", "YARP_math", "YARP_name", "YARP_os", "YARP_run", "YARP_sig"] + grpc_libs
 
-lib_dirs = [yarp_prefix + "/lib"] + grpc_lib_dir
+lib_dirs = [yarp_prefix + "/lib"] + grpc_lib_dir + special_lib
 
 # Prefixes for Cython and C++ based code
 prefix_cy = "ANN_iCub_Interface/"
@@ -327,14 +340,14 @@ extensions = [
               )
 ]
 
-# # Set interface version
-# fileversion = './ANN_iCub_Interface/_version.txt'
-# with open(fileversion, 'r') as file_object:
-#     version = file_object.readlines()[0].rstrip()
-# fileversion_py = './ANN_iCub_Interface/_version.py'
-# with open(fileversion_py, 'w') as file_object:
-#     file_object.write("# automatically generated in setup.py\n")
-#     file_object.write("__version__ = \"" + version + "\"\n")
+# Set interface version
+fileversion = './ANN_iCub_Interface/_version.txt'
+with open(fileversion, 'r') as file_object:
+    version = file_object.readlines()[0].rstrip()
+fileversion_py = './ANN_iCub_Interface/_version.py'
+with open(fileversion_py, 'w') as file_object:
+    file_object.write("# automatically generated in setup.py\n")
+    file_object.write("__version__ = \"" + version + "\"\n")
 
 # Test if gRPC is already used -> need new cythonizing if prior build was without gRPC
 try:
