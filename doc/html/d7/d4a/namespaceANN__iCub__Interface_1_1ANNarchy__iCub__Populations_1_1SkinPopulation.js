@@ -1,0 +1,4 @@
+var namespaceANN__iCub__Interface_1_1ANNarchy__iCub__Populations_1_1SkinPopulation =
+[
+    [ "SkinPopulation", "d8/d05/classANN__iCub__Interface_1_1ANNarchy__iCub__Populations_1_1SkinPopulation_1_1SkinPopulation.html", "d8/d05/classANN__iCub__Interface_1_1ANNarchy__iCub__Populations_1_1SkinPopulation_1_1SkinPopulation" ]
+];
