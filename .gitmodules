@@ -1,6 +1,0 @@
-[submodule "Testfiles/iCub_Python_Lib"]
-	path = Testfiles/iCub_Python_Lib
-	url = https://github.com/tfietzek/iCub_Python_Lib.git
-[submodule "Examples/Basic_Examples/iCub_Python_Lib"]
-	path = Examples/Basic_Examples/iCub_Python_Lib
-	url = https://github.com/tfietzek/iCub_Python_Lib.git

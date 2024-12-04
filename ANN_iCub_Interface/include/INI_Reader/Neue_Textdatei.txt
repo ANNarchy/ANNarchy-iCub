@@ -1,2 +1,0 @@
-g++ -c -o INIReader.o INIReader.cpp
-g++ -c -o ini.o ini.cpp
