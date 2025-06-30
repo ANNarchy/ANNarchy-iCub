@@ -108,5 +108,5 @@ Fietzek, T., Dinkelbach, H. Ü., & Hamker, F. H. (2022). ANNarchy - iCub: An Int
 * tomlkit
 
 ### Optional
-* ANNarchy >= 4.7
+* ANNarchy >= 4.7; <5
 * gRPC >=
