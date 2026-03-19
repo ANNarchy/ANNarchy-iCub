@@ -116,6 +116,25 @@ def set_opencv_prefix():
 
 ####
 
+# Version management
+def spread_version(base_file, py_file, dox_file):
+    # Set interface version
+    with open(base_file, 'r') as file_object:
+        version = file_object.readlines()[0].rstrip().lstrip()
+    with open(py_file, 'w') as file_object:
+        file_object.write("# automatically generated in setup.py\n")
+        file_object.write(f"__version__ = \"{version}\"\n")
+    with open(dox_file, 'w') as file_object:
+        file_object.write("# automatically generated in setup.py\n")
+        file_object.write(f"PROJECT_NUMBER = \"{version}\"\n")
+    return version
+
+fileversion = './ANN_iCub_Interface/version.txt'
+fileversion_py = './ANN_iCub_Interface/_version.py'
+fileversion_doxy = './doc/_version.dox'
+
+###
+
 
 # Interface path
 root_path = os.path.abspath("./")
@@ -194,8 +213,8 @@ if config['path']['yarp_prefix'] == "default":
 elif config['path']['yarp_prefix'] == "icub":
     yarp_prefix = "/usr/local/src/robot/yarp/build"
     include_prefix = "/usr/local/src/robot/yarp/src/"
-    special_include = [ include_prefix + "libYARP_os/src", include_prefix + "libYARP_dev/src", include_prefix + "libYARP_sig/src", 
-                        include_prefix + "libYARP_init/src", include_prefix + "libYARP_math/src", include_prefix + "libYARP_run/src", 
+    special_include = [ include_prefix + "libYARP_os/src", include_prefix + "libYARP_dev/src", include_prefix + "libYARP_sig/src",
+                        include_prefix + "libYARP_init/src", include_prefix + "libYARP_math/src", include_prefix + "libYARP_run/src",
                         include_prefix + "libYARP_cv/src",
                         "/usr/local/src/robot/yarp/build/src/libYARP_conf/src",
                         "/usr/local/src/robot/yarp/src/libYARP_dev/src/idl_generated_code",
@@ -250,6 +269,7 @@ package_data = ['__init__.py',
 extra_compile_args = ["-g", "-fPIC", "-std=c++17", "--shared", "-O3", "-march=native", "-Wall", "-pthread"]
 # , "-fpermissive" nicht als default; macht den Compiler relaxter;
 # "-march=native" ermöglicht direkter Plattformabhängige Optimierung
+macros = []
 
 if config['compiler']['verbose']:
     extra_compile_args.append("--verbose")
@@ -258,7 +278,8 @@ if config['compiler']['pedantic']:
 if config['module_conf']['use_grpc']:
     extra_compile_args += ["-Wl,-rpath,"+root_path+"/ANN_iCub_Interface/grpc/", "-D_USE_GRPC"]
 if config['module_conf']['double_precision']:
-    extra_compile_args.append("-D_DOUBLE_PRECISION")
+    macros.append(("_DOUBLE_PRECISION", None))
+    # extra_compile_args.append("-D_DOUBLE_PRECISION")
 if log_define:
     extra_compile_args.append("-D_USE_LOG_QUIET")
 
@@ -312,6 +333,7 @@ extensions = [
               libraries=libs,
               library_dirs=lib_dirs,
               language="c++",
+              define_macros=macros,
               extra_compile_args=extra_compile_args,
               extra_link_args=[] + grpc_link_args
               ),
@@ -344,17 +366,7 @@ extensions = [
 ]
 
 # Set interface version
-fileversion = './ANN_iCub_Interface/version.txt'
-with open(fileversion, 'r') as file_object:
-    version = file_object.readlines()[0].rstrip().lstrip()
-fileversion_py = './ANN_iCub_Interface/_version.py'
-with open(fileversion_py, 'w') as file_object:
-    file_object.write("# automatically generated in setup.py\n")
-    file_object.write(f"__version__ = \"{version}\"\n")
-fileversion_doxy = './doc/_version.dox'
-with open(fileversion_doxy, 'w') as file_object:
-    file_object.write("# automatically generated in setup.py\n")
-    file_object.write(f"PROJECT_NUMBER = \"{version}\"\n")
+version = spread_version(fileversion, fileversion_py, fileversion_doxy)
 
 # Test if gRPC is already used -> need new cythonizing if prior build was without gRPC
 try:
