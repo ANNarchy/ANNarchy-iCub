@@ -28,15 +28,16 @@ from libcpp cimport bool as bool_t
 from libcpp.memory cimport shared_ptr
 from libcpp.map cimport map as cmap
 from libc.stdint cimport uint8_t
+cimport numpy as np
 
 from .Module_Base_Class cimport Mod_BaseClass, PyModuleBase
 
 cdef extern from "Visual_Reader.hpp":
 
     cdef cppclass VisualReader(Mod_BaseClass):
-        ctypedef double precision
-
         VisualReader() except +
+
+        ctypedef np.float32_t precision
 
         # Init Visual reader with given parameters for image resolution, field of view and eye selection.
         bool_t Init(char, double, double, int, int, bool_t, string)
@@ -54,6 +55,7 @@ cdef extern from "Visual_Reader.hpp":
 
         # void setRegister(bint)
         # bint getRegister()
+        bool_t double_prec
 
         # cmap[string, string] getParameter()
 

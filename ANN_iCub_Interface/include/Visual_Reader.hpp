@@ -41,9 +41,12 @@ class VisualReader : public Mod_BaseClass {
  public:
 #ifndef _DOUBLE_PRECISION
     typedef float precision;
+    bool double_prec = false;
 #endif
 #ifdef _DOUBLE_PRECISION
     typedef double precision;
+    bool double_prec = true;
+
 #endif
 
     VisualReader() = default;

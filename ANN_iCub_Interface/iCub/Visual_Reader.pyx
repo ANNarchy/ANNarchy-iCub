@@ -173,9 +173,9 @@ cdef class PyVisualReader(PyModuleBase):
             flag to select the filter for image upscaling; True for a faster filter. (Default value = True)
         ini_path : str
             Path to the "interface_param.ini"-file. (Default value = "../data/")
-        strip_address : str
+        ip_address : str
             gRPC server ip address. (Default value = "0.0.0.0")
-        unsignedintport : int
+        port : unsigned int
             gRPC server port. (Default value = 50000)
 
         Returns
@@ -206,8 +206,13 @@ cdef class PyVisualReader(PyModuleBase):
         type
             NDarray (vector[vector[precision]]): image_s from the camera_s in the form vector of image_s and as flattened image
         """
-        # return np.array(deref(self._cpp_visual_reader).ReadRobotEyes(), dtype=np.float64)
-        return np.array(deref(self._cpp_visual_reader).ReadRobotEyes())
+        #return np.array(deref(self._cpp_visual_reader).ReadRobotEyes(), dtype=VisualReader.precision)
+        img = deref(self._cpp_visual_reader).ReadRobotEyes()
+        if deref(self._cpp_visual_reader).double_prec:
+            return np.array(img, dtype=np.float64)
+        else:
+            return np.array(img, dtype=np.float32)
+        
 
     # return flattened RGB-image
     def retrieve_robot_eye(self):

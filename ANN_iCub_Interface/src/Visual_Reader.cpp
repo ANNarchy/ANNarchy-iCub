@@ -597,3 +597,8 @@ std::vector<uint8_t> VisualReader::Mat3D2Vec(cv::Mat matrix) {
     }
     return vec;
 }
+
+// bool VisualReader::IsDouble(){
+//     return isdoubleprec;
+// }
+
