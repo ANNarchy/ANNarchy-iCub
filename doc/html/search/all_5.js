@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['fileversion_32',['fileversion',['../d1/d3e/namespace__spread__version_a2a256427f3d9817199873b7c037276d0.html#a2a256427f3d9817199873b7c037276d0',1,'_spread_version']]],
-  ['fileversion_5fdoxy_33',['fileversion_doxy',['../d1/d3e/namespace__spread__version_aef24dc0e040380f2fed22cf51db2c3d9.html#aef24dc0e040380f2fed22cf51db2c3d9',1,'_spread_version']]],
-  ['fileversion_5fpy_34',['fileversion_py',['../d1/d3e/namespace__spread__version_a75579a6a1fee3a7657eb82ef1030aa40.html#a75579a6a1fee3a7657eb82ef1030aa40',1,'_spread_version']]],
-  ['folder_20structure_35',['Folder structure',['../d7/db6/Structure.html',1,'']]]
+  ['enable_20low_20level_20grpc_20communication_0',['Enable Low-Level gRPC communication',['..//home/torsten/Schreibtisch/iCub_General/Interface_ANNarchy_iCub_master/README.md#autotoc_md12',1,'']]],
+  ['enable_20low_20level_20grpc_20communication_20optional_1',['Enable Low-Level gRPC communication (optional)',['../d4/d6d/md_Installation.html#autotoc_md3',1,'']]],
+  ['encoded_2',['encoded',['../d9/dfe/classANN__iCub__Interface_1_1ANNarchy__iCub__Populations_1_1JointPopulation_1_1JointReadout_ac62275baf85537203abc5d6e5b8eff1b.html#ac62275baf85537203abc5d6e5b8eff1b',1,'ANN_iCub_Interface.ANNarchy_iCub_Populations.JointPopulation.JointReadout.encoded(self)'],['../d9/dfe/classANN__iCub__Interface_1_1ANNarchy__iCub__Populations_1_1JointPopulation_1_1JointReadout_afc04cae7db1f117d521e18963dcacdf5.html#afc04cae7db1f117d521e18963dcacdf5',1,'ANN_iCub_Interface.ANNarchy_iCub_Populations.JointPopulation.JointReadout.encoded(self, value)'],['../d9/dfe/classANN__iCub__Interface_1_1ANNarchy__iCub__Populations_1_1JointPopulation_1_1JointReadout_ac62275baf85537203abc5d6e5b8eff1b.html#ac62275baf85537203abc5d6e5b8eff1b',1,'ANN_iCub_Interface.ANNarchy_iCub_Populations.JointPopulation.JointReadout.encoded(self)'],['../d9/dfe/classANN__iCub__Interface_1_1ANNarchy__iCub__Populations_1_1JointPopulation_1_1JointReadout_abc1c3302f9a2f2c058963d34a1d2533e.html#abc1c3302f9a2f2c058963d34a1d2533e',1,'ANN_iCub_Interface.ANNarchy_iCub_Populations.JointPopulation.JointReadout.encoded(self, value)']]],
+  ['examples_3',['Examples',['../d9/d61/Examples.html',1,'Basic Python Examples'],['../da/d22/Generic_Examples.html',1,'Generic Python Examples']]]
 ];

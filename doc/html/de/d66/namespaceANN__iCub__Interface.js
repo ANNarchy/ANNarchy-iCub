@@ -3,7 +3,7 @@ var namespaceANN__iCub__Interface =
     [ "ANNarchy_iCub_Populations", "d0/dba/namespaceANN__iCub__Interface_1_1ANNarchy__iCub__Populations.html", "d0/dba/namespaceANN__iCub__Interface_1_1ANNarchy__iCub__Populations" ],
     [ "iCub", "d5/d16/namespaceANN__iCub__Interface_1_1iCub.html", "d5/d16/namespaceANN__iCub__Interface_1_1iCub" ],
     [ "Special_Features", "de/d12/namespaceANN__iCub__Interface_1_1Special__Features.html", [
-      [ "_text_to_list", "de/d12/namespaceANN__iCub__Interface_1_1Special__Features.html#a0a66817496572f1e7154b4c236f00a67", null ],
+      [ "_text_to_list", "de/d12/namespaceANN__iCub__Interface_1_1Special__Features_a9f578bea184df5e3879e237ced01b721.html#a9f578bea184df5e3879e237ced01b721", null ],
       [ "create_robot_interface_file", "de/d12/namespaceANN__iCub__Interface_1_1Special__Features_a133dd396fdd41825d875b24713ee8eab.html#a133dd396fdd41825d875b24713ee8eab", null ],
       [ "init_robot_from_file", "de/d12/namespaceANN__iCub__Interface_1_1Special__Features_a2032fe1d1083ab33cd2cfde1be659921.html#a2032fe1d1083ab33cd2cfde1be659921", null ],
       [ "save_robot_to_file", "de/d12/namespaceANN__iCub__Interface_1_1Special__Features_af497c28abcde46dd850f23438441d20c.html#af497c28abcde46dd850f23438441d20c", null ]
@@ -41,12 +41,12 @@ var namespaceANN__iCub__Interface =
       [ "JOINT_NUM_WRIST_PITCH", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a4fabcf8b4dc3893c9b9711503ebb975c.html#a4fabcf8b4dc3893c9b9711503ebb975c", null ],
       [ "JOINT_NUM_WRIST_PROSUP", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a0dd2dd5ca6528efe58229cd121280f01.html#a0dd2dd5ca6528efe58229cd121280f01", null ],
       [ "JOINT_NUM_WRIST_YAW", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_abf65676014859a712cfc7b55c80d5b4d.html#abf65676014859a712cfc7b55c80d5b4d", null ],
-      [ "PART_KEY_HEAD", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_acf22859bc87fff8f19675b34a844c53f.html#acf22859bc87fff8f19675b34a844c53f", null ],
-      [ "PART_KEY_LEFT_ARM", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_ac73053764b99c3a9341369f8bb803e43.html#ac73053764b99c3a9341369f8bb803e43", null ],
-      [ "PART_KEY_LEFT_LEG", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a8b63e9acbd8df18f97bdcc2bcd5bba0e.html#a8b63e9acbd8df18f97bdcc2bcd5bba0e", null ],
-      [ "PART_KEY_RIGHT_ARM", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a5926f2b1db17a700db28b8d1fdd9f5b8.html#a5926f2b1db17a700db28b8d1fdd9f5b8", null ],
-      [ "PART_KEY_RIGHT_LEG", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a0ac13ec125a6ab411801e5a9dbc8da86.html#a0ac13ec125a6ab411801e5a9dbc8da86", null ],
-      [ "PART_KEY_TORSO", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a0e67c64672607af0c78eaff0a1295e18.html#a0e67c64672607af0c78eaff0a1295e18", null ],
+      [ "PART_KEY_HEAD", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a2d3ff3a00c9dde7e8aad7c8348ed1e7e.html#a2d3ff3a00c9dde7e8aad7c8348ed1e7e", null ],
+      [ "PART_KEY_LEFT_ARM", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a6b6367215851b7b5b3f8f3632fee48c4.html#a6b6367215851b7b5b3f8f3632fee48c4", null ],
+      [ "PART_KEY_LEFT_LEG", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a8acee2611324407141c5daa9c5d7e030.html#a8acee2611324407141c5daa9c5d7e030", null ],
+      [ "PART_KEY_RIGHT_ARM", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a8fbf05333d323b187b4fe99361c37508.html#a8fbf05333d323b187b4fe99361c37508", null ],
+      [ "PART_KEY_RIGHT_LEG", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a4e8f66c4c16ded9542d24e7c80b2215b.html#a4e8f66c4c16ded9542d24e7c80b2215b", null ],
+      [ "PART_KEY_TORSO", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a372f818b63ebd51181031a6d654d0586.html#a372f818b63ebd51181031a6d654d0586", null ],
       [ "SKIN_SECTION_SIZE_ARM", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a2a759149637b6749d24f79a63b22f3b0.html#a2a759149637b6749d24f79a63b22f3b0", null ],
       [ "SKIN_SECTION_SIZE_FOREARM", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a2e5fa66cd45c410ce547020a23eb3bdf.html#a2e5fa66cd45c410ce547020a23eb3bdf", null ],
       [ "SKIN_SECTION_SIZE_HAND", "dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a286bef2f00d64b13ecbcc009a285e157.html#a286bef2f00d64b13ecbcc009a285e157", null ]

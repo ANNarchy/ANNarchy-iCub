@@ -26,42 +26,25 @@ var NAVTREE =
 [
   [ "ANNarchy iCub Interface", "index.html", [
     [ "Basic Python Examples", "d9/d61/Examples.html", [
-      [ "Main Module Handling", "d9/d61/Examples.html#autotoc_md8", null ],
-      [ "Joint Reader", "d9/d61/Examples.html#autotoc_md9", null ],
-      [ "Joint Writer", "d9/d61/Examples.html#autotoc_md10", null ],
-      [ "Visual Reader", "d9/d61/Examples.html#autotoc_md11", null ],
-      [ "Skin Reader", "d9/d61/Examples.html#autotoc_md12", null ],
-      [ "Kinematic Reader", "d9/d61/Examples.html#autotoc_md13", null ],
-      [ "Kinematic Writer", "d9/d61/Examples.html#autotoc_md14", null ],
-      [ "Final Wrap-up", "d9/d61/Examples.html#autotoc_md15", null ]
+      [ "Main Module Handling", "d9/d61/Examples.html#autotoc_md18", null ],
+      [ "Joint Reader", "d9/d61/Examples.html#autotoc_md19", null ],
+      [ "Joint Writer", "d9/d61/Examples.html#autotoc_md20", null ],
+      [ "Visual Reader", "d9/d61/Examples.html#autotoc_md21", null ],
+      [ "Skin Reader", "d9/d61/Examples.html#autotoc_md22", null ],
+      [ "Kinematic Reader", "d9/d61/Examples.html#autotoc_md23", null ],
+      [ "Kinematic Writer", "d9/d61/Examples.html#autotoc_md24", null ],
+      [ "Final Wrap-up", "d9/d61/Examples.html#autotoc_md25", null ]
     ] ],
     [ "Generic Python Examples", "da/d22/Generic_Examples.html", [
-      [ "Non-gRPC version", "da/d22/Generic_Examples.html#autotoc_md1", null ],
-      [ "gRPC version", "da/d22/Generic_Examples.html#autotoc_md2", null ]
+      [ "Non-gRPC version", "da/d22/Generic_Examples.html#autotoc_md6", null ],
+      [ "gRPC version", "da/d22/Generic_Examples.html#autotoc_md7", null ]
     ] ],
     [ "Installation", "d4/d6d/md_Installation.html", null ],
     [ "Configuration", "d7/da7/md_Manual.html", null ],
     [ "Folder structure", "d7/db6/Structure.html", null ],
-    [ "ANNarchy iCub Interface", "d1/d19/md__home_torsten_Schreibtisch_iCub_General_Repos_Interface_ANNarchy_iCub_master_README.html", [
-      [ "Interface Module level description", "d1/d19/md__home_torsten_Schreibtisch_iCub_General_Repos_Interface_ANNarchy_iCub_master_README.html#autotoc_md17", null ],
-      [ "Installation", "d1/d19/md__home_torsten_Schreibtisch_iCub_General_Repos_Interface_ANNarchy_iCub_master_README.html#autotoc_md18", [
-        [ "Dependencies", "d4/d6d/md_Installation.html#autotoc_md4", null ],
-        [ "Default Installation", "d4/d6d/md_Installation.html#autotoc_md5", null ],
-        [ "Enable Low-Level gRPC communication (optional)", "d4/d6d/md_Installation.html#autotoc_md6", null ],
-        [ "Update", "d4/d6d/md_Installation.html#autotoc_md7", null ],
-        [ "Default Installation", "d1/d19/md__home_torsten_Schreibtisch_iCub_General_Repos_Interface_ANNarchy_iCub_master_README.html#autotoc_md19", null ],
-        [ "Enable Low-Level gRPC communication", "d1/d19/md__home_torsten_Schreibtisch_iCub_General_Repos_Interface_ANNarchy_iCub_master_README.html#autotoc_md20", null ]
-      ] ],
-      [ "useful links", "d1/d19/md__home_torsten_Schreibtisch_iCub_General_Repos_Interface_ANNarchy_iCub_master_README.html#autotoc_md21", null ],
-      [ "Authors", "d1/d19/md__home_torsten_Schreibtisch_iCub_General_Repos_Interface_ANNarchy_iCub_master_README.html#autotoc_md22", null ],
-      [ "Publications", "d1/d19/md__home_torsten_Schreibtisch_iCub_General_Repos_Interface_ANNarchy_iCub_master_README.html#autotoc_md23", null ],
-      [ "Dependencies", "d1/d19/md__home_torsten_Schreibtisch_iCub_General_Repos_Interface_ANNarchy_iCub_master_README.html#autotoc_md24", [
-        [ "Optional", "d1/d19/md__home_torsten_Schreibtisch_iCub_General_Repos_Interface_ANNarchy_iCub_master_README.html#autotoc_md25", null ]
-      ] ]
-    ] ],
     [ "Packages", "namespaces.html", [
-      [ "Packages", "namespaces.html", "namespaces_dup" ],
-      [ "Package Functions", "namespacemembers.html", [
+      [ "Package List", "namespaces.html", "namespaces_dup" ],
+      [ "Package Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ]
@@ -72,8 +55,9 @@ var NAVTREE =
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
-        [ "All", "functions.html", null ],
-        [ "Functions", "functions_func.html", null ]
+        [ "All", "functions.html", "functions_dup" ],
+        [ "Functions", "functions_func.html", "functions_func" ],
+        [ "Variables", "functions_vars.html", null ]
       ] ]
     ] ]
   ] ]
@@ -82,8 +66,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"dd/d5c/namespaceANN__iCub__Interface_1_1Vocabs_a20733cc2c1f5c74230667cc78c609030.html#a20733cc2c1f5c74230667cc78c609030"
+"d9/d61/Examples.html",
+"db/d83/classANN__iCub__Interface_1_1iCub_1_1Joint__Writer_1_1PyJointWriter_afc749aa219babb571a1b53dabbec0b40.html#afc749aa219babb571a1b53dabbec0b40"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
