@@ -162,7 +162,7 @@ if config['module_conf']['use_grpc']:
     # protobuf, grpc
     grpc_avaiable = True
 
-    if os.system("protoc --version") == 0:
+    if subprocess.call("protoc --version", shell=True) == 0:
         print('Checking for protoc ... OK')
     else:
         print('Checking for protoc ... OK')
@@ -191,11 +191,11 @@ if config['module_conf']['use_grpc']:
             print("Skip gRPC build process")
         else:
             # build the interface gRPC definitions
-            os.system(f"protoc -I=. --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc={grpc_cpp_plugin} ANN_iCub_Interface/grpc/icub.proto")
+            subprocess.call(f"protoc -I=. --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc={grpc_cpp_plugin} ANN_iCub_Interface/grpc/icub.proto", shell=True)
 
             print("Build grpc->proto files in seperated library")
             curpath = os.path.abspath("./")
-            os.system(f"cd ANN_iCub_Interface/grpc/ && make EXTFLAGS=\"-I{curpath} -I{grpc_include_path} -L{protoc_lib_path} -L{grpc_lib_path} -Wl,-rpath,{grpc_lib_path}\"")
+            subprocess.call(f"cd ANN_iCub_Interface/grpc/ && make EXTFLAGS=\"-I{curpath} -I{grpc_include_path} -L{protoc_lib_path} -L{grpc_lib_path} -Wl,-rpath,{grpc_lib_path} -Wl,-rpath,{protoc_lib_path}\"", shell=True)
     else:
         sys.exit("grpc and/or protobuf c-compiler is missing ... abort")
 

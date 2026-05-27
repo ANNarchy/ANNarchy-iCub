@@ -21,6 +21,7 @@
 import os
 import sys
 import time
+from pathlib import Path
 
 import matplotlib.pylab as plt
 import numpy as np
@@ -657,8 +658,8 @@ def speed_test_vreader(ann_wrapper, test_count):
     imgs_field = []
 
     path = params.save_path_vr
-    if not os.path.isdir(path):
-        os.mkdir(path)
+    if not os.path.isdir(params.save_path_vr):
+        Path(params.save_path_vr).mkdir(parents=True, exist_ok=True)
 
     print('____________________________________________________________')
     print('__ Add and init visual reader module with full resolution __')

@@ -1,9 +1,15 @@
 from typing import Tuple, List
-try:
-    from ANNarchy.intern.SpecificPopulation import SpecificPopulation
-
-except:
-    from ANNarchy.core.SpecificPopulation import SpecificPopulation
+from  ANNarchy import __version__ as ann_version
+ann_version_list = ann_version.split('.')
+match ann_version_list:
+    case ['5', x]:
+        from ANNarchy.intern.SpecificPopulation import SpecificPopulation
+    case ['4', '8']:
+        from ANNarchy.intern.SpecificPopulation import SpecificPopulation
+    case ['4', '7']:
+        from ANNarchy.core.SpecificPopulation import SpecificPopulation
+    case _:
+        print(f"Unsupported ANNarchy version {ann_version}!")
 
 
 class JointControl(SpecificPopulation):
