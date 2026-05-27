@@ -19,13 +19,20 @@
 import ANN_iCub_Interface
 from ANNarchy.core.Neuron import Neuron
 from ANNarchy.core.Global import dt
-try:
-    from ANNarchy.intern.SpecificPopulation import SpecificPopulation
-    from ANNarchy.intern.Messages import _error
-
-except:
-    from ANNarchy.core.SpecificPopulation import SpecificPopulation
-    from ANNarchy.core.Global import _error
+from  ANNarchy import __version__ as ann_version
+ann_version_list = ann_version.split('.')
+match ann_version_list:
+    case ['5', x]:
+        from ANNarchy.intern.SpecificPopulation import SpecificPopulation
+        from ANNarchy.intern.Messages import error
+    case ['4', '8']:
+        from ANNarchy.intern.SpecificPopulation import SpecificPopulation
+        from ANNarchy.intern.Messages import _error
+    case ['4', '7']:
+        from ANNarchy.core.SpecificPopulation import SpecificPopulation
+        from ANNarchy.core.Global import _error
+    case _:
+        print(f"Unsupported ANNarchy version {ann_version}!")
 
 
 class VisionPopulation(SpecificPopulation):

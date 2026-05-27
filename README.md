@@ -48,8 +48,9 @@ The interface consists of different parts. Clustering the different tasks of the
     - The Vocabs module provide several useful constants like the iCub part strings or a mapping from the joint names to the joint indices in the respective part.
 
 
-## Installation
+## YARP/iCub Installation
 Make sure YARP is installed before installing the interface. An installation guide for YARP/iCub can be found in the github [superbuild repository](https://github.com/robotology/robotology-superbuild) of the YARP/iCub universe.
+Conda installation is currently recommended.
 
 ### Default Installation
 Then the interface can be installed with pip by executing the following line in a terminal in the interface directory.
@@ -65,7 +66,7 @@ pip3 install git+https://github.com/ANNarchy/ANNarchy-iCub.git
 
 
 ### Enable Low-Level gRPC communication
-The interface is build in a default configuration. In this case the gRPC communication with ANNarchy is disabled. To enable this part, set the use_grpc parameter in build_config.toml to True. This part depends on the gRPC package and the protobuf compiler.
+The interface is build in a default stand-alone configuration. In this case the gRPC communication with ANNarchy is disabled. This communication allows a direct link between the interface and ANNarchy simulation core in C++ (See Fietzek et al. 2022 for further explanation). To enable this part, set the use_grpc parameter in build_config.toml to True. This part depends on the gRPC package and the protobuf compiler.
 The system packages are recommended especially for recent Linux versions (>Ubuntu 18.XX). Install the following apt packages: protobuf-compiler-grpc, libgrpc++-dev
 ```bash
     sudo apt install protobuf-compiler-grpc libgrpc++-dev
@@ -74,18 +75,20 @@ For the source installation of gRPC ([installation from the repository](https://
 
 
 ## useful links
-Wiki for the iCub robot:<br>
-<https://icub-tech-iit.github.io/documentation/> <br>
-<http://wiki.icub.org/wiki/Manual> (partially outdated)
+- Interface:
+    - Interface Documentation: https://annarchy.github.io/ANNarchy-iCub/ <br>
 
-YARP website:<br>
-<http://www.yarp.it/git-master/index.html>
+- Documentation for the iCub robot:<br>
+    - <https://mesh-iit.github.io/documentation/> <br>
 
-iCub community (hosted by iit) on github:<br>
-<https://github.com/robotology>
+- YARP website:<br>
+    - <http://www.yarp.it/git-master/index.html>
 
-git repository with helpful documents and scripts for the work with iCub:<br>
-<https://github.com/tfietzek/iCub_simulation_tools.git>
+- iCub community (hosted by iit) on github:<br>
+    - <https://github.com/robotology>
+
+- repository with documents and scripts for the work with the iCub:<br>
+    - <https://github.com/tfietzek/iCub_simulation_tools.git>
 
 
 ## Authors
@@ -103,10 +106,10 @@ Fietzek, T., Dinkelbach, H. Ü., & Hamker, F. H. (2022). ANNarchy - iCub: An Int
 * YARP    >= 3.4
 * OpenCV  >= 3.4
 * Python  >= 3.10
-* cython  > 0.20
+* cython  > 3.
 * numpy   >= 1.13
 * tomlkit
 
 ### Optional
-* ANNarchy >= 4.7; <5
+* ANNarchy >= 4.7; (version >=5 only partial support, specific ANNarchy Population not working)
 * gRPC >=
